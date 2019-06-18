@@ -7,8 +7,8 @@ Author: Davood Tofighi <dtofighi@gmail.com> and David P. MacKinnon
     <davidpm@asu.edu>
 Maintainer: Davood Tofighi <dtofighi@gmail.com>
 Depends:
-    R (>= 3.1.0),
-    base (>= 3.1.0),
+    R (>= 3.5.0),
+    base (>= 3.5.0),
     MASS (>= 7.3),
     lavaan (>= 0.5-20),
     e1071 (>= 1.6-7),
@@ -30,6 +30,8 @@ Imports:
     grDevices,
     Matrix,
     matrixcalc
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
 Description: We provide functions to compute confidence
     intervals (CIs) for a well-defined nonlinear function of the model
     parameters (e.g., product of k coefficients) in single--level and
