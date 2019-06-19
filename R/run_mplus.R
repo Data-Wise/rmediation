@@ -1,9 +1,18 @@
-runmplus <- function(path = tempdir(),
-                     cores = detectCores() - 1,
+#' Run Mplus input files within a directory.
+#'
+#' @param path A path to the mplus files. Default is \code{\link{tempdir}}.
+#' @param cores The number of cores. Default is \code{\link{detectCores}-1}
+#' @param outPath output path
+#' @param logPath log files path
+#' @param pattern pattern
+#' @return Does not return a value.
+
+
+run_mplus <- function(path = tempdir(),
+                     cores = parallel::detectCores() - 1,
                      outPath = tempdir() ,
                      logPath = tempdir() ,
                      pattern = NULL) {
-  library(doParallel)
   #### Mplus function
   mplus <- function(x, out = outfiles, log = logfiles) {
     if (.Platform$OS.type == "unix") {
@@ -20,32 +29,32 @@ runmplus <- function(path = tempdir(),
       wait = TRUE
     )
   }
-  
+
   # Create a vector of .inp files
   if (is.null(pattern))
     pattern <-  ".inp"
   inpfiles <- list.files(path = path ,
                          pattern = pattern,
                          full.names = TRUE)
-  
+
   # Warning Indicator
   if (length(inpfiles) < 1)
     stop("No Mplus input files detected in the target directory: ",
-         directory)
-  
+         path)
+
   # Create directories if they don't exist
   if (!dir.exists(outPath)) dir.create(outPath)
   if (!dir.exists(logPath)) dir.create(logPath)
-  
+
   # Create vectors of outfiles and logfiles for naming
-  outfiles <- str_replace(inpfiles, pattern = ".inp", ".out")
-  logfiles <- str_replace(inpfiles, pattern = ".inp", ".log")
-  
+  outfiles <- stringr::str_replace(inpfiles, pattern = ".inp", ".out")
+  logfiles <- stringr::str_replace(inpfiles, pattern = ".inp", ".log")
+
   # Run Models in Parallel
-  cl <- makeCluster(cores)
-  registerDoParallel(cores)
-  foreach(i = iter(inpfiles),
-          j = icount(length(inpfiles)),
+  cl <- parallel::makeCluster(cores)
+  doParallel::registerDoParallel(cores)
+  foreach::foreach(i = iterators::iter(inpfiles),
+          j = iterators::icount(length(inpfiles)),
           .inorder = FALSE) %dopar% mplus(i, out = outfiles[j], log = logfiles[j])
-  stopCluster(cl)
+  parallel::stopCluster(cl)
 }

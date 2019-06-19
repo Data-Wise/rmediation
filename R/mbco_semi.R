@@ -56,8 +56,6 @@ mbco_semi <- function(h0 = NULL,
 
   null_samp <- sapply(seq.int(R), compare_boot, df = df_trans)
   mbco_pvalue <- mean(null_samp > lrt0)
-  mbco_reject <- ifelse(mbco_pvalue < alpha, 1, 0) # reject or not
-  mbco_boot <-
-    list(p = mbco_pvalue, reject = as.integer(mbco_reject))
+  mbco_boot <- list(p = mbco_pvalue)
   return(mbco_boot)
 }

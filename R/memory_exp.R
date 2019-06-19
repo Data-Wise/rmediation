@@ -7,7 +7,7 @@
 #'   \item{study}{Replication ID, ranges from 1 to 8}
 #'   \item{repetition}{Use of repetition rehearsal technique on a 1 to 9 scale}
 #'   \item{recall}{Total words recalled out of 20 words}
-#'   \item{imagery}Use of imagery rehearsal technique on a 1 to 9 scale}
+#'   \item{imagery}{Use of imagery rehearsal technique on a 1 to 9 scale}
 #'   \item{x}{A \link{factor} with two levels: repetition or primary rehearsal = 0, imagery or secondary rehearsal = 1}
 #' }
 #' @usage data(memory_exp)

@@ -27,6 +27,9 @@ mbco(h0 = NULL, h1 = NULL, R = 10L, type = "asymp", alpha = 0.05,
 
 \item{precision}{Functional precision. The default value is set to 1e-9. See \link{mxOption} for more dettails.}
 }
+\value{
+A list
+}
 \description{
 This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a function of indirect effects.
 }

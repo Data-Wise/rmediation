@@ -11,8 +11,10 @@
 #' @param checkSE if 'No' (default), the standard errors would not be calculated.
 #' @param optim Choose optimizer availble in OpenMx. The default optimizer is "NPSOL". Other optimizer choices include "CSOLNP" and "SLSQP ". See \link{mxOption} for more dettails.
 #' @param precision Functional precision. The default value is set to 1e-9. See \link{mxOption} for more dettails.
+#' @return A list
 #'@export mbco
 #'@author Davood Tofighi \email{dtofighi@@gmail.com}
+
 #'@examples
 #' data(memory_exp)
 #' endVar <- c('x', 'repetition', 'imagery', 'recall')
@@ -92,11 +94,6 @@ mbco <- function(h0 = NULL,
 
   if (!all(sapply(c(h0, h1), is, "MxModel")))
     stop("The 'h0' and 'h1' argument must be MxModel objects")
-
-  # OpenMx::mxOption(NULL, "Calculate Hessian", checkHess)
-  # OpenMx::mxOption(NULL, "Standard Errors", checkSE)
-  # OpenMx::mxOption(NULL, "Function precision", precision)
-  # OpenMx::mxOption(NULL, "Default optimizer", optim)
 
   res <-
     if (type == 'asymp')

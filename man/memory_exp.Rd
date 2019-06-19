@@ -4,7 +4,14 @@
 \name{memory_exp}
 \alias{memory_exp}
 \title{Memory Experiment Data Description from MacKinnon et al., 2018}
-\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 369 rows and 5 columns.}
+\format{A data frame with 369 rows and 5 variables:
+\describe{
+  \item{study}{Replication ID, ranges from 1 to 8}
+  \item{repetition}{Use of repetition rehearsal technique on a 1 to 9 scale}
+  \item{recall}{Total words recalled out of 20 words}
+  \item{imagery}{Use of imagery rehearsal technique on a 1 to 9 scale}
+  \item{x}{A \link{factor} with two levels: repetition or primary rehearsal = 0, imagery or secondary rehearsal = 1}
+}}
 \source{
 \url{http://dx.doi.org/10.1037/met0000174.supp}
 }
