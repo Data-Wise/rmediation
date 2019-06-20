@@ -12,28 +12,27 @@ intervals (CIs) for a well--defined nonlinear function of the model parameters (
 \tabular{ll}{
 Package: \tab RMediation\cr
 Type: \tab Package\cr
-Version: \tab 1.1.4\cr
-Date: \tab 2016-3-12\cr
+Version: \tab 1.2.0\cr
+Date: \tab 2019-6-20\cr
 License: \tab GPL-2\cr
 LazyLoad: \tab yes\cr
 }
 %~~ An overview of how to use the package, including the most important ~~
 %~~ functions ~~
-\code{\link{medci}} produces a CI for the product of two normal random variables using three methods: the distribution of the product of coefficients, Monte Carlo, and asymptotic normal theory with the multivariate-delta standard error (Asymptotic-Delta) method. 
-\code{\link{pprodnormal}} produces percentiles for the distribution of product of two normal random variables. 
+\code{\link{medci}} produces a CI for the product of two normal random variables using three methods: the distribution of the product of coefficients, Monte Carlo, and asymptotic normal theory with the multivariate-delta standard error (Asymptotic-Delta) method.
+\code{\link{pprodnormal}} produces percentiles for the distribution of product of two normal random variables.
 \code{\link{qprodnormal}} generates quantiles for the distribution of product of two normal random variables.
 \code{\link{ci}} produces a CI for a well--defined nonlinear function of the model parameters in single--level and multilevel structural equation models using the Monte Carlo and Asymptotic-Delta method.
 }
 \author{
-  Davood Tofighi \email{dtofighi@unm.edu} and
-  David P. MacKinnon \email{davidpm@asu.edu}
-  
-Maintainer: Davood Tofighi \email{dtofighi@unm.edu}
+Davood Tofighi \email{dtofighi@gmail.com}
+
+Maintainer: Davood Tofighi \email{dtofighi@gmail.com}
 %~~ The author and/or maintainer of the package ~~
 }
 \references{
-MacKinnon, D. P., Fritz, M. S., Williams, J., and Lockwood, C. M. (2007). Distribution of the product confidence limits for the indirect effect: Program PRODCLIN. \emph{Behavior Research Methods}, \bold{39}, 384--389. 
-  
+MacKinnon, D. P., Fritz, M. S., Williams, J., and Lockwood, C. M. (2007). Distribution of the product confidence limits for the indirect effect: Program PRODCLIN. \emph{Behavior Research Methods}, \bold{39}, 384--389.
+
 Meeker, W. and Escobar, L. (1994). An algorithm to compute the CDF of the product of two normal random variables. \emph{Communications in Statistics: Simulation and Computation}, \bold{23}, 271--280.
 
 Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis confidence intervals. \emph{Behavior Research Methods}, \bold{43}, 692--700. doi:10.3758/s13428-011-0076-x
@@ -62,5 +61,3 @@ ci(mu=c(b1=1,b2=.7,b3=.6, b4= .45), Sigma=c(.05,0,0,0,.05,0,0, .03, 0, .03),
 quant=~b1*b2*b3*b4, type="all", plot=TRUE, plotCI=TRUE)
 }
 
-\note{ Two web applications of the RMediation program are available from \url{http://amp.gatech.edu/RMediation} and \url{http://amp.gatech.edu/MonteCarlo}. 
-}
