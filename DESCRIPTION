@@ -22,9 +22,7 @@ Imports:
     foreach,
     iterators,
     stringr,
-    grDevices,
-    Matrix,
-    matrixcalc
+    grDevices
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 Description: We provide functions to compute confidence

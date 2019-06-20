@@ -11,8 +11,6 @@ importFrom("stats", "coef", "density", "deriv", "dnorm", "integrate",
 importFrom("grDevices", "heat.colors")
 importFrom("stats", "filter", "na.omit","cov")
 importFrom('modelr','resample_bootstrap')
-importFrom('Matrix','nearPD')
-importFrom('matrixcalc','is.positive.definite')
 importFrom("methods", "is")
 import(OpenMx)
 import(doParallel)

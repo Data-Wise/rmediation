@@ -26,12 +26,11 @@ mbco_semi <- function(h0 = NULL,
   S <- cov(df)   #  sample covariance marix
   US <- chol(S) # Cholesky upper triangular matrix
   US_inv <- solve(US)   # Cholesky inverse
-  Sigma0 <-
-    OpenMx::mxGetExpected(h0, "covariance")   # Reproduced population Matrix under the null
-  if(!matrixcalc::is.positive.definite(Sigma0) ){
-    Sigma0 <- Matrix::nearPD(Sigma0)
-    warning(" Sigma0 is not positive defnite. A near positive defnite Sigma0 will be used instead.")
-  }
+  Sigma0 <- OpenMx::mxGetExpected(h0, "covariance")   # Reproduced population Matrix under the null
+  # if(!matrixcalc::is.positive.definite(Sigma0) ){
+  #   Sigma0 <- Matrix::nearPD(Sigma0)
+  #   warning(" Sigma0 is not positive defnite. A near positive defnite Sigma0 will be used instead.")
+  # }
 
   USigma0 <- tryCatch(chol(Sigma0), error=function(e) stop("Sigma0 is not positive defnite") )  # Cholesky of Sigma0
   df_trans <- as.matrix(df) %*% US_inv %*% USigma0
