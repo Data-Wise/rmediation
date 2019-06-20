@@ -1,5 +1,6 @@
 ---
 title: "MBCO Test Tutorial"
+author: "Davood Tofighi"
 output: rmarkdown::html_vignette
 date: "`r Sys.Date()`"
 vignette: >

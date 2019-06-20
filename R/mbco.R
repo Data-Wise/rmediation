@@ -12,7 +12,7 @@
 #' @param optim Choose optimizer availble in OpenMx. The default optimizer is "NPSOL". Other optimizer choices include "CSOLNP" and "SLSQP ". See \link{mxOption} for more dettails.
 #' @param precision Functional precision. The default value is set to 1e-9. See \link{mxOption} for more dettails.
 #' @return A list
-#'@export mbco
+#'@export
 #'@author Davood Tofighi \email{dtofighi@@gmail.com}
 
 #'@examples

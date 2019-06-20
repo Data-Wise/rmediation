@@ -76,7 +76,7 @@
 #'   package for mediation analysis confidence intervals. \emph{Behavior
 #'   Research Methods}, \bold{43}, 692--700. doi:10.3758/s13428-011-0076-x
 #' @seealso \code{\link{medci}} \code{\link{RMediation-package}}
-#' @export ci
+#' @export
 #' @importFrom lavaan lav_matrix_vech_reverse
 #' @importFrom MASS mvrnorm
 
