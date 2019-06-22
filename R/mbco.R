@@ -9,7 +9,7 @@
 #' @param alpha Signficance level with the default value of .05
 #' @param checkHess If 'No' (default), the Hessian matrix would not be calculated.
 #' @param checkSE if 'No' (default), the standard errors would not be calculated.
-#' @param optim Choose optimizer availble in OpenMx. The default optimizer is "NPSOL". Other optimizer choices include "CSOLNP" and "SLSQP ". See \link{mxOption} for more dettails.
+#' @param optim Choose optimizer availble in OpenMx. The default optimizer is "NPSOL". Other optimizer choices include "CSOLNP" and "SLSQP". See \link{mxOption} for more dettails.
 #' @param precision Functional precision. The default value is set to 1e-9. See \link{mxOption} for more dettails.
 #' @return A list
 #'@export
@@ -95,7 +95,12 @@ mbco <- function(h0 = NULL,
   if (!all(sapply(c(h0, h1), is, "MxModel")))
     stop("The 'h0' and 'h1' argument must be MxModel objects")
 
-  if(!imxHasNPSOL()) optim <- 'SLSQP' #if NPSOL is not available, use SLSQP
+  type <-
+    match.arg(type, c("asymp", "parametric", "semi")) #checks if one of the types of partially matches
+  optim <- match.arg(optim, c("NPSOL", "CSOLNP", "SLSQP"))
+
+  if (!OpenMx::imxHasNPSOL())
+    optim <- 'SLSQP' #if NPSOL is not available, use SLSQP
 
   res <-
     if (type == 'asymp')
