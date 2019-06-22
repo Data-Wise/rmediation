@@ -8,7 +8,6 @@ mbco_semi <- function(h0 = NULL,
                       checkSE = "No",
                       optim = "NPSOL",
                       precision = 1e-9) {
-  if(!imxHasNPSOL()) optim <- 'SLSQP' #if NPSOL is not available, use SLSQP
   lrt0 <- OpenMx::mxCompare(h1, h0)
   lrt0 <- lrt0$diffLL[2]
   OpenMx::mxOption(NULL, "Calculate Hessian", checkHess)

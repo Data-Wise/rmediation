@@ -95,6 +95,8 @@ mbco <- function(h0 = NULL,
   if (!all(sapply(c(h0, h1), is, "MxModel")))
     stop("The 'h0' and 'h1' argument must be MxModel objects")
 
+  if(!imxHasNPSOL()) optim <- 'SLSQP' #if NPSOL is not available, use SLSQP
+
   res <-
     if (type == 'asymp')
       #Asymptotic MBCO LRT
