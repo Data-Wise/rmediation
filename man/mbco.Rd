@@ -23,12 +23,12 @@ mbco(h0 = NULL, h1 = NULL, R = 10L, type = "asymp", alpha = 0.05,
 
 \item{checkSE}{if 'No' (default), the standard errors would not be calculated.}
 
-\item{optim}{Choose optimizer availble in OpenMx. The default optimizer is "NPSOL". Other optimizer choices include "CSOLNP" and "SLSQP ". See \link{mxOption} for more dettails.}
+\item{optim}{Choose optimizer availble in OpenMx. The default optimizer is "NPSOL". Other optimizer choices include "CSOLNP" and "SLSQP". See \link{mxOption} for more dettails.}
 
 \item{precision}{Functional precision. The default value is set to 1e-9. See \link{mxOption} for more dettails.}
 }
 \value{
-A list
+A \link{list} that contains \item{chisq}{chi-squared test statistic value (not for \code{type='semi'})} \item{\code{df}}{chi-squared df (not for \code{type='semi'})} \item{p}{chi-squared p-value}
 }
 \description{
 This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a function of indirect effects.
