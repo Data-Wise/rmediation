@@ -16,8 +16,8 @@ mbco_parametric <- function(h0 = NULL,
                            h0,
                            boot = TRUE,
                            replications = R)
-  mbco_chisq <- res$diffLL[2]    # Chi-square
-  mbco_pvalue <- res$p[2]      # p-value
+  mbco_chisq <- res$diffLL[2]  # Chi-square
+  mbco_pvalue <- res$p[2]   # p-value
   mbco_df <- res$df[2] - res$df[1] # df
   mbcoTest <-
     list(chisq = mbco_chisq,

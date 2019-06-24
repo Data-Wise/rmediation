@@ -28,7 +28,7 @@ mbco(h0 = NULL, h1 = NULL, R = 10L, type = "asymp", alpha = 0.05,
 \item{precision}{Functional precision. The default value is set to 1e-9. See \link{mxOption} for more dettails.}
 }
 \value{
-A \link{list} that contains \item{chisq}{chi-squared test statistic value (not for \code{type='semi'})} \item{\code{df}}{chi-squared df (not for \code{type='semi'})} \item{p}{chi-squared p-value}
+A \link{list} that contains \item{chisq}{asymptotic chi-squared test statistic value} \item{\code{df}}{chi-squared df} \item{p}{chi-squared p-value computed based on the method specified by the argument \code{type}}
 }
 \description{
 This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a function of indirect effects.

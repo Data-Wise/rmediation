@@ -8,8 +8,9 @@ mbco_semi <- function(h0 = NULL,
                       checkSE = "No",
                       optim = "NPSOL",
                       precision = 1e-9) {
-  lrt0 <- OpenMx::mxCompare(h1, h0)
-  lrt0 <- lrt0$diffLL[2]
+  res <- OpenMx::mxCompare(h1, h0)
+  mbco_chisq <- res$diffLL[2] # Asymptotic chi-square
+  mbco_df <- res$df[2] - res$df[1] # df
   OpenMx::mxOption(NULL, "Calculate Hessian", checkHess)
   OpenMx::mxOption(NULL, "Standard Errors", checkSE)
   OpenMx::mxOption(NULL, "Function precision", precision)
@@ -54,7 +55,9 @@ mbco_semi <- function(h0 = NULL,
   }
 
   null_samp <- sapply(seq.int(R), compare_boot, df = df_trans)
-  mbco_pvalue <- mean(null_samp > lrt0)
-  mbco_boot <- list(p = mbco_pvalue)
+  mbco_pvalue <- mean(null_samp > mbco_chisq)
+  mbco_boot <- list(chisq = mbco_chisq,
+                    df = mbco_df,
+                    p = mbco_pvalue)
   return(mbco_boot)
 }

@@ -11,7 +11,7 @@
 #' @param checkSE if 'No' (default), the standard errors would not be calculated.
 #' @param optim Choose optimizer availble in OpenMx. The default optimizer is "NPSOL". Other optimizer choices include "CSOLNP" and "SLSQP". See \link{mxOption} for more dettails.
 #' @param precision Functional precision. The default value is set to 1e-9. See \link{mxOption} for more dettails.
-#' @return A \link{list} that contains \item{chisq}{chi-squared test statistic value (not for \code{type='semi'})} \item{\code{df}}{chi-squared df (not for \code{type='semi'})} \item{p}{chi-squared p-value}
+#' @return A \link{list} that contains \item{chisq}{asymptotic chi-squared test statistic value} \item{\code{df}}{chi-squared df} \item{p}{chi-squared p-value computed based on the method specified by the argument \code{type}}
 #'@author Davood Tofighi \email{dtofighi@@gmail.com}
 #'@export
 
