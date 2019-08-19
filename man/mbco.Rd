@@ -23,7 +23,7 @@ mbco(h0 = NULL, h1 = NULL, R = 10L, type = "asymp", alpha = 0.05,
 
 \item{checkSE}{if 'No' (default), the standard errors would not be calculated.}
 
-\item{optim}{Choose optimizer availble in OpenMx. The default optimizer is "NPSOL". Other optimizer choices include "CSOLNP" and "SLSQP". See \link{mxOption} for more dettails.}
+\item{optim}{Choose optimizer availble in OpenMx. The default optimizer is "SLSQP". Other optimizer choices include "CSOLNP" and "NPSOL". See \link{mxOption} for more dettails.}
 
 \item{precision}{Functional precision. The default value is set to 1e-9. See \link{mxOption} for more dettails.}
 }

@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
   library(OpenMx)
   library(tidyverse)
   data("memory_exp")
-  mxOption(NULL, "Default optimizer", "NPSOL")
+  mxOption(NULL, "Default optimizer", "SLSQP")
 ```
 
 In this section we discuss in detail the steps required to analyze our empirical example and re-produce the results. You can run the code below to reproduce the results discussed the empirical example section. The R Markdown file that contains all the code as well as the data set for the empirical example is available from the following link ( <http://gofile.me/3JPpt/qemrtp7Sp> ). When using the data, please cite the relevant study by MacKinnon et al. (2018).

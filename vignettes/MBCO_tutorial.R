@@ -11,7 +11,7 @@ knitr::opts_chunk$set(
   library(OpenMx)
   library(tidyverse)
   data("memory_exp")
-  mxOption(NULL, "Default optimizer", "NPSOL")
+  mxOption(NULL, "Default optimizer", "SLSQP")
 
 ## ----single_med_alt------------------------------------------------------
 endVar <- c('imagery', 'recall') # name the endogenous variables
