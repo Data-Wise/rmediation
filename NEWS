@@ -1,6 +1,6 @@
-RMediation 1.1.5 (4/8/2016)
+RMediation 1.1.5 (6/7/2020)
 ==============
-*minor improvements
+*Fixed the issue with 'medic' function that printed '(1-alpha/2)% CI' instead of '(1-alpha)% CI'
 
 RMediation 1.1.4 (3/12/2016)
 =============
