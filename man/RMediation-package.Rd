@@ -5,8 +5,7 @@
 Mediation Analysis Confidence Intervals
 }
 \description{
-We provide functions to compute confidence
-intervals (CIs) for a well--defined nonlinear function of the model parameters (e.g., product of k coefficients) in single--level and multilevel structural equation models.
+RMediation package provides functions to compute confidence intervals (CIs) for and to test a well-defined nonlinear function of the model parameters (e.g., indirect effect) in single--level and multilevel structural equation models.
 }
 \details{
 \tabular{ll}{
@@ -20,10 +19,16 @@ LazyLoad: \tab yes\cr
 %~~ An overview of how to use the package, including the most important ~~
 %~~ functions ~~
 \code{\link{medci}} produces a CI for the product of two normal random variables using three methods: the distribution of the product of coefficients, Monte Carlo, and asymptotic normal theory with the multivariate-delta standard error (Asymptotic-Delta) method.
+
 \code{\link{pprodnormal}} produces percentiles for the distribution of product of two normal random variables.
+
 \code{\link{qprodnormal}} generates quantiles for the distribution of product of two normal random variables.
+
 \code{\link{ci}} produces a CI for a well--defined nonlinear function of the model parameters in single--level and multilevel structural equation models using the Monte Carlo and Asymptotic-Delta method.
+
+\code{\link{mbco}} computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a function of indirect effects.
 }
+
 \author{
 Davood Tofighi \email{dtofighi@gmail.com}
 
@@ -38,6 +43,11 @@ Meeker, W. and Escobar, L. (1994). An algorithm to compute the CDF of the produc
 Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis confidence intervals. \emph{Behavior Research Methods}, \bold{43}, 692--700. doi:10.3758/s13428-011-0076-x
 
 Tofighi, D., and MacKinnon, D. P. (2016). Monte Carlo confidence intervals for complex functions of indirect effects. \emph{Structural Equation Modeling: A Multidisciplinary Journal}, \bold{23}, 194-205. http://doi.org/10.1080/10705511.2015.1057284
+
+Tofighi, D., & Kelley, K. (2020). Indirect effects in sequential mediation models: Evaluating methods for hypothesis testing and confidence interval formation. \emph{Multivariate Behavioral Research}, \bold{55}, 188–210. \url{https://doi.org/10.1080/00273171.2019.1618545}
+
+Tofighi, D. (2020). Bootstrap Model-Based Constrained Optimization Tests of Indirect Effects. \emph{Frontiers in Psychology}, \bold{10}, 2989. \url{https://doi.org/10.3389/fpsyg.2019.02989}
+
 %~~ Literature or other references for background information ~~
 }
 %~~ Optionally other standard keywords, one per line, from file KEYWORDS in ~~
@@ -49,6 +59,7 @@ Tofighi, D., and MacKinnon, D. P. (2016). Monte Carlo confidence intervals for c
   \code{\link{pprodnormal}}
   \code{\link{medci}}
   \code{\link{ci}}
+  \code{\link{mbco}}
 %objects to See Also as \code{\link{help}}
 }
 \examples{

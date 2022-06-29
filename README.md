@@ -1,29 +1,5 @@
-# README #
+# RMediation #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+RMediation package provides functions to compute confidence intervals (CIs) for and to test a well-defined nonlinear function of the model parameters (e.g., indirect effect) in single--level and multilevel structural equation models.
 
-### What is this repository for? ###
-
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+Author: Davood Tofighi <dtofighi@gmail.com>
