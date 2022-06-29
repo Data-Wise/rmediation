@@ -2,7 +2,7 @@ Package: RMediation
 Type: Package
 Title: Mediation Analysis Confidence Intervals
 Version: 1.2.0
-Date: 7-28-2022
+Date: 2022-06-29
 Author: Davood Tofighi <dtofighi@gmail.com>
 Maintainer: Davood Tofighi <dtofighi@gmail.com>
 Depends:
@@ -27,6 +27,7 @@ Imports:
 LinkingTo: Rcpp,RcppArmadillo
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
+LazyData: true
 Description: We provide functions to compute confidence
     intervals (CIs) for a well-defined nonlinear function of the model
     parameters (e.g., product of k coefficients) in single--level and

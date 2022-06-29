@@ -70,11 +70,11 @@
 #' #An Example of Less Conservative Null Sampling Distribution
 #' ci(c(b1=.3,b2=.4,b3=.3), c(.01,0,0,.01,0,.02),
 #' quant=~b1*b2*b3, type="mc", plot=TRUE, plotCI=TRUE, H0=TRUE, mu0=c(b1=0,b2=.4,b3=0.1)  )
-#' @author Davood Tofighi \email{dtofighi@@unm.edu} and David P. MacKinnon
+#' @author Davood Tofighi \email{dtofighi@@gmail.com} and David P. MacKinnon
 #'   \email{davidpm@@asu.edu}
 #' @references  Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R
 #'   package for mediation analysis confidence intervals. \emph{Behavior
-#'   Research Methods}, \bold{43}, 692--700. doi:10.3758/s13428-011-0076-x
+#'   Research Methods}, \bold{43}, 692--700. \doi{doi:10.3758/s13428-011-0076-x}
 #' @seealso \code{\link{medci}} \code{\link{RMediation-package}}
 #' @export
 #' @importFrom lavaan lav_matrix_vech_reverse

@@ -107,13 +107,13 @@ quant=~b1*b2*b3, type="mc", plot=TRUE, plotCI=TRUE, H0=TRUE, mu0=c(b1=0,b2=.4,b3
 \references{
 Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R
 package for mediation analysis confidence intervals. \emph{Behavior
-Research Methods}, \bold{43}, 692--700. doi:10.3758/s13428-011-0076-x
+Research Methods}, \bold{43}, 692--700. \doi{doi:10.3758/s13428-011-0076-x}
 }
 \seealso{
 \code{\link{medci}} \code{\link{RMediation-package}}
 }
 \author{
-Davood Tofighi \email{dtofighi@unm.edu} and David P. MacKinnon
+Davood Tofighi \email{dtofighi@gmail.com} and David P. MacKinnon
 \email{davidpm@asu.edu}
 }
 \keyword{distribution}

@@ -40,13 +40,13 @@ MacKinnon, D. P., Fritz, M. S., Williams, J., and Lockwood, C. M. (2007). Distri
 
 Meeker, W. and Escobar, L. (1994). An algorithm to compute the CDF of the product of two normal random variables. \emph{Communications in Statistics: Simulation and Computation}, \bold{23}, 271--280.
 
-Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis confidence intervals. \emph{Behavior Research Methods}, \bold{43}, 692--700. doi:10.3758/s13428-011-0076-x
+Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis confidence intervals. \emph{Behavior Research Methods}, \bold{43}, 692--700. \doi{doi:10.3758/s13428-011-0076-x}
 
-Tofighi, D., and MacKinnon, D. P. (2016). Monte Carlo confidence intervals for complex functions of indirect effects. \emph{Structural Equation Modeling: A Multidisciplinary Journal}, \bold{23}, 194-205. http://doi.org/10.1080/10705511.2015.1057284
+Tofighi, D., and MacKinnon, D. P. (2016). Monte Carlo confidence intervals for complex functions of indirect effects. \emph{Structural Equation Modeling: A Multidisciplinary Journal}, \bold{23}, 194-205. \doi{http://doi.org/10.1080/10705511.2015.1057284}
 
-Tofighi, D., & Kelley, K. (2020). Indirect effects in sequential mediation models: Evaluating methods for hypothesis testing and confidence interval formation. \emph{Multivariate Behavioral Research}, \bold{55}, 188–210. \url{https://doi.org/10.1080/00273171.2019.1618545}
+Tofighi, D., & Kelley, K. (2020). Indirect effects in sequential mediation models: Evaluating methods for hypothesis testing and confidence interval formation. \emph{Multivariate Behavioral Research}, \bold{55}, 188–210. \doi{https://doi.org/10.1080/00273171.2019.1618545}
 
-Tofighi, D. (2020). Bootstrap Model-Based Constrained Optimization Tests of Indirect Effects. \emph{Frontiers in Psychology}, \bold{10}, 2989. \url{https://doi.org/10.3389/fpsyg.2019.02989}
+Tofighi, D. (2020). Bootstrap Model-Based Constrained Optimization Tests of Indirect Effects. \emph{Frontiers in Psychology}, \bold{10}, 2989. \doi{https://doi.org/10.3389/fpsyg.2019.02989}
 
 %~~ Literature or other references for background information ~~
 }
