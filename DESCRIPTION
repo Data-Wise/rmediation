@@ -2,7 +2,7 @@ Package: RMediation
 Type: Package
 Title: Mediation Analysis Confidence Intervals
 Version: 1.2.0
-Date: 2019-6-5
+Date: 7-28-2022
 Author: Davood Tofighi <dtofighi@gmail.com>
 Maintainer: Davood Tofighi <dtofighi@gmail.com>
 Depends:
@@ -36,4 +36,4 @@ Encoding: UTF-8
 URL: https://amplab.shinyapps.io/MEDCI/
     https://amplab.shinyapps.io/MEDMC/
 Roxygen: list(markdown = TRUE, roclets = c("rd","collate"))
-RoxygenNote: 6.1.1
+RoxygenNote: 7.2.0
