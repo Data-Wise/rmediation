@@ -1,6 +1,6 @@
 #' CI for a nonlinear function of coefficients estimates
 #'
-#' This function returns a (\eqn{1-\alpha})\% confidence interval (CI) for a
+#' This function returns a (\eqn{1-\alpha})% confidence interval (CI) for a
 #' well--defined nonlinear function of the coefficients in single--level and
 #' multilevel structural equation models. The \code{ci} function uses the Monte
 #' Carlo (\code{type="MC"}) and the asymptotic normal theory
@@ -44,7 +44,7 @@
 #' @param H0 False. If \code{TRUE}, it will estimate the sampling distribution
 #'   of \eqn{H_{0}:f(\bm b)=0}. See the arguments \code{mu0} and \code{Sigma0}.
 #' @param mu0 a \link{vector} of means (e.g., coefficient estimates) for the
-#'   normal random variables that satisft the null hypothesis \eqn{H_{0}:f(\bm
+#'   normal random variables that satisfy the null hypothesis \eqn{H_{0}:f(\bm
 #'   b)=0}. If it is not provided, smallest z value of \code{mu} is zet to zero.
 #' @param Sigma0 either a covariance matrix or a \link{vector} that stacks all
 #'   the columns of the lower triangle variance--covariance matrix one
@@ -52,7 +52,7 @@
 #'   instead.
 #' @param ... additional arguments.
 #' @return When \code{type} is \code{"MC"} or \code{"asymp"}, \code{ci} returns
-#'   a \link{list} that contains: \item{(\eqn{1-\alpha})\% CI}{a vector of lower
+#'   a \link{list} that contains: \item{(\eqn{1-\alpha})% CI}{a vector of lower
 #'   and upper confidence limits,} \item{Estimate}{a point estimate of the
 #'   quantity of interest,} \item{SE}{standard error of the quantity of
 #'   interest,} \item{MC Error}{When \code{type="MC"}, error of the Monte Carlo

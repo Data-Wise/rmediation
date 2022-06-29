@@ -4,9 +4,20 @@
 \alias{ci}
 \title{CI for a nonlinear function of coefficients estimates}
 \usage{
-ci(mu, Sigma, quant, alpha = 0.05, type = "MC", plot = FALSE,
-  plotCI = FALSE, n.mc = 1e+06, H0 = FALSE, mu0 = NULL,
-  Sigma0 = NULL, ...)
+ci(
+  mu,
+  Sigma,
+  quant,
+  alpha = 0.05,
+  type = "MC",
+  plot = FALSE,
+  plotCI = FALSE,
+  n.mc = 1e+06,
+  H0 = FALSE,
+  mu0 = NULL,
+  Sigma0 = NULL,
+  ...
+)
 }
 \arguments{
 \item{mu}{(1) a \link{vector} of means (e.g., coefficient estimates) for the
@@ -48,7 +59,7 @@ specify \code{plot="TRUE"}. The default value is \code{FALSE}.}
 of \eqn{H_{0}:f(\bm b)=0}. See the arguments \code{mu0} and \code{Sigma0}.}
 
 \item{mu0}{a \link{vector} of means (e.g., coefficient estimates) for the
-normal random variables that satisft the null hypothesis \eqn{H_{0}:f(\bm
+normal random variables that satisfy the null hypothesis \eqn{H_{0}:f(\bm
   b)=0}. If it is not provided, smallest z value of \code{mu} is zet to zero.}
 
 \item{Sigma0}{either a covariance matrix or a \link{vector} that stacks all

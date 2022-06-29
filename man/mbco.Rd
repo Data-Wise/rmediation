@@ -4,9 +4,17 @@
 \alias{mbco}
 \title{Model-based Constrained Optimization (MBCO) Chi-squared Test}
 \usage{
-mbco(h0 = NULL, h1 = NULL, R = 10L, type = "asymp", alpha = 0.05,
-  checkHess = "No", checkSE = "No", optim = "NPSOL",
-  precision = 1e-09)
+mbco(
+  h0 = NULL,
+  h1 = NULL,
+  R = 10L,
+  type = "asymp",
+  alpha = 0.05,
+  checkHess = "No",
+  checkSE = "No",
+  optim = "SLSQP",
+  precision = 1e-09
+)
 }
 \arguments{
 \item{h0}{An \code{OpenMx} model estimated under a null hypothesis, which is a more constrained model}
@@ -17,15 +25,15 @@ mbco(h0 = NULL, h1 = NULL, R = 10L, type = "asymp", alpha = 0.05,
 
 \item{type}{If 'asymp' (default), the asymptotic MBCO chi-squares test comparing fit of h0 and h1. If 'parametric', the parametric bootstrap MBCO chi-squared test is computed. If 'semi', the semi-parametric MBCO chi-squared is computed.}
 
-\item{alpha}{Signficance level with the default value of .05}
+\item{alpha}{Significance level with the default value of .05}
 
 \item{checkHess}{If 'No' (default), the Hessian matrix would not be calculated.}
 
 \item{checkSE}{if 'No' (default), the standard errors would not be calculated.}
 
-\item{optim}{Choose optimizer availble in OpenMx. The default optimizer is "SLSQP". Other optimizer choices include "CSOLNP" and "NPSOL". See \link{mxOption} for more dettails.}
+\item{optim}{Choose optimizer available in OpenMx. The default optimizer is "SLSQP". Other optimizer choices are available. See \link{mxOption} for more details.}
 
-\item{precision}{Functional precision. The default value is set to 1e-9. See \link{mxOption} for more dettails.}
+\item{precision}{Functional precision. The default value is set to 1e-9. See \link{mxOption} for more details.}
 }
 \value{
 A \link{list} that contains \item{chisq}{asymptotic chi-squared test statistic value} \item{\code{df}}{chi-squared df} \item{p}{chi-squared p-value computed based on the method specified by the argument \code{type}}
@@ -35,6 +43,7 @@ This function computes asymptotic MBCO chi-squared test for a smooth function of
 }
 \examples{
 data(memory_exp)
+memory_exp$x <- as.numeric(memory_exp$x)-1 # manually creating dummy codes because OpenMx gives an error for factor x
 endVar <- c('x', 'repetition', 'imagery', 'recall')
 manifests <- c('x', 'repetition', 'imagery', 'recall')
 full_model <- mxModel(

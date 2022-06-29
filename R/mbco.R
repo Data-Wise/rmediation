@@ -6,17 +6,18 @@
 #' @param h1 An \code{OpenMx} model estimated under an alternative hypothesis, which is a less constrained model. This is usually a model hypothesized by a researcher.
 #' @param R The number of bootstrap draws.
 #' @param type If 'asymp' (default), the asymptotic MBCO chi-squares test comparing fit of h0 and h1. If 'parametric', the parametric bootstrap MBCO chi-squared test is computed. If 'semi', the semi-parametric MBCO chi-squared is computed.
-#' @param alpha Signficance level with the default value of .05
+#' @param alpha Significance level with the default value of .05
 #' @param checkHess If 'No' (default), the Hessian matrix would not be calculated.
 #' @param checkSE if 'No' (default), the standard errors would not be calculated.
-#' @param optim Choose optimizer availble in OpenMx. The default optimizer is "NPSOL". Other optimizer choices include "CSOLNP" and "SLSQP". See \link{mxOption} for more dettails.
-#' @param precision Functional precision. The default value is set to 1e-9. See \link{mxOption} for more dettails.
+#' @param optim Choose optimizer available in OpenMx. The default optimizer is "SLSQP". Other optimizer choices are available. See \link{mxOption} for more details.
+#' @param precision Functional precision. The default value is set to 1e-9. See \link{mxOption} for more details.
 #' @return A \link{list} that contains \item{chisq}{asymptotic chi-squared test statistic value} \item{\code{df}}{chi-squared df} \item{p}{chi-squared p-value computed based on the method specified by the argument \code{type}}
 #'@author Davood Tofighi \email{dtofighi@@gmail.com}
 #'@export
 
 #'@examples
 #' data(memory_exp)
+#' memory_exp$x <- as.numeric(memory_exp$x)-1 # manually creating dummy codes because OpenMx gives an error for factor x
 #' endVar <- c('x', 'repetition', 'imagery', 'recall')
 #' manifests <- c('x', 'repetition', 'imagery', 'recall')
 #'full_model <- mxModel(
@@ -84,7 +85,7 @@ mbco <- function(h0 = NULL,
                  alpha = .05,
                  checkHess = "No",
                  checkSE = "No",
-                 optim = "NPSOL",
+                 optim = "SLSQP",
                  precision = 1e-9) {
   if (missing(h0))
     stop("'h0' argument be a MxModel object")
