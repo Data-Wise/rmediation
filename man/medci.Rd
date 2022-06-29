@@ -4,8 +4,19 @@
 \alias{medci}
 \title{Confidence Interval for the Mediated Effect}
 \usage{
-medci(mu.x, mu.y, se.x, se.y, rho = 0, alpha = 0.05, type = "dop",
-  plot = FALSE, plotCI = FALSE, n.mc = 1e+05, ...)
+medci(
+  mu.x,
+  mu.y,
+  se.x,
+  se.y,
+  rho = 0,
+  alpha = 0.05,
+  type = "dop",
+  plot = FALSE,
+  plotCI = FALSE,
+  n.mc = 1e+05,
+  ...
+)
 }
 \arguments{
 \item{mu.x}{mean of \eqn{x}}
@@ -68,7 +79,7 @@ compute the confidence interval (Tofighi & MacKinnon, 2011).
 \code{type="asymp"} produces the asymptotic normal confidence interval.
 Note that except for the Monte Carlo method, the standard error for the
 indirect effect is based on the analytical results by Craig (1936):
-\deqn{\sqrt(se.y^2 \mu.x^2+se.x^2 \mu.y^2+2 \mu.x \mu.y \rho se.x se.y+ 
+\deqn{\sqrt(se.y^2 \mu.x^2+se.x^2 \mu.y^2+2 \mu.x \mu.y \rho se.x se.y+
   se.x^2 se.y^2+se.x^2 se.y^2 \rho^2) }. In addition, the estimate of
 indirect effect is \eqn{\mu.x\mu.y +\sigma.xy }; \code{type="all"} prints
 confidence intervals using all four options.
@@ -80,10 +91,10 @@ of the RMediation program is available from
 \url{http://amp.gatech.edu/RMediation}.
 }
 \examples{
- res <- medci(mu.x=.2, mu.y=.4, se.x=1, se.y=1, rho=0, alpha=.05, 
- type="prodclin", plot=TRUE, plotCI=TRUE) 
+ res <- medci(mu.x=.2, mu.y=.4, se.x=1, se.y=1, rho=0, alpha=.05,
+ type="prodclin", plot=TRUE, plotCI=TRUE)
 
- 
+
 }
 \references{
 Craig, C. C. (1936). On the frequency function of \eqn{xy}.
