@@ -4,8 +4,17 @@
 \alias{qprodnormal}
 \title{Quantile for the Distribution of Product of Two Normal Variables}
 \usage{
-qprodnormal(p, mu.x, mu.y, se.x, se.y, rho = 0, lower.tail = TRUE,
-  type = "dop", n.mc = 1e+05)
+qprodnormal(
+  p,
+  mu.x,
+  mu.y,
+  se.x,
+  se.y,
+  rho = 0,
+  lower.tail = TRUE,
+  type = "dop",
+  n.mc = 1e+05
+)
 }
 \arguments{
 \item{p}{probability}
