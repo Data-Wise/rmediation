@@ -105,6 +105,7 @@ mbco(null_model1,full_model)
 }
 \references{
 Tofighi, D., & Kelley, K. (2020). Indirect effects in sequential mediation models: Evaluating methods for hypothesis testing and confidence interval formation. \emph{Multivariate Behavioral Research}, \bold{55}, 188–210. \doi{https://doi.org/10.1080/00273171.2019.1618545}
+
 Tofighi, D. (2020). Bootstrap Model-Based Constrained Optimization Tests of Indirect Effects. \emph{Frontiers in Psychology}, \bold{10}, 2989. \doi{https://doi.org/10.3389/fpsyg.2019.02989}
 }
 \author{

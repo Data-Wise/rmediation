@@ -85,7 +85,7 @@ ci <- function(mu, Sigma, quant, alpha=0.05, type="MC", plot=FALSE, plotCI=FALSE
   if(missing(quant) | is.null(quant)) stop(paste("argument",sQuote("quant"), "must be specified"))
   if(!type%in%c("MC","mc","asymp","Asymp","all")) stop(paste("Please enter a ccorrect", sQuote("type"), "argument"))
 
-  if(class(mu) != "lavaan"){
+  if(!isa(mu,"lavaan")){
   if(is.null(Sigma)| missing(Sigma) ) stop(paste("argument",sQuote("Sigma"), "cannot be a NULL value"))
   if(!is.matrix(Sigma)){
   if(length(mu)!= (sqrt(1 + 8 * length(Sigma)) - 1)/2) stop(paste("Please check the length of", sQuote("Sigma"),"and",sQuote("mu"),". If the length(dimension) of the", sQuote("mu"),"vector (",length(mu),") is correct, the stacked lower triangle matrix", sQuote("Sigma"), "must have ",((2*length(mu)+1)^2-1)/8, "elements, instead of", length(Sigma)) )
@@ -111,7 +111,7 @@ ci <- function(mu, Sigma, quant, alpha=0.05, type="MC", plot=FALSE, plotCI=FALSE
     n.mc <- 1e6
     warning(paste("n.mc is too large. It is reset to", n.mc))
   }
-  # This line sets the plot margines and other plot parameters
+  # This line sets the plot margins and other plot parameters
   if(plot){
     op <- par(mar = c(7, 4, 7, 4) + 0.1, xpd=TRUE, ask=FALSE)
   }

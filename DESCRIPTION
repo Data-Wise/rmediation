@@ -23,7 +23,6 @@ Imports:
     stringr,
     grDevices
 Suggests: knitr, rmarkdown
-VignetteBuilder: knitr
 LazyData: true
 Description: We provide functions to compute confidence
     intervals (CIs) for a well-defined nonlinear function of the model

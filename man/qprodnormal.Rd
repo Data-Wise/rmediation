@@ -65,10 +65,10 @@ Monte Carlo error.
 }
 \examples{
 ##lower tail
-qprodnormal(p=.1, mu.x=.5, mu.y=.3, se.x=1, se.y=1, rho=0, 
+qprodnormal(p=.1, mu.x=.5, mu.y=.3, se.x=1, se.y=1, rho=0,
 lower.tail = TRUE, type="all")
 ##upper tail
-qprodnormal(p=.1, mu.x=.5, mu.y=.3, se.x=1, se.y=1, rho=0, 
+qprodnormal(p=.1, mu.x=.5, mu.y=.3, se.x=1, se.y=1, rho=0,
 lower.tail = FALSE, type="all")
 }
 \references{
@@ -80,6 +80,5 @@ Research Methods}, \bold{43}, 692--700. doi:10.3758/s13428-011-0076-x
 \code{\link{medci}} \code{\link{RMediation-package}}
 }
 \author{
-Davood Tofighi \email{dtofighi@gatech.edu} and David P. MacKinnon
-\email{davidpm@asu.edu}
+Davood Tofighi \email{dtofighi@gmail.com}
 }
