@@ -94,6 +94,9 @@ the sampling distributions corresponding to each method will be produced;
 when \code{plotCI=TRUE}, then the overlaid plots of the CIs for both methods
 will be displayed as well.
 }
+\note{
+A shiny web application for  Monte Carlo method of this function is available at \url{https://amplab.shinyapps.io/MEDMC/}
+}
 \examples{
 ci(mu=c(b1=1,b2=.7,b3=.6, b4= .45), Sigma=c(.05,0,0,0,.05,0,0,.03,0,.03),
 quant=~b1*b2*b3*b4, type="all", plot=TRUE, plotCI=TRUE)
@@ -113,8 +116,7 @@ Research Methods}, \bold{43}, 692--700. \doi{doi:10.3758/s13428-011-0076-x}
 \code{\link{medci}} \code{\link{RMediation-package}}
 }
 \author{
-Davood Tofighi \email{dtofighi@gmail.com} and David P. MacKinnon
-\email{davidpm@asu.edu}
+Davood Tofighi \email{dtofighi@gmail.com}
 }
 \keyword{distribution}
 \keyword{regression}

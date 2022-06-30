@@ -61,14 +61,13 @@
 #'
 #'   Meeker, W. and Escobar, L. (1994). An algorithm to compute the CDF of the
 #'   product of two normal random variables. \emph{Communications in Statistics:
-#'   Simulation and Computation}, \bold{23}, 271--280. Tofighi, D. and
+#'   Simulation and Computation}, \bold{23}, 271--280.
 #'
-#'   MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis
+#'   Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis
 #'   confidence intervals. \emph{Behavior Research Methods}, \bold{43},
-#'   692--700. doi:10.3758/s13428-011-0076-x
+#'   692--700. \doi{doi:10.3758/s13428-011-0076-x}
 #'
-#' @author Davood Tofighi \email{dtofighi@unm.edu} and David P. MacKinnon
-#'   \email{davidpm@asu.edu}
+#' @author Davood Tofighi \email{dtofighi@@gmail.com}
 #'
 #' @examples
 #'  res <- medci(mu.x=.2, mu.y=.4, se.x=1, se.y=1, rho=0, alpha=.05,
@@ -80,10 +79,8 @@
 #'
 #' @keywords mediation
 #' @export
-#' @note The PRODCLIN programs may be downloaded from
-#'   \url{http://www.public.asu.edu/~davidpm/ripl/Prodclin/}. A web application
-#'   of the RMediation program is available from
-#'   \url{http://amp.gatech.edu/RMediation}.
+#' @note A web application of the RMediation program is available from
+#'   \url{https://amplab.shinyapps.io/MEDCI/}.
 
 medci <-function(mu.x,mu.y,se.x,se.y,rho=0,alpha=.05,type="dop", plot=FALSE,plotCI=FALSE, n.mc=1e5,...)
 {

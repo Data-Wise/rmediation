@@ -17,14 +17,11 @@ Depends:
     MASS (>= 7.3),
     modelr (>= 0.1.4)
 Imports:
-    Rcpp,
-    RcppArmadillo,
     doParallel,
     foreach,
     iterators,
     stringr,
     grDevices
-LinkingTo: Rcpp,RcppArmadillo
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 LazyData: true

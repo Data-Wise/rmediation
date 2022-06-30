@@ -28,7 +28,7 @@ scalar probability value.
 This function returns a probability corresponding to the quantile \code{q}.
 }
 \examples{
-pMC(.2,mu=c(b1=1,b2=.7,b3=.6, b4= .45), Sigma=c(.05,0,0,0,.05,0,0,.03,0,.03), 
+pMC(.2,mu=c(b1=1,b2=.7,b3=.6, b4= .45), Sigma=c(.05,0,0,0,.05,0,0,.03,0,.03),
 quant=~b1*b2*b3*b4)
 }
 \references{
@@ -38,7 +38,7 @@ Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R package for mediation 
 \code{\link{medci}} \code{\link{RMediation-package}}
 }
 \author{
-Davood Tofighi \email{dtofighi@psych.gatech.edu} and David P. MacKinnon \email{davidpm@asu.edu}
+Davood Tofighi \email{dtofighi@gmail.com}
 }
 \keyword{distribution}
 \keyword{regression}

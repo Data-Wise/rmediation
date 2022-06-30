@@ -1,8 +1,8 @@
 #' Percentile for the Distribution of Product of Two Normal Variables
-#' 
-#' Generates percentiles (100 based quantiles) for the distribution of product 
+#'
+#' Generates percentiles (100 based quantiles) for the distribution of product
 #' of two normal random variables and the mediated effect
-#' 
+#'
 #' @param q quantile or value of the product
 #' @param mu.x  mean of \eqn{x}
 #' @param mu.y mean of \eqn{y}
@@ -10,31 +10,30 @@
 #' @param se.y  standard error (deviation) of \eqn{y}
 #' @param rho correlation between \eqn{x} and \eqn{y}, where -1 <\code{rho} < 1.
 #'   The default value is 0.
-#' @param lower.tail logical; if \code{TRUE} (default), the probability is 
+#' @param lower.tail logical; if \code{TRUE} (default), the probability is
 #'   \eqn{P[X*Y < q]}; otherwise, \eqn{P[X*Y > q]}
-#' @param type method used to compute confidence interval. It takes on the 
+#' @param type method used to compute confidence interval. It takes on the
 #'   values \code{"dop"} (default), \code{"MC"}, \code{"asymp"} or \code{"all"}
 #' @param n.mc when \code{type="MC"}, \code{n.mc} determines the sample size for
 #'   the Monte Carlo method. The default sample size is 1E5.
-#' @details    This function returns the percentile (probability) and the 
-#'   associated error for the distribution of product of mediated effect (two 
-#'   normal random variables). To obtain a percentile using a specific method, 
-#'   the argument \code{type} should be specified. The default method is 
-#'   \code{type="dop"}, which is based on the method described by Meeker and 
-#'   Escobar (1994) to evaluate the CDF of the distribution of product of two 
-#'   normal random variables. \code{type="MC"} uses the Monte Carlo approach 
+#' @details    This function returns the percentile (probability) and the
+#'   associated error for the distribution of product of mediated effect (two
+#'   normal random variables). To obtain a percentile using a specific method,
+#'   the argument \code{type} should be specified. The default method is
+#'   \code{type="dop"}, which is based on the method described by Meeker and
+#'   Escobar (1994) to evaluate the CDF of the distribution of product of two
+#'   normal random variables. \code{type="MC"} uses the Monte Carlo approach
 #'   (Tofighi & MacKinnon, 2011). \code{type="all"} prints percentiles using all
-#'   three options. For the method \code{type="dop"}, the error is the modulus 
-#'   of absolute error for the numerical integration (for more information see 
-#'   Meeker and Escobar, 1994). For \code{type="MC"}, the error refers to the 
+#'   three options. For the method \code{type="dop"}, the error is the modulus
+#'   of absolute error for the numerical integration (for more information see
+#'   Meeker and Escobar, 1994). For \code{type="MC"}, the error refers to the
 #'   Monte Carlo error.
 #' @return   An object of the type \code{\link{list}} that contains the
 #'   following values: \item{p}{probability (percentile) corresponding to
 #'   quantile \code{q}} \item{error}{estimate of the absolute error}
-#' @author Davood Tofighi \email{dtofighi@@gatech.edu} and David P. MacKinnon 
-#'   \email{davidpm@@asu.edu}
-#' @references  Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R 
-#'   package for mediation analysis confidence intervals. \emph{Behavior 
+#' @author Davood Tofighi \email{dtofighi@@gmail.com}
+#' @references  Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R
+#'   package for mediation analysis confidence intervals. \emph{Behavior
 #'   Research Methods}, \bold{43}, 692--700. doi:10.3758/s13428-011-0076-x
 #' @seealso \code{\link{medci}} \code{\link{RMediation-package}}
 #' @examples

@@ -85,10 +85,8 @@ indirect effect is \eqn{\mu.x\mu.y +\sigma.xy }; \code{type="all"} prints
 confidence intervals using all four options.
 }
 \note{
-The PRODCLIN programs may be downloaded from
-\url{http://www.public.asu.edu/~davidpm/ripl/Prodclin/}. A web application
-of the RMediation program is available from
-\url{http://amp.gatech.edu/RMediation}.
+A web application of the RMediation program is available from
+\url{https://amplab.shinyapps.io/MEDCI/}.
 }
 \examples{
  res <- medci(mu.x=.2, mu.y=.4, se.x=1, se.y=1, rho=0, alpha=.05,
@@ -106,18 +104,17 @@ Program PRODCLIN. \emph{Behavior Research Methods}, \bold{39}, 384--389.
 
 Meeker, W. and Escobar, L. (1994). An algorithm to compute the CDF of the
 product of two normal random variables. \emph{Communications in Statistics:
-Simulation and Computation}, \bold{23}, 271--280. Tofighi, D. and
+Simulation and Computation}, \bold{23}, 271--280.
 
-MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis
+Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis
 confidence intervals. \emph{Behavior Research Methods}, \bold{43},
-692--700. doi:10.3758/s13428-011-0076-x
+692--700. \doi{doi:10.3758/s13428-011-0076-x}
 }
 \seealso{
 \code{\link{qprodnormal}} \code{\link{pprodnormal}} \code{\link{ci}}
 \code{\link{RMediation-package}}
 }
 \author{
-Davood Tofighi \email{dtofighi@unm.edu} and David P. MacKinnon
-\email{davidpm@asu.edu}
+Davood Tofighi \email{dtofighi@gmail.com}
 }
 \keyword{mediation}

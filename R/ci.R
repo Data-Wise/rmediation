@@ -70,8 +70,7 @@
 #' #An Example of Less Conservative Null Sampling Distribution
 #' ci(c(b1=.3,b2=.4,b3=.3), c(.01,0,0,.01,0,.02),
 #' quant=~b1*b2*b3, type="mc", plot=TRUE, plotCI=TRUE, H0=TRUE, mu0=c(b1=0,b2=.4,b3=0.1)  )
-#' @author Davood Tofighi \email{dtofighi@@gmail.com} and David P. MacKinnon
-#'   \email{davidpm@@asu.edu}
+#' @author Davood Tofighi \email{dtofighi@@gmail.com}
 #' @references  Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R
 #'   package for mediation analysis confidence intervals. \emph{Behavior
 #'   Research Methods}, \bold{43}, 692--700. \doi{doi:10.3758/s13428-011-0076-x}
@@ -79,6 +78,7 @@
 #' @export
 #' @importFrom lavaan lav_matrix_vech_reverse
 #' @importFrom MASS mvrnorm
+#' @note A shiny web application for  Monte Carlo method of this function is available at \url{https://amplab.shinyapps.io/MEDMC/}
 
 ci <- function(mu, Sigma, quant, alpha=0.05, type="MC", plot=FALSE, plotCI=FALSE, n.mc = 1e+06, H0=FALSE, mu0=NULL, Sigma0=NULL, ...){
   if(missing(mu) | is.null(mu) ) stop(paste("argument",sQuote("mu"), "must be specified"))

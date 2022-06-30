@@ -74,6 +74,5 @@ Research Methods}, \bold{43}, 692--700. doi:10.3758/s13428-011-0076-x
 \code{\link{medci}} \code{\link{RMediation-package}}
 }
 \author{
-Davood Tofighi \email{dtofighi@gatech.edu} and David P. MacKinnon
-\email{davidpm@asu.edu}
+Davood Tofighi \email{dtofighi@gmail.com}
 }
