@@ -8,4 +8,8 @@
 \description{
 We provide functions to compute confidence intervals for a well-defined nonlinear function of the model parameters (e.g., product of k coefficients) in single--level and multilevel structural equation models.
 }
+\author{
+\strong{Maintainer}: Davood Tofighi \email{dtofighi@gmail.com} (\href{https://orcid.org/0000-0001-8523-7776}{ORCID})
+
+}
 \keyword{internal}
