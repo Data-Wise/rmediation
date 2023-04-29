@@ -1,7 +1,7 @@
 Package: RMediation
 Type: Package
 Title: Mediation Analysis Confidence Intervals
-Version: 1.2.0
+Version: 1.2.1
 Date: 2022-06-29
 Author: Davood Tofighi <dtofighi@gmail.com>
 Maintainer: Davood Tofighi <dtofighi@gmail.com>
@@ -25,12 +25,10 @@ Imports:
 Suggests: knitr, rmarkdown
 LazyData: true
 Description: We provide functions to compute confidence
-    intervals (CIs) for a well-defined nonlinear function of the model
+    intervals for a well-defined nonlinear function of the model
     parameters (e.g., product of k coefficients) in single--level and
     multilevel structural equation models.
 License: GPL-2
 Encoding: UTF-8
-URL: https://amplab.shinyapps.io/MEDCI/
-    https://amplab.shinyapps.io/MEDMC/
 Roxygen: list(markdown = TRUE, roclets = c("rd","collate"))
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
