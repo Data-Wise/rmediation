@@ -1,3 +1,8 @@
+RMediation 1.2.2 (4/28/2023)
+==============
+-Fixed an issue where the type="all" in medci function would generate an error "object 'MeekerCI' not found".
+-changed the dependency version for grDevices to >= 3.5 in the description file.
+
 RMediation 1.2.1 (4/28/2023)
 ==============
 * Fixed issues to meet CRAN submission requirements.

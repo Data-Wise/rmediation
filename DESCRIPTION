@@ -1,7 +1,7 @@
 Package: RMediation
 Type: Package
 Title: Mediation Analysis Confidence Intervals
-Version: 1.2.1
+Version: 1.2.2
 Date: 2023-04-28
 Authors@R: person("Davood", "Tofighi",
         email = "dtofighi@gmail.com",
@@ -24,7 +24,7 @@ Imports:
     foreach (>= 1.5.0),
     iterators (>= 1.0.0),
     stringr(>= 1.4.0),
-    grDevices (>= 4.3)
+    grDevices (>= 3.5)
 Suggests: knitr, rmarkdown
 LazyData: true
 Description: We provide functions to compute confidence intervals for a well-defined nonlinear function of the model parameters (e.g., product of k coefficients) in single--level and
