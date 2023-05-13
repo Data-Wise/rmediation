@@ -140,7 +140,7 @@ medci <-function(mu.x,mu.y,se.x,se.y,rho=0,alpha=.05,type="dop", plot=FALSE,plot
         asympCI <- medciAsymp(mu.x, mu.y, se.x, se.y, rho, alpha) # added 3/28/14-DT
         MeekerCI=medciMeeker(mu.x, mu.y, se.x, se.y, rho, alpha)
         res <- list( MeekerCI, MCCI, asympCI)
-        names(res) <- c( "Monte Carlo", "Asymptotic Normal")
+        names(res) <- c("dop", "Monte Carlo", "Asymptotic Normal")
         return(res)
       }
     else if (type=="DOP" || type=="dop" || type=="prodclin")

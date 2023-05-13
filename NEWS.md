@@ -1,6 +1,10 @@
+RMediation 1.2.3 (5/12/2023)
+==============
+* Fixed an issue where the type="all" in the medci function would generate incorrect labels for CIs.
+
 RMediation 1.2.2 (5/11/2023)
 ==============
-* Fixed an issue where the type="all" in medci function would generate an error "object 'MeekerCI' not found".
+* Fixed an issue where the type="all" in the medci function would generate an error "object 'MeekerCI' not found".
 
 * changed the dependency version for grDevices to >= 3.5 in the description file.
 
