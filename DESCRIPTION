@@ -1,8 +1,8 @@
 Package: RMediation
 Type: Package
 Title: Mediation Analysis Confidence Intervals
-Version: 1.2.2
-Date: 2023-04-28
+Version: 1.2.3
+Date: 2023-05-12
 Authors@R: person("Davood", "Tofighi",
         email = "dtofighi@gmail.com",
         role = c("aut", "cre"),
