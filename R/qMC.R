@@ -10,7 +10,9 @@
 #' @param ... additional arguments.
 #' @return scalar quantile value.
 #' @keywords regression distribution
-#' @export qMC
+#' @importFrom lavaan lav_matrix_vech_reverse
+#' @importFrom MASS mvrnorm
+#' @export
 #' @examples
 #' qMC(.05,mu=c(b1=1,b2=.7,b3=.6, b4= .45), Sigma=c(.05,0,0,0,.05,0,0,.03,0,.03),
 #' quant=~b1*b2*b3*b4)
@@ -31,7 +33,7 @@ qMC <- function(p, mu, Sigma, quant, n.mc = 1e+06,...){
   if(is.null(quant)) stop(paste("argument",sQuote("NULL"), "cannot be a NULL value"))
    if(!is.matrix(Sigma)){
     if(length(mu)!= (sqrt(1 + 8 * length(Sigma)) - 1)/2) stop(paste("Please check the length of", sQuote("Sigma"),"and",sQuote("mu"),". If the length(dimension) of the", sQuote("mu"),"vector (",length(mu),") is correct, the stacked lower triangle matrix", sQuote("Sigma"), "must have ",((2*length(mu)+1)^2-1)/8, "elements, instead of", length(Sigma)) )
-    Sigma <- lav_matrix_vech_reverse(Sigma) #converts to a symmetric matrix
+    Sigma <- lavaan::lav_matrix_vech_reverse(Sigma) #converts to a symmetric matrix
   }
   if(is.null(names(mu)) ) names(mu) <- paste("b",1:length(mu), sep="") # if mu names is NULL
 
@@ -44,7 +46,7 @@ qMC <- function(p, mu, Sigma, quant, n.mc = 1e+06,...){
   if(p<=0 |p>=1) stop('Enter a correct p value, 0<p<1')
 
   quant <- parse(text=sub("~","",quant))
-  df <- data.frame(mvrnorm(n.mc,mu,Sigma))
+  df <- data.frame(MASS::mvrnorm(n.mc,mu,Sigma))
   colnames(df) <-names(mu)
   quant.vec <- eval(quant,df)
   return(quantile(quant.vec,p) )

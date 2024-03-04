@@ -13,12 +13,15 @@
 #' @param precision Functional precision. The default value is set to 1e-9. See \link{mxOption} for more details.
 #' @return A \link{list} that contains \item{chisq}{asymptotic chi-squared test statistic value} \item{\code{df}}{chi-squared df} \item{p}{chi-squared p-value computed based on the method specified by the argument \code{type}}
 #'@author Davood Tofighi \email{dtofighi@@gmail.com}
+#'@import OpenMx
+#'@importFrom modelr resample_bootstrap
 #'@export
 #' @references  Tofighi, D., & Kelley, K. (2020). Indirect effects in sequential mediation models: Evaluating methods for hypothesis testing and confidence interval formation. \emph{Multivariate Behavioral Research}, \bold{55}, 188–210. \doi{https://doi.org/10.1080/00273171.2019.1618545}
 #'
 #'  Tofighi, D. (2020). Bootstrap Model-Based Constrained Optimization Tests of Indirect Effects. \emph{Frontiers in Psychology}, \bold{10}, 2989. \doi{https://doi.org/10.3389/fpsyg.2019.02989}
 
 #'@examples
+#' library(OpenMx)
 #' data(memory_exp)
 #' memory_exp$x <- as.numeric(memory_exp$x)-1 # manually creating dummy codes
 #' endVar <- c('x', 'repetition', 'imagery', 'recall')

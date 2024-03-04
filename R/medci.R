@@ -79,6 +79,11 @@
 #'   \code{\link{RMediation-package}}
 #'
 #' @keywords mediation
+#' @importFrom stats rnorm qnorm pnorm dnorm cor density coef cov deriv integrate quantile sd var uniroot vcov
+#' @importFrom graphics par arrows axis curve legend lines mtext plot points text title abline segments
+#' @importFrom grDevices dev.new
+#' @importFrom methods is
+#' @importFrom boot boot boot.ci
 #' @export
 
 medci <-function(mu.x,mu.y,se.x,se.y,rho=0,alpha=.05,type="dop", plot=FALSE,plotCI=FALSE, n.mc=1e5,...)

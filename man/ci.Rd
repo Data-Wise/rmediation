@@ -105,7 +105,7 @@ ci(c(b1=.3,b2=.4,b3=.3), c(.01,0,0,.01,0,.02),
 quant=~b1*b2*b3, type="mc", plot=TRUE, plotCI=TRUE, H0=TRUE, mu0=c(b1=.3,b2=.4,b3=0)  )
 #An Example of Less Conservative Null Sampling Distribution
 ci(c(b1=.3,b2=.4,b3=.3), c(.01,0,0,.01,0,.02),
-quant=~b1*b2*b3, type="mc", plot=TRUE, plotCI=TRUE, H0=TRUE, mu0=c(b1=0,b2=.4,b3=0.1)  )
+quant=~b1*b2*b3, type="mc", plot=TRUE, plotCI=TRUE, H0=TRUE, mu0=c(b1=0,b2=.4,b3=0.1))
 }
 \references{
 Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R

@@ -69,16 +69,17 @@
 #' quant=~b1*b2*b3, type="mc", plot=TRUE, plotCI=TRUE, H0=TRUE, mu0=c(b1=.3,b2=.4,b3=0)  )
 #' #An Example of Less Conservative Null Sampling Distribution
 #' ci(c(b1=.3,b2=.4,b3=.3), c(.01,0,0,.01,0,.02),
-#' quant=~b1*b2*b3, type="mc", plot=TRUE, plotCI=TRUE, H0=TRUE, mu0=c(b1=0,b2=.4,b3=0.1)  )
+#' quant=~b1*b2*b3, type="mc", plot=TRUE, plotCI=TRUE, H0=TRUE, mu0=c(b1=0,b2=.4,b3=0.1))
 #' @author Davood Tofighi \email{dtofighi@@gmail.com}
 #' @references  Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R
 #'   package for mediation analysis confidence intervals. \emph{Behavior
 #'   Research Methods}, \bold{43}, 692--700. \doi{doi:10.3758/s13428-011-0076-x}
 #' @seealso \code{\link{medci}} \code{\link{RMediation-package}}
-#' @export
 #' @importFrom lavaan lav_matrix_vech_reverse
 #' @importFrom MASS mvrnorm
+#' @importFrom e1071 skewness kurtosis
 #' @note A shiny web application for  Monte Carlo method of this function is available at \url{https://amplab.shinyapps.io/MEDMC/}
+#' @export
 
 ci <- function(mu, Sigma, quant, alpha=0.05, type="MC", plot=FALSE, plotCI=FALSE, n.mc = 1e+06, H0=FALSE, mu0=NULL, Sigma0=NULL, ...){
   if(missing(mu) | is.null(mu) ) stop(paste("argument",sQuote("mu"), "must be specified"))
@@ -89,7 +90,7 @@ ci <- function(mu, Sigma, quant, alpha=0.05, type="MC", plot=FALSE, plotCI=FALSE
   if(is.null(Sigma)| missing(Sigma) ) stop(paste("argument",sQuote("Sigma"), "cannot be a NULL value"))
   if(!is.matrix(Sigma)){
   if(length(mu)!= (sqrt(1 + 8 * length(Sigma)) - 1)/2) stop(paste("Please check the length of", sQuote("Sigma"),"and",sQuote("mu"),". If the length(dimension) of the", sQuote("mu"),"vector (",length(mu),") is correct, the stacked lower triangle matrix", sQuote("Sigma"), "must have ",((2*length(mu)+1)^2-1)/8, "elements, instead of", length(Sigma)) )
-  Sigma <- lav_matrix_vech_reverse(Sigma) #converts to a symmetric matrix
+  Sigma <- lavaan::lav_matrix_vech_reverse(Sigma) #converts to a symmetric matrix
   }
   if(is.null(names(mu)) ) names(mu) <- paste("b",1:length(mu), sep="") # if mu names is NULL
 
