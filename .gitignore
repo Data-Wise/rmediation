@@ -7,3 +7,6 @@ Meta
 .Rdata
 .httr-oauth
 .DS_Store
+.Rbuildignore
+.rmediation.Rptoj
+rmediation.Rproj

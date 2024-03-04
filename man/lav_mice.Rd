@@ -23,8 +23,8 @@ It allows for both a SEM model syntax as a character string or a pre-fitted \lin
 }
 \examples{
 \dontrun{
-#library(mice)
-#library(lavaan)
+# library(mice)
+# library(lavaan)
 # Load Holzinger and Swineford (1939) dataset
 data("HolzingerSwineford1939", package = "lavaan")
 # Introduce missing data
@@ -36,11 +36,11 @@ data_with_missing <- amp$amp
 imputed_data <- mice::mice(data_with_missing, m = 3, maxit = 5, seed = 12345, printFlag = FALSE)
 
 # fit the Holzinger and Swineford (1939) example model
-HS_model <- ' visual  =~ x1 + x2 + x3
+HS_model <- " visual  =~ x1 + x2 + x3
              textual =~ x4 + x5 + x6
-             speed   =~ x7 + x8 + x9 '
+             speed   =~ x7 + x8 + x9 "
 # Fit the SEM model without running
- fit_HS <- lavaan::sem(HS_model, data = data_with_missing, do.fit = FALSE)
+fit_HS <- lavaan::sem(HS_model, data = data_with_missing, do.fit = FALSE)
 # Fit the SEM model without pooling to each imputed dataset
 fit_list1 <- lav_mice(HS_model, imputed_data)
 # 'fit_list1' now contains a list of lavaan objects, one for each imputed dataset

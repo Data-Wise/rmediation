@@ -20,22 +20,22 @@
 #' amp <- mice::ampute(df_complete, prop = 0.2, mech = "MAR")
 #' df_incomplete <- amp$amp
 #' # Perform multiple imputation
-#' imputed_data <- mice(df_incomplete, m = 3, method = 'pmm', maxit = 5, seed = 12345)
+#' imputed_data <- mice(df_incomplete, m = 3, method = "pmm", maxit = 5, seed = 12345)
 #' # Simple SEM model specification with OpenMx
 #' manifestVars <- paste0("x", 1:9)
 #' latVar <- c("visual", "textual", "speed")
 #' model <- mxModel("Simple SEM",
-#'                  type="RAM",
-#'                  manifestVars = manifestVars,
-#'                  latentVars = latVar,
-#'                  mxPath(from="visual", to= c("x1", "x2", "x3")),
-#'                  mxPath(from="textual", to= c("x4", "x5", "x6")),
-#'                  mxPath(from="speed", to= c("x7", "x8", "x9")),
-#'                  mxPath(from=manifestVars, arrows=2),
-#'                  mxPath(from=latVar, arrows=2, free=FALSE, values=1.0),
-#'                  mxPath(from="one", to=manifestVars, arrows=1, free=TRUE, values=1.0),
-#'                  mxPath(from="one", to=latVar, arrows=1, free=FALSE, values=0),
-#'                  mxData(df_complete, type="raw")
+#'   type = "RAM",
+#'   manifestVars = manifestVars,
+#'   latentVars = latVar,
+#'   mxPath(from = "visual", to = c("x1", "x2", "x3")),
+#'   mxPath(from = "textual", to = c("x4", "x5", "x6")),
+#'   mxPath(from = "speed", to = c("x7", "x8", "x9")),
+#'   mxPath(from = manifestVars, arrows = 2),
+#'   mxPath(from = latVar, arrows = 2, free = FALSE, values = 1.0),
+#'   mxPath(from = "one", to = manifestVars, arrows = 1, free = TRUE, values = 1.0),
+#'   mxPath(from = "one", to = latVar, arrows = 1, free = FALSE, values = 0),
+#'   mxData(df_complete, type = "raw")
 #' )
 #' # Assuming mx_mice is correctly defined in your environment
 #' fits <- mx_mice(model, imputed_data)
@@ -50,7 +50,6 @@
 
 
 mx_mice <- function(model, mids, ...) {
-
   # Ensure 'mids' is a 'mids' object
   if (!inherits(mids, "mids")) {
     stop("'mids' must be a 'mids' object from the 'mice' package.")
@@ -84,4 +83,3 @@ mx_mice <- function(model, mids, ...) {
   # Return list of OpenMx model fits
   return(mx_results)
 }
-

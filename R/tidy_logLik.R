@@ -20,7 +20,6 @@
 #' fit <- lm(mpg ~ wt, data = mtcars)
 #' logLik_fit <- logLik(fit)
 #' tidy(logLik_fit)
-
 tidy.logLik <- function(x, ...) {
   logLik_value <- as.numeric(x)
   df <- attr(x, "df")

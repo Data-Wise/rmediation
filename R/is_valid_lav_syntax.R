@@ -31,18 +31,22 @@ is_valid_lav_syntax <- function(model, data = NULL) {
     stop("'data' must be a data frame.")
   }
 
-  tryCatch({
-    # Attempt to parse and fit the model in a safe environment
-    # Note: Using a minimal dataset or dummy data as needed
-    lavaan(
-      model = model,
-      data = data,
-      auto.var = TRUE,
-      auto.fix.first = TRUE,
-      auto.cov.lv.x = TRUE
-    )
-    TRUE  # Return TRUE if parsing and fitting succeed
-  }, error = function(e) {
-    FALSE  # Return FALSE if an error occurs
-  })
+  tryCatch(
+    {
+      # Attempt to parse and fit the model in a safe environment
+      # Note: Using a minimal dataset or dummy data as needed
+      lavaan(
+        model = model,
+        data = data,
+        auto.var = TRUE,
+        auto.fix.first = TRUE,
+        auto.cov.lv.x = TRUE,
+        do.fit = FALSE
+      )
+      TRUE # Return TRUE if parsing and fitting succeed
+    },
+    error = function(e) {
+      FALSE # Return FALSE if an error occurs
+    }
+  )
 }

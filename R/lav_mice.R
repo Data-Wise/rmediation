@@ -10,8 +10,8 @@
 #' @return A list of [lavaan] model fits, one for each imputed dataset.
 #' @examples
 #' \dontrun{
-#' #library(mice)
-#' #library(lavaan)
+#' # library(mice)
+#' # library(lavaan)
 #' # Load Holzinger and Swineford (1939) dataset
 #' data("HolzingerSwineford1939", package = "lavaan")
 #' # Introduce missing data
@@ -23,11 +23,11 @@
 #' imputed_data <- mice::mice(data_with_missing, m = 3, maxit = 5, seed = 12345, printFlag = FALSE)
 #'
 #' # fit the Holzinger and Swineford (1939) example model
-#' HS_model <- ' visual  =~ x1 + x2 + x3
+#' HS_model <- " visual  =~ x1 + x2 + x3
 #'              textual =~ x4 + x5 + x6
-#'              speed   =~ x7 + x8 + x9 '
+#'              speed   =~ x7 + x8 + x9 "
 #' # Fit the SEM model without running
-#'  fit_HS <- lavaan::sem(HS_model, data = data_with_missing, do.fit = FALSE)
+#' fit_HS <- lavaan::sem(HS_model, data = data_with_missing, do.fit = FALSE)
 #' # Fit the SEM model without pooling to each imputed dataset
 #' fit_list1 <- lav_mice(HS_model, imputed_data)
 #' # 'fit_list1' now contains a list of lavaan objects, one for each imputed dataset
@@ -50,7 +50,7 @@ lav_mice <- function(model, mids, ...) {
 
   # Ensure 'model' is either a character string or a lavaan model object
 
-  if(is_valid_lav_syntax(model, mids$data)){
+  if (is_valid_lav_syntax(model, mids$data)) {
     stop("The model is not a valid lavaan model syntax.")
   }
   # Determine if 'model' is a character string or a lavaan model
@@ -58,8 +58,9 @@ lav_mice <- function(model, mids, ...) {
 
   # Extract complete imputed datasets
   data_complete <-
-    lapply(1:mids$m, function(i)
-      mice::complete(mids, action = i))
+    lapply(1:mids$m, function(i) {
+      mice::complete(mids, action = i)
+    })
 
   # Fit SEM model to each imputed dataset or update the model with new data
   sem_results <- lapply(data_complete, function(data) {
