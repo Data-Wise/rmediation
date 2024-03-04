@@ -42,6 +42,7 @@ A \link{list} that contains \item{chisq}{asymptotic chi-squared test statistic v
 This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a function of indirect effects.
 }
 \examples{
+library(OpenMx)
 data(memory_exp)
 memory_exp$x <- as.numeric(memory_exp$x)-1 # manually creating dummy codes
 endVar <- c('x', 'repetition', 'imagery', 'recall')
