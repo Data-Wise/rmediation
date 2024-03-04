@@ -1,3 +1,5 @@
+# RMediation 2.0.0
+
 RMediation 1.2.3 (5/12/2023)
 ==============
 * Fixed an issue where the type="all" in the medci function would generate incorrect labels for CIs.

@@ -1,7 +1,7 @@
 Package: RMediation
 Type: Package
 Title: Mediation Analysis Confidence Intervals
-Version: 1.2.4
+Version: 2.0.0
 Date: 2024-03-2
 Authors@R: person("Davood", "Tofighi",
         email = "dtofighi@gmail.com",
