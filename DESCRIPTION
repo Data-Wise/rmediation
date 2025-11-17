@@ -26,7 +26,6 @@ Imports:
 Suggests:
     knitr,
     rmarkdown,
-    missingmed (>= 0.1.0),
     testthat (>= 3.0.0)
 LazyData: true
 Description: We provide functions to compute confidence intervals for a well-defined nonlinear function of the model parameters (e.g., product of k coefficients) in single--level and
