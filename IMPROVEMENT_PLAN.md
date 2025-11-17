@@ -8,13 +8,18 @@
 
 ## Executive Summary
 
-The RMediation package (1,531 lines across 26 R files) provides solid statistical methods for mediation analysis confidence intervals. However, the codebase has accumulated technical debt through:
+The RMediation package (1,531 lines across 23 R files after missingmed separation) provides solid statistical methods for mediation analysis confidence intervals. However, the codebase has accumulated technical debt through:
 - **47 identified issues** across code quality, organization, documentation, and testing
 - **Critical bugs** requiring immediate attention (logic errors, copy-paste mistakes)
 - **No test infrastructure** (highest risk)
 - **Significant code duplication** (maintenance burden)
 
-This plan provides a phased approach to modernization while maintaining backward compatibility.
+**Recent Changes**:
+- ✅ Separated missing data functionality into `missingmed` package
+- ✅ Removed `mice` dependency
+- ✅ Reduced from 26 to 23 R files
+
+This plan provides a phased approach to modernization while maintaining backward compatibility, with a **new recommendation to adopt S7 OOP** for result objects.
 
 ---
 
@@ -24,22 +29,11 @@ This plan provides a phased approach to modernization while maintaining backward
 
 #### 1.1 Logic Error in is_valid_lav_syntax.R
 **File**: `R/lav_mice.R:53-55`
+**Status**: ✅ **RESOLVED** - Moved to missingmed package
+
 **Issue**: Negation error - stops on valid syntax instead of invalid
-
-```r
-# CURRENT (WRONG):
-if (is_valid_lav_syntax(model, mids$data)) {
-  stop("The model is not a valid lavaan model syntax.")
-}
-
-# FIX:
-if (!is_valid_lav_syntax(model, mids$data)) {
-  stop("The model is not a valid lavaan model syntax.")
-}
-```
-
-**Impact**: Function fails on valid models
-**Testing**: Add unit test with valid/invalid lavaan syntax
+**Resolution**: Function moved to `missingmed` package where it will be fixed
+**Testing**: Will be tested in missingmed package test suite
 
 ---
 
@@ -620,109 +614,213 @@ if (!requireNamespace("mice", quietly = TRUE)) {
 
 ---
 
-## Phase 6: Modernization (Weeks 7-8)
+## Phase 6: S7 OOP Adoption (Weeks 7-8)
 
-### Priority: LOW - Nice to Have
+### Priority: **MEDIUM-HIGH** - Recommended Based on Analysis
 
-#### 6.1 Add S3 Classes for Results
+**Rationale**: After comprehensive analysis, S7 adoption for result objects provides significant UX improvements with minimal risk and effort (~2 weeks). See detailed S7 analysis document for full justification.
 
-**New file**: `R/ci_result_class.R`
+#### 6.1 Create S7 Class Hierarchy
+
+**New file**: `R/s7_classes.R`
 
 ```r
-#' Create CI Result Object
-#' @keywords internal
-new_ci_result <- function(ci, estimate, se, method, alpha, mc_error = NULL) {
-  structure(
-    list(
-      ci = ci,
-      estimate = estimate,
-      se = se,
-      method = method,
-      alpha = alpha,
-      mc_error = mc_error,
-      contains_zero = ci[1] <= 0 && ci[2] >= 0
-    ),
-    class = "ci_result"
-  )
-}
+library(S7)
 
-#' @export
-print.ci_result <- function(x, digits = 3, ...) {
-  cat(sprintf("Mediation Analysis Confidence Interval\n"))
-  cat(sprintf("Method: %s\n", x$method))
-  cat(sprintf("Estimate: %.*f\n", digits, x$estimate))
-  cat(sprintf("SE: %.*f\n", digits, x$se))
-  cat(sprintf("%d%% CI: [%.*f, %.*f]\n",
-              (1 - x$alpha) * 100,
-              digits, x$ci[1],
-              digits, x$ci[2]))
-  if (!is.null(x$mc_error)) {
-    cat(sprintf("MC Error: %.*f\n", digits, x$mc_error))
+# Base class for all CI results
+ConfidenceInterval <- new_class(
+  "ConfidenceInterval",
+  properties = list(
+    ci = class_double,
+    estimate = class_double,
+    se = class_double,
+    mc_error = class_double | NULL,
+    method = class_character,
+    alpha = class_numeric
+  )
+)
+
+# Subclass for medci() results
+MediationCI <- new_class(
+  "MediationCI",
+  parent = ConfidenceInterval,
+  properties = list(
+    mu_x = class_double,
+    mu_y = class_double,
+    se_x = class_double,
+    se_y = class_double,
+    rho = class_double
+  )
+)
+
+# Subclass for ci() results
+GeneralCI <- new_class(
+  "GeneralCI",
+  parent = ConfidenceInterval,
+  properties = list(
+    quant = class_formula,
+    parameters = class_character
+  )
+)
+
+# Class for MBCO test results
+MBCOTest <- new_class(
+  "MBCOTest",
+  properties = list(
+    chisq = class_double,
+    df = class_double,
+    p_value = class_double,
+    method = class_character,
+    alpha = class_numeric
+  )
+)
+```
+
+**Key Benefits**:
+- Type-safe result objects
+- Professional `print()` output
+- Backward compatible via `[`, `[[`, `$` methods
+- Enables future enhancements (ggplot2 integration)
+
+---
+
+#### 6.2 Implement Print Methods
+
+**New file**: `R/s7_methods_print.R`
+
+```r
+method(print, MediationCI) <- function(x, digits = 4, ...) {
+  cat("\n")
+  cat("Mediation Analysis: Confidence Interval for Indirect Effect\n")
+  cat(strrep("=", 60), "\n\n")
+
+  cat("Method:      ", x@method, "\n")
+  cat("Parameters:\n")
+  cat("  mu.x =", format(x@mu_x, digits), ",  se.x =", format(x@se_x, digits), "\n")
+  cat("  mu.y =", format(x@mu_y, digits), ",  se.y =", format(x@se_y, digits), "\n")
+  cat("  rho =", format(x@rho, digits), "\n\n")
+
+  cat("Estimate:    ", format(x@estimate, digits), "\n")
+  cat("Std. Error:  ", format(x@se, digits), "\n")
+
+  ci_level <- (1 - x@alpha) * 100
+  cat(sprintf("%d%% CI:      [%s, %s]\n",
+    round(ci_level),
+    format(x@ci[1], digits),
+    format(x@ci[2], digits)
+  ))
+
+  if (!is.null(x@mc_error)) {
+    cat("MC Error:    ", format(x@mc_error, digits), "\n")
   }
-  if (x$contains_zero) {
-    cat("Note: CI contains zero (non-significant at alpha = ", x$alpha, ")\n", sep = "")
+
+  # Interpretation
+  cat("\nInterpretation:\n")
+  if (x@ci[1] < 0 && x@ci[2] > 0) {
+    cat("  The indirect effect is not statistically significant\n")
+    cat("  (CI includes zero at", sprintf("%g%%", ci_level), "level).\n")
+  } else {
+    direction <- if (x@ci[1] > 0) "positive" else "negative"
+    cat("  The indirect effect is statistically significant and", direction, "\n")
+    cat("  (CI excludes zero at", sprintf("%g%%", ci_level), "level).\n")
   }
+
+  cat("\n")
   invisible(x)
 }
 
-#' @export
-summary.ci_result <- function(object, ...) {
-  # More detailed output
-}
+method(print, MBCOTest) <- function(x, digits = 4, ...) {
+  cat("\n")
+  cat("Model-Based Constrained Optimization Test\n")
+  cat(strrep("=", 50), "\n\n")
 
-#' @export
-plot.ci_result <- function(x, ...) {
-  # Visualization of CI
+  cat("Method:       ", x@method, "\n")
+  cat("Chi-squared:  ", format(x@chisq, digits), "\n")
+  cat("df:           ", x@df, "\n")
+  cat("p-value:      ", format.pval(x@p_value, digits), "\n\n")
+
+  if (x@p_value < x@alpha) {
+    cat("Result: Reject H0 (p <", x@alpha, ")\n")
+  } else {
+    cat("Result: Fail to reject H0 (p >=", x@alpha, ")\n")
+  }
+
+  cat("\n")
+  invisible(x)
 }
 ```
 
-**Updates**: Modify medci(), ci() to return ci_result objects
+**Impact**: Users get formatted, interpretable output automatically
 
 ---
 
-#### 6.2 Improve Error Messages with rlang
+#### 6.3 Implement Backward Compatibility Methods
 
-**Example modernization**:
+**New file**: `R/s7_methods_compat.R`
 
 ```r
-# OLD (base R):
-if (alpha <= 0 || alpha >= 1)
-  stop("alpha must be between 0 and 1!")
+# Allow [ and [[ access like lists
+method(`[`, ConfidenceInterval) <- function(x, i) {
+  as.list(x)[i]
+}
 
-# NEW (rlang):
-if (alpha <= 0 || alpha >= 1) {
-  rlang::abort(
-    "Invalid significance level",
-    class = "rmediation_invalid_alpha",
-    alpha = alpha,
-    message = sprintf("alpha must be in (0, 1), got %g", alpha)
+method(`[[`, ConfidenceInterval) <- function(x, i) {
+  as.list(x)[[i]]
+}
+
+# Allow $ access
+method(`$`, ConfidenceInterval) <- function(x, name) {
+  as.list(x)[[name]]
+}
+
+# names() method for legacy code
+method(names, ConfidenceInterval) <- function(x) {
+  names(as.list(x))
+}
+
+# Convert to list for backward compatibility
+method(as.list, ConfidenceInterval) <- function(x, ...) {
+  ci_name <- sprintf("%d%% CI", round((1 - x@alpha) * 100))
+  lst <- list(
+    as.numeric(x@ci),
+    x@estimate,
+    x@se
+  )
+  names(lst) <- c(ci_name, "Estimate", "SE")
+
+  if (!is.null(x@mc_error)) {
+    lst$`MC Error` <- x@mc_error
+  }
+
+  lst
+}
+
+method(as.list, MBCOTest) <- function(x, ...) {
+  list(
+    chisq = x@chisq,
+    df = x@df,
+    p = x@p_value
   )
 }
 ```
 
-**Benefits**:
-- Structured error conditions
-- Better error context
-- Can be caught with specific classes
+**Result**: Old code like `res$Estimate` and `res[["95% CI"]]` continues to work!
 
 ---
 
-#### 6.3 Vectorize Functions
+#### 6.4 Refactor Plot Methods (Optional)
 
-**Example**: Allow multiple alpha levels
+Decouple plotting from computation:
 
-```r
-#' @param alpha Significance level(s). Can be vector (e.g., c(0.05, 0.10))
-medci_vectorized <- function(mu.x, mu.y, se.x, se.y,
-                               rho = 0,
-                               alpha = 0.05,  # Now accepts vector
-                               ...) {
-  # Compute once, return multiple CIs
-  lapply(alpha, function(a) {
-    medci_single(mu.x, mu.y, se.x, se.y, rho, a, ...)
-  })
-}
-```
+**Current**: `medci(..., plot=TRUE, plotCI=TRUE)`
+**Proposed**: `res <- medci(...); plot(res)`
+
+**Benefits**:
+- No recomputation needed to replot
+- Can customize plots after computation
+- Follows R conventions
+
+**Implementation**: Low priority - can be done in future release
 
 ---
 
@@ -839,14 +937,16 @@ After Phase 7 (if breaking changes):
 
 | Phase | Duration | Deliverables | Priority |
 |-------|----------|--------------|----------|
-| 1: Critical Bugs | 1 week | Bug fixes, typos | CRITICAL |
+| 1: Critical Bugs | 1 week | Bug fixes (✅ 1/3 resolved via missingmed), typos | CRITICAL |
 | 2: Testing | 1 week | Test infrastructure, 70%+ coverage | HIGH |
 | 3: Refactoring | 2 weeks | Utilities extracted, code consolidated | HIGH |
 | 4: Documentation | 1 week | Vignettes, enhanced docs | HIGH |
-| 5: Dependencies | 1 week | Optimized DESCRIPTION | MEDIUM |
-| 6: Modernization | 2 weeks | S3 classes, rlang, vectorization | LOW |
+| 5: Dependencies | 1 week | ✅ mice removed, DESCRIPTION optimized | MEDIUM |
+| 6: S7 OOP | 2 weeks | S7 classes, print/summary methods | MEDIUM-HIGH |
 | 7: Release | 1 week | CI/CD, final checks | CRITICAL |
 | **Total** | **9 weeks** | Production-ready v2.1.0+ | |
+
+**Note**: Phase 5 partially complete (mice dependency removed, missingmed separated)
 
 ---
 
@@ -874,6 +974,8 @@ After Phase 7 (if breaking changes):
 - ✅ Consistent API
 - ✅ Better examples
 - ✅ Integration with missingmed package
+- ✅ Professional print() output (with S7)
+- ✅ Enhanced summary() methods (with S7)
 
 ---
 
