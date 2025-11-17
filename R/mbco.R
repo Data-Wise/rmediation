@@ -9,8 +9,8 @@
 #' @param alpha Significance level with the default value of .05
 #' @param checkHess If 'No' (default), the Hessian matrix would not be calculated.
 #' @param checkSE if 'No' (default), the standard errors would not be calculated.
-#' @param optim Choose optimizer available in OpenMx. The default optimizer is "SLSQP". Other optimizer choices are available. See \link{mxOption} for more details.
-#' @param precision Functional precision. The default value is set to 1e-9. See \link{mxOption} for more details.
+#' @param optim Choose optimizer available in OpenMx. The default optimizer is "SLSQP". Other optimizer choices are available. See \link[OpenMx]{mxOption} for more details.
+#' @param precision Functional precision. The default value is set to 1e-9. See \link[OpenMx]{mxOption} for more details.
 #' @return A \link{list} that contains \item{chisq}{asymptotic chi-squared test statistic value} \item{\code{df}}{chi-squared df} \item{p}{chi-squared p-value computed based on the method specified by the argument \code{type}}
 #' @author Davood Tofighi \email{dtofighi@@gmail.com}
 #' @import OpenMx
@@ -82,15 +82,17 @@
 #' full_model <- mxTryHard(full_model, checkHess = FALSE, silent = TRUE)
 #' null_model1 <- mxTryHard(null_model1, checkHess = FALSE, silent = TRUE)
 #' mbco(null_model1, full_model)
-mbco <- function(h0 = NULL,
-                 h1 = NULL,
-                 R = 10L,
-                 type = "asymp",
-                 alpha = .05,
-                 checkHess = "No",
-                 checkSE = "No",
-                 optim = "SLSQP",
-                 precision = 1e-9) {
+mbco <- function(
+  h0 = NULL,
+  h1 = NULL,
+  R = 10L,
+  type = "asymp",
+  alpha = .05,
+  checkHess = "No",
+  checkSE = "No",
+  optim = "SLSQP",
+  precision = 1e-9
+) {
   if (missing(h0)) {
     stop("'h0' argument be a MxModel object")
   }

@@ -31,9 +31,9 @@ mbco(
 
 \item{checkSE}{if 'No' (default), the standard errors would not be calculated.}
 
-\item{optim}{Choose optimizer available in OpenMx. The default optimizer is "SLSQP". Other optimizer choices are available. See \link{mxOption} for more details.}
+\item{optim}{Choose optimizer available in OpenMx. The default optimizer is "SLSQP". Other optimizer choices are available. See \link[OpenMx]{mxOption} for more details.}
 
-\item{precision}{Functional precision. The default value is set to 1e-9. See \link{mxOption} for more details.}
+\item{precision}{Functional precision. The default value is set to 1e-9. See \link[OpenMx]{mxOption} for more details.}
 }
 \value{
 A \link{list} that contains \item{chisq}{asymptotic chi-squared test statistic value} \item{\code{df}}{chi-squared df} \item{p}{chi-squared p-value computed based on the method specified by the argument \code{type}}

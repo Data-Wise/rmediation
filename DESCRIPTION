@@ -35,7 +35,7 @@ Description: We provide functions to compute confidence intervals for a well-def
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("rd","collate", "namespace"))
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 URL: https://github.com/quantPsych/rmediation
 BugReports: https://github.com/quantPsych/rmediation/issues
