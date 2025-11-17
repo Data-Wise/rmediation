@@ -29,7 +29,7 @@ install.packages("RMediation")
 Alternatively, you can install the development version directly from GitHub using the `remotes` package:
 
 ``` r
-remotes::install_github("quantpsych/RMediation")
+remotes::install_github("data-wise/RMediation")
 ```
 
 ## Usage

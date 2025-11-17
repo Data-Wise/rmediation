@@ -37,5 +37,5 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("rd","collate", "namespace"))
 RoxygenNote: 7.3.3
 VignetteBuilder: knitr
-URL: https://github.com/quantPsych/rmediation
-BugReports: https://github.com/quantPsych/rmediation/issues
+URL: https://data-wise.github.io/rmediation/, https://github.com/data-wise/rmediation
+BugReports: https://github.com/data-wise/rmediation/issues

@@ -1,0 +1,88 @@
+url: https://data-wise.github.io/rmediation/
+template:
+  bootstrap: 5
+  bootswatch: cosmo
+  bslib:
+    primary: "#0054AD"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+
+home:
+  title: RMediation - Mediation Analysis Confidence Intervals
+  description: >
+    Compute confidence intervals for nonlinear functions of model parameters
+    in mediation analysis using distribution of product, Monte Carlo, and
+    bootstrap methods.
+  links:
+  - text: Browse source code
+    href: https://github.com/data-wise/rmediation
+  - text: Report a bug
+    href: https://github.com/data-wise/rmediation/issues
+
+navbar:
+  structure:
+    left:  [home, reference, articles, news]
+    right: [search, github]
+  components:
+    home:
+      icon: fas fa-home fa-lg
+      href: index.html
+    reference:
+      text: Reference
+      href: reference/index.html
+    articles:
+      text: Articles
+      menu:
+      - text: Getting Started
+        href: articles/getting-started.html
+      - text: CI Methods Comparison
+        href: articles/ci-methods-comparison.html
+    news:
+      text: News
+      href: news/index.html
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/data-wise/rmediation
+
+reference:
+- title: Core Functions
+  desc: >
+    Main user-facing functions for mediation analysis confidence intervals
+    and hypothesis testing.
+  contents:
+  - medci
+  - ci
+  - mbco
+
+- title: Distribution Functions
+  desc: >
+    Distribution functions for the product of two normal random variables.
+  contents:
+  - pprodnormal
+  - qprodnormal
+  - pMC
+  - qMC
+
+- title: Datasets
+  desc: Example datasets for demonstrating mediation analysis.
+  contents:
+  - memory_exp
+
+- title: Utility Functions
+  desc: >
+    S3 methods and helper functions.
+  contents:
+  - tidy.logLik
+
+authors:
+  Davood Tofighi:
+    href: "https://orcid.org/0000-0001-8523-7776"
+
+footer:
+  structure:
+    left: developed_by
+    right: built_with
+
+development:
+  mode: auto
+  version_label: default
