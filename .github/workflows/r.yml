@@ -32,8 +32,11 @@ jobs:
           r-version: ${{ matrix.r-version }}
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "rcmdcheck"))
+          install.packages(c("remotes", "rcmdcheck", "spelling"))
           remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+      - name: Spell Check
+        run: spelling::spell_check_package()
         shell: Rscript {0}
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")

@@ -19,7 +19,7 @@ mbco_semi <- function(h0 = NULL,
   df <-
     h1$data$observed # Extract the original data from the fitted model
   df <-
-    df[h1$manifestVars] # Seubset of teh manifest variables used to fit the model
+    df[h1$manifestVars] # Subset of the manifest variables used to fit the model
   if (any(lapply(df, class) %in% c("factor", "character"))) {
     # Check to see if any of the manisfest variables is factor or character
     stop("One of the variables is factor or character. Please change it to numeric.")

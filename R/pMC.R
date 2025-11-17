@@ -25,15 +25,15 @@
 
 
 pMC <- function(q, mu, Sigma, quant, lower.tail = TRUE, n.mc = 1e+06, ...) {
-  if (missing(q)) stop(paste("argument", sQuote("p"), "must be specified"))
-  if (missing(mu)) stop(paste("argument", sQuote("p"), "must be specified"))
+  if (missing(q)) stop(paste("argument", sQuote("q"), "must be specified"))
+  if (missing(mu)) stop(paste("argument", sQuote("mu"), "must be specified"))
   if (missing(Sigma)) stop(paste("argument", sQuote("Sigma"), "must be specified"))
   if (missing(quant)) stop(paste("argument", sQuote("quant"), "must be specified"))
-  if (is.null(q)) stop(paste("argument", sQuote("mu"), "cannot be a NULL value"))
+  if (is.null(q)) stop(paste("argument", sQuote("q"), "cannot be a NULL value"))
 
   if (is.null(mu)) stop(paste("argument", sQuote("mu"), "cannot be a NULL value"))
   if (is.null(Sigma)) stop(paste("argument", sQuote("Sigma"), "cannot be a NULL value"))
-  if (is.null(quant)) stop(paste("argument", sQuote("NULL"), "cannot be a NULL value"))
+  if (is.null(quant)) stop(paste("argument", sQuote("quant"), "cannot be a NULL value"))
   if (!is.matrix(Sigma)) {
     if (length(mu) != (sqrt(1 + 8 * length(Sigma)) - 1) / 2) stop(paste("Please check the length of", sQuote("Sigma"), "and", sQuote("mu"), ". If the length(dimension) of the", sQuote("mu"), "vector (", length(mu), ") is correct, the stacked lower triangle matrix", sQuote("Sigma"), "must have ", ((2 * length(mu) + 1)^2 - 1) / 8, "elements, instead of", length(Sigma)))
     Sigma <- lavaan::lav_matrix_vech_reverse(Sigma) # converts to a symmetric matrix

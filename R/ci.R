@@ -91,7 +91,7 @@
 ci <- function(mu, Sigma, quant, alpha = 0.05, type = "MC", plot = FALSE, plotCI = FALSE, n.mc = 1e+06, H0 = FALSE, mu0 = NULL, Sigma0 = NULL, ...) {
   if (missing(mu) | is.null(mu)) stop(paste("argument", sQuote("mu"), "must be specified"))
   if (missing(quant) | is.null(quant)) stop(paste("argument", sQuote("quant"), "must be specified"))
-  if (!type %in% c("MC", "mc", "asymp", "Asymp", "all")) stop(paste("Please enter a ccorrect", sQuote("type"), "argument"))
+  if (!type %in% c("MC", "mc", "asymp", "Asymp", "all")) stop(paste("Please enter a correct", sQuote("type"), "argument"))
 
   if (!isa(mu, "lavaan")) {
     if (is.null(Sigma) | missing(Sigma)) stop(paste("argument", sQuote("Sigma"), "cannot be a NULL value"))
