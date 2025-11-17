@@ -12,3 +12,6 @@ Meta
 rmediation.Rproj
 rmediation.code-workspace
 .claude/
+
+# pkgdown
+docs/
