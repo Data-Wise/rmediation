@@ -22,9 +22,11 @@ Imports:
     methods (>= 3.5.0),
     MASS (>= 7.3),
     modelr (>= 0.1.8),
-    generics (>= 0.0.2),
-    mice (>= 3.8.0)
-Suggests: knitr, rmarkdown
+    generics (>= 0.0.2)
+Suggests:
+    knitr,
+    rmarkdown,
+    missingmed (>= 0.1.0)
 LazyData: true
 Description: We provide functions to compute confidence intervals for a well-defined nonlinear function of the model parameters (e.g., product of k coefficients) in single--level and
     multilevel structural equation models. It also computes a chi-square test statistic for a function of indirect effects. 
