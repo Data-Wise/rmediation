@@ -95,11 +95,15 @@ medci <- function(mu.x, mu.y, se.x, se.y, rho = 0, alpha = .05, type = "dop", pl
   assert_number(se.y, lower = 0, finite = TRUE)
   assert_number(rho, lower = -1, upper = 1, finite = TRUE)
   assert_number(alpha, lower = 0, upper = 1, finite = TRUE)
+  if (alpha <= 0 || alpha >= 1) {
+    stop("alpha must be between 0 and 1")
+  }
   assert_logical(plot)
   assert_logical(plotCI)
   assert_count(n.mc, positive = TRUE)
 
-  type <- match.arg(type, c("dop", "MC", "asymp", "all"))
+  type <- tolower(type)
+  type <- match.arg(type, c("dop", "mc", "asymp", "all", "prodclin"))
 
   if (plot == TRUE) {
     mean.v <- c(mu.x, mu.y)
@@ -142,10 +146,10 @@ medci <- function(mu.x, mu.y, se.x, se.y, rho = 0, alpha = .05, type = "dop", pl
     res <- list(MeekerCI, MCCI, asympCI)
     names(res) <- c("Distribution of Product", "Monte Carlo", "Asymptotic Normal")
     return(res)
-  } else if (type == "dop") {
+  } else if (type == "dop" || type == "prodclin") {
     MeekerCI <- medciMeeker(mu.x, mu.y, se.x, se.y, rho, alpha)
     return(MeekerCI)
-  } else if (type == "MC") {
+  } else if (type == "mc") {
     MCCI <- medciMC(mu.x, mu.y, se.x, se.y, rho, alpha, n.mc = n.mc)
     return(MCCI)
   } else if (type == "asymp") {

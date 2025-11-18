@@ -95,7 +95,7 @@ test_that("medci validates parameter bounds", {
 test_that("medci validates type parameter", {
   expect_error(
     medci(0.3, 0.4, 0.1, 0.1, type = "invalid"),
-    "type"
+    "should be one of"
   )
 })
 

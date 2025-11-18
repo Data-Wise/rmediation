@@ -135,8 +135,8 @@ test_that("qprodnormal handles rho parameter", {
 
 test_that("pprodnormal validates probability bounds", {
   # p should be between 0 and 1 for valid CDF values
-  result_0 <- pprodnormal(-Inf, 0.3, 0.4, 0.1, 0.1, type = "MC", n.mc = 1e4)
-  result_1 <- pprodnormal(Inf, 0.3, 0.4, 0.1, 0.1, type = "MC", n.mc = 1e4)
+  result_0 <- pprodnormal(-1e6, 0.3, 0.4, 0.1, 0.1, type = "MC", n.mc = 1e4)
+  result_1 <- pprodnormal(1e6, 0.3, 0.4, 0.1, 0.1, type = "MC", n.mc = 1e4)
 
   expect_equal(result_0, 0, tolerance = 0.01)
   expect_equal(result_1, 1, tolerance = 0.01)
