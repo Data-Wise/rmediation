@@ -123,8 +123,8 @@ test_that("qprodnormal handles rho parameter", {
   se.x <- 0.1
   se.y <- 0.1
 
-  result_rho0 <- qprodnormal(p, mu.x, mu.y, se.x, se.y, rho = 0, type = "MC", n.mc = 1e4)
-  result_rho_pos <- qprodnormal(p, mu.x, mu.y, se.x, se.y, rho = 0.3, type = "MC", n.mc = 1e4)
+  result_rho0 <- qprodnormal(p, mu.x, mu.y, se.x, se.y, rho = 0, type = "dop")
+  result_rho_pos <- qprodnormal(p, mu.x, mu.y, se.x, se.y, rho = 0.3, type = "dop")
 
   expect_type(result_rho0, "double")
   expect_type(result_rho_pos, "double")

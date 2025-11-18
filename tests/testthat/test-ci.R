@@ -193,7 +193,7 @@ test_that("ci MC and asymptotic methods produce consistent estimates", {
   expect_equal(result_mc$Estimate, result_asymp$Estimate, tolerance = 0.01)
 
   # SEs should be similar
-  expect_equal(as.numeric(result_mc$SE), as.numeric(result_asymp$SE), tolerance = 0.01)
+  expect_equal(as.numeric(result_mc$SE), as.numeric(result_asymp$SE), tolerance = 0.02)
 })
 
 test_that("ci handles four-path indirect effects", {

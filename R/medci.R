@@ -90,33 +90,7 @@
 #' @export
 
 medci <- function(mu.x, mu.y, se.x, se.y, rho = 0, alpha = .05, type = "dop", plot = FALSE, plotCI = FALSE, n.mc = 1e5, ...) {
-  if (!is.numeric(mu.x)) {
-    stop("Argument mu.x must be numeric!")
-  }
-  if (!is.numeric(mu.y)) {
-    stop("Argument mu.y must be numeric!")
-  }
-  if (!is.numeric(se.x)) {
-    stop("Argument se.x must be numeric!")
-  }
-  if (!is.numeric(se.y)) {
-    stop("Argument se.y must be numeric!")
-  }
-  if (!is.numeric(alpha)) {
-    stop("Argument alpha  must be numeric!")
-  }
-  if (!is.numeric(rho)) {
-    stop("Argument rho  must be numeric!")
-  }
-  if (alpha <= 0 || alpha >= 1) {
-    stop("alpha must be between 0 and 1!")
-  }
-  if (rho <= -1 || rho >= 1) {
-    stop("rho must be between -1 and 1!")
-  }
-  if (!is.numeric(n.mc) || is.null(n.mc)) {
-    n.mc <- 1e5
-  } # sets n.mc to default
+  n.mc <- validate_prodnormal_params(mu.x, mu.y, se.x, se.y, rho, n.mc, alpha)
   if (plot == TRUE) {
     mean.v <- c(mu.x, mu.y)
     var.mat <- matrix(c(se.x^2, se.x * se.y * rho, se.x * se.y * rho, se.y^2), 2)
@@ -156,7 +130,7 @@ medci <- function(mu.x, mu.y, se.x, se.y, rho = 0, alpha = .05, type = "dop", pl
     asympCI <- medciAsymp(mu.x, mu.y, se.x, se.y, rho, alpha) # added 3/28/14-DT
     MeekerCI <- medciMeeker(mu.x, mu.y, se.x, se.y, rho, alpha)
     res <- list(MeekerCI, MCCI, asympCI)
-    names(res) <- c("dop", "Monte Carlo", "Asymptotic Normal")
+    names(res) <- c("Distribution of Product", "Monte Carlo", "Asymptotic Normal")
     return(res)
   } else if (type == "DOP" || type == "dop" || type == "prodclin") {
     MeekerCI <- medciMeeker(mu.x, mu.y, se.x, se.y, rho, alpha)
