@@ -24,7 +24,7 @@ Description: Computes confidence intervals for nonlinear functions of model
     Tofighi, D. (2020). Bootstrap Model-Based Constrained Optimization Tests of 
     Indirect Effects. Frontiers in Psychology, 10, 2989. 
     <doi:10.3389/fpsyg.2019.02989>.
-License: GPL (>= 3)
+License: GPL (>= 3) | file LICENSE
 URL: https://data-wise.github.io/rmediation/, https://github.com/data-wise/rmediation
 BugReports: https://github.com/data-wise/rmediation/issues
 Depends:
