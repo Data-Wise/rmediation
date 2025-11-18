@@ -102,31 +102,44 @@ ci <- function(
   ...
 ) {
   # Input validation
-  assert(checkmate::check_class(mu, "lavaan"), checkmate::check_numeric(mu, finite = TRUE))
-  assert_formula(quant)
+  checkmate::assert(
+    checkmate::check_class(mu, "lavaan"),
+    checkmate::check_numeric(mu, finite = TRUE)
+  )
+  checkmate::assert_formula(quant)
   assert_number(alpha, lower = 0, upper = 1, finite = TRUE)
   type <- tolower(type)
   type <- match.arg(type, c("mc", "asymp", "all"))
-  assert_logical(plot)
-  assert_logical(plotCI)
-  assert_count(n.mc, positive = TRUE)
-  assert_logical(H0)
+  checkmate::assert_logical(plot)
+  checkmate::assert_logical(plotCI)
+  checkmate::assert_count(n.mc, positive = TRUE)
+  checkmate::assert_logical(H0)
 
   if (H0) {
     if (!is.null(mu0)) {
       assert_numeric(mu0, finite = TRUE, len = length(mu))
     }
     if (!is.null(Sigma0)) {
-      assert(checkmate::check_matrix(Sigma0, mode = "numeric"), checkmate::check_numeric(Sigma0))
+      assert(
+        checkmate::check_matrix(Sigma0, mode = "numeric"),
+        checkmate::check_numeric(Sigma0)
+      )
     }
   }
-
 
   if (!inherits(mu, "lavaan")) {
     if (is.null(Sigma) || missing(Sigma)) {
       stop(paste("argument", sQuote("Sigma"), "cannot be a NULL value"))
     }
-    assert(checkmate::check_matrix(Sigma, mode = "numeric", nrows = length(mu), ncols = length(mu)), checkmate::check_numeric(Sigma))
+    assert(
+      checkmate::check_matrix(
+        Sigma,
+        mode = "numeric",
+        nrows = length(mu),
+        ncols = length(mu)
+      ),
+      checkmate::check_numeric(Sigma)
+    )
     if (!is.matrix(Sigma)) {
       if (length(mu) != (sqrt(1 + 8 * length(Sigma)) - 1) / 2) {
         stop(paste(

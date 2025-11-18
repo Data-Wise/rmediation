@@ -24,19 +24,54 @@
 #' @export
 qMC <- function(p, mu, Sigma, quant, n.mc = 1e+06, ...) {
   # Input validation
-  assert_numeric(p, lower = 0, upper = 1, finite = TRUE, len = 1)
-  assert_numeric(mu, finite = TRUE)
-  assert(checkmate::check_matrix(Sigma, mode = "numeric", nrows = length(mu), ncols = length(mu)), checkmate::check_numeric(Sigma))
-  assert_formula(quant)
-  assert_count(n.mc, positive = TRUE)
+  checkmate::assert_numeric(p, lower = 0, upper = 1, finite = TRUE, len = 1)
+  checkmate::assert_numeric(mu, finite = TRUE)
+  checkmate::assert(
+    checkmate::check_matrix(
+      Sigma,
+      mode = "numeric",
+      nrows = length(mu),
+      ncols = length(mu)
+    ),
+    checkmate::check_numeric(Sigma)
+  )
+  checkmate::assert_formula(quant)
+  checkmate::assert_count(n.mc, positive = TRUE)
 
   if (!is.matrix(Sigma)) {
-    if (length(mu) != (sqrt(1 + 8 * length(Sigma)) - 1) / 2) stop(paste("Please check the length of", sQuote("Sigma"), "and", sQuote("mu"), ". If the length(dimension) of the", sQuote("mu"), "vector (", length(mu), ") is correct, the stacked lower triangle matrix", sQuote("Sigma"), "must have ", ((2 * length(mu) + 1)^2 - 1) / 8, "elements, instead of", length(Sigma)))
+    if (length(mu) != (sqrt(1 + 8 * length(Sigma)) - 1) / 2) {
+      stop(paste(
+        "Please check the length of",
+        sQuote("Sigma"),
+        "and",
+        sQuote("mu"),
+        ". If the length(dimension) of the",
+        sQuote("mu"),
+        "vector (",
+        length(mu),
+        ") is correct, the stacked lower triangle matrix",
+        sQuote("Sigma"),
+        "must have ",
+        ((2 * length(mu) + 1)^2 - 1) / 8,
+        "elements, instead of",
+        length(Sigma)
+      ))
+    }
     Sigma <- lavaan::lav_matrix_vech_reverse(Sigma) # converts to a symmetric matrix
   }
-  if (is.null(names(mu))) names(mu) <- paste("b", 1:length(mu), sep = "") # if mu names is NULL
+  if (is.null(names(mu))) {
+    names(mu) <- paste("b", 1:length(mu), sep = "")
+  } # if mu names is NULL
 
-  if (!all(all.vars(quant) %in% names(mu))) stop(paste("The parameters names in formula", sQuote("quant"), "must match the parameters names provided in", sQuote("mu"), "."))
+  if (!all(all.vars(quant) %in% names(mu))) {
+    stop(paste(
+      "The parameters names in formula",
+      sQuote("quant"),
+      "must match the parameters names provided in",
+      sQuote("mu"),
+      "."
+    ))
+  }
 
   if (length(mu) * n.mc > .Machine$integer.max) {
     n.mc <- 1e6
