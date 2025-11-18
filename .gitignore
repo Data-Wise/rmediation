@@ -1,3 +1,4 @@
+
 .Rproj.user
 .Rhistory
 .RData
@@ -12,7 +13,6 @@ Meta
 rmediation.Rproj
 rmediation.code-workspace
 .claude/
-
-# pkgdown
 docs/
-planning
+planning/
+..Rcheck/
