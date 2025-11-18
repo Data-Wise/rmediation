@@ -1,0 +1,756 @@
+Hmm ... looks like a package
+Converting parsed Rd's to LaTeX .
+Creating pdf output from LaTeX ...
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./Rd2.tex
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/book.c
+ls
+Document Class: book 2024/06/29 v1.4n Standard LaTeX document class
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/bk10.c
+lo)) (/opt/homebrew/Cellar/r/4.5.2_1/lib/R/share/texmf/tex/latex/Rd.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/ifthen
+.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/iftex/ift
+ex.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/tools/longt
+able.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/tools/bm.st
+y)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/alltt.
+sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/tools/verba
+tim.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/url/url.sty
+)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/textco
+mp.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+math.sty
+For additional information on amsmath, use the `?' option.
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+text.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+gen.sty))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+bsy.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+opn.sty))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsfonts/am
+sfonts.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsfonts/am
+ssymb.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/jknapltx/ma
+thrsfs.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/fonten
+c.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/time
+s.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/inconsolata
+/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/xkeyval/xke
+yval.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/xkeyval/x
+keyval.tex
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/xkeyval/x
+kvutils.tex
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/xkeyval/k
+eyval.tex)))))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/graphics/co
+lor.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/graphics-cf
+g/color.cfg)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/graphics-de
+f/pdftex.def)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/graphics/ma
+thcolor.ltx))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/hy
+perref.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/kvsetkeys/k
+vsetkeys.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/kvdefinek
+eys/kvdefinekeys.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pdfescape
+/pdfescape.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/ltxcmds/l
+txcmds.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pdftexcmd
+s/pdftexcmds.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/infwarerr
+/infwarerr.sty)))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hycolor/hyc
+olor.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/na
+meref.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/refcount/re
+fcount.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/gettitles
+tring/gettitlestring.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/kvoptions/k
+voptions.sty)))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/etoolbox/et
+oolbox.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/stringenc
+/stringenc.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/pd
+1enc.def)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/intcalc/i
+ntcalc.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/pu
+enc.def)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/bitset/bi
+tset.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/bigintcal
+c/bigintcalc.sty))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/atbegs
+hi-ltx.sty))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/hp
+dftex.def
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/atvery
+end-ltx.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/rerunfilech
+eck/rerunfilecheck.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/uniquecou
+nter/uniquecounter.sty))))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/makeid
+x.sty)
+Writing index file Rd2.idx
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/t1pt
+m.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/l3backend/l
+3backend-pdftex.def)
+No file Rd2.aux.
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/context/base/mkii
+/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/inconsolata
+/t1zi4.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsfonts/um
+sa.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsfonts/um
+sb.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/jknapltx/ur
+sfs.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/ts1p
+tm.fd)
+[1{/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/map/pdftex/up
+dmap/pdftex.map}{/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts
+/enc/dvips/base/8r.enc}{/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dis
+t/fonts/enc/dvips/inconsolata/i4-t1-0.enc}{/opt/homebrew/Cellar/texlive/2025030
+8_2/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+No file Rd2.toc.
+
+[2]
+Overfull \hbox (10.72733pt too wide) in paragraph at lines 125--129
+\T1/ptm/m/n/10 oth-er-wise, the co-ef-fi-cient names are as-signed au-to-mat-i-
+cally as fol-lows: []\T1/zi4/m/n/10 b1,b2,...[]\T1/ptm/m/n/10 .
+
+[3]
+[4]
+[5]
+Overfull \hbox (1.19746pt too wide) in paragraph at lines 325--329
+\T1/ptm/m/n/10 di-ated ef-fect. Note that to ob-tain the CI plot, one must also
+ spec-ify []\T1/zi4/m/n/10 plot="TRUE"[]\T1/ptm/m/n/10 .
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/t1ph
+v.fd)
+[6]
+[7]
+[8]
+Overfull \hbox (3.22453pt too wide) in paragraph at lines 471--472
+[]\T1/ptm/m/n/10 logical; if []\T1/zi4/m/n/10 TRUE []\T1/ptm/m/n/10 (de-fault),
+ the prob-a-bil-ity is $\OML/cmm/m/it/10 P\OT1/cmr/m/n/10 [\OML/cmm/m/it/10 qua
+nt < q\OT1/cmr/m/n/10 ]$\T1/ptm/m/n/10 ; oth-er-wise, $\OML/cmm/m/it/10 P\OT1/c
+mr/m/n/10 [\OML/cmm/m/it/10 quant >
+
+[9]
+[10]
+[11]
+[12]
+[13]
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/inconsolata
+/ts1zi4.fd)
+No file Rd2.ind.
+
+[14{/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/enc/dvips/in
+consolata/i4-ts1.enc}] (./Rd2.aux)
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)
+pdfTeX warning (dest): name{Rfn.data.frame} has been referenced but does not ex
+ist, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.logLik} has been referenced but does not exist,
+ replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.factor} has been referenced but does not exist,
+ replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.density} has been referenced but does not exist
+, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.mxOption} has been referenced but does not exis
+t, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.list} has been referenced but does not exist, r
+eplaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.formula} has been referenced but does not exist
+, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.lavaan} has been referenced but does not exist,
+ replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.vector} has been referenced but does not exist,
+ replaced by a fixed one
+
+</opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/in
+consolata/Inconsolata-zi4r.pfb></opt/homebrew/Cellar/texlive/20250308_2/share/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></opt/homebrew/Cellar/texli
+ve/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></opt/
+homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmmib10.pfb></opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmr10.pfb></opt/homebrew/Cellar/texlive/20250308_2/sh
+are/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></opt/homebrew/Cellar/te
+xlive/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></o
+pt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/cm-su
+per/sfrm1000.pfb></opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/font
+s/type1/urw/helvetic/uhvr8a.pfb></opt/homebrew/Cellar/texlive/20250308_2/share/
+texmf-dist/fonts/type1/urw/times/utmb8a.pfb></opt/homebrew/Cellar/texlive/20250
+308_2/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></opt/homebrew/Cellar/t
+exlive/20250308_2/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></opt/homeb
+rew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/urw/times/utmri8a.pf
+b>
+Output written on Rd2.pdf (14 pages, 182991 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.17 [TeX Live 2025] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (59 entries accepted, 4 rejected).
+Sorting entries....done (366 comparisons).
+Generating output file Rd2.ind....done (87 lines written, 0 warnings).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./Rd2.tex
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/book.c
+ls
+Document Class: book 2024/06/29 v1.4n Standard LaTeX document class
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/bk10.c
+lo)) (/opt/homebrew/Cellar/r/4.5.2_1/lib/R/share/texmf/tex/latex/Rd.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/ifthen
+.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/iftex/ift
+ex.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/tools/longt
+able.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/tools/bm.st
+y)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/alltt.
+sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/tools/verba
+tim.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/url/url.sty
+)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/textco
+mp.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+math.sty
+For additional information on amsmath, use the `?' option.
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+text.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+gen.sty))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+bsy.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+opn.sty))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsfonts/am
+sfonts.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsfonts/am
+ssymb.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/jknapltx/ma
+thrsfs.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/fonten
+c.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/time
+s.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/inconsolata
+/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/xkeyval/xke
+yval.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/xkeyval/x
+keyval.tex
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/xkeyval/x
+kvutils.tex
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/xkeyval/k
+eyval.tex)))))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/graphics/co
+lor.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/graphics-cf
+g/color.cfg)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/graphics-de
+f/pdftex.def)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/graphics/ma
+thcolor.ltx))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/hy
+perref.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/kvsetkeys/k
+vsetkeys.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/kvdefinek
+eys/kvdefinekeys.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pdfescape
+/pdfescape.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/ltxcmds/l
+txcmds.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pdftexcmd
+s/pdftexcmds.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/infwarerr
+/infwarerr.sty)))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hycolor/hyc
+olor.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/na
+meref.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/refcount/re
+fcount.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/gettitles
+tring/gettitlestring.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/kvoptions/k
+voptions.sty)))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/etoolbox/et
+oolbox.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/stringenc
+/stringenc.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/pd
+1enc.def)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/intcalc/i
+ntcalc.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/pu
+enc.def)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/bitset/bi
+tset.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/bigintcal
+c/bigintcalc.sty))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/atbegs
+hi-ltx.sty))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/hp
+dftex.def
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/atvery
+end-ltx.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/rerunfilech
+eck/rerunfilecheck.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/uniquecou
+nter/uniquecounter.sty))))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/makeid
+x.sty)
+Writing index file Rd2.idx
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/t1pt
+m.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/l3backend/l
+3backend-pdftex.def) (./Rd2.aux)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/context/base/mkii
+/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (./Rd2.out) (./Rd2.out)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/inconsolata
+/t1zi4.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsfonts/um
+sa.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsfonts/um
+sb.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/jknapltx/ur
+sfs.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/ts1p
+tm.fd)
+[1{/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/map/pdftex/up
+dmap/pdftex.map}{/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts
+/enc/dvips/base/8r.enc}{/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dis
+t/fonts/enc/dvips/inconsolata/i4-t1-0.enc}{/opt/homebrew/Cellar/texlive/2025030
+8_2/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] (./Rd2.toc)
+[2]
+Overfull \hbox (10.72733pt too wide) in paragraph at lines 125--129
+\T1/ptm/m/n/10 oth-er-wise, the co-ef-fi-cient names are as-signed au-to-mat-i-
+cally as fol-lows: []\T1/zi4/m/n/10 b1,b2,...[]\T1/ptm/m/n/10 .
+
+[3]
+[4]
+[5]
+Overfull \hbox (1.19746pt too wide) in paragraph at lines 325--329
+\T1/ptm/m/n/10 di-ated ef-fect. Note that to ob-tain the CI plot, one must also
+ spec-ify []\T1/zi4/m/n/10 plot="TRUE"[]\T1/ptm/m/n/10 .
+
+[6]
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/t1ph
+v.fd)
+[7]
+[8]
+Overfull \hbox (3.22453pt too wide) in paragraph at lines 471--472
+[]\T1/ptm/m/n/10 logical; if []\T1/zi4/m/n/10 TRUE []\T1/ptm/m/n/10 (de-fault),
+ the prob-a-bil-ity is $\OML/cmm/m/it/10 P\OT1/cmr/m/n/10 [\OML/cmm/m/it/10 qua
+nt < q\OT1/cmr/m/n/10 ]$\T1/ptm/m/n/10 ; oth-er-wise, $\OML/cmm/m/it/10 P\OT1/c
+mr/m/n/10 [\OML/cmm/m/it/10 quant >
+
+[9]
+[10]
+[11]
+[12]
+[13]
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/inconsolata
+/ts1zi4.fd) (./Rd2.ind
+[14{/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/enc/dvips/in
+consolata/i4-ts1.enc}]
+
+LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
+(Font)              using `T1/zi4/m/n' instead on input line 70.
+
+
+
+[15]) (./Rd2.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)
+pdfTeX warning (dest): name{Rfn.data.frame} has been referenced but does not ex
+ist, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.logLik} has been referenced but does not exist,
+ replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.factor} has been referenced but does not exist,
+ replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.density} has been referenced but does not exist
+, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.mxOption} has been referenced but does not exis
+t, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.list} has been referenced but does not exist, r
+eplaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.formula} has been referenced but does not exist
+, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.lavaan} has been referenced but does not exist,
+ replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.vector} has been referenced but does not exist,
+ replaced by a fixed one
+
+</opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/in
+consolata/Inconsolata-zi4r.pfb></opt/homebrew/Cellar/texlive/20250308_2/share/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></opt/homebrew/Cellar/texli
+ve/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></opt/
+homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmmib10.pfb></opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmr10.pfb></opt/homebrew/Cellar/texlive/20250308_2/sh
+are/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></opt/homebrew/Cellar/te
+xlive/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></o
+pt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/cm-su
+per/sfrm1000.pfb></opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/font
+s/type1/urw/helvetic/uhvr8a.pfb></opt/homebrew/Cellar/texlive/20250308_2/share/
+texmf-dist/fonts/type1/urw/times/utmb8a.pfb></opt/homebrew/Cellar/texlive/20250
+308_2/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></opt/homebrew/Cellar/t
+exlive/20250308_2/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></opt/homeb
+rew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/urw/times/utmri8a.pf
+b>
+Output written on Rd2.pdf (15 pages, 188230 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.17 [TeX Live 2025] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (59 entries accepted, 4 rejected).
+Sorting entries....done (362 comparisons).
+Generating output file Rd2.ind....done (87 lines written, 0 warnings).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./Rd2.tex
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/book.c
+ls
+Document Class: book 2024/06/29 v1.4n Standard LaTeX document class
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/bk10.c
+lo)) (/opt/homebrew/Cellar/r/4.5.2_1/lib/R/share/texmf/tex/latex/Rd.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/ifthen
+.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/iftex/ift
+ex.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/tools/longt
+able.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/tools/bm.st
+y)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/alltt.
+sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/tools/verba
+tim.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/url/url.sty
+)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/textco
+mp.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+math.sty
+For additional information on amsmath, use the `?' option.
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+text.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+gen.sty))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+bsy.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsmath/ams
+opn.sty))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsfonts/am
+sfonts.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsfonts/am
+ssymb.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/jknapltx/ma
+thrsfs.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/fonten
+c.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/time
+s.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/inconsolata
+/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/xkeyval/xke
+yval.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/xkeyval/x
+keyval.tex
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/xkeyval/x
+kvutils.tex
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/xkeyval/k
+eyval.tex)))))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/graphics/co
+lor.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/graphics-cf
+g/color.cfg)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/graphics-de
+f/pdftex.def)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/graphics/ma
+thcolor.ltx))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/hy
+perref.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/kvsetkeys/k
+vsetkeys.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/kvdefinek
+eys/kvdefinekeys.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pdfescape
+/pdfescape.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/ltxcmds/l
+txcmds.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/pdftexcmd
+s/pdftexcmds.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/infwarerr
+/infwarerr.sty)))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hycolor/hyc
+olor.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/na
+meref.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/refcount/re
+fcount.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/gettitles
+tring/gettitlestring.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/kvoptions/k
+voptions.sty)))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/etoolbox/et
+oolbox.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/stringenc
+/stringenc.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/pd
+1enc.def)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/intcalc/i
+ntcalc.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/pu
+enc.def)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/bitset/bi
+tset.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/bigintcal
+c/bigintcalc.sty))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/atbegs
+hi-ltx.sty))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/hyperref/hp
+dftex.def
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/atvery
+end-ltx.sty)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/rerunfilech
+eck/rerunfilecheck.sty
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/generic/uniquecou
+nter/uniquecounter.sty))))
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/base/makeid
+x.sty)
+Writing index file Rd2.idx
+
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/t1pt
+m.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/l3backend/l
+3backend-pdftex.def) (./Rd2.aux)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/context/base/mkii
+/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (./Rd2.out) (./Rd2.out)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/inconsolata
+/t1zi4.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsfonts/um
+sa.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/amsfonts/um
+sb.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/jknapltx/ur
+sfs.fd)
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/ts1p
+tm.fd)
+[1{/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/map/pdftex/up
+dmap/pdftex.map}{/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts
+/enc/dvips/base/8r.enc}{/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dis
+t/fonts/enc/dvips/inconsolata/i4-t1-0.enc}{/opt/homebrew/Cellar/texlive/2025030
+8_2/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] (./Rd2.toc)
+[2]
+Overfull \hbox (10.72733pt too wide) in paragraph at lines 125--129
+\T1/ptm/m/n/10 oth-er-wise, the co-ef-fi-cient names are as-signed au-to-mat-i-
+cally as fol-lows: []\T1/zi4/m/n/10 b1,b2,...[]\T1/ptm/m/n/10 .
+
+[3]
+[4]
+[5]
+Overfull \hbox (1.19746pt too wide) in paragraph at lines 325--329
+\T1/ptm/m/n/10 di-ated ef-fect. Note that to ob-tain the CI plot, one must also
+ spec-ify []\T1/zi4/m/n/10 plot="TRUE"[]\T1/ptm/m/n/10 .
+
+[6]
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/t1ph
+v.fd)
+[7]
+[8]
+Overfull \hbox (3.22453pt too wide) in paragraph at lines 471--472
+[]\T1/ptm/m/n/10 logical; if []\T1/zi4/m/n/10 TRUE []\T1/ptm/m/n/10 (de-fault),
+ the prob-a-bil-ity is $\OML/cmm/m/it/10 P\OT1/cmr/m/n/10 [\OML/cmm/m/it/10 qua
+nt < q\OT1/cmr/m/n/10 ]$\T1/ptm/m/n/10 ; oth-er-wise, $\OML/cmm/m/it/10 P\OT1/c
+mr/m/n/10 [\OML/cmm/m/it/10 quant >
+
+[9]
+[10]
+[11]
+[12]
+[13]
+(/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/inconsolata
+/ts1zi4.fd) (./Rd2.ind
+[14{/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/enc/dvips/in
+consolata/i4-ts1.enc}]
+
+LaTeX Font Warning: Font shape `T1/zi4/m/it' undefined
+(Font)              using `T1/zi4/m/n' instead on input line 70.
+
+
+
+[15]) (./Rd2.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+ )
+(see the transcript file for additional information)
+pdfTeX warning (dest): name{Rfn.data.frame} has been referenced but does not ex
+ist, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.logLik} has been referenced but does not exist,
+ replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.factor} has been referenced but does not exist,
+ replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.density} has been referenced but does not exist
+, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.mxOption} has been referenced but does not exis
+t, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.list} has been referenced but does not exist, r
+eplaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.formula} has been referenced but does not exist
+, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.lavaan} has been referenced but does not exist,
+ replaced by a fixed one
+
+
+pdfTeX warning (dest): name{Rfn.vector} has been referenced but does not exist,
+ replaced by a fixed one
+
+</opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/in
+consolata/Inconsolata-zi4r.pfb></opt/homebrew/Cellar/texlive/20250308_2/share/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></opt/homebrew/Cellar/texli
+ve/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></opt/
+homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmmib10.pfb></opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmr10.pfb></opt/homebrew/Cellar/texlive/20250308_2/sh
+are/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></opt/homebrew/Cellar/te
+xlive/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></o
+pt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/cm-su
+per/sfrm1000.pfb></opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/font
+s/type1/urw/helvetic/uhvr8a.pfb></opt/homebrew/Cellar/texlive/20250308_2/share/
+texmf-dist/fonts/type1/urw/times/utmb8a.pfb></opt/homebrew/Cellar/texlive/20250
+308_2/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></opt/homebrew/Cellar/t
+exlive/20250308_2/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></opt/homeb
+rew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/urw/times/utmri8a.pf
+b>
+Output written on Rd2.pdf (15 pages, 188580 bytes).
+Transcript written on Rd2.log.
+Saving output to ‘RMediation-manual.pdf’ ...
+Done
+You may want to clean up by 'rm -Rf /var/folders/ks/18k8m75d55g71zc5btp253nc0000gn/T//Rtmp95DO7q/Rd2pdf1036c17ba15b3'
