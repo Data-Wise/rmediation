@@ -91,15 +91,15 @@ mbco <- function(
   precision = 1e-9
 ) {
   # Input validation
-  assert_class(h0, "MxModel")
-  assert_class(h1, "MxModel")
-  assert_count(R, positive = TRUE)
+  checkmate::assert_class(h0, "MxModel")
+  checkmate::assert_class(h1, "MxModel")
+  checkmate::assert_count(R, positive = TRUE)
   type <- match.arg(type, c("asymp", "parametric", "semi"))
-  assert_number(alpha, lower = 0, upper = 1, finite = TRUE)
-  assert_choice(checkHess, c("Yes", "No"))
-  assert_choice(checkSE, c("Yes", "No"))
+  checkmate::assert_number(alpha, lower = 0, upper = 1, finite = TRUE)
+  checkmate::assert_choice(checkHess, c("Yes", "No"))
+  checkmate::assert_choice(checkSE, c("Yes", "No"))
   optim <- match.arg(optim, c("NPSOL", "CSOLNP", "SLSQP"))
-  assert_number(precision, lower = 0, finite = TRUE)
+  checkmate::assert_number(precision, lower = 0, finite = TRUE)
 
   if (!OpenMx::imxHasNPSOL()) {
     optim <- "SLSQP"
