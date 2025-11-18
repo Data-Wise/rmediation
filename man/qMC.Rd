@@ -34,9 +34,6 @@ qMC(.05,
 \references{
 Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis confidence intervals. \emph{Behavior Research Methods}, \bold{43}, 692--700. doi:10.3758/s13428-011-0076-x
 }
-\seealso{
-\code{\link{medci}} \code{\link{RMediation-package}}
-}
 \author{
 Davood Tofighi \email{dtofighi@gmail.com}
 }

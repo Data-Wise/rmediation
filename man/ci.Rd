@@ -94,9 +94,6 @@ the sampling distributions corresponding to each method will be produced;
 when \code{plotCI=TRUE}, then the overlaid plots of the CIs for both methods
 will be displayed as well.
 }
-\note{
-A shiny web application for  Monte Carlo method of this function is available at \url{https://amplab.shinyapps.io/MEDMC/}
-}
 \examples{
 ci(
   mu = c(b1 = 1, b2 = .7, b3 = .6, b4 = .45),
