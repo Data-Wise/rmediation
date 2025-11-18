@@ -20,3 +20,14 @@
 ^\.Rhistory$
 ^\.RData$
 ^\.Renviron$
+^CLAUDE.md$
+^GEMINI.md$
+^GITHUB_PAGES_SETUP.md$
+^IMPROVEMENT_PLAN.md$
+^LICENSE.md$
+^MIGRATION_SUMMARY.md$
+^PKGDOWN_SETUP.md$
+^QUICK_SUMMARY.md$
+^SECURITY.md$
+^_pkgdown.yml$
+^rmediation.code-workspace$
