@@ -39,7 +39,8 @@ Imports:
     methods (>= 4.1.0),
     MASS (>= 7.3),
     modelr (>= 0.1.8),
-    generics (>= 0.0.2)
+    generics (>= 0.0.2),
+    checkmate (>= 2.1.0)
 Suggests:
     knitr,
     rmarkdown,

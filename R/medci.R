@@ -85,12 +85,22 @@
 #' @importFrom stats rnorm qnorm pnorm dnorm cor density coef cov deriv integrate quantile sd var uniroot vcov
 #' @importFrom graphics par arrows axis curve legend lines mtext plot points text title abline segments
 #' @importFrom grDevices dev.new
-#' @importFrom methods is
-#' @importFrom boot boot boot.ci
+#' @importFrom checkmate assert_number assert_logical assert_count
 #' @export
-
 medci <- function(mu.x, mu.y, se.x, se.y, rho = 0, alpha = .05, type = "dop", plot = FALSE, plotCI = FALSE, n.mc = 1e5, ...) {
-  n.mc <- validate_prodnormal_params(mu.x, mu.y, se.x, se.y, rho, n.mc, alpha)
+  # Input validation
+  assert_number(mu.x, finite = TRUE)
+  assert_number(mu.y, finite = TRUE)
+  assert_number(se.x, lower = 0, finite = TRUE)
+  assert_number(se.y, lower = 0, finite = TRUE)
+  assert_number(rho, lower = -1, upper = 1, finite = TRUE)
+  assert_number(alpha, lower = 0, upper = 1, finite = TRUE)
+  assert_logical(plot)
+  assert_logical(plotCI)
+  assert_count(n.mc, positive = TRUE)
+
+  type <- match.arg(type, c("dop", "MC", "asymp", "all"))
+
   if (plot == TRUE) {
     mean.v <- c(mu.x, mu.y)
     var.mat <- matrix(c(se.x^2, se.x * se.y * rho, se.x * se.y * rho, se.y^2), 2)
@@ -125,23 +135,21 @@ medci <- function(mu.x, mu.y, se.x, se.y, rho = 0, alpha = .05, type = "dop", pl
     }
   }
 
-  if (type == "all" || type == "All" || type == "ALL") {
+  if (type == "all") {
     MCCI <- medciMC(mu.x, mu.y, se.x, se.y, rho, alpha, n.mc = n.mc)
     asympCI <- medciAsymp(mu.x, mu.y, se.x, se.y, rho, alpha) # added 3/28/14-DT
     MeekerCI <- medciMeeker(mu.x, mu.y, se.x, se.y, rho, alpha)
     res <- list(MeekerCI, MCCI, asympCI)
     names(res) <- c("Distribution of Product", "Monte Carlo", "Asymptotic Normal")
     return(res)
-  } else if (type == "DOP" || type == "dop" || type == "prodclin") {
+  } else if (type == "dop") {
     MeekerCI <- medciMeeker(mu.x, mu.y, se.x, se.y, rho, alpha)
     return(MeekerCI)
-  } else if (type == "MC" || type == "mc" || type == "Mc") {
+  } else if (type == "MC") {
     MCCI <- medciMC(mu.x, mu.y, se.x, se.y, rho, alpha, n.mc = n.mc)
     return(MCCI)
-  } else if (type == "Asymp" || type == "asymp") {
+  } else if (type == "asymp") {
     asympCI <- medciAsymp(mu.x, mu.y, se.x, se.y, rho, alpha) # Modified/ added 3/28/14
     return(asympCI)
-  } else {
-    stop("Wrong type! please specify type=\"all\", \"DOP\", \"prodclin\",\"MC\", or \"asymp\" ")
   }
 }

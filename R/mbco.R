@@ -15,73 +15,8 @@
 #' @author Davood Tofighi \email{dtofighi@@gmail.com}
 #' @import OpenMx
 #' @importFrom modelr resample_bootstrap
+#' @importFrom checkmate assert_class assert_count assert_number assert_choice
 #' @export
-#' @references  Tofighi, D., & Kelley, K. (2020). Indirect effects in sequential mediation models: Evaluating methods for hypothesis testing and confidence interval formation. \emph{Multivariate Behavioral Research}, \bold{55}, 188–210. \doi{https://doi.org/10.1080/00273171.2019.1618545}
-#'
-#'  Tofighi, D. (2020). Bootstrap Model-Based Constrained Optimization Tests of Indirect Effects. \emph{Frontiers in Psychology}, \bold{10}, 2989. \doi{https://doi.org/10.3389/fpsyg.2019.02989}
-
-#' @examples
-#' library(OpenMx)
-#' data(memory_exp)
-#' memory_exp$x <- as.numeric(memory_exp$x) - 1 # manually creating dummy codes
-#' endVar <- c("x", "repetition", "imagery", "recall")
-#' manifests <- c("x", "repetition", "imagery", "recall")
-#' full_model <- mxModel(
-#'   "memory_example",
-#'   type = "RAM",
-#'   manifestVars = manifests,
-#'   mxPath(
-#'     from = "x",
-#'     to = endVar,
-#'     arrows = 1,
-#'     free = TRUE,
-#'     values = .2,
-#'     labels = c("a1", "a2", "cp")
-#'   ),
-#'   mxPath(
-#'     from = "repetition",
-#'     to = "recall",
-#'     arrows = 1,
-#'     free = TRUE,
-#'     values = .2,
-#'     labels = "b1"
-#'   ),
-#'   mxPath(
-#'     from = "imagery",
-#'     to = "recall",
-#'     arrows = 1,
-#'     free = TRUE,
-#'     values = .2,
-#'     labels = "b2"
-#'   ),
-#'   mxPath(
-#'     from = manifests,
-#'     arrows = 2,
-#'     free = TRUE,
-#'     values = .8
-#'   ),
-#'   mxPath(
-#'     from = "one",
-#'     to = endVar,
-#'     arrows = 1,
-#'     free = TRUE,
-#'     values = .1
-#'   ),
-#'   mxAlgebra(a1 * b1, name = "ind1"),
-#'   mxAlgebra(a2 * b2, name = "ind2"),
-#'   mxCI("ind1", type = "both"),
-#'   mxCI("ind2", type = "both"),
-#'   mxData(observed = memory_exp, type = "raw")
-#' )
-#' ## Reduced  Model for indirect effect: a1*b1
-#' null_model1 <- mxModel(
-#'   model = full_model,
-#'   name = "Null Model 1",
-#'   mxConstraint(ind1 == 0, name = "ind1_eq0_constr")
-#' )
-#' full_model <- mxTryHard(full_model, checkHess = FALSE, silent = TRUE)
-#' null_model1 <- mxTryHard(null_model1, checkHess = FALSE, silent = TRUE)
-#' mbco(null_model1, full_model)
 mbco <- function(
   h0 = NULL,
   h1 = NULL,
@@ -93,21 +28,17 @@ mbco <- function(
   optim = "SLSQP",
   precision = 1e-9
 ) {
-  if (missing(h0)) {
-    stop("'h0' argument be a MxModel object")
-  }
-
-  if (missing(h1)) {
-    stop("'h1' argument be a MxModel object")
-  }
-
-  if (!all(sapply(c(h0, h1), is, "MxModel"))) {
-    stop("The 'h0' and 'h1' argument must be MxModel objects")
-  }
-
-  type <-
-    match.arg(type, c("asymp", "parametric", "semi")) # checks if one of the types of partially matches
+  # Input validation
+  assert_class(h0, "MxModel")
+  assert_class(h1, "MxModel")
+  assert_count(R, positive = TRUE)
+  type <- match.arg(type, c("asymp", "parametric", "semi"))
+  assert_number(alpha, lower = 0, upper = 1, finite = TRUE)
+  assert_choice(checkHess, c("Yes", "No"))
+  assert_choice(checkSE, c("Yes", "No"))
   optim <- match.arg(optim, c("NPSOL", "CSOLNP", "SLSQP"))
+  assert_number(precision, lower = 0, finite = TRUE)
+
 
   if (!OpenMx::imxHasNPSOL()) {
     optim <- "SLSQP"

@@ -38,28 +38,31 @@
 #' @seealso \code{\link{medci}} \code{\link{RMediation-package}}
 #' @examples
 #' pprodnormal(q = 0, mu.x = .5, mu.y = .3, se.x = 1, se.y = 1, rho = 0, type = "all")
+#' @importFrom checkmate assert_numeric assert_logical assert_count
 #' @export
-
-
 pprodnormal <- function(q, mu.x, mu.y, se.x = 1, se.y = 1, rho = 0, lower.tail = TRUE, type = "dop", n.mc = 1e5) {
-  n.mc <- validate_prodnormal_params(mu.x, mu.y, se.x, se.y, rho, n.mc)
+  # Input validation
+  assert_numeric(q, finite = TRUE, len = 1)
+  assert_numeric(mu.x, finite = TRUE)
+  assert_numeric(mu.y, finite = TRUE)
+  assert_numeric(se.x, lower = 0, finite = TRUE)
+  assert_numeric(se.y, lower = 0, finite = TRUE)
+  assert_numeric(rho, lower = -1, upper = 1, finite = TRUE)
+  assert_logical(lower.tail)
+  type <- match.arg(type, c("dop", "MC", "all"))
+  assert_count(n.mc, positive = TRUE)
 
-  if (type == "all" || type == "All" || type == "ALL") {
+  if (type == "all") {
     p2 <- pprodnormalMeeker(q, mu.x, mu.y, se.x, se.y, rho, lower.tail)$p
-    ## cat("Monte Carlo method:\n")
     p3 <- pprodnormalMC(q, mu.x, mu.y, se.x, se.y, rho, lower.tail, n.mc)$p
     res <- list(p2, p3)
     names(res) <- c("Distribution of Product", "Monte Carlo")
     return(res)
-  } else if (type == "DOP" || type == "dop") {
-    ## cat("Meeker method:\n")
+  } else if (type == "dop") {
     p2 <- pprodnormalMeeker(q, mu.x, mu.y, se.x, se.y, rho, lower.tail)$p
     return(p2)
-  } else if (type == "MC" || type == "mc" || type == "Mc") {
-    ## cat("Monte Carlo method:\n")
+  } else if (type == "MC") {
     p3 <- pprodnormalMC(q, mu.x, mu.y, se.x, se.y, rho, lower.tail, n.mc)$p
     return(p3)
-  } else {
-    stop("Wrong type! please specify type=\"all\", \"DOP\", or \"MC\" ")
   }
 }

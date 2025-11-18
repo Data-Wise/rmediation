@@ -48,30 +48,32 @@
 #'   p = .1, mu.x = .5, mu.y = .3, se.x = 1, se.y = 1, rho = 0,
 #'   lower.tail = FALSE, type = "all"
 #' )
+#' @importFrom checkmate assert_numeric assert_logical assert_count
 #' @export
-
-
 qprodnormal <-
   function(p, mu.x, mu.y, se.x, se.y, rho = 0, lower.tail = TRUE, type = "dop", n.mc = 1e5) {
-    n.mc <- validate_prodnormal_params(mu.x, mu.y, se.x, se.y, rho, n.mc, p = p)
+    # Input validation
+    assert_numeric(p, lower = 0, upper = 1, finite = TRUE, len = 1)
+    assert_numeric(mu.x, finite = TRUE)
+    assert_numeric(mu.y, finite = TRUE)
+    assert_numeric(se.x, lower = 0, finite = TRUE)
+    assert_numeric(se.y, lower = 0, finite = TRUE)
+    assert_numeric(rho, lower = -1, upper = 1, finite = TRUE)
+    assert_logical(lower.tail)
+    type <- match.arg(type, c("dop", "MC", "all"))
+    assert_count(n.mc, positive = TRUE)
 
-    if (type == "all" || type == "All" || type == "ALL") {
-      ## cat("Meeker method:\n")
+    if (type == "all") {
       q2 <- qprodnormalMeeker(p, mu.x, mu.y, se.x, se.y, rho, lower.tail)$q
-      ## cat("Monte Carlo method:\n")
       q3 <- qprodnormalMC(p, mu.x, mu.y, se.x, se.y, rho, lower.tail, n.mc)$q
       res <- list(q2, q3)
       names(res) <- c("Distribution of Product", "Monte Carlo")
       return(res)
-    } else if (type == "DOP" || type == "dop") {
-      ## cat("Meeker method:\n")
+    } else if (type == "dop") {
       q2 <- qprodnormalMeeker(p, mu.x, mu.y, se.x, se.y, rho, lower.tail)$q
       return(q2)
-    } else if (type == "MC" || type == "mc" || type == "Mc") {
-      ## cat("Monte Carlo method:\n")
+    } else if (type == "MC") {
       q3 <- qprodnormalMC(p, mu.x, mu.y, se.x, se.y, rho, lower.tail, n.mc)$q
       return(q3)
-    } else {
-      stop("Wrong type! please specify type=\"all\", \"DOP\", or \"MC\" ")
     }
   }

@@ -85,9 +85,8 @@
 #' @importFrom lavaan lav_matrix_vech_reverse
 #' @importFrom MASS mvrnorm
 #' @importFrom e1071 skewness kurtosis
-#' @note A shiny web application for  Monte Carlo method of this function is available at \url{https://amplab.shinyapps.io/MEDMC/}
+#' @importFrom checkmate assert_number assert_logical assert_count assert_formula assert
 #' @export
-
 ci <- function(
   mu,
   Sigma,
@@ -102,20 +101,31 @@ ci <- function(
   Sigma0 = NULL,
   ...
 ) {
-  if (missing(mu) | is.null(mu)) {
-    stop(paste("argument", sQuote("mu"), "must be specified"))
-  }
-  if (missing(quant) | is.null(quant)) {
-    stop(paste("argument", sQuote("quant"), "must be specified"))
-  }
-  if (!type %in% c("MC", "mc", "asymp", "Asymp", "all")) {
-    stop(paste("Please enter a correct", sQuote("type"), "argument"))
+  # Input validation
+  assert(checkmate::check_class(mu, "lavaan"), checkmate::check_numeric(mu, finite = TRUE))
+  assert_formula(quant)
+  assert_number(alpha, lower = 0, upper = 1, finite = TRUE)
+  type <- match.arg(type, c("MC", "asymp", "all"))
+  assert_logical(plot)
+  assert_logical(plotCI)
+  assert_count(n.mc, positive = TRUE)
+  assert_logical(H0)
+
+  if (H0) {
+    if (!is.null(mu0)) {
+      assert_numeric(mu0, finite = TRUE, len = length(mu))
+    }
+    if (!is.null(Sigma0)) {
+      assert(checkmate::check_matrix(Sigma0, mode = "numeric"), checkmate::check_numeric(Sigma0))
+    }
   }
 
-  if (!isa(mu, "lavaan")) {
-    if (is.null(Sigma) | missing(Sigma)) {
+
+  if (!inherits(mu, "lavaan")) {
+    if (is.null(Sigma) || missing(Sigma)) {
       stop(paste("argument", sQuote("Sigma"), "cannot be a NULL value"))
     }
+    assert(checkmate::check_matrix(Sigma, mode = "numeric", nrows = length(mu), ncols = length(mu)), checkmate::check_numeric(Sigma))
     if (!is.matrix(Sigma)) {
       if (length(mu) != (sqrt(1 + 8 * length(Sigma)) - 1) / 2) {
         stop(paste(
