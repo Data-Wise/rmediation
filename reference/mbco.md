@@ -179,13 +179,5 @@ null_model1 <- mxTryHard(null_model1, checkHess = FALSE, silent = TRUE)
 #> 
 #>  Solution found!  Final fit=5637.3991 (started at 86655.884)  (1 attempt(s): 1 valid, 0 errors)
 mbco(null_model1, full_model)
-#> $chisq
-#> [1] 0.06033239
-#> 
-#> $df
-#> [1] 1
-#> 
-#> $p
-#> [1] 0.8059713
-#> 
+#> Error in assert_class(h0, "MxModel"): could not find function "assert_class"
 ```

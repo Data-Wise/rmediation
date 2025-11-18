@@ -168,133 +168,17 @@ ci(
   Sigma = c(.05, 0, 0, 0, .05, 0, 0, .03, 0, .03),
   quant = ~ b1 * b2 * b3 * b4, type = "all", plot = TRUE, plotCI = TRUE
 )
-
-#> $MC
-#> $MC[[1]]
-#>      2.5 %     97.5 % 
-#> 0.02312248 0.50064170 
-#> 
-#> $MC$Estimate
-#> [1] 0.1890947
-#> 
-#> $MC$SE
-#> [1] 0.1252815
-#> 
-#> $MC$MCError
-#> [1] 1.252815e-07
-#> 
-#> $MC$p
-#> [1] 0.011638
-#> 
-#> attr(,"quant")
-#> ~b1 * b2 * b3 * b4
-#> <environment: 0x5643fefce518>
-#> 
-#> $Asymptotic
-#> $Asymptotic$`97.5% CI`
-#> [1] -0.04040623  0.41840623
-#> 
-#> $Asymptotic$Estimate
-#> [1] 0.189
-#> 
-#> $Asymptotic$SE
-#>           [,1]
-#> [1,] 0.1170461
-#> 
-#> attr(,"quant")
-#> ~b1 * b2 * b3 * b4
-#> <environment: 0x5643fefce518>
-#> 
+#> Error in assert(checkmate::check_class(mu, "lavaan"), checkmate::check_numeric(mu,     finite = TRUE)): could not find function "assert"
 # An Example of Conservative Null Sampling Distribution
 ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
   quant = ~ b1 * b2 * b3, type = "mc", plot = TRUE, plotCI = TRUE,
    H0 = TRUE, mu0 = c(b1 = .3, b2 = .4, b3 = 0)
 )
-
-#> [[1]]
-#> [[1]][[1]]
-#>      2.5 %     97.5 % 
-#> 0.00158318 0.09359723 
-#> 
-#> [[1]]$Estimate
-#> [1] 0.03602848
-#> 
-#> [[1]]$SE
-#> [1] 0.02396279
-#> 
-#> [[1]]$MCError
-#> [1] 2.396279e-08
-#> 
-#> [[1]]$p
-#> [1] 0.036072
-#> 
-#> attr(,"quant")
-#> ~b1 * b2 * b3
-#> <environment: 0x5643fefce518>
-#> 
-#> [[2]]
-#> [[2]]$CI
-#>       2.5 %      97.5 % 
-#> -0.00231408  0.07429322 
-#> 
-#> [[2]]$Estimate
-#> [1] -1.082207e-05
-#> 
-#> [[2]]$SE
-#> [1] 0.0184502
-#> 
-#> [[2]]$p
-#> [1] 0.060574
-#> 
-#> [[2]][[5]]
-#>  b1  b2  b3 
-#> 0.3 0.4 0.0 
-#> 
-#> 
+#> Error in assert(checkmate::check_class(mu, "lavaan"), checkmate::check_numeric(mu,     finite = TRUE)): could not find function "assert"
 # An Example of Less Conservative Null Sampling Distribution
 ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
   quant = ~ b1 * b2 * b3, type = "mc", plot = TRUE, plotCI = TRUE,
   H0 = TRUE, mu0 = c(b1 = 0, b2 = .4, b3 = 0.1)
 )
-
-#> [[1]]
-#> [[1]][[1]]
-#>       2.5 %      97.5 % 
-#> 0.001513854 0.093562761 
-#> 
-#> [[1]]$Estimate
-#> [1] 0.03599655
-#> 
-#> [[1]]$SE
-#> [1] 0.02394217
-#> 
-#> [[1]]$MCError
-#> [1] 2.394217e-08
-#> 
-#> [[1]]$p
-#> [1] 0.036404
-#> 
-#> attr(,"quant")
-#> ~b1 * b2 * b3
-#> <environment: 0x5643fefce518>
-#> 
-#> [[2]]
-#> [[2]]$CI
-#>      2.5 %     97.5 % 
-#> 0.02047066 0.05149711 
-#> 
-#> [[2]]$Estimate
-#> [1] 7.660872e-07
-#> 
-#> [[2]]$SE
-#> [1] 0.007143127
-#> 
-#> [[2]]$p
-#> [1] 0.0025
-#> 
-#> [[2]][[5]]
-#>  b1  b2  b3 
-#> 0.0 0.4 0.1 
-#> 
-#> 
+#> Error in assert(checkmate::check_class(mu, "lavaan"), checkmate::check_numeric(mu,     finite = TRUE)): could not find function "assert"
 ```

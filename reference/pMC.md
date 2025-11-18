@@ -77,5 +77,5 @@ pMC(.2,
   mu = c(b1 = 1, b2 = .7, b3 = .6, b4 = .45), Sigma = c(.05, 0, 0, 0, .05, 0, 0, .03, 0, .03),
   quant = ~ b1 * b2 * b3 * b4
 )
-#> [1] 0.619489
+#> Error in assert_numeric(q, finite = TRUE, len = 1): could not find function "assert_numeric"
 ```

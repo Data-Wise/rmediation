@@ -219,135 +219,19 @@ Research Methods</em>, <b>43</b>, 692–700. <a href="https://doi.org/10.3758/s1
 <span class="r-in"><span>  Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.05</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.05</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.03</span>, <span class="fl">0</span>, <span class="fl">.03</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  quant <span class="op">=</span> <span class="op">~</span> <span class="va">b1</span> <span class="op">*</span> <span class="va">b2</span> <span class="op">*</span> <span class="va">b3</span> <span class="op">*</span> <span class="va">b4</span>, type <span class="op">=</span> <span class="st">"all"</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, plotCI <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="ci-1.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $MC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $MC[[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      2.5 %     97.5 % </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.02312248 0.50064170 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $MC$Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1890947</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $MC$SE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1252815</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $MC$MCError</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.252815e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $MC$p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.011638</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"quant")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ~b1 * b2 * b3 * b4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5643fefce518&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Asymptotic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Asymptotic$`97.5% CI`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.04040623  0.41840623</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Asymptotic$Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.189</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Asymptotic$SE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           [,1]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 0.1170461</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"quant")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ~b1 * b2 * b3 * b4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5643fefce518&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in assert(checkmate::check_class(mu, "lavaan"), checkmate::check_numeric(mu,     finite = TRUE)):</span> could not find function "assert"</span>
 <span class="r-in"><span><span class="co"># An Example of Conservative Null Sampling Distribution</span></span></span>
 <span class="r-in"><span><span class="fu">ci</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">.3</span>, b2 <span class="op">=</span> <span class="fl">.4</span>, b3 <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.01</span>, <span class="fl">0</span>, <span class="fl">.02</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  quant <span class="op">=</span> <span class="op">~</span> <span class="va">b1</span> <span class="op">*</span> <span class="va">b2</span> <span class="op">*</span> <span class="va">b3</span>, type <span class="op">=</span> <span class="st">"mc"</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, plotCI <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>   H0 <span class="op">=</span> <span class="cn">TRUE</span>, mu0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">.3</span>, b2 <span class="op">=</span> <span class="fl">.4</span>, b3 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="ci-2.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]][[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      2.5 %     97.5 % </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.00158318 0.09359723 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.03602848</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$SE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.02396279</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$MCError</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.396279e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.036072</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"quant")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ~b1 * b2 * b3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5643fefce518&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$CI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       2.5 %      97.5 % </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -0.00231408  0.07429322 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -1.082207e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$SE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0184502</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.060574</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]][[5]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  b1  b2  b3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.3 0.4 0.0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in assert(checkmate::check_class(mu, "lavaan"), checkmate::check_numeric(mu,     finite = TRUE)):</span> could not find function "assert"</span>
 <span class="r-in"><span><span class="co"># An Example of Less Conservative Null Sampling Distribution</span></span></span>
 <span class="r-in"><span><span class="fu">ci</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">.3</span>, b2 <span class="op">=</span> <span class="fl">.4</span>, b3 <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.01</span>, <span class="fl">0</span>, <span class="fl">.02</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  quant <span class="op">=</span> <span class="op">~</span> <span class="va">b1</span> <span class="op">*</span> <span class="va">b2</span> <span class="op">*</span> <span class="va">b3</span>, type <span class="op">=</span> <span class="st">"mc"</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, plotCI <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  H0 <span class="op">=</span> <span class="cn">TRUE</span>, mu0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">0</span>, b2 <span class="op">=</span> <span class="fl">.4</span>, b3 <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="ci-3.png" alt="" width="700" height="433"></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]][[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       2.5 %      97.5 % </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.001513854 0.093562761 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.03599655</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$SE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.02394217</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$MCError</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.394217e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]$p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.036404</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"quant")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ~b1 * b2 * b3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5643fefce518&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$CI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      2.5 %     97.5 % </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.02047066 0.05149711 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$Estimate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.660872e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$SE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.007143127</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$p</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0025</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]][[5]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  b1  b2  b3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0 0.4 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in assert(checkmate::check_class(mu, "lavaan"), checkmate::check_numeric(mu,     finite = TRUE)):</span> could not find function "assert"</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
