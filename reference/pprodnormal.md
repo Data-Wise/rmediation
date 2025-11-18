@@ -109,19 +109,9 @@ Davood Tofighi <dtofighi@gmail.com>
 ``` r
 pprodnormal(q = 0, mu.x = .5, mu.y = .3, se.x = 1, se.y = 1, rho = 0, type = "all")
 #> $`Distribution of Product`
-#> $`Distribution of Product`$p
 #> [1] 0.4548488
 #> 
-#> $`Distribution of Product`$error
-#> [1] 5.196031e-05
-#> 
-#> 
 #> $`Monte Carlo`
-#> $`Monte Carlo`$p
 #> [1] 0.45464
-#> 
-#> $`Monte Carlo`$error
-#> [1] 4.979407e-06
-#> 
 #> 
 ```
