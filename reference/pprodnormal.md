@@ -112,6 +112,6 @@ pprodnormal(q = 0, mu.x = .5, mu.y = .3, se.x = 1, se.y = 1, rho = 0, type = "al
 #> [1] 0.4548488
 #> 
 #> $`Monte Carlo`
-#> [1] 0.45232
+#> [1] 0.45464
 #> 
 ```
