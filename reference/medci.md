@@ -159,9 +159,10 @@ res <- medci(
   mu.x = .2, mu.y = .4, se.x = 1, se.y = 1, rho = 0, alpha = .05,
   type = "dop", plot = TRUE, plotCI = TRUE
 )
-#> Error in assert_number(mu.x, finite = TRUE): could not find function "assert_number"
+#> Warning: 'length', 'angle', or 'code' greater than length 1; values after the first are ignored
+
 ## Example 2
 res <- medci(mu.x = .2, mu.y = .4, se.x = 1, se.y = 1, rho = 0,
  alpha = .05, type = "all", plot = TRUE, plotCI = TRUE)
-#> Error in assert_number(mu.x, finite = TRUE): could not find function "assert_number"
+#> Warning: 'length', 'angle', or 'code' greater than length 1; values after the first are ignored
 ```

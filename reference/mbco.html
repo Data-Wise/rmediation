@@ -109,95 +109,10 @@
 
 </dl></div>
     <div class="section level2">
-    <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Tofighi, D., &amp; Kelley, K. (2020). Indirect effects in sequential mediation models: Evaluating methods for hypothesis testing and confidence interval formation. <em>Multivariate Behavioral Research</em>, <b>55</b>, 188–210. <a href="https://doi.org/10.1080/00273171.2019.1618545" class="external-link">doi:10.1080/00273171.2019.1618545</a></p>
-<p>Tofighi, D. (2020). Bootstrap Model-Based Constrained Optimization Tests of Indirect Effects. <em>Frontiers in Psychology</em>, <b>10</b>, 2989. <a href="https://doi.org/10.3389/fpsyg.2019.02989" class="external-link">doi:10.3389/fpsyg.2019.02989</a></p>
-    </div>
-    <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p>Davood Tofighi <a href="mailto:dtofighi@gmail.com">dtofighi@gmail.com</a></p>
     </div>
 
-    <div class="section level2">
-    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openmx.ssri.psu.edu/" class="external-link">OpenMx</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> To take full advantage of multiple cores, use:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   mxOption(key='Number of Threads', value=parallel::detectCores()) #now</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">memory_exp</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">memory_exp</span><span class="op">$</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">memory_exp</span><span class="op">$</span><span class="va">x</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span> <span class="co"># manually creating dummy codes</span></span></span>
-<span class="r-in"><span><span class="va">endVar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"repetition"</span>, <span class="st">"imagery"</span>, <span class="st">"recall"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">manifests</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"repetition"</span>, <span class="st">"imagery"</span>, <span class="st">"recall"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">full_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxModel.html" class="external-link">mxModel</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="st">"memory_example"</span>,</span></span>
-<span class="r-in"><span>  type <span class="op">=</span> <span class="st">"RAM"</span>,</span></span>
-<span class="r-in"><span>  manifestVars <span class="op">=</span> <span class="va">manifests</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxPath.html" class="external-link">mxPath</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    from <span class="op">=</span> <span class="st">"x"</span>,</span></span>
-<span class="r-in"><span>    to <span class="op">=</span> <span class="va">endVar</span>,</span></span>
-<span class="r-in"><span>    arrows <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>    free <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>    values <span class="op">=</span> <span class="fl">.2</span>,</span></span>
-<span class="r-in"><span>    labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a1"</span>, <span class="st">"a2"</span>, <span class="st">"cp"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxPath.html" class="external-link">mxPath</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    from <span class="op">=</span> <span class="st">"repetition"</span>,</span></span>
-<span class="r-in"><span>    to <span class="op">=</span> <span class="st">"recall"</span>,</span></span>
-<span class="r-in"><span>    arrows <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>    free <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>    values <span class="op">=</span> <span class="fl">.2</span>,</span></span>
-<span class="r-in"><span>    labels <span class="op">=</span> <span class="st">"b1"</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxPath.html" class="external-link">mxPath</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    from <span class="op">=</span> <span class="st">"imagery"</span>,</span></span>
-<span class="r-in"><span>    to <span class="op">=</span> <span class="st">"recall"</span>,</span></span>
-<span class="r-in"><span>    arrows <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>    free <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>    values <span class="op">=</span> <span class="fl">.2</span>,</span></span>
-<span class="r-in"><span>    labels <span class="op">=</span> <span class="st">"b2"</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxPath.html" class="external-link">mxPath</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    from <span class="op">=</span> <span class="va">manifests</span>,</span></span>
-<span class="r-in"><span>    arrows <span class="op">=</span> <span class="fl">2</span>,</span></span>
-<span class="r-in"><span>    free <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>    values <span class="op">=</span> <span class="fl">.8</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxPath.html" class="external-link">mxPath</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    from <span class="op">=</span> <span class="st">"one"</span>,</span></span>
-<span class="r-in"><span>    to <span class="op">=</span> <span class="va">endVar</span>,</span></span>
-<span class="r-in"><span>    arrows <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>    free <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>    values <span class="op">=</span> <span class="fl">.1</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxAlgebra.html" class="external-link">mxAlgebra</a></span><span class="op">(</span><span class="va">a1</span> <span class="op">*</span> <span class="va">b1</span>, name <span class="op">=</span> <span class="st">"ind1"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxAlgebra.html" class="external-link">mxAlgebra</a></span><span class="op">(</span><span class="va">a2</span> <span class="op">*</span> <span class="va">b2</span>, name <span class="op">=</span> <span class="st">"ind2"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxCI.html" class="external-link">mxCI</a></span><span class="op">(</span><span class="st">"ind1"</span>, type <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxCI.html" class="external-link">mxCI</a></span><span class="op">(</span><span class="st">"ind2"</span>, type <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxData.html" class="external-link">mxData</a></span><span class="op">(</span>observed <span class="op">=</span> <span class="va">memory_exp</span>, type <span class="op">=</span> <span class="st">"raw"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Looks like there is a pre-existing one-headed path from 'x' to 'x'.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> That path is now overwritten by a two-headed path between 'x' and 'x'.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> To retain the one-headed path, either use 'dummy' latent variables, or directly modify the MxModel's 'A' matrix;</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> See the `mxPath()` help page for examples.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Be advised, this overwriting behavior may change in the future, so do not write scripts that rely upon it!</span>
-<span class="r-in"><span><span class="co">## Reduced  Model for indirect effect: a1*b1</span></span></span>
-<span class="r-in"><span><span class="va">null_model1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxModel.html" class="external-link">mxModel</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  model <span class="op">=</span> <span class="va">full_model</span>,</span></span>
-<span class="r-in"><span>  name <span class="op">=</span> <span class="st">"Null Model 1"</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxConstraint.html" class="external-link">mxConstraint</a></span><span class="op">(</span><span class="va">ind1</span> <span class="op">==</span> <span class="fl">0</span>, name <span class="op">=</span> <span class="st">"ind1_eq0_constr"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">full_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxTryHard.html" class="external-link">mxTryHard</a></span><span class="op">(</span><span class="va">full_model</span>, checkHess <span class="op">=</span> <span class="cn">FALSE</span>, silent <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Beginning initial fit attemptFit attempt 0, fit=5637.33872082209, new current best! (was 86655.7966682804)Final run, for Hessian and/or standard errors and/or confidence intervals                                                                             </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Solution found!  Final fit=5637.3387 (started at 86655.797)  (1 attempt(s): 1 valid, 0 errors)</span>
-<span class="r-in"><span><span class="va">null_model1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/OpenMx/man/mxTryHard.html" class="external-link">mxTryHard</a></span><span class="op">(</span><span class="va">null_model1</span>, checkHess <span class="op">=</span> <span class="cn">FALSE</span>, silent <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Beginning initial fit attemptFit attempt 0, fit=5637.39905321693, new current best! (was Inf)Final run, for Hessian and/or standard errors and/or confidence intervals                                                                         </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  Solution found!  Final fit=5637.3991 (started at 86655.884)  (1 attempt(s): 1 valid, 0 errors)</span>
-<span class="r-in"><span><span class="fu">mbco</span><span class="op">(</span><span class="va">null_model1</span>, <span class="va">full_model</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in assert_class(h0, "MxModel"):</span> could not find function "assert_class"</span>
-</code></pre></div>
-    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

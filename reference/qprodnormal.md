@@ -112,11 +112,21 @@ qprodnormal(
   p = .1, mu.x = .5, mu.y = .3, se.x = 1, se.y = 1, rho = 0,
   lower.tail = TRUE, type = "all"
 )
-#> Error in assert_numeric(p, lower = 0, upper = 1, finite = TRUE, len = 1): could not find function "assert_numeric"
+#> $`Distribution of Product`
+#> [1] -0.9898408
+#> 
+#> $`Monte Carlo`
+#> [1] -0.9970027
+#> 
 ## upper tail
 qprodnormal(
   p = .1, mu.x = .5, mu.y = .3, se.x = 1, se.y = 1, rho = 0,
   lower.tail = FALSE, type = "all"
 )
-#> Error in assert_numeric(p, lower = 0, upper = 1, finite = TRUE, len = 1): could not find function "assert_numeric"
+#> $`Distribution of Product`
+#> [1] 1.433771
+#> 
+#> $`Monte Carlo`
+#> [1] 1.426408
+#> 
 ```
