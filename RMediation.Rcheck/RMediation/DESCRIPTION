@@ -3,7 +3,7 @@ Type: Package
 Title: Mediation Analysis Confidence Intervals
 Version: 2.0.0
 Date: 2025-11-17
-Author: Davood Tofighi [aut, cre] (ORCID: 0000-0001-8523-7776)
+Author: Davood Tofighi [aut, cre] (ORCID: <https://orcid.org/0000-0001-8523-7776>)
 Maintainer: Davood Tofighi <dtofighi@gmail.com>
 Authors@R: person("Davood", "Tofighi",
     email = "dtofighi@gmail.com",
@@ -40,5 +40,5 @@ Roxygen: list(markdown = TRUE, roclets = c("rd", "collate",
 RoxygenNote: 7.3.3
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2025-11-18 03:28:13 UTC; dt
-Built: R 4.5.2; ; 2025-11-18 03:28:19 UTC; unix
+Packaged: 2025-11-18 03:34:12 UTC; dt
+Built: R 4.5.2; ; 2025-11-18 03:34:34 UTC; unix
