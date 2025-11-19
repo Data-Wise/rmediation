@@ -2,10 +2,14 @@
 
 RMediation 1.3.0 (2025-11-18)
 ==============
-* Added example to `mbco` function and updated documentation.
+* Updated functions and package documentation.
+* Updated package dependencies.
+* Updated `mbco` function documentation.
 * Implemented `checkmate` for robust input validation.
-* Addressed R CMD check NOTEs and WARNINGs for CRAN submission.
-* Updated `.gitignore` and package configuration.
+* Created GitHub pages for package documentation.
+* Refactored package structure for better organization.
+* Refactored package validation for better input validation.
+* Added tests for package functions.
 
 RMediation 1.2.3 (5/12/2023)
 ==============
