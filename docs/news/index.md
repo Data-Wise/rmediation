@@ -1,6 +1,17 @@
 # Changelog
 
-## RMediation 2.0.0
+## RMediation 1.3.0
+
+## RMediation 1.3.0 (2025-11-18)
+
+- Updated functions and package documentation.
+- Updated package dependencies.
+- Updated `mbco` function documentation.
+- Implemented `checkmate` for robust input validation.
+- Created GitHub pages for package documentation.
+- Refactored package structure for better organization.
+- Refactored package validation for better input validation.
+- Added tests for package functions.
 
 ## RMediation 1.2.3 (5/12/2023)
 

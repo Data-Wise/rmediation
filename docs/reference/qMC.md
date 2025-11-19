@@ -56,11 +56,6 @@ Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R package for
 mediation analysis confidence intervals. *Behavior Research Methods*,
 **43**, 692–700. doi:10.3758/s13428-011-0076-x
 
-## See also
-
-[`medci`](https://data-wise.github.io/rmediation/reference/medci.md)
-[`RMediation-package`](https://data-wise.github.io/rmediation/reference/RMediation-package.md)
-
 ## Author
 
 Davood Tofighi <dtofighi@gmail.com>

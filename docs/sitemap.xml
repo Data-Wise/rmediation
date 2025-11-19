@@ -1,14 +1,21 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://data-wise.github.io/rmediation/404.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/CLAUDE.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/GEMINI.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/GITHUB_PAGES_SETUP.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/IMPROVEMENT_PLAN.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/LICENSE-text.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/LICENSE.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/MIGRATION_SUMMARY.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/PKGDOWN_SETUP.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/QUICK_SUMMARY.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/README-bk.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/SECURITY.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/authors.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/index.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/news/index.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/news (1)/index.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/news (2)/index.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/reference/RMediation-package.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/reference/ci.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/reference/index.html</loc></url>
@@ -21,5 +28,33 @@
 <url><loc>https://data-wise.github.io/rmediation/reference/qprodnormal.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/reference/reexports.html</loc></url>
 <url><loc>https://data-wise.github.io/rmediation/reference/tidy_logLik.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/RMediation-package.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/RMediation.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/ci.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/index.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/mbco.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/medci.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/memory_exp.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/pMC.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/pprodnormal.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/qMC.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/qprodnormal.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/reexports.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/tidy.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (1)/tidy_logLik.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/RMediation-package.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/RMediation.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/ci.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/index.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/mbco.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/medci.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/memory_exp.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/pMC.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/pprodnormal.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/qMC.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/qprodnormal.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/reexports.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/tidy.html</loc></url>
+<url><loc>https://data-wise.github.io/rmediation/reference (2)/tidy_logLik.html</loc></url>
 </urlset>
 

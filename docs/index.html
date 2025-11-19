@@ -5,26 +5,35 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>RMediation - Mediation Analysis Confidence Intervals • RMediation</title>
+<title>RMediation • RMediation</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" sizes="any" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Inter-0.4.10/font.css" rel="stylesheet">
+<link href="deps/Fira_Code-0.4.10/font.css" rel="stylesheet">
+<link href="deps/Montserrat-0.4.10/font.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="RMediation - Mediation Analysis Confidence Intervals">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="RMediation">
 <meta name="description" content="Compute confidence intervals for nonlinear functions of model parameters in mediation analysis using distribution of product, Monte Carlo, and bootstrap methods.
 ">
 <meta property="og:description" content="Compute confidence intervals for nonlinear functions of model parameters in mediation analysis using distribution of product, Monte Carlo, and bootstrap methods.
 ">
+<meta property="og:image" content="https://data-wise.github.io/rmediation/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +42,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="active nav-item"><a class="nav-link" href="index.html"><span class="fa fas fa-home fa-lg"></span></a></li>
+<li class="active nav-item"><a class="nav-link" href="index.html" aria-label="Home"><span class="fa fas fa-home fa-lg"></span></a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -48,7 +57,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/data-wise/rmediation"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/data-wise/rmediation" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -57,76 +66,119 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="rmediation">RMediation<a class="anchor" aria-label="anchor" href="#rmediation"></a>
-</h1></div>
-<p>Below is the revised README.md file for the RMediation package, incorporating additional features such as MBCO, parametric and semi-parametric bootstrap methods, distribution of the product, and Monte Carlo method for confidence intervals:</p>
-</div>
-<div class="section level1">
-<h1 id="rmediation-1">RMediation<a class="anchor" aria-label="anchor" href="#rmediation-1"></a>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="rmediation-">RMediation <a class="anchor" aria-label="anchor" href="#rmediation-"></a>
 </h1>
-<p>RMediation is an R package for conducting mediation analysis in observational studies and experimental designs. Mediation analysis allows researchers to assess the mechanisms through which an independent variable affects a dependent variable by examining the role of intermediate variables, known as mediators.</p>
+</div>
+<p><a href="https://CRAN.R-project.org/package=RMediation" class="external-link"><img src="https://www.r-pkg.org/badges/version/RMediation" alt="CRAN status"></a> <a href="https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml" class="external-link"><img src="https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml/badge.svg" alt="Website Status"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></p>
+<p><strong>RMediation</strong> provides rigorous statistical methods for mediation analysis in observational and experimental designs. It addresses the known limitations of normal-theory confidence intervals (e.g., Sobel test) by implementing advanced methods that account for the non-normal distribution of the indirect effect.</p>
 <div class="section level2">
-<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+<h2 id="key-capabilities">Key Capabilities<a class="anchor" aria-label="anchor" href="#key-capabilities"></a>
 </h2>
+<div class="section level3">
+<h3 id="id_1-rigorous-confidence-intervals">1. Rigorous Confidence Intervals<a class="anchor" aria-label="anchor" href="#id_1-rigorous-confidence-intervals"></a>
+</h3>
+<p>Compute accurate Confidence Intervals (CIs) for indirect effects using methods that outperform the standard normal approximation:</p>
 <ul>
-<li>Implements various mediation analysis methods, including:
+<li>
+<strong>Distribution of the Product:</strong> Exact method for the product of two normal random variables.</li>
+<li>
+<strong>Monte Carlo Method:</strong> Robust simulation-based intervals.</li>
+<li>
+<strong>Bootstrapping:</strong> Parametric and semi-parametric bootstrap implementations.</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="id_2-advanced-hypothesis-testing">2. Advanced Hypothesis Testing<a class="anchor" aria-label="anchor" href="#id_2-advanced-hypothesis-testing"></a>
+</h3>
 <ul>
-<li>Distribution of the product method CI</li>
-<li>Sobel test (asymptotic normal)</li>
-<li>Monte Carlo method for confidence intervals</li>
-<li>Likelihood ratio test of mediation using Model-based Constraint Optimization, LRT-MBCO</li>
-<li>Parametric and semi-parametric bootstrap methods for LRT MBCO</li>
+<li>
+<strong>LRT-MBCO:</strong> Implements the <strong>Likelihood Ratio Test via Model-Based Constrained Optimization</strong>, a powerful frequentist method for testing indirect effects that controls Type I error rates better than standard approaches.</li>
+<li>
+<strong>Sobel Test:</strong> Asymptotic normal test included for baseline comparison.</li>
 </ul>
-</li>
-<li>Provides functions for estimating direct and indirect effects and confidence intervals.</li>
-<li>Includes visualization functions for displaying distribution of indirect estimates.</li>
+</div>
+<div class="section level3">
+<h3 id="id_3-seamless-integration">3. Seamless Integration<a class="anchor" aria-label="anchor" href="#id_3-seamless-integration"></a>
+</h3>
+<ul>
+<li>Works directly with summary statistics (coefficients/SEs).</li>
+<li>Extracts parameters automatically from fitted <code>lavaan</code> or <code>OpenMx</code> model objects.</li>
 </ul>
+<hr>
+</div>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the latest version of RMediation from CRAN using the following command:</p>
+<p>You can install the stable version from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"RMediation"</span><span class="op">)</span></span></code></pre></div>
-<p>Alternatively, you can install the development version directly from GitHub using the <code>remotes</code> package:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"data-wise/RMediation"</span><span class="op">)</span></span></code></pre></div>
+<p>Or the development version from GitHub:</p>
+<p>R</p>
+<pre><code><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"data-wise/RMediation"</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level2">
-<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+<h2 id="usage-scenarios">Usage Scenarios<a class="anchor" aria-label="anchor" href="#usage-scenarios"></a>
 </h2>
-<p>To conduct a basic mediation analysis using RMediation, follow these steps:</p>
-<ol style="list-style-type: decimal">
-<li>Load the RMediation package:</li>
-</ol>
+<div class="section level3">
+<h3 id="scenario-a-using-summary-statistics">Scenario A: Using Summary Statistics<a class="anchor" aria-label="anchor" href="#scenario-a-using-summary-statistics"></a>
+</h3>
+<p>If you already have estimates from a published paper or other software, you can calculate CIs using coefficients (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>a</mi><mo accent="true">̂</mo></mover><mo>,</mo><mover><mi>b</mi><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">\hat{a}, \hat{b}</annotation></semantics></math>) and their standard errors.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span></code></pre></div>
-<p>There are several scenarios for mediation analysis using the RMediation:</p>
-<ol style="list-style-type: decimal">
-<li><p>You have already performed a mediation analysis using a structural equation model (SEM) software and you have coeffiecient and indirect effect estimates along with their standard errors and covariance matrix of the coefficients. For a single mediator model, you can use the <code>medci</code> function to calculate confidence intervals for the indirect effects. For multiple mediator models, you can use the <code>ci</code> function to calculate confidence intervals for the indirect effects. For a general mediation model, you can use the <code>ci</code> function to calculate confidence intervals for the indirect effects. These two functions offer a variety of methods for calculating confidence intervals, such as distribution of the product and Monte Carlo methods.</p></li>
-<li><p>You have not yet performed a mediation analysis in <code>lavaan</code> or <code>OpenMx</code> and you have a fitted model object. In this case, you can use the <code>ci</code> function to estimate indirect effect confidence interval with multiple mediators and the <code>medci</code> function to calculate confidence intervals for the indirect effects with a single mediator. The first argument for these functions are the fitted model object– you do not need to specify the coefficnet estimates and their standard errors (covariance matrix of the coefficients) as the functions will extract these from the fitted model object.</p></li>
-</ol>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Example: Single mediator</span></span>
+<span><span class="co"># a = 0.5, b = 0.6, se.a = 0.08, se.b = 0.04, rho = 0 (independence)</span></span>
+<span><span class="fu"><a href="reference/medci.html">medci</a></span><span class="op">(</span>mu.x <span class="op">=</span> <span class="fl">0.5</span>, mu.y <span class="op">=</span> <span class="fl">0.6</span>, se.x <span class="op">=</span> <span class="fl">0.08</span>, se.y <span class="op">=</span> <span class="fl">0.04</span>, rho <span class="op">=</span> <span class="fl">0</span>, type <span class="op">=</span> <span class="st">"prodclin"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="scenario-b-using-a-fitted-model-object-lavaan">Scenario B: Using a Fitted Model Object (Lavaan)<a class="anchor" aria-label="anchor" href="#scenario-b-using-a-fitted-model-object-lavaan"></a>
+</h3>
+<p>If you have fit a model using <code>lavaan</code>, <code>RMediation</code> can automatically extract the necessary information to compute CIs for indirect effects.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 1. Fit your model in lavaan</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="va">my_model</span>, data <span class="op">=</span> <span class="va">my_data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 2. Pass the fitted object directly to ci()</span></span>
+<span><span class="co"># RMediation detects the coefficients and covariance matrix automatically</span></span>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span><span class="va">fit</span>, type <span class="op">=</span> <span class="st">"MC"</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
 </h2>
-<p>Contributions to RMediation are welcome! If you encounter any issues, have suggestions for improvements, or would like to contribute new features, please open an issue or submit a pull request on GitHub.</p>
+<p>Contributions are welcome! If you encounter issues or have feature requests:</p>
+<ul>
+<li><p><a href="https://github.com/data-wise/rmediation/issues" class="external-link">Report a Bug</a></p></li>
+<li><p><a href="https://www.google.com/search?q=https://github.com/data-wise/rmediation/pulls" class="external-link">Submit a Pull Request</a></p></li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<p>If you use RMediation in your research, please cite it using the following citation:</p>
-<pre><code>Tofighi, D. and MacKinnon, D. P. (2011). 'RMediation' An R package for mediation analysis confidence intervals. Behavior Research Methods, 43, 692--700. &lt;doi:10.3758/s13428-011-0076-x&gt;.
-
-Tofighi, D. (2020). Bootstrap Model-Based Constrained Optimization Tests of Indirect Effects. Frontiers in Psychology, 10, 2989. &lt;doi:10.3389/fpsyg.2019.02989&gt;.</code></pre>
+<p>If you use <strong>RMediation</strong> in your research, please cite the following:</p>
+<blockquote>
+<p><strong>Package Reference:</strong> &gt; Tofighi, D., &amp; MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis confidence intervals. <em>Behavior Research Methods</em>, 43, 692–700. <a href="doi:10.3758/s13428-011-0076-x" class="uri">doi:10.3758/s13428-011-0076-x</a></p>
+</blockquote>
+<blockquote>
+<p><strong>MBCO Method:</strong> &gt; Tofighi, D., &amp; Kelley, K. (2020). Improved inference in mediation analysis: Introducing the model-based constrained optimization procedure. <em>Psychological Methods</em>, 25(4), 496-515. <a href="doi:10.1037/met0000259" class="uri">doi:10.1037/met0000259</a></p>
+</blockquote>
+<blockquote>
+<p><strong>Bootstrap MBCO:</strong> &gt; Tofighi, D. (2020). Bootstrap Model-Based Constrained Optimization Tests of Indirect Effects. <em>Frontiers in Psychology</em>, 10, 2989. <a href="doi:10.3389/fpsyg.2019.02989" class="uri">doi:10.3389/fpsyg.2019.02989</a></p>
+</blockquote>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
 </h2>
-<p><code>RMediation</code> is licensed under the <a href="https://choosealicense.com/licenses/gpl-3.0/" class="external-link">GPL-3.0</a>. See the LICENSE file for details.</p>
+<p><code>RMediation</code> is licensed under the <a href="https://choosealicense.com/licenses/gpl-3.0/" class="external-link">GPL-3.0</a>.</p>
 </div>
 </div>
-
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -141,18 +193,11 @@ Tofighi, D. (2020). Bootstrap Model-Based Constrained Optimization Tests of Indi
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="LICENSE.html">Full license</a></li>
-<li><small>GPL (&gt;= 3)</small></li>
+<li>GPL (&gt;= 3) | file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
 
-
-<div class="citation">
-<h2 data-toc-skip>Citation</h2>
-<ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing RMediation</a></li>
-</ul>
-</div>
 
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>

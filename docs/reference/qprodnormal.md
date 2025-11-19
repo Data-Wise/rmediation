@@ -113,20 +113,10 @@ qprodnormal(
   lower.tail = TRUE, type = "all"
 )
 #> $`Distribution of Product`
-#> $`Distribution of Product`$q
 #> [1] -0.9898408
 #> 
-#> $`Distribution of Product`$error
-#> [1] 6.103516e-05
-#> 
-#> 
 #> $`Monte Carlo`
-#> $`Monte Carlo`$q
 #> [1] -1.000082
-#> 
-#> $`Monte Carlo`$error
-#> [1] 3.000015e-06
-#> 
 #> 
 ## upper tail
 qprodnormal(
@@ -134,19 +124,9 @@ qprodnormal(
   lower.tail = FALSE, type = "all"
 )
 #> $`Distribution of Product`
-#> $`Distribution of Product`$q
 #> [1] 1.433771
 #> 
-#> $`Distribution of Product`$error
-#> [1] 6.103516e-05
-#> 
-#> 
 #> $`Monte Carlo`
-#> $`Monte Carlo`$q
 #> [1] 1.439503
-#> 
-#> $`Monte Carlo`$error
-#> [1] 3.000015e-06
-#> 
 #> 
 ```

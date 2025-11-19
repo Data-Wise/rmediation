@@ -139,11 +139,6 @@ When `type="all"`, `ci` returns a
 [list](https://rdrr.io/r/base/list.html) that contains the results
 produced by each method as described above.
 
-## Note
-
-A shiny web application for Monte Carlo method of this function is
-available at <https://amplab.shinyapps.io/MEDMC/>
-
 ## References
 
 Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R package for
@@ -188,7 +183,7 @@ ci(
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3 * b4
-#> <environment: 0xb172a7a48>
+#> <environment: 0xa622410e0>
 #> 
 #> $Asymptotic
 #> $Asymptotic$`97.5% CI`
@@ -203,7 +198,7 @@ ci(
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3 * b4
-#> <environment: 0xb172a7a48>
+#> <environment: 0xa622410e0>
 #> 
 # An Example of Conservative Null Sampling Distribution
 ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
@@ -230,7 +225,7 @@ ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3
-#> <environment: 0xb172a7a48>
+#> <environment: 0xa622410e0>
 #> 
 #> [[2]]
 #> [[2]]$CI
@@ -276,7 +271,7 @@ ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3
-#> <environment: 0xb172a7a48>
+#> <environment: 0xa622410e0>
 #> 
 #> [[2]]
 #> [[2]]$CI
