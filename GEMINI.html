@@ -55,6 +55,25 @@
 </div>
 <div class="section level2">
 <h2 id="common-development-commands">Common Development Commands<a class="anchor" aria-label="anchor" href="#common-development-commands"></a></h2>
+</div>
+<div class="section level2">
+<h2 id="building-and-running">Building and Running<a class="anchor" aria-label="anchor" href="#building-and-running"></a></h2>
+<p>The project uses a <code>Makefile</code> and a custom R script (<code>dev/dev_agent.R</code>) to manage common development tasks.</p>
+<ul><li>
+<strong><code>make build</code></strong>: Builds the R package tarball using <code>devtools::build()</code>.</li>
+<li>
+<strong><code>make test</code></strong>: Runs the test suite using <code><a href="https://testthat.r-lib.org/reference/test_package.html" class="external-link">testthat::test_package()</a></code>.</li>
+<li>
+<strong><code>make check</code></strong>: Performs a full package check using <code>devtools::check()</code>.</li>
+<li>
+<strong><code>make lint</code></strong>: Lints the package code using <code>lintr::lint_package()</code>.</li>
+<li>
+<strong><code>make doc</code></strong>: Generates Roxygen documentation using <code>roxygen2::roxygenise()</code>.</li>
+<li>
+<strong><code>make site</code></strong>: Builds a <code>pkgdown</code> website for the package.</li>
+<li>
+<strong><code>make status</code></strong>: Prints a summary of the <code>DESCRIPTION</code> file.</li>
+</ul><p>To install the package locally for development, you can use <code>devtools::install()</code>.</p>
 <div class="section level3">
 <h3 id="package-building-and-checking">Package Building and Checking<a class="anchor" aria-label="anchor" href="#package-building-and-checking"></a></h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">

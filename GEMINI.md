@@ -26,6 +26,26 @@ and experimental designs.
 
 ## Common Development Commands
 
+## Building and Running
+
+The project uses a `Makefile` and a custom R script (`dev/dev_agent.R`)
+to manage common development tasks.
+
+- **`make build`**: Builds the R package tarball using
+  `devtools::build()`.
+- **`make test`**: Runs the test suite using
+  [`testthat::test_package()`](https://testthat.r-lib.org/reference/test_package.html).
+- **`make check`**: Performs a full package check using
+  `devtools::check()`.
+- **`make lint`**: Lints the package code using `lintr::lint_package()`.
+- **`make doc`**: Generates Roxygen documentation using
+  `roxygen2::roxygenise()`.
+- **`make site`**: Builds a `pkgdown` website for the package.
+- **`make status`**: Prints a summary of the `DESCRIPTION` file.
+
+To install the package locally for development, you can use
+`devtools::install()`.
+
 ### Package Building and Checking
 
 ``` r
