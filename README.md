@@ -1,4 +1,4 @@
-# RMediation `<a href="https://data-wise.github.io/rmediation/"><img src="https://raw.githubusercontent.com/data-wise/rmediation/main/man/figures/logo.png" align="right" height="138" alt="RMediation website"/></a>`
+# RMediation <img src="man/figures/logo.png" align="right" height="139" alt="RMediation website" />
 
 [![CRAN status](https://www.r-pkg.org/badges/version/RMediation)](https://CRAN.R-project.org/package=RMediation)
 [![Website Status](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml)
