@@ -92,11 +92,25 @@ reference:
   contents:
   - memory_exp
 
+- title: S7 Classes and Generics
+  desc: >
+    Modern S7 object-oriented classes and generic functions for type-safe
+    mediation analysis.
+  contents:
+  - ProductNormal
+  - MBCOResult
+  - cdf
+  - quantile
+  - print
+  - summary
+  - show
+
 - title: Utility Functions
   desc: >
     S3 methods and helper functions.
   contents:
   - tidy.logLik
+  - reexports
 
 authors:
   Davood Tofighi:

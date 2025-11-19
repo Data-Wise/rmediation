@@ -69,12 +69,12 @@
 #' )
 #' # An Example of Conservative Null Sampling Distribution
 #' ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
-#'   quant = ~ b1 * b2 * b3, type = "mc", plot = TRUE, plotCI = TRUE,
+#'   quant = ~ b1 * b2 * b3, type = "MC", plot = TRUE, plotCI = TRUE,
 #'    H0 = TRUE, mu0 = c(b1 = .3, b2 = .4, b3 = 0)
 #' )
 #' # An Example of Less Conservative Null Sampling Distribution
 #' ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
-#'   quant = ~ b1 * b2 * b3, type = "mc", plot = TRUE, plotCI = TRUE,
+#'   quant = ~ b1 * b2 * b3, type = "MC", plot = TRUE, plotCI = TRUE,
 #'   H0 = TRUE, mu0 = c(b1 = 0, b2 = .4, b3 = 0.1)
 #' )
 #' @author Davood Tofighi \email{dtofighi@@gmail.com}
@@ -86,14 +86,8 @@
 #' @importFrom MASS mvrnorm
 #' @importFrom e1071 skewness kurtosis
 #' @importFrom checkmate assert_number assert_logical assert_count assert_formula assert
-#' @export
-#' @example 
-#' ci(
-#'   mu = c(b1 = 1, b2 = .7, b3 = .6, b4 = .45),
-#'   Sigma = c(.05, 0, 0, 0, .05, 0, 0, .03, 0, .03),
-#'   quant = ~ b1 * b2 * b3 * b4, type = "MC", plot = TRUE, plotCI = TRUE
-#' )
-ci <- function(
+#' @keywords internal
+.ci_core <- function(
   mu,
   Sigma,
   quant,
@@ -182,19 +176,13 @@ ci <- function(
     }
   } else {
     fm1 <- mu
-    #    if(!fm1@Options[['do.fit']]) fm1 <- update(mu, do.fit=TRUE) # If it's not fitted, refit.
-    pEstM1 <- coef(fm1) # parameter estimate
+    pEstM1 <- lavaan::coef(fm1)
     name1 <- all.vars(quant)
     if (!all(name1 %in% names(pEstM1))) {
-      stop(paste(
-        "The parameters names in formula",
-        sQuote("quant"),
-        "must match the parameters names provided in lavaan object."
-      ))
+      stop(paste("The parameters names in formula", sQuote("quant"), "must match the parameters names provided in lavaan object."))
     }
     mu <- pEstM1[name1]
-    ## Cov
-    covM1 <- (vcov(fm1)) # covariance of the coef estimates
+    covM1 <- (lavaan::vcov(fm1))
     Sigma <- covM1[name1, name1]
   }
 

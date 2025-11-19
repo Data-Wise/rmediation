@@ -32,15 +32,16 @@ Depends:
     base (>= 4.1.0),
     stats (>= 4.1.0)
 Imports:
-    graphics (>= 4.1.0),
-    lavaan (>= 0.5-20),
+    checkmate (>= 2.1.0),
     e1071 (>= 1.6-7),
-    OpenMx (>= 2.13),
+    generics (>= 0.0.2),
+    graphics (>= 4.1.0),
     grDevices (>= 4.1.0),
+    lavaan (>= 0.5-20),
     MASS (>= 7.3),
     modelr (>= 0.1.8),
-    generics (>= 0.0.2),
-    checkmate (>= 2.1.0)
+    OpenMx (>= 2.13),
+    S7
 Suggests:
     knitr,
     rmarkdown,

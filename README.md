@@ -20,9 +20,15 @@ Compute accurate Confidence Intervals (CIs) for indirect effects using methods t
 * **LRT-MBCO:** Implements the **Likelihood Ratio Test via Model-Based Constrained Optimization**, a powerful frequentist method for testing indirect effects that controls Type I error rates better than standard approaches.
 * **Sobel Test:** Asymptotic normal test included for baseline comparison.
 
-### 3. Seamless Integration
+### 3. Modern S7 Object-Oriented Design
+* **Type-safe classes:** `ProductNormal` and `MBCOResult` S7 classes with validators.
+* **Meaningful output:** All classes have `print()`, `summary()`, and `show()` methods.
+* **Legacy compatible:** Existing code continues to work seamlessly.
+
+### 4. Seamless Integration
 * Works directly with summary statistics (coefficients/SEs).
 * Extracts parameters automatically from fitted `lavaan` or `OpenMx` model objects.
+* Auto-detects indirect effects in `lavaan` models (e.g., `ab := a*b`).
 
 ---
 
@@ -66,6 +72,42 @@ library(RMediation)
 ci(mu = c(b1 = 1, b2 = .7, b3 = .6, b4 = .45),
   Sigma = c(.05, 0, 0, 0, .05, 0, 0, .03, 0, .03),
   quant = ~ b1 * b2 * b3 * b4, type = "MC", plot = TRUE, plotCI = TRUE)
+```
+
+### Using S7 `ProductNormal` Class
+
+```r
+library(RMediation)
+
+# Create a ProductNormal distribution
+mu <- c(0.5, 0.3)
+Sigma <- matrix(c(0.01, 0.002, 0.002, 0.01), 2, 2)
+pn <- ProductNormal(mu = mu, Sigma = Sigma)
+
+# Compute confidence interval
+ci(pn, level = 0.95)
+
+# Display detailed information
+print(pn)
+summary(pn)
+```
+
+### Using `lavaan` Integration
+
+```r
+library(lavaan)
+library(RMediation)
+
+# Define mediation model
+model <- '
+  m ~ a*x
+  y ~ b*m
+  ab := a*b
+'
+fit <- sem(model, data = YourData)
+
+# Auto-detect and compute CI for indirect effect
+ci(fit)  # Automatically finds 'ab := a*b'
 ```
 
 ## Contributing
