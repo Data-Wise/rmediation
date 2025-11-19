@@ -33,7 +33,7 @@
 
     <a class="navbar-brand me-2" href="index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.3.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,11 +99,24 @@
 </ul>
 </div>
 <div class="section level3">
-<h3 id="id_3-seamless-integration">3. Seamless Integration<a class="anchor" aria-label="anchor" href="#id_3-seamless-integration"></a>
+<h3 id="id_3-modern-s7-object-oriented-design">3. Modern S7 Object-Oriented Design<a class="anchor" aria-label="anchor" href="#id_3-modern-s7-object-oriented-design"></a>
+</h3>
+<ul>
+<li>
+<strong>Type-safe classes:</strong> <code>ProductNormal</code> and <code>MBCOResult</code> S7 classes with validators.</li>
+<li>
+<strong>Meaningful output:</strong> All classes have <code><a href="reference/print.html">print()</a></code>, <code><a href="reference/summary.html">summary()</a></code>, and <code><a href="reference/show.html">show()</a></code> methods.</li>
+<li>
+<strong>Legacy compatible:</strong> Existing code continues to work seamlessly.</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="id_4-seamless-integration">4. Seamless Integration<a class="anchor" aria-label="anchor" href="#id_4-seamless-integration"></a>
 </h3>
 <ul>
 <li>Works directly with summary statistics (coefficients/SEs).</li>
 <li>Extracts parameters automatically from fitted <code>lavaan</code> or <code>OpenMx</code> model objects.</li>
+<li>Auto-detects indirect effects in <code>lavaan</code> models (e.g., <code>ab := a*b</code>).</li>
 </ul>
 <hr>
 </div>
@@ -111,13 +124,34 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the stable version from CRAN:</p>
+<div class="section level3">
+<h3 id="stable-release-cran">Stable Release (CRAN)<a class="anchor" aria-label="anchor" href="#stable-release-cran"></a>
+</h3>
+<p>Install the stable version from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"RMediation"</span><span class="op">)</span></span></code></pre></div>
-<p>Or the development version from GitHub:</p>
-<p>R</p>
-<pre><code><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"data-wise/RMediation"</span><span class="op">)</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="development-version-github">Development Version (GitHub)<a class="anchor" aria-label="anchor" href="#development-version-github"></a>
+</h3>
+<p>Install the latest development version with new S7 features:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Install remotes if needed</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Install from develop branch</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Data-Wise/rmediation"</span>, ref <span class="op">=</span> <span class="st">"develop"</span><span class="op">)</span></span></code></pre></div>
+<p><strong>Development version includes:</strong></p>
+<ul>
+<li>✨ Modern S7 object-oriented classes (<code>ProductNormal</code>, <code>MBCOResult</code>)</li>
+<li>🎯 Auto-detection of indirect effects in <code>lavaan</code> models<br>
+</li>
+<li>📊 Enhanced display methods (<code>print</code>, <code>summary</code>, <code>show</code>)</li>
+<li>✅ Comprehensive input validation with better error messages</li>
+<li>🔧 All features fully backward compatible</li>
+</ul>
+<hr>
+</div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -143,6 +177,42 @@
 <span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">1</span>, b2 <span class="op">=</span> <span class="fl">.7</span>, b3 <span class="op">=</span> <span class="fl">.6</span>, b4 <span class="op">=</span> <span class="fl">.45</span><span class="op">)</span>,</span>
 <span>  Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.05</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.05</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.03</span>, <span class="fl">0</span>, <span class="fl">.03</span><span class="op">)</span>,</span>
 <span>  quant <span class="op">=</span> <span class="op">~</span> <span class="va">b1</span> <span class="op">*</span> <span class="va">b2</span> <span class="op">*</span> <span class="va">b3</span> <span class="op">*</span> <span class="va">b4</span>, type <span class="op">=</span> <span class="st">"MC"</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, plotCI <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="using-s7-productnormal-class">Using S7 <code>ProductNormal</code> Class<a class="anchor" aria-label="anchor" href="#using-s7-productnormal-class"></a>
+</h3>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create a ProductNormal distribution</span></span>
+<span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.3</span><span class="op">)</span></span>
+<span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.002</span>, <span class="fl">0.002</span>, <span class="fl">0.01</span><span class="op">)</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">pn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ProductNormal.html">ProductNormal</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="va">mu</span>, Sigma <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Compute confidence interval</span></span>
+<span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span><span class="va">pn</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Display detailed information</span></span>
+<span><span class="fu"><a href="reference/print.html">print</a></span><span class="op">(</span><span class="va">pn</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/summary.html">summary</a></span><span class="op">(</span><span class="va">pn</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="using-lavaan-integration">Using <code>lavaan</code> Integration<a class="anchor" aria-label="anchor" href="#using-lavaan-integration"></a>
+</h3>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Define mediation model</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">'</span></span>
+<span><span class="st">  m ~ a*x</span></span>
+<span><span class="st">  y ~ b*m</span></span>
+<span><span class="st">  ab := a*b</span></span>
+<span><span class="st">'</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="va">model</span>, data <span class="op">=</span> <span class="va">YourData</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Auto-detect and compute CI for indirect effect</span></span>
+<span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>  <span class="co"># Automatically finds 'ab := a*b'</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">

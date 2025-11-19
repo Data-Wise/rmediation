@@ -35,29 +35,60 @@ methods that outperform the standard normal approximation:
 - **Sobel Test:** Asymptotic normal test included for baseline
   comparison.
 
-### 3. Seamless Integration
+### 3. Modern S7 Object-Oriented Design
+
+- **Type-safe classes:** `ProductNormal` and `MBCOResult` S7 classes
+  with validators.
+- **Meaningful output:** All classes have
+  [`print()`](https://data-wise.github.io/rmediation/reference/print.md),
+  [`summary()`](https://data-wise.github.io/rmediation/reference/summary.md),
+  and
+  [`show()`](https://data-wise.github.io/rmediation/reference/show.md)
+  methods.
+- **Legacy compatible:** Existing code continues to work seamlessly.
+
+### 4. Seamless Integration
 
 - Works directly with summary statistics (coefficients/SEs).
 - Extracts parameters automatically from fitted `lavaan` or `OpenMx`
   model objects.
+- Auto-detects indirect effects in `lavaan` models (e.g., `ab := a*b`).
 
 ------------------------------------------------------------------------
 
 ## Installation
 
-You can install the stable version from CRAN:
+### Stable Release (CRAN)
+
+Install the stable version from CRAN:
 
 ``` r
 
 install.packages("RMediation")
 ```
 
-Or the development version from GitHub:
+### Development Version (GitHub)
 
-R
+Install the latest development version with new S7 features:
 
-    # install.packages("remotes")
-    remotes::install_github("data-wise/RMediation")
+``` r
+
+# Install remotes if needed
+install.packages("remotes")
+
+# Install from develop branch
+remotes::install_github("Data-Wise/rmediation", ref = "develop")
+```
+
+**Development version includes:**
+
+- ✨ Modern S7 object-oriented classes (`ProductNormal`, `MBCOResult`)
+- 🎯 Auto-detection of indirect effects in `lavaan` models  
+- 📊 Enhanced display methods (`print`, `summary`, `show`)
+- ✅ Comprehensive input validation with better error messages
+- 🔧 All features fully backward compatible
+
+------------------------------------------------------------------------
 
 ## Usage
 
@@ -86,6 +117,44 @@ library(RMediation)
 ci(mu = c(b1 = 1, b2 = .7, b3 = .6, b4 = .45),
   Sigma = c(.05, 0, 0, 0, .05, 0, 0, .03, 0, .03),
   quant = ~ b1 * b2 * b3 * b4, type = "MC", plot = TRUE, plotCI = TRUE)
+```
+
+### Using S7 `ProductNormal` Class
+
+``` r
+
+library(RMediation)
+
+# Create a ProductNormal distribution
+mu <- c(0.5, 0.3)
+Sigma <- matrix(c(0.01, 0.002, 0.002, 0.01), 2, 2)
+pn <- ProductNormal(mu = mu, Sigma = Sigma)
+
+# Compute confidence interval
+ci(pn, level = 0.95)
+
+# Display detailed information
+print(pn)
+summary(pn)
+```
+
+### Using `lavaan` Integration
+
+``` r
+
+library(lavaan)
+library(RMediation)
+
+# Define mediation model
+model <- '
+  m ~ a*x
+  y ~ b*m
+  ab := a*b
+'
+fit <- sem(model, data = YourData)
+
+# Auto-detect and compute CI for indirect effect
+ci(fit)  # Automatically finds 'ab := a*b'
 ```
 
 ## Contributing

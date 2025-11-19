@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.3.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,76 @@
       <small>Source: <a href="https://github.com/data-wise/rmediation/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.4.0" id="rmediation-140">RMediation 1.4.0<a class="anchor" aria-label="anchor" href="#rmediation-140"></a></h2>
+<div class="section level3">
+<h3 id="major-changes-1-4-0">Major Changes<a class="anchor" aria-label="anchor" href="#major-changes-1-4-0"></a></h3>
+<div class="section level4">
+<h4 id="s7-oop-migration-1-4-0">S7 OOP Migration<a class="anchor" aria-label="anchor" href="#s7-oop-migration-1-4-0"></a></h4>
+<ul><li>Introduced S7 object-oriented programming for modern, type-safe class definitions.</li>
+<li>
+<strong>New S7 Classes:</strong>
+<ul><li>
+<code>ProductNormal</code>: Represents the distribution of the product of normal random variables.</li>
+<li>
+<code>MBCOResult</code>: Encapsulates results from MBCO tests.</li>
+</ul></li>
+<li>
+<strong>New S7 Generics:</strong> <code><a href="../reference/cdf.html">cdf()</a></code>, <code><a href="../reference/quantile.html">quantile()</a></code>, <code><a href="../reference/ci.html">ci()</a></code>, <code><a href="../reference/print.html">print()</a></code>, <code><a href="../reference/summary.html">summary()</a></code>, <code><a href="../reference/show.html">show()</a></code>.</li>
+<li>All S7 classes include comprehensive display methods (<code>print</code>, <code>summary</code>, <code>show</code>) for meaningful output.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="enhanced-ci-function-1-4-0">Enhanced <code>ci()</code> Function<a class="anchor" aria-label="anchor" href="#enhanced-ci-function-1-4-0"></a></h4>
+<ul><li>Migrated <code><a href="../reference/ci.html">ci()</a></code> to S7 generic with methods for:
+<ul><li>
+<code>numeric</code>: Legacy support for direct coefficient/covariance input.</li>
+<li>
+<code>lavaan</code>: Automatic extraction and CI computation for indirect effects.</li>
+<li>
+<code>ProductNormal</code>: Native S7 class support.</li>
+</ul></li>
+<li>
+<strong>Auto-detection</strong>: Automatically identifies product parameters (e.g., <code>ab := a*b</code>) in <code>lavaan</code> models.</li>
+<li>Renamed first argument to <code>mu</code> for better legacy compatibility.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="mbco-function-updates-1-4-0">MBCO Function Updates<a class="anchor" aria-label="anchor" href="#mbco-function-updates-1-4-0"></a></h4>
+<ul><li>Migrated <code><a href="../reference/mbco.html">mbco()</a></code> to S7 generic with method for <code>MxModel</code> objects.</li>
+<li>Returns <code>MBCOResult</code> S7 objects with properties: <code>statistic</code>, <code>df</code>, <code>p_value</code>, <code>type</code>.</li>
+<li>
+<strong>Legacy Compatibility</strong>: Implemented S3 methods (<code>$</code>, <code>[[</code>, <code>names</code>) for backward-compatible list-style access (e.g., <code>result$chisq</code>, <code>result$p</code>).</li>
+<li>Display methods show significance indicators (<em>, <strong>, </strong></em>, ns) and interpretation.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="input-validation-1-4-0">Input Validation<a class="anchor" aria-label="anchor" href="#input-validation-1-4-0"></a></h4>
+<ul><li>Comprehensive input validation using <code>checkmate</code> package across all functions.</li>
+<li>Type checking with <code><a href="https://rdrr.io/r/base/match.arg.html" class="external-link">match.arg()</a></code> for categorical arguments.</li>
+<li>Improved error messages for invalid inputs.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="display-methods-1-4-0">Display Methods<a class="anchor" aria-label="anchor" href="#display-methods-1-4-0"></a></h4>
+<ul><li>All S7 classes have meaningful <code><a href="../reference/print.html">print()</a></code>, <code><a href="../reference/summary.html">summary()</a></code>, and <code><a href="../reference/show.html">show()</a></code> methods.</li>
+<li>
+<code>ProductNormal</code> displays: distribution type, means, covariance matrix, SDs, and correlations.</li>
+<li>
+<code>MBCOResult</code> displays: test type, statistics, p-values with significance levels, and interpretation.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="package-cleanup-1-4-0">Package Cleanup<a class="anchor" aria-label="anchor" href="#package-cleanup-1-4-0"></a></h4>
+<ul><li>Removed unused dependencies (<code>doParallel</code>, <code>foreach</code>, <code>methods</code>).</li>
+<li>Fixed all documentation warnings and notes.</li>
+<li>
+<strong>R CMD check</strong>: Now passes with 0 errors, 0 warnings, 0 notes.</li>
+<li>Added 19 new tests for display methods (total: 160 tests).</li>
+</ul></div>
+</div>
+<div class="section level3">
+<h3 id="bug-fixes-1-4-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-4-0"></a></h3>
+<ul><li>Fixed argument dispatch issues between <code>alpha</code> and <code>level</code> parameters.</li>
+<li>Resolved S7 generic conflicts with base R functions.</li>
+<li>Fixed recursive dispatch issues in display methods.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.3.0" id="rmediation-130">RMediation 1.3.0<a class="anchor" aria-label="anchor" href="#rmediation-130"></a></h2>
 </div>

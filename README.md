@@ -55,6 +55,7 @@ remotes::install_github("Data-Wise/rmediation", ref = "develop")
 ```
 
 **Development version includes:**
+
 - ✨ Modern S7 object-oriented classes (`ProductNormal`, `MBCOResult`)
 - 🎯 Auto-detection of indirect effects in `lavaan` models  
 - 📊 Enhanced display methods (`print`, `summary`, `show`)
