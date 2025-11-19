@@ -26,3 +26,7 @@
 ^dev/.*
 ^Makefile$
 ^README\.dev\.md$
+# Exclude pkgdown-only logo variants (keep only logo.png and logo-light-medium.png)
+^man/figures/favicon\.png$
+^man/figures/logo-dark-.*\.png$
+^man/figures/logo-small-.*\.png$
