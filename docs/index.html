@@ -120,10 +120,10 @@
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"data-wise/RMediation"</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level2">
-<h2 id="usage-scenarios">Usage Scenarios<a class="anchor" aria-label="anchor" href="#usage-scenarios"></a>
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <div class="section level3">
-<h3 id="scenario-a-using-summary-statistics">Scenario A: Using Summary Statistics<a class="anchor" aria-label="anchor" href="#scenario-a-using-summary-statistics"></a>
+<h3 id="using-summary-statistics-to-calculate-cis">Using Summary Statistics to Calculate CIs<a class="anchor" aria-label="anchor" href="#using-summary-statistics-to-calculate-cis"></a>
 </h3>
 <p>If you already have estimates from a published paper or other software, you can calculate CIs using coefficients (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>a</mi><mo accent="true">̂</mo></mover><mo>,</mo><mover><mi>b</mi><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">\hat{a}, \hat{b}</annotation></semantics></math>) and their standard errors.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -134,20 +134,15 @@
 <span><span class="fu"><a href="reference/medci.html">medci</a></span><span class="op">(</span>mu.x <span class="op">=</span> <span class="fl">0.5</span>, mu.y <span class="op">=</span> <span class="fl">0.6</span>, se.x <span class="op">=</span> <span class="fl">0.08</span>, se.y <span class="op">=</span> <span class="fl">0.04</span>, rho <span class="op">=</span> <span class="fl">0</span>, type <span class="op">=</span> <span class="st">"prodclin"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="scenario-b-using-a-fitted-model-object-lavaan">Scenario B: Using a Fitted Model Object (Lavaan)<a class="anchor" aria-label="anchor" href="#scenario-b-using-a-fitted-model-object-lavaan"></a>
+<h3 id="using-ci-to-calculate-cis-for-indirect-effects-of-path-with-two-sequential-mediators">Using <code>ci</code> to Calculate CIs for Indirect Effects of Path with Two Sequential Mediators<a class="anchor" aria-label="anchor" href="#using-ci-to-calculate-cis-for-indirect-effects-of-path-with-two-sequential-mediators"></a>
 </h3>
-<p>If you have fit a model using <code>lavaan</code>, <code>RMediation</code> can automatically extract the necessary information to compute CIs for indirect effects.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># 1. Fit your model in lavaan</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="va">my_model</span>, data <span class="op">=</span> <span class="va">my_data</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># 2. Pass the fitted object directly to ci()</span></span>
-<span><span class="co"># RMediation detects the coefficients and covariance matrix automatically</span></span>
-<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span><span class="va">fit</span>, type <span class="op">=</span> <span class="st">"MC"</span><span class="op">)</span> </span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Example: Two sequential mediators</span></span>
+<span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">1</span>, b2 <span class="op">=</span> <span class="fl">.7</span>, b3 <span class="op">=</span> <span class="fl">.6</span>, b4 <span class="op">=</span> <span class="fl">.45</span><span class="op">)</span>,</span>
+<span>  Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.05</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.05</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.03</span>, <span class="fl">0</span>, <span class="fl">.03</span><span class="op">)</span>,</span>
+<span>  quant <span class="op">=</span> <span class="op">~</span> <span class="va">b1</span> <span class="op">*</span> <span class="va">b2</span> <span class="op">*</span> <span class="va">b3</span> <span class="op">*</span> <span class="va">b4</span>, type <span class="op">=</span> <span class="st">"MC"</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, plotCI <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
