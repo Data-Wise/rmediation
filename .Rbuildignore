@@ -18,3 +18,11 @@
 ^.*\s\(\d+\).*$
 ^RMediation\.Rcheck$
 ^RMediation_2\.0\.0\.tar\.gz$
+
+## Development files
+
+# Development agent files (dev script, Makefile, docs)
+^dev$
+^dev/.*
+^Makefile$
+^README\.dev\.md$
