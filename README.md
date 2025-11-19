@@ -43,9 +43,9 @@ R
 remotes::install_github("data-wise/RMediation")
 ```
 
-## Usage Scenarios
+## Usage
 
-### Scenario A: Using Summary Statistics
+### Using Summary Statistics to Calculate CIs
 
 If you already have estimates from a published paper or other software, you can calculate CIs using coefficients ($\hat{a}, \hat{b}$) and their standard errors.
 
@@ -57,21 +57,15 @@ library(RMediation)
 medci(mu.x = 0.5, mu.y = 0.6, se.x = 0.08, se.y = 0.04, rho = 0, type = "prodclin")
 ```
 
-### Scenario B: Using a Fitted Model Object (Lavaan)
-
-If you have fit a model using `lavaan`, `RMediation` can automatically extract the necessary information to compute CIs for indirect effects.
+### Using `ci` to Calculate CIs for Indirect Effects of Path with Two Sequential Mediators
 
 ```r
-library(lavaan)
 library(RMediation)
 
-# 1. Fit your model in lavaan
-fit <- sem(my_model, data = my_data)
-
-# 2. Pass the fitted object directly to ci()
-# RMediation detects the coefficients and covariance matrix automatically
-results <- ci(fit, type = "MC") 
-print(results)
+# Example: Two sequential mediators
+ci(mu = c(b1 = 1, b2 = .7, b3 = .6, b4 = .45),
+  Sigma = c(.05, 0, 0, 0, .05, 0, 0, .03, 0, .03),
+  quant = ~ b1 * b2 * b3 * b4, type = "MC", plot = TRUE, plotCI = TRUE)
 ```
 
 ## Contributing
