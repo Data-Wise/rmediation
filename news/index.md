@@ -1,6 +1,13 @@
 # Changelog
 
-## RMediation 2.0.0
+## RMediation 1.3.0
+
+## RMediation 1.3.0 (2025-11-18)
+
+- Added example to `mbco` function and updated documentation.
+- Implemented `checkmate` for robust input validation.
+- Addressed R CMD check NOTEs and WARNINGs for CRAN submission.
+- Updated `.gitignore` and package configuration.
 
 ## RMediation 1.2.3 (5/12/2023)
 
