@@ -1,4 +1,4 @@
-# RMediation 1.3.0.9000 (Development)
+# RMediation 1.4.0
 
 ## Major Changes
 

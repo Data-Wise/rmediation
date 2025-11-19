@@ -34,21 +34,34 @@ Compute accurate Confidence Intervals (CIs) for indirect effects using methods t
 
 ## Installation
 
-You can install the stable version from CRAN:
+### Stable Release (CRAN)
+
+Install the stable version from CRAN:
 
 ```r
 install.packages("RMediation")
-````
-
-Or the development version from GitHub:
-
-R
-
-```
-# install.packages("remotes")
-remotes::install_github("data-wise/RMediation")
 ```
 
+### Development Version (GitHub)
+
+Install the latest development version with new S7 features:
+
+```r
+# Install remotes if needed
+install.packages("remotes")
+
+# Install from develop branch
+remotes::install_github("Data-Wise/rmediation", ref = "develop")
+```
+
+**Development version includes:**
+- ✨ Modern S7 object-oriented classes (`ProductNormal`, `MBCOResult`)
+- 🎯 Auto-detection of indirect effects in `lavaan` models  
+- 📊 Enhanced display methods (`print`, `summary`, `show`)
+- ✅ Comprehensive input validation with better error messages
+- 🔧 All features fully backward compatible
+
+---
 ## Usage
 
 ### Using Summary Statistics to Calculate CIs
