@@ -1,9 +1,8 @@
-# RMediation `<img src="man/figures/logo.png" align="right" height="139" alt="RMediation website" />`
+# RMediation `<a href="https://data-wise.github.io/rmediation/"><img src="https://raw.githubusercontent.com/data-wise/rmediation/main/man/figures/logo.png" align="right" height="138" alt="RMediation website"/></a>`
 
 [![CRAN status](https://www.r-pkg.org/badges/version/RMediation)](https://CRAN.R-project.org/package=RMediation)
 [![Website Status](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-
 [![R-hub](https://github.com/Data-Wise/rmediation/actions/workflows/rhub.yaml/badge.svg)](https://github.com/Data-Wise/rmediation/actions/workflows/rhub.yaml)
 
 **RMediation** provides rigorous statistical methods for mediation analysis in observational and experimental designs. It addresses the known limitations of normal-theory confidence intervals (e.g., Sobel test) by implementing advanced methods that account for the non-normal distribution of the indirect effect.
