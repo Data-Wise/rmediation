@@ -37,7 +37,8 @@ to manage common development tasks.
   [`testthat::test_package()`](https://testthat.r-lib.org/reference/test_package.html).
 - **`make check`**: Performs a full package check using
   [`devtools::check()`](https://devtools.r-lib.org/reference/check.html).
-- **`make lint`**: Lints the package code using `lintr::lint_package()`.
+- **`make lint`**: Lints the package code using
+  [`lintr::lint_package()`](https://lintr.r-lib.org/reference/lint.html).
 - **`make doc`**: Generates Roxygen documentation using
   [`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html).
 - **`make site`**: Builds a `pkgdown` website for the package.

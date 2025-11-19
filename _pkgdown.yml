@@ -53,13 +53,13 @@ navbar:
     reference:
       text: Reference
       href: reference/index.html
-    articles:
-      text: Articles
-      menu:
-      - text: Getting Started
-        href: articles/getting-started.html
-      - text: CI Methods Comparison
-        href: articles/ci-methods-comparison.html
+    # articles:
+    #   text: Articles
+    #   menu:
+    #   - text: Getting Started
+    #     href: articles/getting-started.html
+    #   - text: CI Methods Comparison
+    #     href: articles/ci-methods-comparison.html
     news:
       text: News
       href: news/index.html

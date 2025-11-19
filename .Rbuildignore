@@ -30,3 +30,4 @@
 ^man/figures/favicon\.png$
 ^man/figures/logo-dark-.*\.png$
 ^man/figures/logo-small-.*\.png$
+^cran-comments\.md$
