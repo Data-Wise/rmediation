@@ -1,15 +1,17 @@
-# RMediation <img src="man/figures/logo.png" align="right" height="139" alt="RMediation website" />
+# RMediation `<img src="man/figures/logo.png" align="right" height="139" alt="RMediation website" />`
 
 [![CRAN status](https://www.r-pkg.org/badges/version/RMediation)](https://CRAN.R-project.org/package=RMediation)
 [![Website Status](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 
+[![R-hub](https://github.com/Data-Wise/rmediation/actions/workflows/rhub.yaml/badge.svg)](https://github.com/Data-Wise/rmediation/actions/workflows/rhub.yaml)
 
 **RMediation** provides rigorous statistical methods for mediation analysis in observational and experimental designs. It addresses the known limitations of normal-theory confidence intervals (e.g., Sobel test) by implementing advanced methods that account for the non-normal distribution of the indirect effect.
 
 ## Key Capabilities
 
 ### 1. Rigorous Confidence Intervals
+
 Compute accurate Confidence Intervals (CIs) for indirect effects using methods that outperform the standard normal approximation:
 
 * **Distribution of the Product:** Exact method for the product of two normal random variables.
@@ -17,10 +19,12 @@ Compute accurate Confidence Intervals (CIs) for indirect effects using methods t
 * **Bootstrapping:** Parametric and semi-parametric bootstrap implementations.
 
 ### 2. Advanced Hypothesis Testing
+
 * **LRT-MBCO:** Implements the **Likelihood Ratio Test via Model-Based Constrained Optimization**, a powerful frequentist method for testing indirect effects that controls Type I error rates better than standard approaches.
 * **Sobel Test:** Asymptotic normal test included for baseline comparison.
 
 ### 3. Seamless Integration
+
 * Works directly with summary statistics (coefficients/SEs).
 * Extracts parameters automatically from fitted `lavaan` or `OpenMx` model objects.
 
@@ -32,7 +36,7 @@ You can install the stable version from CRAN:
 
 ```r
 install.packages("RMediation")
-````
+```
 
 Or the development version from GitHub:
 
@@ -73,9 +77,8 @@ ci(mu = c(b1 = 1, b2 = .7, b3 = .6, b4 = .45),
 Contributions are welcome! If you encounter issues or have feature requests:
 
 - [Report a Bug](https://github.com/data-wise/rmediation/issues)
-    
 - [Submit a Pull Request](https://www.google.com/search?q=https://github.com/data-wise/rmediation/pulls)
-    
+
 ## Citation
 
 If you use **RMediation** in your research, please cite the following:
