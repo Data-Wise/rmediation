@@ -248,11 +248,31 @@ mediation analysis.
 
 ## Utility Functions
 
-S3 methods and helper functions.
+S3 methods, validation helpers, and utility functions.
 
+- [`utils_validation`](https://data-wise.github.io/rmediation/reference/utils_validation.md)
+  : Enhanced validation and utility functions for ProductNormal class
+- [`ProductNormal2()`](https://data-wise.github.io/rmediation/reference/ProductNormal2.md)
+  : Enhanced ProductNormal constructor with better validation
+- [`ProductNormal_from_lavaan()`](https://data-wise.github.io/rmediation/reference/ProductNormal_from_lavaan.md)
+  : Utility function to create ProductNormal from lavaan parameter
+  estimates
+- [`validate_ProductNormal()`](https://data-wise.github.io/rmediation/reference/validate_ProductNormal.md)
+  : Additional validation for ProductNormal objects
+- [`is_valid_for_computation()`](https://data-wise.github.io/rmediation/reference/is_valid_for_computation.md)
+  : Method to check if ProductNormal object is properly specified for
+  computation
 - [`tidy(`*`<logLik>`*`)`](https://data-wise.github.io/rmediation/reference/tidy_logLik.md)
   : Creates a data.frame for a log-likelihood object
 - [`reexports`](https://data-wise.github.io/rmediation/reference/reexports.md)
   [`tidy`](https://data-wise.github.io/rmediation/reference/reexports.md)
   : Objects exported from other packages
 
+# Articles
+
+### All vignettes
+
+- [Getting Started with
+  RMediation](https://data-wise.github.io/rmediation/articles/getting-started.md):
+- [Comparing Confidence Interval Methods in
+  RMediation](https://data-wise.github.io/rmediation/articles/methods-comparison.md):

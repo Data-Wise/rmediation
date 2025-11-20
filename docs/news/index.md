@@ -85,7 +85,11 @@
 
 ## RMediation 1.3.0
 
+CRAN release: 2025-11-20
+
 ## RMediation 1.3.0 (2025-11-18)
+
+CRAN release: 2025-11-20
 
 - Updated functions and package documentation.
 - Updated package dependencies.
