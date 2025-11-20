@@ -59,7 +59,7 @@ navbar:
       - text: Getting Started
         href: articles/getting-started.html
       - text: CI Methods Comparison
-        href: articles/ci-methods-comparison.html
+        href: articles/methods-comparison.html
     news:
       text: News
       href: news/index.html
