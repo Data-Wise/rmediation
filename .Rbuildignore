@@ -33,3 +33,6 @@
 ^vignettes/.*\.knit\.md$
 ^vignettes/.*_cache$
 ^vignettes/.*_files$
+^vignettes/CONVERSION_NOTES\.md$
+^doc$
+^Meta$
