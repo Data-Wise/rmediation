@@ -107,8 +107,13 @@ reference:
 
 - title: Utility Functions
   desc: >
-    S3 methods and helper functions.
+    S3 methods, validation helpers, and utility functions.
   contents:
+  - utils_validation
+  - ProductNormal2
+  - ProductNormal_from_lavaan
+  - validate_ProductNormal
+  - is_valid_for_computation
   - tidy.logLik
   - reexports
 
