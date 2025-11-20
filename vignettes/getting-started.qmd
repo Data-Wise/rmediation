@@ -76,6 +76,7 @@ The package includes modern S7 object-oriented classes:
 
 ```{r}
 #| label: example3
+#| eval: false
 
 # Create a ProductNormal distribution object
 pn <- ProductNormal(

@@ -172,6 +172,7 @@ The modern S7 implementation provides method-specific functionality:
 
 ```{r}
 #| label: s7-example
+#| eval: false
 
 # Create a ProductNormal object (represents distribution of product)
 pn <- ProductNormal(
