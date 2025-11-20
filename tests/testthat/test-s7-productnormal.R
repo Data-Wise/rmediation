@@ -53,18 +53,18 @@ test_that("Methods work for 3 variables (Monte Carlo)", {
   mu <- c(0, 0, 0)
   Sigma <- diag(3)
   pn <- ProductNormal(mu = mu, Sigma = Sigma)
-  
+
   # CDF at 0 should be 0.5 for product of 3 standard normals (symmetry)
   # With MC error, it should be close
   set.seed(123)
-  p_val <- cdf(pn, q = 0, n.mc = 1e4)
+  p_val <- cdf(pn, q = 0, type = "MC", n.mc = 1e4)
   expect_equal(p_val, 0.5, tolerance = 0.02)
-  
+
   # Quantile at 0.5 should be 0
-  q_val <- quantile(pn, p = 0.5, n.mc = 1e4)
+  q_val <- quantile(pn, p = 0.5, type = "MC", n.mc = 1e4)
   expect_equal(as.numeric(q_val), 0, tolerance = 0.1)
-  
+
   # CI should be symmetric around 0
-  ci_val <- ci(pn, level = 0.95, n.mc = 1e4)
+  ci_val <- ci(pn, level = 0.95, type = "MC", n.mc = 1e4)
   expect_equal(unname(ci_val[1]), unname(-ci_val[2]), tolerance = 0.1)
 })
