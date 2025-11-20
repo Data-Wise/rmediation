@@ -11,7 +11,8 @@ Authors@R: person("Davood", "Tofighi",
     comment = c(ORCID = "0000-0001-8523-7776"))
 Description: Computes confidence intervals for nonlinear functions of model 
     parameters (e.g., product of k coefficients) in single-level and multilevel 
-    structural equation models. Methods include the distribution of the product, 
+    structural equation
+     models. Methods include the distribution of the product, 
     Monte Carlo simulation, and bootstrap methods. It also performs the Model-Based 
     Constrained Optimization (MBCO) procedure for hypothesis testing of indirect 
     effects.
