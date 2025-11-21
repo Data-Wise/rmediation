@@ -124,18 +124,11 @@ S7::method(ci, S7::class_any) <- function(mu, level = 0.95, type = "dop", n.mc =
   return(results)
 }
 
-#' @export
-S7::method(quantile, S7::class_numeric) <- function(object, ...) {
-  stats::quantile(x = object, ...)
-}
-
-#' @export
-S7::method(quantile, S7::class_numeric) <- function(object, ...) {
-  stats::quantile(x = object, ...)
-}
+# Note: removed quantile methods for class_numeric since dist_quantile is for distributions only
+# Data quantiles should use stats::quantile directly
 
 #' @export
 S7::method(cdf, S7::class_numeric) <- function(object, q, ...) {
-  # Empirical CDF
+  # Empirical CDF for numeric vectors
   stats::ecdf(object)(q)
 }

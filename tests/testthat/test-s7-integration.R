@@ -37,9 +37,10 @@ test_that("ci generic works with lavaan input (new auto-detection)", {
   
   expect_type(res, "list")
   expect_true("ab" %in% names(res))
-  # "ab" result should be a numeric vector (CI) from ProductNormal method
-  expect_true(is.numeric(res$ab))
-  expect_length(res$ab, 2)
+  # "ab" result is a list with CI, Estimate, SE from ProductNormal method
+  expect_type(res$ab, "list")
+  expect_true("CI" %in% names(res$ab))
+  expect_length(res$ab$CI, 2)
 })
 
 test_that("ci generic works with lavaan input (legacy quant behavior)", {

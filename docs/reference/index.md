@@ -45,14 +45,8 @@ mediation analysis.
   : MBCO Result Class
 - [`cdf()`](https://data-wise.github.io/rmediation/reference/cdf.md) :
   Cumulative Distribution Function
-- [`quantile()`](https://data-wise.github.io/rmediation/reference/quantile.md)
-  : Quantile Function
-- [`print()`](https://data-wise.github.io/rmediation/reference/print.md)
-  : Print method
-- [`summary()`](https://data-wise.github.io/rmediation/reference/summary.md)
-  : Summary method
-- [`show()`](https://data-wise.github.io/rmediation/reference/show.md) :
-  Show method
+- [`dist_quantile()`](https://data-wise.github.io/rmediation/reference/dist_quantile.md)
+  : Distribution Quantile Function
 
 ## Utility Functions
 

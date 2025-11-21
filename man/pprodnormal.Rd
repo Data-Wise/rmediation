@@ -31,7 +31,7 @@ pprodnormal(
 The default value is 0.}
 
 \item{lower.tail}{logical; if \code{TRUE} (default), the probability is
-\eqn{P[X*Y < q]}; otherwise, \eqn{P[X*Y > q]}}
+\eqn{P(XY \le q)}; otherwise, \eqn{P(XY > q)}}
 
 \item{type}{method used to compute confidence interval. It takes on the
 values \code{"dop"} (default), \code{"MC"}, \code{"asymp"} or \code{"all"}}

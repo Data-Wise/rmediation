@@ -44,6 +44,9 @@ ProductNormal <- S7::new_class("ProductNormal",
   }
 )
 
+# Register S4 for compatibility with base generics
+S7::S4_register(ProductNormal)
+
 #' Cumulative Distribution Function
 #'
 #' Generic function for computing cumulative distribution function.
@@ -53,14 +56,16 @@ ProductNormal <- S7::new_class("ProductNormal",
 #' @export
 cdf <- S7::new_generic("cdf", "object")
 
-#' Quantile Function
+#' Distribution Quantile Function
 #'
-#' Generic function for computing quantiles.
+#' Compute quantiles for distribution objects. This function computes quantiles
+#' for product normal distributions, not data quantiles (use \code{stats::quantile}
+#' for data).
 #'
-#' @param object A distribution object.
+#' @param object A distribution object (e.g., ProductNormal).
 #' @param ... Additional arguments passed to methods.
 #' @export
-quantile <- S7::new_generic("quantile", "object")
+dist_quantile <- S7::new_generic("dist_quantile", "object")
 
 #' Confidence Interval
 #'
@@ -71,32 +76,8 @@ quantile <- S7::new_generic("quantile", "object")
 #' @export
 ci <- S7::new_generic("ci", "mu")
 
-#' Print method
-#'
-#' Generic function for printing objects.
-#'
-#' @param x An object.
-#' @param ... Additional arguments passed to methods.
-#' @export
-print <- S7::new_generic("print", "x")
-
-#' Summary method
-#'
-#' Generic function for summarizing objects.
-#'
-#' @param object An object.
-#' @param ... Additional arguments passed to methods.
-#' @export
-summary <- S7::new_generic("summary", "object")
-
-#' Show method
-#'
-#' Generic function for showing objects.
-#'
-#' @param object An object.
-#' @param ... Additional arguments passed to methods.
-#' @export
-show <- S7::new_generic("show", "object")
+# Note: print, summary, and show generics are NOT exported.
+# S7 methods will register directly with base generics to avoid masking.
 
 #' MBCO Result Class
 #'
@@ -115,6 +96,9 @@ MBCOResult <- S7::new_class("MBCOResult",
     type = S7::class_character
   )
 )
+
+# Register S4 for compatibility with base generics
+S7::S4_register(MBCOResult)
 
 #' Model-based Constrained Optimization (MBCO) Chi-squared Test
 #'

@@ -1,8 +1,8 @@
 #' CI for a nonlinear function of coefficients estimates
 #'
-#' This function returns a (\eqn{1-\alpha})% confidence interval (CI) for a
-#' well--defined nonlinear function of the coefficients in single--level and
-#' multilevel structural equation models. The \code{ci} function uses the Monte
+#' This function returns a confidence interval (CI) at significance level
+#' \eqn{\alpha} for a well-defined nonlinear function of the coefficients in
+#' single-level and multilevel structural equation models. The \code{ci} function uses the Monte
 #' Carlo (\code{type="MC"}) and the asymptotic normal theory
 #' (\code{type="asymp"}) with the multivariate delta standard error
 #' (Asymptotic--Delta) method (Sobel, 1982) to compute a CI. In addition, for
@@ -42,23 +42,25 @@
 #'   specify \code{plot="TRUE"}. The default value is \code{FALSE}.
 #' @param n.mc Monte Carlo sample size. The default sample size is 1e+6.
 #' @param H0 False. If \code{TRUE}, it will estimate the sampling distribution
-#'   of \eqn{H_{0}:f(\bm b)=0}. See the arguments \code{mu0} and \code{Sigma0}.
+#'   of \eqn{H_0: f(\mathbf{b}) = 0}. See the arguments \code{mu0} and \code{Sigma0}.
 #' @param mu0 a \link{vector} of means (e.g., coefficient estimates) for the
-#'   normal random variables that satisfy the null hypothesis \eqn{H_{0}:f(\bm
-#'   b)=0}. If it is not provided, smallest z value of \code{mu} is zet to zero.
+#'   normal random variables that satisfy the null hypothesis
+#'   \eqn{H_0: f(\mathbf{b}) = 0}. If it is not provided, smallest z value of
+#'   \code{mu} is set to zero.
 #' @param Sigma0 either a covariance matrix or a \link{vector} that stacks all
 #'   the columns of the lower triangle variance--covariance matrix one
 #'   underneath the other. If it is not provided, then \code{Sigma} is used
 #'   instead.
 #' @param ... additional arguments.
 #' @return When \code{type} is \code{"MC"} or \code{"asymp"}, \code{ci} returns
-#'   a \link{list} that contains: \item{(\eqn{1-\alpha})% CI}{a vector of lower
-#'   and upper confidence limits,} \item{Estimate}{a point estimate of the
-#'   quantity of interest,} \item{SE}{standard error of the quantity of
-#'   interest,} \item{MC Error}{When \code{type="MC"}, error of the Monte Carlo
-#'   estimate.} When \code{type="all"}, \code{ci} returns a \link{list} of two
-#'   objects, each of which a \link{list} that contains the results produced by
-#'   each method as described above.
+#'   a \link{list} that contains: \item{CI}{a vector of lower and upper
+#'   confidence limits (at significance level \eqn{\alpha}),}
+#'   \item{Estimate}{a point estimate of the quantity of interest,}
+#'   \item{SE}{standard error of the quantity of interest,} \item{MC Error}{When
+#'   \code{type="MC"}, error of the Monte Carlo estimate.} When
+#'   \code{type="all"}, \code{ci} returns a \link{list} of two objects, each of
+#'   which a \link{list} that contains the results produced by each method as
+#'   described above.
 #' @keywords regression distribution
 #'
 #' @examples

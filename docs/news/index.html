@@ -42,7 +42,16 @@
 <div class="section level3">
 <h3 id="major-changes-1-4-0">Major Changes<a class="anchor" aria-label="anchor" href="#major-changes-1-4-0"></a></h3>
 <div class="section level4">
-<h4 id="s7-oop-migration-1-4-0">S7 OOP Migration<a class="anchor" aria-label="anchor" href="#s7-oop-migration-1-4-0"></a></h4>
+<h4 id="s7-core-architecture-complete-refactoring-1-4-0">S7 Core Architecture (Complete Refactoring)<a class="anchor" aria-label="anchor" href="#s7-core-architecture-complete-refactoring-1-4-0"></a></h4>
+<ul><li>
+<strong>Complete architectural redesign:</strong> S7 is now the computational core, with legacy functions as thin wrappers.</li>
+<li>
+<strong>Zero breaking changes:</strong> All existing code continues to work exactly as before (100% backward compatible).</li>
+<li>
+<strong>Enhanced extensibility:</strong> New computational architecture makes adding CI methods and features straightforward.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="s7-oop-classes-1-4-0">S7 OOP Classes<a class="anchor" aria-label="anchor" href="#s7-oop-classes-1-4-0"></a></h4>
 <ul><li>Introduced S7 object-oriented programming for modern, type-safe class definitions.</li>
 <li>
 <strong>New S7 Classes:</strong>
@@ -52,8 +61,24 @@
 <code>MBCOResult</code>: Encapsulates results from MBCO tests.</li>
 </ul></li>
 <li>
-<strong>New S7 Generics:</strong> <code><a href="../reference/cdf.html">cdf()</a></code>, <code><a href="../reference/quantile.html">quantile()</a></code>, <code><a href="../reference/ci.html">ci()</a></code>, <code><a href="../reference/print.html">print()</a></code>, <code><a href="../reference/summary.html">summary()</a></code>, <code><a href="../reference/show.html">show()</a></code>.</li>
+<strong>New S7 Generics:</strong> <code><a href="../reference/cdf.html">cdf()</a></code>, <code><a href="../reference/dist_quantile.html">dist_quantile()</a></code>, <code><a href="../reference/ci.html">ci()</a></code>, <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>, <code>show()</code>.</li>
 <li>All S7 classes include comprehensive display methods (<code>print</code>, <code>summary</code>, <code>show</code>) for meaningful output.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="n-variable-product-support-new-1-4-0">N-Variable Product Support (NEW)<a class="anchor" aria-label="anchor" href="#n-variable-product-support-new-1-4-0"></a></h4>
+<ul><li>
+<strong>Breaking limitation removed:</strong> Can now compute confidence intervals for products of 3 or more variables.</li>
+<li>Works with Monte Carlo method (<code>type = "mc"</code>).</li>
+<li>Example: <code>ProductNormal(mu = c(0.3, 0.4, 0.5), Sigma = diag(3))</code> for three-way products.</li>
+<li>Previous versions limited to 2-variable products only.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="internal-computational-core-1-4-0">Internal Computational Core<a class="anchor" aria-label="anchor" href="#internal-computational-core-1-4-0"></a></h4>
+<ul><li>
+<strong>New internal S7 functions:</strong> <code><a href="../reference/dot-compute_ci_dop.html">.compute_ci_dop()</a></code>, <code><a href="../reference/dot-compute_ci_mc.html">.compute_ci_mc()</a></code>, <code><a href="../reference/dot-compute_ci_asymp.html">.compute_ci_asymp()</a></code>, <code><a href="../reference/dot-compute_cdf_dop.html">.compute_cdf_dop()</a></code>, <code><a href="../reference/dot-compute_cdf_mc.html">.compute_cdf_mc()</a></code>, <code><a href="../reference/dot-compute_quantile_dop.html">.compute_quantile_dop()</a></code>, <code><a href="../reference/dot-compute_quantile_mc.html">.compute_quantile_mc()</a></code>.</li>
+<li>All core algorithms now work with <code>ProductNormal</code> objects natively.</li>
+<li>Legacy functions (<code><a href="../reference/medci.html">medci()</a></code>, <code><a href="../reference/pprodnormal.html">pprodnormal()</a></code>, <code><a href="../reference/qprodnormal.html">qprodnormal()</a></code>) convert parameters and dispatch to S7 core.</li>
+<li>Identical numerical results to previous versions (validated with 201 tests).</li>
 </ul></div>
 <div class="section level4">
 <h4 id="enhanced-ci-function-1-4-0">Enhanced <code>ci()</code> Function<a class="anchor" aria-label="anchor" href="#enhanced-ci-function-1-4-0"></a></h4>
@@ -85,11 +110,19 @@
 </ul></div>
 <div class="section level4">
 <h4 id="display-methods-1-4-0">Display Methods<a class="anchor" aria-label="anchor" href="#display-methods-1-4-0"></a></h4>
-<ul><li>All S7 classes have meaningful <code><a href="../reference/print.html">print()</a></code>, <code><a href="../reference/summary.html">summary()</a></code>, and <code><a href="../reference/show.html">show()</a></code> methods.</li>
+<ul><li>All S7 classes have meaningful <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>, and <code>show()</code> methods.</li>
 <li>
 <code>ProductNormal</code> displays: distribution type, means, covariance matrix, SDs, and correlations.</li>
 <li>
 <code>MBCOResult</code> displays: test type, statistics, p-values with significance levels, and interpretation.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="namespace-improvements-1-4-0">Namespace Improvements<a class="anchor" aria-label="anchor" href="#namespace-improvements-1-4-0"></a></h4>
+<ul><li>
+<strong>Zero masking warnings:</strong> Package now loads cleanly with no namespace conflicts.</li>
+<li>Renamed <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile()</a></code> generic to <code><a href="../reference/dist_quantile.html">dist_quantile()</a></code> to avoid masking <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">stats::quantile()</a></code>.</li>
+<li>S7 methods for <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>, <code>show()</code> now properly register with base generics.</li>
+<li>Added S4 compatibility via <code><a href="https://rconsortium.github.io/S7/reference/S4_register.html" class="external-link">S7::S4_register()</a></code> for formal generic support.</li>
 </ul></div>
 <div class="section level4">
 <h4 id="package-cleanup-1-4-0">Package Cleanup<a class="anchor" aria-label="anchor" href="#package-cleanup-1-4-0"></a></h4>
@@ -97,14 +130,16 @@
 <li>Fixed all documentation warnings and notes.</li>
 <li>
 <strong>R CMD check</strong>: Now passes with 0 errors, 0 warnings, 0 notes.</li>
-<li>Added 19 new tests for display methods (total: 160 tests).</li>
+<li>Added 40 new S7 prototype tests + 19 display method tests (total: 201 tests, 100% pass rate).</li>
 </ul></div>
 </div>
 <div class="section level3">
 <h3 id="bug-fixes-1-4-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-4-0"></a></h3>
 <ul><li>Fixed argument dispatch issues between <code>alpha</code> and <code>level</code> parameters.</li>
-<li>Resolved S7 generic conflicts with base R functions.</li>
+<li>Resolved S7 generic conflicts with base R functions (print, summary, quantile).</li>
 <li>Fixed recursive dispatch issues in display methods.</li>
+<li>Added case-insensitive handling for <code>type</code> parameter (accepts “MC”, “mc”, “DOP”, “dop”, etc.).</li>
+<li>Fixed return value structure for <code><a href="../reference/ci.html">ci()</a></code> method (now returns list with <code>CI</code>, <code>Estimate</code>, <code>SE</code> components).</li>
 </ul></div>
 </div>
     <div class="section level2">

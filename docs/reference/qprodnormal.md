@@ -48,8 +48,8 @@ qprodnormal(
 
 - lower.tail:
 
-  logical; if `TRUE` (default), the probability is \\P\[X\*Y \< q\]\\;
-  otherwise, \\P\[X\*Y \> q\]\\
+  logical; if `TRUE` (default), the probability is \\P(XY \le q)\\;
+  otherwise, \\P(XY \> q)\\
 
 - type:
 
@@ -116,7 +116,7 @@ qprodnormal(
 #> [1] -0.9898408
 #> 
 #> $`Monte Carlo`
-#> [1] -1.000082
+#> [1] -0.9945457
 #> 
 ## upper tail
 qprodnormal(
@@ -127,6 +127,6 @@ qprodnormal(
 #> [1] 1.433771
 #> 
 #> $`Monte Carlo`
-#> [1] 1.439503
+#> [1] 1.449133
 #> 
 ```

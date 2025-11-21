@@ -60,7 +60,7 @@ S7::method(summary, MBCOResult) <- function(object, ...) {
   cat("Chi-squared statistic:", round(object@statistic, 4), "\n")
   cat("Degrees of freedom:", object@df, "\n")
   cat("P-value:", format.pval(object@p_value, digits = 4), "\n\n")
-  
+
   cat("Interpretation:\n")
   if (object@p_value < 0.05) {
     cat("The null hypothesis is rejected at the 0.05 level.\n")
@@ -69,7 +69,7 @@ S7::method(summary, MBCOResult) <- function(object, ...) {
     cat("The null hypothesis is not rejected at the 0.05 level.\n")
     cat("There is insufficient evidence for the alternative model.\n")
   }
-  
+
   invisible(object)
 }
 

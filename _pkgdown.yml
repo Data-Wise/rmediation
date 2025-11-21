@@ -100,10 +100,7 @@ reference:
   - ProductNormal
   - MBCOResult
   - cdf
-  - quantile
-  - print
-  - summary
-  - show
+  - dist_quantile
 
 - title: Utility Functions
   desc: >

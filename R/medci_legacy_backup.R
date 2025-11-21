@@ -25,10 +25,10 @@
 #'   the Monte Carlo method. The default sample size is 1E5.
 #' @param \dots additional arguments to be passed on to the function.
 #'
-#' @details  This function returns a confidence interval at significance level
-#'   \eqn{\alpha} for the mediated effect (product of two normal random
-#'   variables). To obtain a confidence interval using a specific method, the
-#'   argument \code{type} should be specified. The default is \code{type="dop"}, which uses the code
+#' @details  This function returns a (\eqn{1-\alpha})% confidence interval for
+#'   the mediated effect (product of two normal random variables). To obtain a
+#'   confidence interval using a specific method, the argument \code{type}
+#'   should be specified. The default is \code{type="dop"}, which uses the code
 #'   we wrote in \R to implement the distribution of product of the coefficients
 #'   method described by Meeker and Escobar (1994) to evaluate the CDF of the
 #'   distribution of product. \code{type="MC"} uses the Monte Carlo approach to
@@ -36,23 +36,21 @@
 #'   \code{type="asymp"} produces the asymptotic normal confidence interval.
 #'   Note that except for the Monte Carlo method, the standard error for the
 #'   indirect effect is based on the analytical results by Craig (1936):
-#'   \deqn{SE = \sqrt{\sigma_y^2 \mu_x^2 + \sigma_x^2 \mu_y^2 + 2\mu_x\mu_y\rho\sigma_x\sigma_y + \sigma_x^2\sigma_y^2 + \sigma_x^2\sigma_y^2\rho^2}}
-#'   where \eqn{\sigma_x} and \eqn{\sigma_y} are the standard errors of \eqn{x} and \eqn{y},
-#'   respectively. In addition, the estimate of the indirect effect is
-#'   \eqn{\mu_x\mu_y + \sigma_{xy}}, where \eqn{\sigma_{xy}} is the covariance between
-#'   \eqn{x} and \eqn{y}. The argument \code{type="all"} prints confidence intervals
-#'   using all available methods.
+#'   \deqn{\sqrt(se.y^2 \mu.x^2+se.x^2 \mu.y^2+2 \mu.x \mu.y \rho se.x se.y+
+#'   se.x^2 se.y^2+se.x^2 se.y^2 \rho^2) }. In addition, the estimate of
+#'   indirect effect is \eqn{\mu.x \mu.y +\sigma.xy }; \code{type="all"} prints
+#'   confidence intervals using all four options.
 #'
 #' @return A vector of lower confidence limit and upper confidence limit. When
 #'   \code{type} is \code{"prodclin"} (default), \code{"DOP"}, \code{"MC"} or
 #'   \code{"asymp"}, \code{medci} returns a \link{list} that contains:
-#'   \item{CI}{a vector of lower and upper confidence limits (at significance
-#'   level \eqn{\alpha}),} \item{Estimate}{a point estimate of the quantity of
-#'   interest,} \item{SE}{standard error of the quantity of interest,}
-#'   \item{MC Error}{When \code{type="MC"}, error of the Monte Carlo estimate.}
-#'   Note that when \code{type="all"}, \code{medci} returns a \link{list} of
-#'   \emph{four} objects, each of which a \link{list} that contains the results
-#'   produced by each method as described above.
+#'   \item{(\eqn{1-\alpha})% CI}{a vector of lower and upper confidence
+#'   limits,} \item{Estimate}{a point estimate of the quantity of interest,}
+#'   \item{SE}{standard error of the quantity of interest,} \item{MC Error}{When
+#'   \code{type="MC"}, error of the Monte Carlo estimate.} Note that when
+#'   \code{type="all"}, \code{medci} returns a \link{list} of \emph{four}
+#'   objects, each of which a \link{list} that contains the results produced by
+#'   each method as described above.
 #'
 #' @references Craig, C. C. (1936). On the frequency function of \eqn{xy}.
 #'   \emph{The Annals of Mathematical Statistics}, \bold{7}, 1--15.

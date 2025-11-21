@@ -2,114 +2,93 @@
 NULL
 
 #' @export
-#' @export
-S7::method(cdf, ProductNormal) <- function(object, q, type = "dop", n.mc = 1e5, ...) {
+S7::method(cdf, ProductNormal) <- function(object, q, type = "dop", n.mc = 1e5, lower.tail = TRUE, ...) {
   checkmate::assert_numeric(q)
-  type <- match.arg(type, c("dop", "MC", "all"))
+  type <- tolower(type)  # Handle case insensitivity
+  type <- match.arg(type, c("dop", "mc", "all"))
   checkmate::assert_count(n.mc, positive = TRUE)
+  checkmate::assert_logical(lower.tail)
 
-  mu <- object@mu
-  Sigma <- object@Sigma
-  
-  if (length(mu) == 2) {
-    # Dispatch to existing pprodnormal
-    # Extract standard errors and correlation from Sigma
-    se.x <- sqrt(Sigma[1, 1])
-    se.y <- sqrt(Sigma[2, 2])
-    rho <- Sigma[1, 2] / (se.x * se.y)
-    
-    return(pprodnormal(q, mu.x = mu[1], mu.y = mu[2], se.x = se.x, se.y = se.y, rho = rho, type = type, n.mc = n.mc))
-  } else {
-    # For > 2 variables, currently only MC is supported/implemented effectively for general case
-    # We can implement a simple MC here or dispatch to a new internal function
-    # For now, let's implement a direct MC for N variables
-    
-    if (type == "dop") {
-      warning("Exact distribution (dop) not available for > 2 variables. Using Monte Carlo.")
+  # Dispatch to S7 core computation
+  result <- switch(tolower(type),
+    "dop" = .compute_cdf_dop(object, q),
+    "mc" = .compute_cdf_mc(object, q, n.mc),
+    "all" = list(
+      dop = .compute_cdf_dop(object, q),
+      mc = .compute_cdf_mc(object, q, n.mc)
+    )
+  )
+
+  # Handle upper tail if requested
+  if (!lower.tail) {
+    if (type == "all") {
+      result$dop$p <- 1 - result$dop$p
+      result$mc$p <- 1 - result$mc$p
+    } else {
+      result$p <- 1 - result$p
     }
-    
-    # Monte Carlo implementation for N variables
-    # Generate multivariate normal samples
-    samples <- MASS::mvrnorm(n = n.mc, mu = mu, Sigma = Sigma)
-    # Compute product
-    prod_samples <- apply(samples, 1, prod)
-    # Compute empirical CDF
-    mean(prod_samples <= q)
+  }
+
+  # Return probability value (or list for "all")
+  if (type == "all") {
+    return(result)
+  } else {
+    return(result$p)
   }
 }
 
 #' @export
-S7::method(quantile, ProductNormal) <- function(object, p, type = "dop", n.mc = 1e5, ...) {
+S7::method(dist_quantile, ProductNormal) <- function(object, p, type = "dop", n.mc = 1e5, lower.tail = TRUE, ...) {
   checkmate::assert_numeric(p, lower = 0, upper = 1)
-  type <- match.arg(type, c("dop", "MC", "all"))
+  type <- tolower(type)  # Handle case insensitivity
+  type <- match.arg(type, c("dop", "mc", "all"))
   checkmate::assert_count(n.mc, positive = TRUE)
+  checkmate::assert_logical(lower.tail)
 
-  mu <- object@mu
-  Sigma <- object@Sigma
-  
-  if (length(mu) == 2) {
-    # Dispatch to existing qprodnormal
-    se.x <- sqrt(Sigma[1, 1])
-    se.y <- sqrt(Sigma[2, 2])
-    rho <- Sigma[1, 2] / (se.x * se.y)
-    
-    return(qprodnormal(p, mu.x = mu[1], mu.y = mu[2], se.x = se.x, se.y = se.y, rho = rho, type = type, n.mc = n.mc))
+  # Dispatch to S7 core computation
+  result <- switch(tolower(type),
+    "dop" = .compute_quantile_dop(object, p, lower.tail),
+    "mc" = .compute_quantile_mc(object, p, n.mc, lower.tail),
+    "all" = list(
+      dop = .compute_quantile_dop(object, p, lower.tail),
+      mc = .compute_quantile_mc(object, p, n.mc, lower.tail)
+    )
+  )
+
+  # Return quantile value (or list for "all")
+  if (type == "all") {
+    return(result)
   } else {
-     if (type == "dop") {
-      warning("Exact distribution (dop) not available for > 2 variables. Using Monte Carlo.")
-    }
-    
-    # Monte Carlo implementation for N variables
-    samples <- MASS::mvrnorm(n = n.mc, mu = mu, Sigma = Sigma)
-    prod_samples <- apply(samples, 1, prod)
-    stats::quantile(prod_samples, probs = p)
+    return(result$q)
   }
 }
 
 #' @export
 S7::method(ci, ProductNormal) <- function(mu, level = 0.95, type = "dop", n.mc = 1e5, ...) {
-  object <- mu # Alias for internal use if needed, or just use mu
+  object <- mu # S7 method signature requires 'mu' as first arg
   checkmate::assert_number(level, lower = 0, upper = 1)
-  type <- match.arg(type, c("dop", "MC", "asymp", "all", "prodclin"))
+  type <- tolower(type)  # Handle case insensitivity
+  type <- match.arg(type, c("dop", "mc", "asymp", "all", "prodclin"))
   checkmate::assert_count(n.mc, positive = TRUE)
 
   alpha <- 1 - level
-  mu_vec <- object@mu # Rename local var to avoid conflict
-  Sigma <- object@Sigma
-  
-  if (length(mu_vec) == 2) {
-    # Dispatch to existing medci
-    se.x <- sqrt(Sigma[1, 1])
-    se.y <- sqrt(Sigma[2, 2])
-    rho <- Sigma[1, 2] / (se.x * se.y)
-    
-    res <- medci(mu.x = mu_vec[1], mu.y = mu_vec[2], se.x = se.x, se.y = se.y, rho = rho, alpha = alpha, type = type, n.mc = n.mc, plot = FALSE)
-    # medci returns a list or vector depending on type. 
-    # If type="dop" (default), it returns a list with CI.
-    # We should standardize the output of this method to just the CI vector or a specific object.
-    # Let's return the CI vector for consistency with stats::confint
-    
-    if (is.list(res) && !is.null(res$`95% CI`)) {
-       return(res$`95% CI`)
-    } else if (is.list(res) && !is.null(res$CI)) {
-       return(res$CI)
-    } else if (is.numeric(res)) {
-       return(res)
-    } else {
-       # Fallback for other return types of medci
-       return(res)
-    }
 
-  } else {
-     if (type == "dop") {
-      warning("Exact distribution (dop) not available for > 2 variables. Using Monte Carlo.")
-    }
-    
-    # Monte Carlo implementation for N variables
-    samples <- MASS::mvrnorm(n = n.mc, mu = mu_vec, Sigma = Sigma)
-    prod_samples <- apply(samples, 1, prod)
-    stats::quantile(prod_samples, probs = c(alpha/2, 1 - alpha/2))
-  }
+  # Map prodclin to dop for backward compatibility
+  if (type == "prodclin") type <- "dop"
+
+  # Dispatch to S7 core computation
+  result <- switch(type,
+    "dop" = .compute_ci_dop(object, alpha),
+    "mc" = .compute_ci_mc(object, alpha, n.mc),
+    "asymp" = .compute_ci_asymp(object, alpha),
+    "all" = list(
+      dop = .compute_ci_dop(object, alpha),
+      mc = .compute_ci_mc(object, alpha, n.mc),
+      asymp = .compute_ci_asymp(object, alpha)
+    )
+  )
+
+  return(result)
 }
 
 #' @export
@@ -119,7 +98,7 @@ S7::method(print, ProductNormal) <- function(x, ...) {
   cat("Means:", paste(round(x@mu, 4), collapse = ", "), "\n")
   if (length(x@mu) <= 3) {
     cat("Covariance matrix:\n")
-    base::print(x@Sigma)
+    base::print.default(x@Sigma)
   } else {
     cat("Covariance matrix: ", nrow(x@Sigma), "x", ncol(x@Sigma), "\n")
   }
@@ -131,20 +110,20 @@ S7::method(summary, ProductNormal) <- function(object, ...) {
   cat("ProductNormal Distribution Summary\n")
   cat("==================================\n")
   cat("Number of variables:", length(object@mu), "\n\n")
-  
+
   cat("Means:\n")
-  base::print(data.frame(Variable = paste0("V", seq_along(object@mu)), 
+  base::print.default(data.frame(Variable = paste0("V", seq_along(object@mu)),
                          Mean = object@mu))
-  
+
   cat("\nStandard Deviations:\n")
   sds <- sqrt(diag(object@Sigma))
-  base::print(data.frame(Variable = paste0("V", seq_along(sds)), 
+  base::print.default(data.frame(Variable = paste0("V", seq_along(sds)),
                          SD = sds))
-  
+
   cat("\nCorrelation Matrix:\n")
   cor_mat <- cov2cor(object@Sigma)
-  base::print(round(cor_mat, 4))
-  
+  base::print.default(round(cor_mat, 4))
+
   invisible(object)
 }
 

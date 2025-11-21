@@ -11,7 +11,7 @@
 #' @param rho correlation between \eqn{x} and \eqn{y}, where -1 <\code{rho} < 1.
 #'   The default value is 0.
 #' @param lower.tail logical; if \code{TRUE} (default), the probability is
-#'   \eqn{P[X*Y < q]}; otherwise, \eqn{P[X*Y > q]}
+#'   \eqn{P(XY \le q)}; otherwise, \eqn{P(XY > q)}
 #' @param type method used to compute confidence interval. It takes on the
 #'   values \code{"dop"} (default), \code{"MC"}, \code{"asymp"} or \code{"all"}
 #' @param n.mc when \code{type="MC"}, \code{n.mc} determines the sample size for

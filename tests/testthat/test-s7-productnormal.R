@@ -28,7 +28,7 @@ test_that("quantile method works for 2 variables (dispatch to qprodnormal)", {
   Sigma <- matrix(c(1, 0, 0, 1), 2)
   pn <- ProductNormal(mu = mu, Sigma = Sigma)
   
-  q_s7 <- quantile(pn, p = 0.05, type = "dop")
+  q_s7 <- dist_quantile(pn, p = 0.05, type = "dop")
   q_orig <- qprodnormal(p = 0.05, mu.x = 0.5, mu.y = 0.3, se.x = 1, se.y = 1, rho = 0, type = "dop")
   
   expect_equal(q_s7, q_orig)
@@ -41,12 +41,12 @@ test_that("ci method works for 2 variables (dispatch to medci)", {
   
   ci_s7 <- ci(pn, level = 0.95, type = "dop")
   ci_orig <- medci(mu.x = 0.5, mu.y = 0.3, se.x = 1, se.y = 1, rho = 0, alpha = 0.05, type = "dop", plot = FALSE)
-  
-  # medci returns a list with CI element for type="dop" in some versions, or just the CI. 
-  # Our wrapper extracts it.
-  # Let's check if values match.
-  expect_equal(ci_s7[1], ci_orig[[1]][1])
-  expect_equal(ci_s7[2], ci_orig[[1]][2])
+
+  # ci() returns list with CI, Estimate, SE
+  # medci returns list with CI element
+  # Check if values match
+  expect_equal(ci_s7$CI[1], ci_orig[[1]][1])
+  expect_equal(ci_s7$CI[2], ci_orig[[1]][2])
 })
 
 test_that("Methods work for 3 variables (Monte Carlo)", {
@@ -61,10 +61,10 @@ test_that("Methods work for 3 variables (Monte Carlo)", {
   expect_equal(p_val, 0.5, tolerance = 0.02)
 
   # Quantile at 0.5 should be 0
-  q_val <- quantile(pn, p = 0.5, type = "MC", n.mc = 1e4)
+  q_val <- dist_quantile(pn, p = 0.5, type = "MC", n.mc = 1e4)
   expect_equal(as.numeric(q_val), 0, tolerance = 0.1)
 
   # CI should be symmetric around 0
   ci_val <- ci(pn, level = 0.95, type = "MC", n.mc = 1e4)
-  expect_equal(unname(ci_val[1]), unname(-ci_val[2]), tolerance = 0.1)
+  expect_equal(unname(ci_val$CI[1]), unname(-ci_val$CI[2]), tolerance = 0.1)
 })
