@@ -2,7 +2,9 @@ url: https://data-wise.github.io/rmediation/
 template:
   bootstrap: 5
   # "litera" is excellent for text-heavy documentation (very clean)
-  bootswatch: litera 
+  bootswatch: litera
+  includes:
+    in_header: <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   bslib:
     # A deeper, more "academic" blue for primary actions
     primary: "#0054AD"
