@@ -36,8 +36,8 @@ The default value is 0.}
 \item{type}{method used to compute confidence interval. It takes on the
 values \code{"dop"} (default), \code{"MC"}, \code{"asymp"} or \code{"all"}}
 
-\item{n.mc}{when \code{type="MC"}, \code{n.mc} determines the sample size for
-the Monte Carlo method. The default sample size is 1E5.}
+\item{n.mc}{Monte Carlo sample size when \code{type="MC"} (default: 1e5).
+Larger values provide more precision but take longer to compute.}
 }
 \value{
 An object of the type \code{\link{list}} that contains the

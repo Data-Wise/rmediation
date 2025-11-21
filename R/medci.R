@@ -21,8 +21,9 @@
 #'   bars on the plot for the mediated effect. Note that to obtain the CI plot,
 #'   one must also specify \code{plot="TRUE"}. The default value is
 #'   \code{FALSE}.
-#' @param n.mc when \code{type="MC"}, \code{n.mc} determines the sample size for
-#'   the Monte Carlo method. The default sample size is 1E5.
+#' @param n.mc Monte Carlo sample size when \code{type="MC"} (default: 1e5).
+#'   Larger values provide more precision but take longer to compute. For most
+#'   applications, 1e5 provides adequate precision (MC error < 0.05% of SE).
 #' @param \dots additional arguments to be passed on to the function.
 #'
 #' @details  This function returns a confidence interval at significance level

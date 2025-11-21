@@ -12,7 +12,7 @@
   type = "MC",
   plot = FALSE,
   plotCI = FALSE,
-  n.mc = 1e+06,
+  n.mc = 1e+05,
   H0 = FALSE,
   mu0 = NULL,
   Sigma0 = NULL,
@@ -53,7 +53,9 @@ density plot of the sampling distribution of \code{quant}. When
 added to the density plots. Note that to obtain a CI plot, one must also
 specify \code{plot="TRUE"}. The default value is \code{FALSE}.}
 
-\item{n.mc}{Monte Carlo sample size. The default sample size is 1e+6.}
+\item{n.mc}{Monte Carlo sample size (default: 1e5). Larger values provide
+more precision but take longer to compute. For most applications, 1e5
+provides adequate precision (MC error < 0.05\% of SE).}
 
 \item{H0}{False. If \code{TRUE}, it will estimate the sampling distribution
 of \eqn{H_0: f(\mathbf{b}) = 0}. See the arguments \code{mu0} and \code{Sigma0}.}

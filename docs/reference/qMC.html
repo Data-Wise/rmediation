@@ -44,7 +44,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">qMC</span><span class="op">(</span><span class="va">p</span>, <span class="va">mu</span>, <span class="va">Sigma</span>, <span class="va">quant</span>, n.mc <span class="op">=</span> <span class="fl">1e+06</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">qMC</span><span class="op">(</span><span class="va">p</span>, <span class="va">mu</span>, <span class="va">Sigma</span>, <span class="va">quant</span>, n.mc <span class="op">=</span> <span class="fl">1e+05</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -68,7 +68,8 @@
 
 
 <dt id="arg-n-mc">n.mc<a class="anchor" aria-label="anchor" href="#arg-n-mc"></a></dt>
-<dd><p>Monte Carlo sample size. The default sample size is 1e+6.</p></dd>
+<dd><p>Monte Carlo sample size (default: 1e5). Larger values provide
+more precision but take longer to compute.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -95,7 +96,7 @@
 <span class="r-in"><span>  quant <span class="op">=</span> <span class="op">~</span> <span class="va">b1</span> <span class="op">*</span> <span class="va">b2</span> <span class="op">*</span> <span class="va">b3</span> <span class="op">*</span> <span class="va">b4</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         5% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.03764409 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.03721976 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
