@@ -29,9 +29,7 @@ License: GPL (>= 3) | file LICENSE
 URL: https://data-wise.github.io/rmediation/, https://github.com/data-wise/rmediation
 BugReports: https://github.com/data-wise/rmediation/issues
 Depends:
-    R (>= 4.1.0),
-    base (>= 4.1.0),
-    stats (>= 4.1.0)
+    R (>= 4.1.0)
 Imports:
     checkmate (>= 2.1.0),
     e1071 (>= 1.6-7),
@@ -44,14 +42,10 @@ Imports:
     OpenMx (>= 2.13),
     S7
 Suggests:
-    knitr,
-    rmarkdown,
-    quarto,
     testthat (>= 3.0.0)
 Encoding: UTF-8
 LazyData: true
-VignetteBuilder: knitr, quarto
 Roxygen: list(markdown = TRUE, roclets = c("rd", "collate", "namespace"))
 RoxygenNote: 7.3.3
 Config/testthat/edition: 3
-SystemRequirements: GNU make, pandoc (for vignettes), quarto
+SystemRequirements: GNU make

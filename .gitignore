@@ -1,20 +1,36 @@
+# R session files
 .Rproj.user
 .Rhistory
 .RData
-.Ruserdata
-inst/doc
-Meta
 .Rdata
+.Ruserdata
 .httr-oauth
+
+# Build artifacts (auto-generated, should not be committed)
+/doc/
+/Meta/
+inst/doc
+
+# System files
 .DS_Store
+
+# Project files
 .Rbuildignore
 .rmediation.Rptoj
 rmediation.Rproj
 rmediation.code-workspace
+
+# Development directories
 .claude/
-docs/
 planning/
+
+# pkgdown website (deployed separately)
+docs/
+
+# R CMD check results
 ..Rcheck/
 RMediation.Rcheck/
-RMediation_2.0.0.tar.gz
+*.tar.gz
+
+# AI assistant docs (kept in root but ignored in git)
 QWEN.md

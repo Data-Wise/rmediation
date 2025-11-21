@@ -28,11 +28,16 @@
 ^Makefile$
 ^README\.dev\.md$
 
-## Vignette files
+## Vignette files (excluded until Quarto support is stable)
+^vignettes$
 ^vignettes/.*\.Rmd$
 ^vignettes/.*\.knit\.md$
 ^vignettes/.*_cache$
 ^vignettes/.*_files$
 ^vignettes/_CONVERSION_NOTES\.md$
+^vignettes/\.quarto$
+^vignettes/_freeze$
+^vignettes/_quarto\.yml$
 ^doc$
 ^Meta$
+^data-raw$
