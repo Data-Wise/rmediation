@@ -109,7 +109,6 @@ S7::S4_register(MBCOResult)
 #' @param ... Additional arguments.
 #' @return An object of class \code{MBCOResult} containing \item{statistic}{asymptotic chi-squared test statistic value} \item{df}{chi-squared df} \item{p_value}{chi-squared p-value computed based on the method specified by the argument \code{type}} \item{type}{The type of test performed}
 #' @author Davood Tofighi \email{dtofighi@@gmail.com}
-#' @import OpenMx
 #' @importFrom modelr resample_bootstrap
 #' @importFrom checkmate assert_class assert_count assert_number assert_choice
 #' @export
