@@ -34,7 +34,7 @@ home:
     href: https://github.com/data-wise/rmediation/issues
   # This ensures the logo appears in the sidebar of the homepage
   sidebar:
-    structure: [links, license, community, authors, dev]
+    structure: [links, license, citation, authors, dev]
 
 # LOGO CONFIGURATION
 # best practice: keep your logo at man/figures/logo.png
@@ -119,6 +119,7 @@ reference:
 authors:
   Davood Tofighi:
     href: "https://orcid.org/0000-0001-8523-7776"
+    html: "<img src='https://orcid.org/sites/default/files/images/orcid_16x16.png' height='16' width='16' alt='ORCID iD icon'> Davood Tofighi"
 
 # Social sharing previews (Twitter cards/OpenGraph)
 opengraph:
@@ -131,8 +132,14 @@ opengraph:
 
 footer:
   structure:
-    left: developed_by
-    right: built_with
+    left: [developed_by, built_with]
+    right: [package_version]
+  components:
+    package_version: "Version {version}"
+    developed_by: |
+      Developed by [Davood Tofighi](https://orcid.org/0000-0001-8523-7776)
+    built_with: |
+      Built with [pkgdown](https://pkgdown.r-lib.org/)
 
 development:
   mode: auto
