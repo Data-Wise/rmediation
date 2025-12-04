@@ -1,13 +1,5 @@
 # RMediation
 
-[![CRAN
-status](https://www.r-pkg.org/badges/version/RMediation)](https://CRAN.R-project.org/package=RMediation)
-[![Website
-Status](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml)
-[![Lifecycle:
-stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-[![R-hub](https://github.com/Data-Wise/rmediation/actions/workflows/rhub.yaml/badge.svg)](https://github.com/Data-Wise/rmediation/actions/workflows/rhub.yaml)
-
 **RMediation** provides rigorous statistical methods for mediation
 analysis in observational and experimental designs. It addresses the
 known limitations of normal-theory confidence intervals (e.g., Sobel
@@ -230,8 +222,7 @@ Contributions are welcome! If you encounter issues or have feature
 requests:
 
 - [Report a Bug](https://github.com/data-wise/rmediation/issues)
-- [Submit a Pull
-  Request](https://www.google.com/search?q=https://github.com/data-wise/rmediation/pulls)
+- [Submit a Pull Request](https://github.com/data-wise/rmediation/pulls)
 
 ## Citation
 

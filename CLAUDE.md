@@ -121,12 +121,13 @@ Ecosystem coordination managed in `/Users/dt/mediation-planning/`: -
 
 ### Related Packages
 
-| Package   | Repository                               | Purpose                                |
-|-----------|------------------------------------------|----------------------------------------|
-| medfit    | <https://github.com/data-wise/medfit>    | Foundation (model fitting, extraction) |
-| probmed   | <https://github.com/data-wise/probmed>   | P_med effect size                      |
-| medrobust | <https://github.com/data-wise/medrobust> | Sensitivity analysis                   |
-| medsim    | <https://github.com/data-wise/medsim>    | Simulation infrastructure              |
+| Package        | Repository                                    | Purpose                                | Website                                       |
+|----------------|-----------------------------------------------|----------------------------------------|-----------------------------------------------|
+| mediationverse | <https://github.com/data-wise/mediationverse> | Meta-package (loads all)               | <https://data-wise.github.io/mediationverse/> |
+| medfit         | <https://github.com/data-wise/medfit>         | Foundation (model fitting, extraction) | <https://data-wise.github.io/medfit/>         |
+| probmed        | <https://github.com/data-wise/probmed>        | P_med effect size                      | <https://data-wise.github.io/probmed/>        |
+| medrobust      | <https://github.com/data-wise/medrobust>      | Sensitivity analysis                   | <https://data-wise.github.io/medrobust/>      |
+| medsim         | <https://github.com/data-wise/medsim>         | Simulation infrastructure              | <https://data-wise.github.io/medsim/>         |
 
 ### Integration with medfit (planned)
 
