@@ -32,22 +32,10 @@ jobs:
         with:
           use-public-rspm: true
 
-      - uses: quarto-dev/quarto-actions/setup@v2
-        with:
-          version: 1.6.39
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, local::., any::quarto
+          extra-packages: any::pkgdown, local::.
           needs: website
-
-      - name: Check Quarto
-        run: quarto check
-
-      - name: Render Quarto vignettes
-        run: |
-          quarto render vignettes/getting-started.qmd --to html
-          quarto render vignettes/methods-comparison.qmd --to html
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)
