@@ -40,10 +40,10 @@ Imports:
     MASS (>= 7.3),
     methods,
     modelr (>= 0.1.8),
-    OpenMx (>= 2.13),
     S7
 Suggests:
     medfit,
+    OpenMx (>= 2.13),
     testthat (>= 3.0.0)
 Remotes:
     data-wise/medfit

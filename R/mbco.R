@@ -11,6 +11,16 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
   precision = 1e-9,
   ...
 ) {
+  # Check OpenMx availability
+  if (!requireNamespace("OpenMx", quietly = TRUE)) {
+    stop(
+      "Package 'OpenMx' is required for MBCO functions but is not installed.\n",
+      "Install it with: install.packages('OpenMx')\n",
+      "Note: OpenMx requires compilation and may take several minutes to install.",
+      call. = FALSE
+    )
+  }
+
   # Input validation
   if (!inherits(h0, "MxModel")) stop("h0 must be an MxModel")
   if (!inherits(h1, "MxModel")) stop("h1 must be an MxModel")

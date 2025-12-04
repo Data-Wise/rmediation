@@ -1,6 +1,5 @@
 #' @importFrom S7 method
 #' @importFrom lavaan parameterEstimates
-#' @importFrom OpenMx mxEval
 NULL
 
 # Helper function to parse product strings
