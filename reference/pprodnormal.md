@@ -48,8 +48,8 @@ pprodnormal(
 
 - lower.tail:
 
-  logical; if `TRUE` (default), the probability is \\P\[X\*Y \< q\]\\;
-  otherwise, \\P\[X\*Y \> q\]\\
+  logical; if `TRUE` (default), the probability is \\P(XY \le q)\\;
+  otherwise, \\P(XY \> q)\\
 
 - type:
 
@@ -58,8 +58,8 @@ pprodnormal(
 
 - n.mc:
 
-  when `type="MC"`, `n.mc` determines the sample size for the Monte
-  Carlo method. The default sample size is 1E5.
+  Monte Carlo sample size when `type="MC"` (default: 1e5). Larger values
+  provide more precision but take longer to compute.
 
 ## Value
 
@@ -112,6 +112,6 @@ pprodnormal(q = 0, mu.x = .5, mu.y = .3, se.x = 1, se.y = 1, rho = 0, type = "al
 #> [1] 0.4548488
 #> 
 #> $`Monte Carlo`
-#> [1] 0.45464
+#> [1] 0.45291
 #> 
 ```

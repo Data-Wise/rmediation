@@ -23,11 +23,11 @@ A data frame with 369 rows and 5 variables:
 
 - repetition:
 
-  Use of repetition rehearsal technique on a 1 to 9 scale
+  Use of repetition rehearsal technique, ranges from 1 to 12
 
 - recall:
 
-  Total words recalled out of 20 words
+  Total words recalled out of 20 words, ranges from 3 to 20
 
 - imagery:
 
@@ -36,8 +36,7 @@ A data frame with 369 rows and 5 variables:
 - x:
 
   A [factor](https://rdrr.io/r/base/factor.html) with two levels:
-  repetition or primary rehearsal = 0, imagery or secondary rehearsal =
-  1
+  "repetition" (primary rehearsal) or "imagery" (secondary rehearsal)
 
 ## Source
 

@@ -5,7 +5,7 @@ This function returns a quantile corresponding to the probability `p`.
 ## Usage
 
 ``` r
-qMC(p, mu, Sigma, quant, n.mc = 1e+06, ...)
+qMC(p, mu, Sigma, quant, n.mc = 1e+05, ...)
 ```
 
 ## Arguments
@@ -40,7 +40,8 @@ qMC(p, mu, Sigma, quant, n.mc = 1e+06, ...)
 
 - n.mc:
 
-  Monte Carlo sample size. The default sample size is 1e+6.
+  Monte Carlo sample size (default: 1e5). Larger values provide more
+  precision but take longer to compute.
 
 - ...:
 
@@ -68,5 +69,5 @@ qMC(.05,
   quant = ~ b1 * b2 * b3 * b4
 )
 #>         5% 
-#> 0.03754532 
+#> 0.03721976 
 ```

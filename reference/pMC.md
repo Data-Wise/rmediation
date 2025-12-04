@@ -5,7 +5,7 @@ This function returns a probability corresponding to the quantile `q`.
 ## Usage
 
 ``` r
-pMC(q, mu, Sigma, quant, lower.tail = TRUE, n.mc = 1e+06, ...)
+pMC(q, mu, Sigma, quant, lower.tail = TRUE, n.mc = 1e+05, ...)
 ```
 
 ## Arguments
@@ -45,7 +45,8 @@ pMC(q, mu, Sigma, quant, lower.tail = TRUE, n.mc = 1e+06, ...)
 
 - n.mc:
 
-  Monte Carlo sample size. The default sample size is 1e+6.
+  Monte Carlo sample size (default: 1e5). Larger values provide more
+  precision but take longer to compute.
 
 - ...:
 
@@ -72,5 +73,5 @@ pMC(.2,
   mu = c(b1 = 1, b2 = .7, b3 = .6, b4 = .45), Sigma = c(.05, 0, 0, 0, .05, 0, 0, .03, 0, .03),
   quant = ~ b1 * b2 * b3 * b4
 )
-#> [1] 0.619489
+#> [1] 0.61953
 ```
