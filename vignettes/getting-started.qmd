@@ -4,7 +4,7 @@ author: "RMediation Development Team"
 format: html
 vignette: >
   %\VignetteIndexEntry{Getting Started with RMediation}
-  %\VignetteEngine{quarto::html}
+  %\VignetteEngine{quarto}
   %\VignetteEncoding{UTF-8}
 ---
 
