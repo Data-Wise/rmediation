@@ -41,6 +41,22 @@ Compute accurate Confidence Intervals (CIs) for indirect effects using methods t
 
 ---
 
+## Mediationverse Ecosystem
+
+**RMediation** is part of the **mediationverse** ecosystem for mediation analysis in R:
+
+| Package | Purpose | Role |
+|---------|---------|------|
+| [**medfit**](https://github.com/data-wise/medfit) | Model fitting, extraction, bootstrap | Foundation |
+| [**probmed**](https://github.com/data-wise/probmed) | Probabilistic effect size (P_med) | Application |
+| **RMediation** (this) | Confidence intervals (DOP, MBCO) | Application |
+| [**medrobust**](https://github.com/data-wise/medrobust) | Sensitivity analysis | Application |
+| [**medsim**](https://github.com/data-wise/medsim) | Simulation infrastructure | Support |
+
+See [Ecosystem Coordination](https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md) for version compatibility and development guidelines.
+
+---
+
 ## Installation
 
 ### Stable Release (CRAN)
