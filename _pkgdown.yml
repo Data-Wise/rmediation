@@ -1,43 +1,35 @@
 url: https://data-wise.github.io/rmediation/
+
 template:
   bootstrap: 5
-  # "litera" is excellent for text-heavy documentation (very clean)
   bootswatch: litera
   includes:
     in_header: <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   bslib:
-    # A deeper, more "academic" blue for primary actions
+    # Consistent academic blue across mediationverse ecosystem
     primary: "#0054AD"
-    # A slightly off-white background reduces eye strain compared to pure white
     bg: "#ffffff"
     fg: "#212529"
-    # Modern, readable fonts
+    # Modern, readable fonts (consistent with mediationverse)
     base_font: { google: "Inter" }
     heading_font: { google: "Montserrat" }
     code_font: { google: "Fira Code" }
-    # Controls the global base font size (Default is 1rem)
     font-size-base: 0.925rem
-# Syntax highlighting for code blocks (e.g., 'arrow', 'github', 'monokai')
-  params:
-    bootswatch: litera
 
 home:
-  title: RMediation
+  title: "RMediation: Confidence Intervals for Mediation Analysis"
   description: >
-    Compute confidence intervals for nonlinear functions of model parameters
-    in mediation analysis using distribution of product, Monte Carlo, and
+    Part of the mediationverse ecosystem. Compute confidence intervals for
+    indirect effects using distribution of product, Monte Carlo, and
     bootstrap methods.
   links:
   - text: Browse source code
     href: https://github.com/data-wise/rmediation
   - text: Report a bug
     href: https://github.com/data-wise/rmediation/issues
-  # This ensures the logo appears in the sidebar of the homepage
   sidebar:
     structure: [links, license, citation, authors, dev]
 
-# LOGO CONFIGURATION
-# best practice: keep your logo at man/figures/logo.png
 logo:
   image: man/figures/logo.png
   align: right
@@ -45,13 +37,13 @@ logo:
 
 navbar:
   structure:
-    left:  [home, reference, articles, news]
+    left:  [home, reference, articles, ecosystem, status, news]
     right: [search, github]
   components:
     home:
       icon: fas fa-home fa-lg
       href: index.html
-      aria-label: Home  # <--- ADD THIS LINE
+      aria-label: Home
     reference:
       text: Reference
       href: reference/index.html
@@ -62,13 +54,41 @@ navbar:
         href: articles/getting-started.html
       - text: CI Methods Comparison
         href: articles/methods-comparison.html
+    ecosystem:
+      text: Ecosystem
+      menu:
+      - text: "Core Packages"
+      - text: "mediationverse (Meta-package)"
+        href: https://data-wise.github.io/mediationverse/
+      - text: "medfit (Foundation)"
+        href: https://data-wise.github.io/medfit/
+      - text: "probmed (P_med Effect Size)"
+        href: https://data-wise.github.io/probmed/
+      - text: "RMediation (Confidence Intervals)"
+        href: https://data-wise.github.io/rmediation/
+      - text: "medrobust (Sensitivity Analysis)"
+        href: https://data-wise.github.io/medrobust/
+      - text: "---------"
+      - text: "Support Packages"
+      - text: "medsim (Simulation Infrastructure)"
+        href: https://data-wise.github.io/medsim/
+    status:
+      icon: fas fa-chart-line
+      text: Status
+      menu:
+      - text: "Package Status Dashboard"
+        href: https://github.com/data-wise/mediationverse/blob/main/STATUS.md
+      - text: "Development Roadmap"
+        href: https://data-wise.github.io/mediationverse/articles/roadmap.html
+      - text: "Contributing Guide"
+        href: https://data-wise.github.io/mediationverse/articles/contributing.html
     news:
       text: News
       href: news/index.html
     github:
       icon: fab fa-github fa-lg
       href: https://github.com/data-wise/rmediation
-      aria-label: GitHub # <--- Good practice to add this here too
+      aria-label: GitHub
 
 reference:
 - title: Core Functions
@@ -122,14 +142,10 @@ authors:
     href: "https://orcid.org/0000-0001-8523-7776"
     html: "<img src='https://orcid.org/sites/default/files/images/orcid_16x16.png' height='16' width='16' alt='ORCID iD icon'> Davood Tofighi"
 
-# Social sharing previews (Twitter cards/OpenGraph)
 opengraph:
   image:
-    src: man/figures/logo-light-medium.png
+    src: man/figures/logo.png
     alt: "RMediation Package Logo"
-  twitter:
-    creator: "@your_twitter_handle" # Optional: Add if you have one
-    site: "@your_twitter_handle"
 
 footer:
   structure:
