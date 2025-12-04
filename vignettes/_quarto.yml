@@ -1,0 +1,29 @@
+project:
+  type: default
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    code-tools: true
+    code-copy: true
+    theme: cosmo
+    highlight-style: github
+    df-print: paged
+    embed-resources: false
+
+execute:
+  echo: true
+  warning: true
+  message: true
+  cache: false
+  freeze: auto
+
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: "#>"
+    fig.width: 7
+    fig.height: 5
+    fig.align: "center"

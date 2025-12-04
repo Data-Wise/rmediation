@@ -1,4 +1,4 @@
-confintMC <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "MC", plot = FALSE, plotCI = FALSE, n.mc = 1e+06, H0 = FALSE, mu0, Sigma0, ...) {
+confintMC <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "MC", plot = FALSE, plotCI = FALSE, n.mc = 1e5, H0 = FALSE, mu0, Sigma0, ...) {
   q1 <- quant
   quant <- parse(text = sub("~", "", quant))
   df <- data.frame(MASS::mvrnorm(n.mc, mu, Sigma))

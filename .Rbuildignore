@@ -10,6 +10,7 @@
 ^\.claude$
 ^CLAUDE\.md$
 ^GEMINI\.md$
+^QWEN\.md$
 ^\.git$
 ^\.github$
 ^\.gitignore$
@@ -26,9 +27,17 @@
 ^dev/.*
 ^Makefile$
 ^README\.dev\.md$
-# Exclude pkgdown-only logo variants (keep only logo.png and logo-light-medium.png)
-^man/figures/favicon\.png$
-^man/figures/logo-dark-.*\.png$
-^man/figures/logo-small-.*\.png$
-^cran-comments\.md$
-^CRAN-SUBMISSION$
+
+## Vignette files (excluded until Quarto support is stable)
+^vignettes$
+^vignettes/.*\.Rmd$
+^vignettes/.*\.knit\.md$
+^vignettes/.*_cache$
+^vignettes/.*_files$
+^vignettes/_CONVERSION_NOTES\.md$
+^vignettes/\.quarto$
+^vignettes/_freeze$
+^vignettes/_quarto\.yml$
+^doc$
+^Meta$
+^data-raw$

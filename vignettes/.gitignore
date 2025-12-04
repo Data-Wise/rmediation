@@ -1,0 +1,7 @@
+*.html
+*.R
+
+
+/.quarto/
+/_freeze/
+**/*.quarto_ipynb

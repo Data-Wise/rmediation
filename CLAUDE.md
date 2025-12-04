@@ -360,3 +360,45 @@ Where z₁₋α/₂ is the normal quantile (e.g., 1.96 for 95% CI)
 
 ### Package Website
 - Shiny web application for Monte Carlo CI: https://amplab.shinyapps.io/MEDMC/
+
+---
+
+## Ecosystem Coordination
+
+RMediation is an **application package** in the mediationverse ecosystem.
+
+### Central Planning Documents
+
+All ecosystem-wide coordination is managed in `/Users/dt/mediation-planning/`:
+
+| Document | Purpose |
+|----------|---------|
+| `ECOSYSTEM-COORDINATION.md` | Version matrix, change propagation, release timeline |
+| `MONTHLY-CHECKLIST.md` | Recurring ecosystem health checks |
+| `templates/README-template.md` | Standardized README structure |
+| `templates/NEWS-template.md` | Standardized NEWS.md format |
+
+### Package Roles
+
+| Package | Purpose | Role |
+|---------|---------|------|
+| [**medfit**](https://github.com/data-wise/medfit) | Model fitting, extraction, bootstrap | Foundation |
+| [**probmed**](https://github.com/data-wise/probmed) | Probabilistic effect size (P_med) | Application |
+| **RMediation** (this) | Confidence intervals (DOP, MBCO) | Application |
+| [**medrobust**](https://github.com/data-wise/medrobust) | Sensitivity analysis | Application |
+| [**medsim**](https://github.com/data-wise/medsim) | Simulation infrastructure | Support |
+
+### What RMediation Provides
+
+- **Distribution of Product** (DOP) method for exact CIs
+- **MBCO** hypothesis testing
+- **Monte Carlo** CIs for product of normals
+- **N-variable product** support (3+ variables)
+
+### Integration with medfit (planned)
+
+- Model extraction will use medfit infrastructure
+- Bootstrap utilities may be shared
+- S7 classes may inherit from medfit base classes
+
+See [Ecosystem Coordination](https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md) for guidelines.
