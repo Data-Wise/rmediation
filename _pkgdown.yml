@@ -78,6 +78,7 @@ reference:
   contents:
   - medci
   - ci
+  - ci_mediation_data
   - mbco
 
 - title: Distribution Functions
