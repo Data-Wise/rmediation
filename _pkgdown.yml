@@ -22,13 +22,15 @@ home:
     Part of the mediationverse ecosystem. Compute confidence intervals for
     indirect effects using distribution of product, Monte Carlo, and
     bootstrap methods.
-  links:
-  - text: Browse source code
-    href: https://github.com/data-wise/rmediation
-  - text: Report a bug
-    href: https://github.com/data-wise/rmediation/issues
   sidebar:
     structure: [links, license, citation, authors, dev]
+  links:
+  - text: "Source Code"
+    href: https://github.com/data-wise/rmediation
+  - text: "Report Issues"
+    href: https://github.com/data-wise/rmediation/issues
+  - text: "Request Feature"
+    href: https://github.com/data-wise/rmediation/issues/new
 
 logo:
   image: man/figures/logo.png
@@ -58,8 +60,6 @@ navbar:
       text: Ecosystem
       menu:
       - text: "Core Packages"
-      - text: "mediationverse (Meta-package)"
-        href: https://data-wise.github.io/mediationverse/
       - text: "medfit (Foundation)"
         href: https://data-wise.github.io/medfit/
       - text: "probmed (P_med Effect Size)"
@@ -76,12 +76,15 @@ navbar:
       icon: fas fa-chart-line
       text: Status
       menu:
-      - text: "Package Status Dashboard"
+      - text: "📊 Package Status Dashboard"
         href: https://github.com/data-wise/mediationverse/blob/main/STATUS.md
-      - text: "Development Roadmap"
+      - text: "🗺️ Development Roadmap"
         href: https://data-wise.github.io/mediationverse/articles/roadmap.html
-      - text: "Contributing Guide"
+      - text: "🤝 Contributing Guide"
         href: https://data-wise.github.io/mediationverse/articles/contributing.html
+      - text: "---------"
+      - text: "📋 Ecosystem Coordination"
+        href: https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md
     news:
       text: News
       href: news/index.html
@@ -137,15 +140,15 @@ reference:
   - tidy.logLik
   - reexports
 
+development:
+  mode: auto
+  version_label: default
+  version_tooltip: "Development version"
+
 authors:
   Davood Tofighi:
     href: "https://orcid.org/0000-0001-8523-7776"
     html: "<img src='https://orcid.org/sites/default/files/images/orcid_16x16.png' height='16' width='16' alt='ORCID iD icon'> Davood Tofighi"
-
-opengraph:
-  image:
-    src: man/figures/logo.png
-    alt: "RMediation Package Logo"
 
 footer:
   structure:
@@ -157,7 +160,3 @@ footer:
       Developed by [Davood Tofighi](https://orcid.org/0000-0001-8523-7776)
     built_with: |
       Built with [pkgdown](https://pkgdown.r-lib.org/)
-
-development:
-  mode: auto
-  version_label: default
