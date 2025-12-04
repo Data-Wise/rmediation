@@ -1,3 +1,13 @@
+# RMediation (development version)
+
+## Ecosystem Notes
+
+* Part of the mediationverse ecosystem for mediation analysis
+* Integration with medfit planned for future release
+* See [Ecosystem Coordination](https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md) for guidelines
+
+---
+
 # RMediation 1.4.0
 
 ## Major Changes
