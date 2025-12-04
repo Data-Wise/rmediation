@@ -44,13 +44,14 @@ jobs:
       - name: Check Quarto
         run: quarto check
 
-      - name: Build site
+      - name: Render Quarto vignettes
         run: |
-          options(pkgdown.internet = FALSE)
-          pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)
+          quarto render vignettes/getting-started.qmd --to html
+          quarto render vignettes/methods-comparison.qmd --to html
+
+      - name: Build site
+        run: pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)
         shell: Rscript {0}
-        env:
-          QUARTO_LOG_LEVEL: DEBUG
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
