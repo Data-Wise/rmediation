@@ -38,11 +38,15 @@ Imports:
     grDevices (>= 4.1.0),
     lavaan (>= 0.5-20),
     MASS (>= 7.3),
+    methods,
     modelr (>= 0.1.8),
     OpenMx (>= 2.13),
     S7
 Suggests:
+    medfit,
     testthat (>= 3.0.0)
+Remotes:
+    data-wise/medfit
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE, roclets = c("rd", "collate", "namespace"))
