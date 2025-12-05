@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   getting-started: getting-started.html
   methods-comparison: methods-comparison.html
-last_built: 2025-12-05T18:41Z
+last_built: 2025-12-05T18:57Z
 urls:
   reference: https://data-wise.github.io/rmediation/reference
   article: https://data-wise.github.io/rmediation/articles
