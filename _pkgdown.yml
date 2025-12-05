@@ -137,6 +137,7 @@ reference:
   - ProductNormal_from_lavaan
   - validate_ProductNormal
   - is_valid_for_computation
+  - tidy
   - tidy.logLik
 
 development:
