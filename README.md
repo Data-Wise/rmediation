@@ -189,25 +189,21 @@ For Monte Carlo CIs in SEM:
 
 ```
 Tofighi, D., & MacKinnon, D. P. (2016). Monte Carlo confidence intervals for
-complex functions of indirect effects. Structural Equation Modeling, 23(2),
-194-205. https://doi.org/10.1080/10705511.2015.1057284
+complex functions of indirect effects. Structural Equation Modeling: A
+Multidisciplinary Journal, 23, 194-205.
+https://doi.org/10.1080/10705511.2015.1057284
 ```
 
-For simulation study comparing CI methods:
-
-```
-MacKinnon, D. P., Lockwood, C. M., & Williams, J. (2004). Confidence limits for
-the indirect effect: Distribution of the product and resampling methods.
-Multivariate Behavioral Research, 39(1), 99-128.
-https://doi.org/10.1207/s15327906mbr3901_4
-```
-
-For MBCO methods:
+For MBCO and bootstrap methods:
 
 ```
 Tofighi, D., & Kelley, K. (2020). Improved inference in mediation analysis:
 Introducing the model-based constrained optimization procedure.
 Psychological Methods, 25(4), 496-515. https://doi.org/10.1037/met0000259
+
+Tofighi, D. (2020). Bootstrap model-based constrained optimization tests of
+indirect effects. Frontiers in Psychology, 10, 2989.
+https://doi.org/10.3389/fpsyg.2019.02989
 ```
 
 ## Getting Help
