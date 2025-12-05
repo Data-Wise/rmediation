@@ -88,7 +88,6 @@
 #' @seealso \code{\link{medci}} \code{\link{RMediation-package}}
 #' @importFrom lavaan lav_matrix_vech_reverse
 #' @importFrom MASS mvrnorm
-#' @importFrom e1071 skewness kurtosis
 #' @importFrom checkmate assert_number assert_logical assert_count assert_formula assert
 #' @keywords internal
 .ci_core <- function(

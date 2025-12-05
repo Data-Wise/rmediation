@@ -28,9 +28,7 @@
 ^Makefile$
 ^README\.dev\.md$
 
-## Vignette files (excluded until Quarto support is stable)
-^vignettes$
-^vignettes/.*\.Rmd$
+## Vignette auxiliary files (not needed in package)
 ^vignettes/.*\.knit\.md$
 ^vignettes/.*_cache$
 ^vignettes/.*_files$

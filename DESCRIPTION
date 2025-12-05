@@ -32,19 +32,19 @@ Depends:
     R (>= 4.1.0)
 Imports:
     checkmate (>= 2.1.0),
-    e1071 (>= 1.6-7),
-    generics (>= 0.0.2),
     graphics (>= 4.1.0),
     grDevices (>= 4.1.0),
     lavaan (>= 0.5-20),
     MASS (>= 7.3),
     methods,
-    modelr (>= 0.1.8),
     S7
 Suggests:
+    knitr,
     medfit,
     OpenMx (>= 2.13),
+    rmarkdown,
     testthat (>= 3.0.0)
+VignetteBuilder: knitr
 Remotes:
     data-wise/medfit
 Encoding: UTF-8
