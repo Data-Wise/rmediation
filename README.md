@@ -194,6 +194,15 @@ Multidisciplinary Journal, 23, 194-205.
 https://doi.org/10.1080/10705511.2015.1057284
 ```
 
+For sequential mediation and CI method comparisons:
+
+```
+Tofighi, D., & Kelley, K. (2020). Indirect effects in sequential mediation
+models: Evaluating methods for hypothesis testing and confidence interval
+formation. Multivariate Behavioral Research, 55(2), 188-210.
+https://doi.org/10.1080/00273171.2019.1618545
+```
+
 For MBCO and bootstrap methods:
 
 ```
