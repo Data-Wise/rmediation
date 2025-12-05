@@ -4,159 +4,193 @@
 [![CRAN status](https://www.r-pkg.org/badges/version/RMediation)](https://CRAN.R-project.org/package=RMediation)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R-CMD-check](https://github.com/data-wise/rmediation/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/data-wise/rmediation/actions/workflows/R-CMD-check.yaml)
-[![Website Status](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml)
-[![R-hub](https://github.com/data-wise/rmediation/actions/workflows/rhub.yaml/badge.svg)](https://github.com/data-wise/rmediation/actions/workflows/rhub.yaml)
 [![Codecov](https://codecov.io/gh/data-wise/rmediation/graph/badge.svg)](https://codecov.io/gh/data-wise/rmediation)
+[![Website](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml/badge.svg)](https://data-wise.github.io/rmediation/)
 <!-- badges: end -->
 
-**RMediation** provides rigorous statistical methods for mediation analysis confidence intervals in observational and experimental designs. It addresses the known limitations of normal-theory confidence intervals (e.g., Sobel test) by implementing advanced methods that account for the non-normal distribution of the indirect effect.
+## Overview
 
-## Features
+**RMediation** computes confidence intervals for indirect effects in mediation analysis. It implements statistically rigorous methods that account for the non-normal distribution of the product of regression coefficients—addressing the well-known limitations of normal-theory approaches like the Sobel test.
 
-- **Distribution of the Product (DOP):** Exact method for the product of two normal random variables using the Meeker & Escobar (1994) algorithm.
-- **Monte Carlo Method:** Robust simulation-based intervals for any number of variables.
-- **N-Variable Products:** Supports confidence intervals for products of 3 or more variables.
-- **LRT-MBCO:** Likelihood Ratio Test via Model-Based Constrained Optimization for hypothesis testing of indirect effects.
-- **Bootstrap Variants:** Parametric and semiparametric bootstrap methods for robust inference.
-- **Modern S7 Architecture:** Type-safe `ProductNormal` and `MBCOResult` classes with validators and display methods.
-- **lavaan Integration:** Auto-detects indirect effects in lavaan models (e.g., `ab := a*b`).
-- **Zero Masking Warnings:** Clean namespace with no conflicts with base R functions.
+The package supports:
 
-## Mediationverse Ecosystem
+- **Single mediator models** (X → M → Y)
+- **Sequential/serial mediators** (X → M₁ → M₂ → Y)
+- **Parallel mediators** with complex indirect effects
+- **Any product of normal random variables** for custom applications
 
-**RMediation** is part of the **mediationverse** ecosystem for mediation analysis in R:
+## Why RMediation?
 
-| Package | Purpose | Role |
-|---------|---------|------|
-| [**medfit**](https://data-wise.github.io/medfit/) | Model fitting, extraction, bootstrap | Foundation |
-| [**probmed**](https://data-wise.github.io/probmed/) | Probabilistic effect size (P_med) | Application |
-| **RMediation** (this) | Confidence intervals (DOP, MBCO) | Application |
-| [**medrobust**](https://data-wise.github.io/medrobust/) | Sensitivity analysis | Application |
-| [**medsim**](https://data-wise.github.io/medsim/) | Simulation infrastructure | Support |
+Traditional methods (e.g., Sobel test) assume the indirect effect *ab* follows a normal distribution. This assumption is often violated because the product of two normal variables is *not* normally distributed—especially when effect sizes are small or sample sizes are modest.
 
-**Resources:**
-- [Ecosystem Coordination](https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md) - Version compatibility and development guidelines
-- [Development Roadmap](https://data-wise.github.io/mediationverse/articles/roadmap.html) - Timeline and milestones
-- [Package Status Dashboard](https://github.com/data-wise/mediationverse/blob/main/STATUS.md) - Build status for all packages
+**RMediation** provides methods that correctly handle this non-normality:
+
+| Method | Best For | Speed |
+|--------|----------|-------|
+| **DOP** (Distribution of Product) | Two-variable products; publication-quality results | Fast |
+| **Monte Carlo** | Complex models; 3+ variable products | Moderate |
+| **MBCO** (Model-Based Constrained Optimization) | Hypothesis testing; bootstrap inference | Slower |
 
 ## Installation
 
-### Stable Release (CRAN)
-
-Install the stable version from CRAN:
+### From CRAN (Stable)
 
 ```r
 install.packages("RMediation")
 ```
 
-### Development Version (GitHub)
-
-Install the latest development version:
+### From GitHub (Development)
 
 ```r
-# Install remotes if needed
-install.packages("remotes")
+# Using pak (recommended)
+pak::pak("Data-Wise/rmediation@develop")
 
-# Install from develop branch
+# Or using remotes
 remotes::install_github("Data-Wise/rmediation", ref = "develop")
 ```
 
-## Quick Examples
+## Usage
 
-### Using Summary Statistics
+### Basic Example: Single Mediator
 
-If you have estimates from a published paper or other software, compute CIs using coefficients and standard errors:
-
-```r
-library(RMediation)
-
-# Single mediator: a = 0.5, b = 0.6, se.a = 0.08, se.b = 0.04
-medci(mu.x = 0.5, mu.y = 0.6, se.x = 0.08, se.y = 0.04, rho = 0, type = "dop")
-```
-
-### Sequential Mediators
-
-Compute CIs for indirect effects with multiple sequential mediators:
+When you have coefficient estimates and standard errors (e.g., from a published study):
 
 ```r
 library(RMediation)
 
-# Two sequential mediators
-ci(mu = c(b1 = 1, b2 = .7, b3 = .6, b4 = .45),
-   Sigma = c(.05, 0, 0, 0, .05, 0, 0, .03, 0, .03),
-   quant = ~ b1 * b2 * b3 * b4, type = "MC", plot = TRUE, plotCI = TRUE)
+# Path coefficients: a = 0.5 (SE = 0.08), b = 0.6 (SE = 0.04)
+# Compute 95% CI for the indirect effect ab
+medci(mu.x = 0.5, mu.y = 0.6,
+      se.x = 0.08, se.y = 0.04,
+      rho = 0, type = "dop")
+
+#> 95% CI for ab: [0.178, 0.422]
+#> Estimate: 0.300, SE: 0.062
 ```
 
-### Using the S7 ProductNormal Class
+### Sequential Mediators (3+ Variables)
+
+For models with multiple sequential mediators (X → M₁ → M₂ → Y), use the `ci()` function with a formula:
 
 ```r
-library(RMediation)
-
-# Create a ProductNormal distribution
-mu <- c(0.5, 0.3)
-Sigma <- matrix(c(0.01, 0.002, 0.002, 0.01), 2, 2)
-pn <- ProductNormal(mu = mu, Sigma = Sigma)
-
-# Compute confidence interval
-ci(pn, level = 0.95, type = "dop")
-
-# Display detailed information
-print(pn)
-summary(pn)
+# Four-path indirect effect: b1 * b2 * b3 * b4
+ci(mu = c(b1 = 1.0, b2 = 0.7, b3 = 0.6, b4 = 0.45),
+   Sigma = c(0.05, 0, 0, 0,    # Covariance matrix (lower triangle)
+             0.05, 0, 0,
+             0.03, 0,
+             0.03),
+   quant = ~ b1 * b2 * b3 * b4,
+   type = "MC",
+   n.mc = 1e5)
 ```
 
-### N-Variable Products
+### With lavaan Models
 
-Compute confidence intervals for products of 3 or more variables:
-
-```r
-library(RMediation)
-
-# Three-way product: a1 * a2 * b
-pn3 <- ProductNormal(
-  mu = c(0.3, 0.4, 0.5),
-  Sigma = diag(3)
-)
-
-# Compute CI using Monte Carlo method
-ci(pn3, level = 0.95, type = "mc", n.mc = 1e5)
-```
-
-### Using lavaan Integration
+RMediation integrates directly with [lavaan](https://lavaan.ugent.be/) SEM models:
 
 ```r
 library(lavaan)
 library(RMediation)
 
-# Define mediation model
+# Define mediation model with labeled paths
 model <- '
   m ~ a*x
-  y ~ b*m
+  y ~ b*m + c*x
+
+  # Define indirect effect
   ab := a*b
 '
-fit <- sem(model, data = YourData)
 
-# Auto-detect and compute CI for indirect effect
-ci(fit)  # Automatically finds 'ab := a*b'
+fit <- sem(model, data = mydata)
+
+# Compute CI for indirect effect (auto-detects 'ab := a*b')
+ci(fit, type = "dop")
 ```
 
-## Contributing
+### Using the S7 ProductNormal Class
 
-Contributions are welcome! If you encounter issues or have feature requests:
+For programmatic use, create `ProductNormal` objects directly:
 
-- [Report a Bug](https://github.com/data-wise/rmediation/issues)
-- [Submit a Pull Request](https://github.com/data-wise/rmediation/pulls)
+```r
+# Define distribution of two correlated normal variables
+pn <- ProductNormal(
+  mu = c(0.5, 0.3),
+  Sigma = matrix(c(0.01, 0.002,
+                   0.002, 0.01), 2, 2)
+)
+
+# Compute confidence interval
+ci(pn, level = 0.95, type = "dop")
+
+# Get CDF and quantiles
+cdf(pn, q = 0.15)
+dist_quantile(pn, p = 0.975)
+
+# View summary
+summary(pn)
+```
+
+### Hypothesis Testing with MBCO
+
+For formal hypothesis testing of indirect effects using bootstrap:
+
+```r
+# Requires OpenMx model
+library(OpenMx)
+
+# ... define your OpenMx mediation model ...
+
+# Run MBCO test (H0: indirect effect = 0)
+mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
+```
+
+## Key Functions
+
+| Function | Purpose |
+|----------|---------|
+| `medci()` | CI for product of two normal variables |
+| `ci()` | CI for any function of parameters (formulas, lavaan, ProductNormal) |
+| `mbco()` | Bootstrap hypothesis tests via MBCO |
+| `pprodnormal()` | CDF of product of two normals |
+| `qprodnormal()` | Quantiles of product of two normals |
+| `ProductNormal()` | S7 class for product distributions |
+
+## Part of the Mediationverse
+
+**RMediation** is part of the [**mediationverse**](https://data-wise.github.io/mediationverse/)—a suite of R packages for comprehensive mediation analysis:
+
+| Package | Purpose |
+|---------|---------|
+| [**medfit**](https://data-wise.github.io/medfit/) | Model fitting and coefficient extraction |
+| [**probmed**](https://data-wise.github.io/probmed/) | Probabilistic effect size (P_med) |
+| **RMediation** | Confidence intervals (DOP, Monte Carlo, MBCO) |
+| [**medrobust**](https://data-wise.github.io/medrobust/) | Sensitivity analysis |
+| [**medsim**](https://data-wise.github.io/medsim/) | Simulation infrastructure |
 
 ## Citation
 
-If you use **RMediation** in your research, please cite:
+If you use RMediation in your research, please cite:
 
-> Tofighi, D., & MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis confidence intervals. *Behavior Research Methods*, 43, 692-700. doi:10.3758/s13428-011-0076-x
+```
+Tofighi, D., & MacKinnon, D. P. (2011). RMediation: An R package for mediation
+analysis confidence intervals. Behavior Research Methods, 43, 692-700.
+https://doi.org/10.3758/s13428-011-0076-x
+```
 
-> Tofighi, D., & Kelley, K. (2020). Improved inference in mediation analysis: Introducing the model-based constrained optimization procedure. *Psychological Methods*, 25(4), 496-515. doi:10.1037/met0000259
+For MBCO methods, also cite:
 
-> Tofighi, D. (2020). Bootstrap Model-Based Constrained Optimization Tests of Indirect Effects. *Frontiers in Psychology*, 10, 2989. doi:10.3389/fpsyg.2019.02989
+```
+Tofighi, D., & Kelley, K. (2020). Improved inference in mediation analysis:
+Introducing the model-based constrained optimization procedure.
+Psychological Methods, 25(4), 496-515. https://doi.org/10.1037/met0000259
+```
+
+## Getting Help
+
+- [Package documentation](https://data-wise.github.io/rmediation/)
+- [Report issues](https://github.com/data-wise/rmediation/issues)
+- [Mediationverse roadmap](https://data-wise.github.io/mediationverse/articles/roadmap.html)
 
 ## License
 
-RMediation is licensed under the [GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/).
+GPL-3
