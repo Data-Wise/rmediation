@@ -28,13 +28,16 @@
 
 | Package | Purpose | Role |
 |---------|---------|------|
-| [**medfit**](https://github.com/data-wise/medfit) | Model fitting, extraction, bootstrap | Foundation |
-| [**probmed**](https://github.com/data-wise/probmed) | Probabilistic effect size (P_med) | Application |
+| [**medfit**](https://data-wise.github.io/medfit/) | Model fitting, extraction, bootstrap | Foundation |
+| [**probmed**](https://data-wise.github.io/probmed/) | Probabilistic effect size (P_med) | Application |
 | **RMediation** (this) | Confidence intervals (DOP, MBCO) | Application |
-| [**medrobust**](https://github.com/data-wise/medrobust) | Sensitivity analysis | Application |
-| [**medsim**](https://github.com/data-wise/medsim) | Simulation infrastructure | Support |
+| [**medrobust**](https://data-wise.github.io/medrobust/) | Sensitivity analysis | Application |
+| [**medsim**](https://data-wise.github.io/medsim/) | Simulation infrastructure | Support |
 
-See [Ecosystem Coordination](https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md) for version compatibility and development guidelines.
+**Resources:**
+- [Ecosystem Coordination](https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md) - Version compatibility and development guidelines
+- [Development Roadmap](https://data-wise.github.io/mediationverse/articles/roadmap.html) - Timeline and milestones
+- [Package Status Dashboard](https://github.com/data-wise/mediationverse/blob/main/STATUS.md) - Build status for all packages
 
 ## Installation
 

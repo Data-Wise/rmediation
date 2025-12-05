@@ -1,10 +1,25 @@
 # RMediation (development version)
 
+## Dependency Reduction
+
+* **Removed dependencies**: `e1071`, `modelr`, and `generics` packages are no longer required.
+* **Internal implementations**: Added internal `.skewness()`, `.kurtosis()`, and `.resample_bootstrap()` functions to replace external dependencies.
+* **Own tidy generic**: Package now defines its own `tidy()` generic instead of re-exporting from `generics`.
+* Total Imports reduced from 10 to 7 packages.
+
+## CI/CD Improvements
+
+* Added `R-CMD-check.yaml` workflow for multi-platform testing (macOS, Windows, Ubuntu with R devel/release/oldrel).
+* Added `test-coverage.yaml` workflow for Codecov integration.
+* Added `VignetteBuilder: knitr` to DESCRIPTION for proper vignette building.
+* Standardized README.md to mediationverse format.
+
 ## Ecosystem Notes
 
-* Part of the mediationverse ecosystem for mediation analysis
-* Integration with medfit planned for future release
-* See [Ecosystem Coordination](https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md) for guidelines
+* Part of the **mediationverse** ecosystem for mediation analysis in R.
+* Integration with medfit planned for v1.5.0 (Q1 2026).
+* See [Ecosystem Coordination](https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md) for version compatibility and development guidelines.
+* See [Development Roadmap](https://data-wise.github.io/mediationverse/articles/roadmap.html) for timeline.
 
 ---
 
