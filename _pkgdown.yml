@@ -138,7 +138,6 @@ reference:
   - validate_ProductNormal
   - is_valid_for_computation
   - tidy.logLik
-  - reexports
 
 development:
   mode: auto
