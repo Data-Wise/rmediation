@@ -185,7 +185,24 @@ analysis confidence intervals. Behavior Research Methods, 43, 692-700.
 https://doi.org/10.3758/s13428-011-0076-x
 ```
 
-For MBCO methods, also cite:
+For Monte Carlo CIs in SEM:
+
+```
+Tofighi, D., & MacKinnon, D. P. (2016). Monte Carlo confidence intervals for
+complex functions of indirect effects. Structural Equation Modeling, 23(2),
+194-205. https://doi.org/10.1080/10705511.2015.1057284
+```
+
+For simulation study comparing CI methods:
+
+```
+MacKinnon, D. P., Lockwood, C. M., & Williams, J. (2004). Confidence limits for
+the indirect effect: Distribution of the product and resampling methods.
+Multivariate Behavioral Research, 39(1), 99-128.
+https://doi.org/10.1207/s15327906mbr3901_4
+```
+
+For MBCO methods:
 
 ```
 Tofighi, D., & Kelley, K. (2020). Improved inference in mediation analysis:
