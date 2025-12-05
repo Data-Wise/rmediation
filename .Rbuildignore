@@ -9,6 +9,7 @@
 ^(\.\.)?\.Rcheck$
 ^\.claude$
 ^CLAUDE\.md$
+^STATUS\.md$
 ^GEMINI\.md$
 ^QWEN\.md$
 ^\.git$
