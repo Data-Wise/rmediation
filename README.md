@@ -161,11 +161,19 @@ mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
 
 | Package | Purpose |
 |---------|---------|
+| [**mediationverse**](https://data-wise.github.io/mediationverse/) | Meta-package: install and load all packages |
 | [**medfit**](https://data-wise.github.io/medfit/) | Model fitting and coefficient extraction |
 | [**probmed**](https://data-wise.github.io/probmed/) | Probabilistic effect size (P_med) |
 | **RMediation** | Confidence intervals (DOP, Monte Carlo, MBCO) |
 | [**medrobust**](https://data-wise.github.io/medrobust/) | Sensitivity analysis |
 | [**medsim**](https://data-wise.github.io/medsim/) | Simulation infrastructure |
+
+Install the entire ecosystem:
+
+```r
+pak::pak("Data-Wise/mediationverse")
+library(mediationverse)  # Loads all packages
+```
 
 ## Citation
 
