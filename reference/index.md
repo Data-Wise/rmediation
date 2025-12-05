@@ -67,8 +67,7 @@ S3 methods, validation helpers, and utility functions.
 - [`is_valid_for_computation()`](https://data-wise.github.io/rmediation/reference/is_valid_for_computation.md)
   : Method to check if ProductNormal object is properly specified for
   computation
+- [`tidy()`](https://data-wise.github.io/rmediation/reference/tidy.md) :
+  Tidy generic function
 - [`tidy(`*`<logLik>`*`)`](https://data-wise.github.io/rmediation/reference/tidy_logLik.md)
   : Creates a data.frame for a log-likelihood object
-- [`reexports`](https://data-wise.github.io/rmediation/reference/reexports.md)
-  [`tidy`](https://data-wise.github.io/rmediation/reference/reexports.md)
-  : Objects exported from other packages

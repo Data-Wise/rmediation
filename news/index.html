@@ -59,10 +59,28 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="rmediation-development-version">RMediation (development version)<a class="anchor" aria-label="anchor" href="#rmediation-development-version"></a></h2>
 <div class="section level3">
+<h3 id="dependency-reduction-development-version">Dependency Reduction<a class="anchor" aria-label="anchor" href="#dependency-reduction-development-version"></a></h3>
+<ul><li>
+<strong>Removed dependencies</strong>: <code>e1071</code>, <code>modelr</code>, and <code>generics</code> packages are no longer required.</li>
+<li>
+<strong>Internal implementations</strong>: Added internal <code>.skewness()</code>, <code>.kurtosis()</code>, and <code>.resample_bootstrap()</code> functions to replace external dependencies.</li>
+<li>
+<strong>Own tidy generic</strong>: Package now defines its own <code><a href="../reference/tidy.html">tidy()</a></code> generic instead of re-exporting from <code>generics</code>.</li>
+<li>Total Imports reduced from 10 to 7 packages.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="cicd-improvements-development-version">CI/CD Improvements<a class="anchor" aria-label="anchor" href="#cicd-improvements-development-version"></a></h3>
+<ul><li>Added <code>R-CMD-check.yaml</code> workflow for multi-platform testing (macOS, Windows, Ubuntu with R devel/release/oldrel).</li>
+<li>Added <code>test-coverage.yaml</code> workflow for Codecov integration.</li>
+<li>Added <code>VignetteBuilder: knitr</code> to DESCRIPTION for proper vignette building.</li>
+<li>Standardized README.md to mediationverse format.</li>
+</ul></div>
+<div class="section level3">
 <h3 id="ecosystem-notes-development-version">Ecosystem Notes<a class="anchor" aria-label="anchor" href="#ecosystem-notes-development-version"></a></h3>
-<ul><li>Part of the mediationverse ecosystem for mediation analysis</li>
-<li>Integration with medfit planned for future release</li>
-<li>See <a href="https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md" class="external-link">Ecosystem Coordination</a> for guidelines</li>
+<ul><li>Part of the <strong>mediationverse</strong> ecosystem for mediation analysis in R.</li>
+<li>Integration with medfit planned for v1.5.0 (Q1 2026).</li>
+<li>See <a href="https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md" class="external-link">Ecosystem Coordination</a> for version compatibility and development guidelines.</li>
+<li>See <a href="https://data-wise.github.io/mediationverse/articles/roadmap.html" class="external-link">Development Roadmap</a> for timeline.</li>
 </ul><hr></div>
 </div>
     <div class="section level2">

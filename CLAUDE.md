@@ -90,9 +90,13 @@ patterns.
 ### Key Dependencies
 
 - **lavaan**: SEM parameter extraction
-- **OpenMx**: For MBCO model-based tests
+- **OpenMx**: For MBCO model-based tests (Suggests)
 - **MASS**: Multivariate normal sampling
-- **doParallel/foreach**: Parallel bootstrap
+- **checkmate**: Input validation
+- **S7**: Object-oriented programming system
+
+**Note**: Dependencies reduced in development version. Internal
+implementations replace `e1071`, `modelr`, and `generics`.
 
 ------------------------------------------------------------------------
 
@@ -113,23 +117,26 @@ patterns.
 RMediation is an **application package** in the mediationverse
 ecosystem.
 
-### Central Planning
+### Ecosystem Resources
 
-Ecosystem coordination managed in `/Users/dt/mediation-planning/`: -
-`ECOSYSTEM-COORDINATION.md` - Version matrix, release timeline -
-`MONTHLY-CHECKLIST.md` - Health checks
+| Resource                 | URL                                                                   |
+|--------------------------|-----------------------------------------------------------------------|
+| Ecosystem Coordination   | <https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md> |
+| Development Roadmap      | <https://data-wise.github.io/mediationverse/articles/roadmap.html>    |
+| Package Status Dashboard | <https://github.com/data-wise/mediationverse/blob/main/STATUS.md>     |
 
 ### Related Packages
 
-| Package        | Repository                                    | Purpose                                | Website                                       |
-|----------------|-----------------------------------------------|----------------------------------------|-----------------------------------------------|
-| mediationverse | <https://github.com/data-wise/mediationverse> | Meta-package (loads all)               | <https://data-wise.github.io/mediationverse/> |
-| medfit         | <https://github.com/data-wise/medfit>         | Foundation (model fitting, extraction) | <https://data-wise.github.io/medfit/>         |
-| probmed        | <https://github.com/data-wise/probmed>        | P_med effect size                      | <https://data-wise.github.io/probmed/>        |
-| medrobust      | <https://github.com/data-wise/medrobust>      | Sensitivity analysis                   | <https://data-wise.github.io/medrobust/>      |
-| medsim         | <https://github.com/data-wise/medsim>         | Simulation infrastructure              | <https://data-wise.github.io/medsim/>         |
+| Package        | Purpose                              | Role        | Website                                       |
+|----------------|--------------------------------------|-------------|-----------------------------------------------|
+| mediationverse | Meta-package (loads all)             | Umbrella    | <https://data-wise.github.io/mediationverse/> |
+| medfit         | Model fitting, extraction, bootstrap | Foundation  | <https://data-wise.github.io/medfit/>         |
+| probmed        | Probabilistic effect size (P_med)    | Application | <https://data-wise.github.io/probmed/>        |
+| RMediation     | Confidence intervals (DOP, MBCO)     | Application | <https://data-wise.github.io/rmediation/>     |
+| medrobust      | Sensitivity analysis                 | Application | <https://data-wise.github.io/medrobust/>      |
+| medsim         | Simulation infrastructure            | Support     | <https://data-wise.github.io/medsim/>         |
 
-### Integration with medfit (planned)
+### Integration with medfit (v1.5.0, Q1 2026)
 
 - Model extraction will use medfit infrastructure
 - Bootstrap utilities may be shared

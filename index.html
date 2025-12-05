@@ -96,269 +96,295 @@
 </div>
 <!-- badges: start -->
 
-<p><strong>RMediation</strong> provides rigorous statistical methods for mediation analysis in observational and experimental designs. It addresses the known limitations of normal-theory confidence intervals (e.g., Sobel test) by implementing advanced methods that account for the non-normal distribution of the indirect effect.</p>
 <div class="section level2">
-<h2 id="key-capabilities">Key Capabilities<a class="anchor" aria-label="anchor" href="#key-capabilities"></a>
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<div class="section level3">
-<h3 id="id_1-rigorous-confidence-intervals">1. Rigorous Confidence Intervals<a class="anchor" aria-label="anchor" href="#id_1-rigorous-confidence-intervals"></a>
-</h3>
-<p>Compute accurate Confidence Intervals (CIs) for indirect effects using methods that outperform the standard normal approximation:</p>
+<p><strong>RMediation</strong> computes confidence intervals for indirect effects in mediation analysis. It implements statistically rigorous methods that account for the non-normal distribution of the product of regression coefficients—addressing the well-known limitations of normal-theory approaches like the Sobel test.</p>
+<p>The package supports:</p>
 <ul>
 <li>
-<strong>Distribution of the Product (DOP):</strong> Exact method for the product of two normal random variables using Meeker &amp; Escobar (1994) algorithm.</li>
+<strong>Single mediator models</strong> (X → M → Y)</li>
 <li>
-<strong>Monte Carlo Method:</strong> Robust simulation-based intervals for any number of variables.</li>
+<strong>Sequential/serial mediators</strong> (X → M₁ → M₂ → Y)</li>
 <li>
-<strong>Bootstrapping:</strong> Parametric and semi-parametric bootstrap implementations via MBCO tests.</li>
+<strong>Parallel mediators</strong> with complex indirect effects</li>
 <li>
-<strong>N-Variable Products (NEW):</strong> Now supports confidence intervals for products of 3 or more variables—a capability not available in previous versions.</li>
+<strong>Any product of normal random variables</strong> for custom applications</li>
 </ul>
-</div>
-<div class="section level3">
-<h3 id="id_2-advanced-hypothesis-testing">2. Advanced Hypothesis Testing<a class="anchor" aria-label="anchor" href="#id_2-advanced-hypothesis-testing"></a>
-</h3>
-<ul>
-<li>
-<strong>LRT-MBCO:</strong> Implements the <strong>Likelihood Ratio Test via Model-Based Constrained Optimization</strong>, a powerful frequentist method for testing indirect effects that controls Type I error rates better than standard approaches.</li>
-<li>
-<strong>Bootstrap Variants:</strong> Parametric and semiparametric bootstrap methods for robust inference.</li>
-<li>
-<strong>Sobel Test:</strong> Asymptotic normal test included for baseline comparison.</li>
-</ul>
-</div>
-<div class="section level3">
-<h3 id="id_3-modern-s7-object-oriented-architecture-v140">3. Modern S7 Object-Oriented Architecture (v1.4.0)<a class="anchor" aria-label="anchor" href="#id_3-modern-s7-object-oriented-architecture-v140"></a>
-</h3>
-<ul>
-<li>
-<strong>S7 computational core:</strong> Complete architectural redesign with S7 as the foundation—legacy functions are now thin wrappers.</li>
-<li>
-<strong>Type-safe classes:</strong> <code>ProductNormal</code> and <code>MBCOResult</code> S7 classes with validators.</li>
-<li>
-<strong>Meaningful output:</strong> All classes have <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>, and <code>show()</code> methods.</li>
-<li>
-<strong>Zero breaking changes:</strong> 100% backward compatible—all existing code works without modification.</li>
-<li>
-<strong>Enhanced extensibility:</strong> New architecture makes adding CI methods straightforward.</li>
-</ul>
-</div>
-<div class="section level3">
-<h3 id="id_4-clean-namespace">4. Clean Namespace<a class="anchor" aria-label="anchor" href="#id_4-clean-namespace"></a>
-</h3>
-<ul>
-<li>
-<strong>Zero masking warnings:</strong> Package loads cleanly with no conflicts with base R functions.</li>
-<li>All S7 methods properly register with base generics (<code>print</code>, <code>summary</code>, <code>show</code>).</li>
-<li>New <code><a href="reference/dist_quantile.html">dist_quantile()</a></code> generic avoids conflict with <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">stats::quantile()</a></code>.</li>
-</ul>
-</div>
-<div class="section level3">
-<h3 id="id_5-seamless-integration">5. Seamless Integration<a class="anchor" aria-label="anchor" href="#id_5-seamless-integration"></a>
-</h3>
-<ul>
-<li>Works directly with summary statistics (coefficients/SEs).</li>
-<li>Extracts parameters automatically from fitted <code>lavaan</code> or <code>OpenMx</code> model objects.</li>
-<li>Auto-detects indirect effects in <code>lavaan</code> models (e.g., <code>ab := a*b</code>).</li>
-</ul>
-<hr>
-</div>
 </div>
 <div class="section level2">
-<h2 id="mediationverse-ecosystem">Mediationverse Ecosystem<a class="anchor" aria-label="anchor" href="#mediationverse-ecosystem"></a>
+<h2 id="why-rmediation">Why RMediation?<a class="anchor" aria-label="anchor" href="#why-rmediation"></a>
 </h2>
-<p><strong>RMediation</strong> is part of the <strong>mediationverse</strong> ecosystem for mediation analysis in R:</p>
+<p>Traditional methods (e.g., Sobel test) assume the indirect effect <em>ab</em> follows a normal distribution. This assumption is often violated because the product of two normal variables is <em>not</em> normally distributed—especially when effect sizes are small or sample sizes are modest.</p>
+<p><strong>RMediation</strong> provides methods that correctly handle this non-normality:</p>
 <table class="table">
 <colgroup>
-<col width="37%">
-<col width="37%">
-<col width="25%">
+<col width="32%">
+<col width="40%">
+<col width="28%">
 </colgroup>
 <thead><tr class="header">
-<th>Package</th>
-<th>Purpose</th>
-<th>Role</th>
+<th>Method</th>
+<th>Best For</th>
+<th>Speed</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><a href="https://github.com/data-wise/medfit" class="external-link"><strong>medfit</strong></a></td>
-<td>Model fitting, extraction, bootstrap</td>
-<td>Foundation</td>
+<td>
+<strong>DOP</strong> (Distribution of Product)</td>
+<td>Two-variable products; publication-quality results</td>
+<td>Fast</td>
 </tr>
 <tr class="even">
-<td><a href="https://github.com/data-wise/probmed" class="external-link"><strong>probmed</strong></a></td>
-<td>Probabilistic effect size (P_med)</td>
-<td>Application</td>
+<td><strong>Monte Carlo</strong></td>
+<td>Complex models; 3+ variable products</td>
+<td>Moderate</td>
 </tr>
 <tr class="odd">
 <td>
-<strong>RMediation</strong> (this)</td>
-<td>Confidence intervals (DOP, MBCO)</td>
-<td>Application</td>
-</tr>
-<tr class="even">
-<td><a href="https://github.com/data-wise/medrobust" class="external-link"><strong>medrobust</strong></a></td>
-<td>Sensitivity analysis</td>
-<td>Application</td>
-</tr>
-<tr class="odd">
-<td><a href="https://github.com/data-wise/medsim" class="external-link"><strong>medsim</strong></a></td>
-<td>Simulation infrastructure</td>
-<td>Support</td>
+<strong>MBCO</strong> (Model-Based Constrained Optimization)</td>
+<td>Hypothesis testing; bootstrap inference</td>
+<td>Slower</td>
 </tr>
 </tbody>
 </table>
-<p>See <a href="https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md" class="external-link">Ecosystem Coordination</a> for version compatibility and development guidelines.</p>
-<hr>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="section level3">
-<h3 id="stable-release-cran">Stable Release (CRAN)<a class="anchor" aria-label="anchor" href="#stable-release-cran"></a>
+<h3 id="from-cran-stable">From CRAN (Stable)<a class="anchor" aria-label="anchor" href="#from-cran-stable"></a>
 </h3>
-<p>Install the stable version from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"RMediation"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="development-version-github">Development Version (GitHub)<a class="anchor" aria-label="anchor" href="#development-version-github"></a>
+<h3 id="from-github-development">From GitHub (Development)<a class="anchor" aria-label="anchor" href="#from-github-development"></a>
 </h3>
-<p>Install the latest development version with new S7 features:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Install remotes if needed</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Using pak (recommended)</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Data-Wise/rmediation@develop"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Install from develop branch</span></span>
+<span><span class="co"># Or using remotes</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Data-Wise/rmediation"</span>, ref <span class="op">=</span> <span class="st">"develop"</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Development version includes (v1.4.0):</strong></p>
-<ul>
-<li>✨ <strong>S7 computational core</strong> - Complete architectural redesign for extensibility</li>
-<li>🚀 <strong>N-variable product support</strong> - Compute CIs for 3+ variable products (NEW capability)</li>
-<li>🎯 Auto-detection of indirect effects in <code>lavaan</code> models</li>
-<li>📊 Enhanced display methods (<code>print</code>, <code>summary</code>, <code>show</code>)</li>
-<li>✅ Comprehensive input validation with better error messages</li>
-<li>🧹 <strong>Zero masking warnings</strong> - Clean namespace with no conflicts</li>
-<li>🔧 <strong>100% backward compatible</strong> - All existing code works without changes</li>
-</ul>
-<hr>
 </div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <div class="section level3">
-<h3 id="using-summary-statistics-to-calculate-cis">Using Summary Statistics to Calculate CIs<a class="anchor" aria-label="anchor" href="#using-summary-statistics-to-calculate-cis"></a>
+<h3 id="basic-example-single-mediator">Basic Example: Single Mediator<a class="anchor" aria-label="anchor" href="#basic-example-single-mediator"></a>
 </h3>
-<p>If you already have estimates from a published paper or other software, you can calculate CIs using coefficients (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>a</mi><mo accent="true">̂</mo></mover><mo>,</mo><mover><mi>b</mi><mo accent="true">̂</mo></mover></mrow><annotation encoding="application/x-tex">\hat{a}, \hat{b}</annotation></semantics></math>) and their standard errors.</p>
+<p>When you have coefficient estimates and standard errors (e.g., from a published study):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Example: Single mediator</span></span>
-<span><span class="co"># a = 0.5, b = 0.6, se.a = 0.08, se.b = 0.04, rho = 0 (independence)</span></span>
-<span><span class="fu"><a href="reference/medci.html">medci</a></span><span class="op">(</span>mu.x <span class="op">=</span> <span class="fl">0.5</span>, mu.y <span class="op">=</span> <span class="fl">0.6</span>, se.x <span class="op">=</span> <span class="fl">0.08</span>, se.y <span class="op">=</span> <span class="fl">0.04</span>, rho <span class="op">=</span> <span class="fl">0</span>, type <span class="op">=</span> <span class="st">"prodclin"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Path coefficients: a = 0.5 (SE = 0.08), b = 0.6 (SE = 0.04)</span></span>
+<span><span class="co"># Compute 95% CI for the indirect effect ab</span></span>
+<span><span class="fu"><a href="reference/medci.html">medci</a></span><span class="op">(</span>mu.x <span class="op">=</span> <span class="fl">0.5</span>, mu.y <span class="op">=</span> <span class="fl">0.6</span>,</span>
+<span>      se.x <span class="op">=</span> <span class="fl">0.08</span>, se.y <span class="op">=</span> <span class="fl">0.04</span>,</span>
+<span>      rho <span class="op">=</span> <span class="fl">0</span>, type <span class="op">=</span> <span class="st">"dop"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#&gt; 95% CI for ab: [0.178, 0.422]</span></span>
+<span><span class="co">#&gt; Estimate: 0.300, SE: 0.062</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="using-ci-to-calculate-cis-for-indirect-effects-of-path-with-two-sequential-mediators">Using <code>ci</code> to Calculate CIs for Indirect Effects of Path with Two Sequential Mediators<a class="anchor" aria-label="anchor" href="#using-ci-to-calculate-cis-for-indirect-effects-of-path-with-two-sequential-mediators"></a>
+<h3 id="sequential-mediators-3-variables">Sequential Mediators (3+ Variables)<a class="anchor" aria-label="anchor" href="#sequential-mediators-3-variables"></a>
 </h3>
+<p>For models with multiple sequential mediators (X → M₁ → M₂ → Y), use the <code><a href="reference/ci.html">ci()</a></code> function with a formula:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Example: Two sequential mediators</span></span>
-<span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">1</span>, b2 <span class="op">=</span> <span class="fl">.7</span>, b3 <span class="op">=</span> <span class="fl">.6</span>, b4 <span class="op">=</span> <span class="fl">.45</span><span class="op">)</span>,</span>
-<span>  Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.05</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.05</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.03</span>, <span class="fl">0</span>, <span class="fl">.03</span><span class="op">)</span>,</span>
-<span>  quant <span class="op">=</span> <span class="op">~</span> <span class="va">b1</span> <span class="op">*</span> <span class="va">b2</span> <span class="op">*</span> <span class="va">b3</span> <span class="op">*</span> <span class="va">b4</span>, type <span class="op">=</span> <span class="st">"MC"</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, plotCI <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Four-path indirect effect: b1 * b2 * b3 * b4</span></span>
+<span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">1.0</span>, b2 <span class="op">=</span> <span class="fl">0.7</span>, b3 <span class="op">=</span> <span class="fl">0.6</span>, b4 <span class="op">=</span> <span class="fl">0.45</span><span class="op">)</span>,</span>
+<span>   Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>,    <span class="co"># Covariance matrix (lower triangle)</span></span>
+<span>             <span class="fl">0.05</span>, <span class="fl">0</span>, <span class="fl">0</span>,</span>
+<span>             <span class="fl">0.03</span>, <span class="fl">0</span>,</span>
+<span>             <span class="fl">0.03</span><span class="op">)</span>,</span>
+<span>   quant <span class="op">=</span> <span class="op">~</span> <span class="va">b1</span> <span class="op">*</span> <span class="va">b2</span> <span class="op">*</span> <span class="va">b3</span> <span class="op">*</span> <span class="va">b4</span>,</span>
+<span>   type <span class="op">=</span> <span class="st">"MC"</span>,</span>
+<span>   n.mc <span class="op">=</span> <span class="fl">1e5</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="using-s7-productnormal-class">Using S7 <code>ProductNormal</code> Class<a class="anchor" aria-label="anchor" href="#using-s7-productnormal-class"></a>
+<h3 id="with-lavaan-models">With lavaan Models<a class="anchor" aria-label="anchor" href="#with-lavaan-models"></a>
 </h3>
+<p>RMediation integrates directly with <a href="https://lavaan.ugent.be/" class="external-link">lavaan</a> SEM models:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Create a ProductNormal distribution (2 variables)</span></span>
-<span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.3</span><span class="op">)</span></span>
-<span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.002</span>, <span class="fl">0.002</span>, <span class="fl">0.01</span><span class="op">)</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">pn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ProductNormal.html">ProductNormal</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="va">mu</span>, Sigma <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span></span>
+<span><span class="co"># Define mediation model with labeled paths</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">'</span></span>
+<span><span class="st">  m ~ a*x</span></span>
+<span><span class="st">  y ~ b*m + c*x</span></span>
+<span><span class="st"></span></span>
+<span><span class="st">  # Define indirect effect</span></span>
+<span><span class="st">  ab := a*b</span></span>
+<span><span class="st">'</span></span>
+<span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="va">model</span>, data <span class="op">=</span> <span class="va">mydata</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Compute CI for indirect effect (auto-detects 'ab := a*b')</span></span>
+<span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span><span class="va">fit</span>, type <span class="op">=</span> <span class="st">"dop"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="using-the-s7-productnormal-class">Using the S7 ProductNormal Class<a class="anchor" aria-label="anchor" href="#using-the-s7-productnormal-class"></a>
+</h3>
+<p>For programmatic use, create <code>ProductNormal</code> objects directly:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Define distribution of two correlated normal variables</span></span>
+<span><span class="va">pn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ProductNormal.html">ProductNormal</a></span><span class="op">(</span></span>
+<span>  mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.3</span><span class="op">)</span>,</span>
+<span>  Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.002</span>,</span>
+<span>                   <span class="fl">0.002</span>, <span class="fl">0.01</span><span class="op">)</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Compute confidence interval</span></span>
 <span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span><span class="va">pn</span>, level <span class="op">=</span> <span class="fl">0.95</span>, type <span class="op">=</span> <span class="st">"dop"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Display detailed information</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pn</span><span class="op">)</span></span>
+<span><span class="co"># Get CDF and quantiles</span></span>
+<span><span class="fu"><a href="reference/cdf.html">cdf</a></span><span class="op">(</span><span class="va">pn</span>, q <span class="op">=</span> <span class="fl">0.15</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/dist_quantile.html">dist_quantile</a></span><span class="op">(</span><span class="va">pn</span>, p <span class="op">=</span> <span class="fl">0.975</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># View summary</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pn</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="new-n-variable-products-v140">NEW: N-Variable Products (v1.4.0)<a class="anchor" aria-label="anchor" href="#new-n-variable-products-v140"></a>
+<h3 id="hypothesis-testing-with-mbco">Hypothesis Testing with MBCO<a class="anchor" aria-label="anchor" href="#hypothesis-testing-with-mbco"></a>
 </h3>
-<p>Compute confidence intervals for products of 3 or more variables—a capability previously unavailable:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Three-way product: a1 * a2 * b (e.g., multiple mediators)</span></span>
-<span><span class="va">pn3</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ProductNormal.html">ProductNormal</a></span><span class="op">(</span></span>
-<span>  mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.5</span><span class="op">)</span>,</span>
-<span>  Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Compute CI using Monte Carlo method</span></span>
-<span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span><span class="va">pn3</span>, level <span class="op">=</span> <span class="fl">0.95</span>, type <span class="op">=</span> <span class="st">"mc"</span>, n.mc <span class="op">=</span> <span class="fl">1e5</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Output:</span></span>
-<span><span class="co"># $CI</span></span>
-<span><span class="co"># [1] -2.369153  2.768295</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># $Estimate</span></span>
-<span><span class="co"># [1] 0.06</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># $SE</span></span>
-<span><span class="co"># [1] 1.306089</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="using-lavaan-integration">Using <code>lavaan</code> Integration<a class="anchor" aria-label="anchor" href="#using-lavaan-integration"></a>
-</h3>
+<p>For formal hypothesis testing of indirect effects using bootstrap:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Requires OpenMx model</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openmx.ssri.psu.edu/" class="external-link">OpenMx</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Define mediation model</span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">'</span></span>
-<span><span class="st">  m ~ a*x</span></span>
-<span><span class="st">  y ~ b*m</span></span>
-<span><span class="st">  ab := a*b</span></span>
-<span><span class="st">'</span></span>
-<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lavaan/man/sem.html" class="external-link">sem</a></span><span class="op">(</span><span class="va">model</span>, data <span class="op">=</span> <span class="va">YourData</span><span class="op">)</span></span>
+<span><span class="co"># ... define your OpenMx mediation model ...</span></span>
 <span></span>
-<span><span class="co"># Auto-detect and compute CI for indirect effect</span></span>
-<span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>  <span class="co"># Automatically finds 'ab := a*b'</span></span></code></pre></div>
+<span><span class="co"># Run MBCO test (H0: indirect effect = 0)</span></span>
+<span><span class="fu"><a href="reference/mbco.html">mbco</a></span><span class="op">(</span><span class="va">model</span>, effect <span class="op">=</span> <span class="st">"ab"</span>, n.boot <span class="op">=</span> <span class="fl">1000</span>, type <span class="op">=</span> <span class="st">"parametric"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
-<h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
+<h2 id="key-functions">Key Functions<a class="anchor" aria-label="anchor" href="#key-functions"></a>
 </h2>
-<p>Contributions are welcome! If you encounter issues or have feature requests:</p>
-<ul>
-<li><a href="https://github.com/data-wise/rmediation/issues" class="external-link">Report a Bug</a></li>
-<li><a href="https://github.com/data-wise/rmediation/pulls" class="external-link">Submit a Pull Request</a></li>
-</ul>
+<table class="table">
+<colgroup>
+<col width="52%">
+<col width="47%">
+</colgroup>
+<thead><tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code><a href="reference/medci.html">medci()</a></code></td>
+<td>CI for product of two normal variables</td>
+</tr>
+<tr class="even">
+<td><code><a href="reference/ci.html">ci()</a></code></td>
+<td>CI for any function of parameters (formulas, lavaan, ProductNormal)</td>
+</tr>
+<tr class="odd">
+<td><code><a href="reference/mbco.html">mbco()</a></code></td>
+<td>Bootstrap hypothesis tests via MBCO</td>
+</tr>
+<tr class="even">
+<td><code><a href="reference/pprodnormal.html">pprodnormal()</a></code></td>
+<td>CDF of product of two normals</td>
+</tr>
+<tr class="odd">
+<td><code><a href="reference/qprodnormal.html">qprodnormal()</a></code></td>
+<td>Quantiles of product of two normals</td>
+</tr>
+<tr class="even">
+<td><code><a href="reference/ProductNormal.html">ProductNormal()</a></code></td>
+<td>S7 class for product distributions</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level2">
+<h2 id="part-of-the-mediationverse">Part of the Mediationverse<a class="anchor" aria-label="anchor" href="#part-of-the-mediationverse"></a>
+</h2>
+<p><strong>RMediation</strong> is part of the <a href="https://data-wise.github.io/mediationverse/" class="external-link"><strong>mediationverse</strong></a>—a suite of R packages for comprehensive mediation analysis:</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th>Package</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://data-wise.github.io/mediationverse/" class="external-link"><strong>mediationverse</strong></a></td>
+<td>Meta-package: install and load all packages</td>
+</tr>
+<tr class="even">
+<td><a href="https://data-wise.github.io/medfit/" class="external-link"><strong>medfit</strong></a></td>
+<td>Model fitting and coefficient extraction</td>
+</tr>
+<tr class="odd">
+<td><a href="https://data-wise.github.io/probmed/" class="external-link"><strong>probmed</strong></a></td>
+<td>Probabilistic effect size (P_med)</td>
+</tr>
+<tr class="even">
+<td><strong>RMediation</strong></td>
+<td>Confidence intervals (DOP, Monte Carlo, MBCO)</td>
+</tr>
+<tr class="odd">
+<td><a href="https://data-wise.github.io/medrobust/" class="external-link"><strong>medrobust</strong></a></td>
+<td>Sensitivity analysis</td>
+</tr>
+<tr class="even">
+<td><a href="https://data-wise.github.io/medsim/" class="external-link"><strong>medsim</strong></a></td>
+<td>Simulation infrastructure</td>
+</tr>
+</tbody>
+</table>
+<p>Install the entire ecosystem:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Data-Wise/mediationverse"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mediationverse</span><span class="op">)</span>  <span class="co"># Loads all packages</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<p>If you use <strong>RMediation</strong> in your research, please cite the following:</p>
-<blockquote>
-<p><strong>Package Reference:</strong> &gt; Tofighi, D., &amp; MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis confidence intervals. <em>Behavior Research Methods</em>, 43, 692–700. <a href="doi:10.3758/s13428-011-0076-x" class="uri">doi:10.3758/s13428-011-0076-x</a></p>
-</blockquote>
-<blockquote>
-<p><strong>MBCO Method:</strong> &gt; Tofighi, D., &amp; Kelley, K. (2020). Improved inference in mediation analysis: Introducing the model-based constrained optimization procedure. <em>Psychological Methods</em>, 25(4), 496-515. <a href="doi:10.1037/met0000259" class="uri">doi:10.1037/met0000259</a></p>
-</blockquote>
-<blockquote>
-<p><strong>Bootstrap MBCO:</strong> &gt; Tofighi, D. (2020). Bootstrap Model-Based Constrained Optimization Tests of Indirect Effects. <em>Frontiers in Psychology</em>, 10, 2989. <a href="doi:10.3389/fpsyg.2019.02989" class="uri">doi:10.3389/fpsyg.2019.02989</a></p>
-</blockquote>
+<p>If you use RMediation in your research, please cite:</p>
+<pre><code>Tofighi, D., &amp; MacKinnon, D. P. (2011). RMediation: An R package for mediation
+analysis confidence intervals. Behavior Research Methods, 43, 692-700.
+https://doi.org/10.3758/s13428-011-0076-x</code></pre>
+<p>For Monte Carlo CIs in SEM:</p>
+<pre><code>Tofighi, D., &amp; MacKinnon, D. P. (2016). Monte Carlo confidence intervals for
+complex functions of indirect effects. Structural Equation Modeling: A
+Multidisciplinary Journal, 23, 194-205.
+https://doi.org/10.1080/10705511.2015.1057284</code></pre>
+<p>For sequential mediation and CI method comparisons:</p>
+<pre><code>Tofighi, D., &amp; Kelley, K. (2020). Indirect effects in sequential mediation
+models: Evaluating methods for hypothesis testing and confidence interval
+formation. Multivariate Behavioral Research, 55(2), 188-210.
+https://doi.org/10.1080/00273171.2019.1618545</code></pre>
+<p>For MBCO and bootstrap methods:</p>
+<pre><code>Tofighi, D., &amp; Kelley, K. (2020). Improved inference in mediation analysis:
+Introducing the model-based constrained optimization procedure.
+Psychological Methods, 25(4), 496-515. https://doi.org/10.1037/met0000259
+
+Tofighi, D. (2020). Bootstrap model-based constrained optimization tests of
+indirect effects. Frontiers in Psychology, 10, 2989.
+https://doi.org/10.3389/fpsyg.2019.02989</code></pre>
+</div>
+<div class="section level2">
+<h2 id="getting-help">Getting Help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
+</h2>
+<ul>
+<li><a href="https://data-wise.github.io/rmediation/">Package documentation</a></li>
+<li><a href="https://github.com/data-wise/rmediation/issues" class="external-link">Report issues</a></li>
+<li><a href="https://data-wise.github.io/mediationverse/articles/roadmap.html" class="external-link">Mediationverse roadmap</a></li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>
 </h2>
-<p><code>RMediation</code> is licensed under the <a href="https://choosealicense.com/licenses/gpl-3.0/" class="external-link">GPL-3.0</a>.</p>
+<p>GPL-3</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

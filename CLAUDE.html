@@ -90,7 +90,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Install dependencies and check package</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_deps</span><span class="op">(</span>dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu">rcmdcheck</span><span class="fu">::</span><span class="fu">rcmdcheck</span><span class="op">(</span>args <span class="op">=</span> <span class="st">"--no-manual"</span>, error_on <span class="op">=</span> <span class="st">"error"</span><span class="op">)</span></span>
+<span><span class="fu">rcmdcheck</span><span class="fu">::</span><span class="fu"><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.html" class="external-link">rcmdcheck</a></span><span class="op">(</span>args <span class="op">=</span> <span class="st">"--no-manual"</span>, error_on <span class="op">=</span> <span class="st">"error"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Development workflow</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">load_all</span><span class="op">(</span><span class="op">)</span></span>
@@ -162,12 +162,15 @@
 <ul><li>
 <strong>lavaan</strong>: SEM parameter extraction</li>
 <li>
-<strong>OpenMx</strong>: For MBCO model-based tests</li>
+<strong>OpenMx</strong>: For MBCO model-based tests (Suggests)</li>
 <li>
 <strong>MASS</strong>: Multivariate normal sampling</li>
 <li>
-<strong>doParallel/foreach</strong>: Parallel bootstrap</li>
-</ul><hr></div>
+<strong>checkmate</strong>: Input validation</li>
+<li>
+<strong>S7</strong>: Object-oriented programming system</li>
+</ul><p><strong>Note</strong>: Dependencies reduced in development version. Internal implementations replace <code>e1071</code>, <code>modelr</code>, and <code>generics</code>.</p>
+<hr></div>
 </div>
 <div class="section level2">
 <h2 id="testing-strategy">Testing Strategy<a class="anchor" aria-label="anchor" href="#testing-strategy"></a></h2>
@@ -184,38 +187,49 @@
 <h2 id="ecosystem-coordination">Ecosystem Coordination<a class="anchor" aria-label="anchor" href="#ecosystem-coordination"></a></h2>
 <p>RMediation is an <strong>application package</strong> in the mediationverse ecosystem.</p>
 <div class="section level3">
-<h3 id="central-planning">Central Planning<a class="anchor" aria-label="anchor" href="#central-planning"></a></h3>
-<p>Ecosystem coordination managed in <code>/Users/dt/mediation-planning/</code>: - <code>ECOSYSTEM-COORDINATION.md</code> - Version matrix, release timeline - <code>MONTHLY-CHECKLIST.md</code> - Health checks</p>
-</div>
+<h3 id="ecosystem-resources">Ecosystem Resources<a class="anchor" aria-label="anchor" href="#ecosystem-resources"></a></h3>
+<table class="table"><colgroup><col width="66%"><col width="33%"></colgroup><thead><tr class="header"><th>Resource</th>
+<th>URL</th>
+</tr></thead><tbody><tr class="odd"><td>Ecosystem Coordination</td>
+<td><a href="https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md" class="external-link uri">https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md</a></td>
+</tr><tr class="even"><td>Development Roadmap</td>
+<td><a href="https://data-wise.github.io/mediationverse/articles/roadmap.html" class="external-link uri">https://data-wise.github.io/mediationverse/articles/roadmap.html</a></td>
+</tr><tr class="odd"><td>Package Status Dashboard</td>
+<td><a href="https://github.com/data-wise/mediationverse/blob/main/STATUS.md" class="external-link uri">https://github.com/data-wise/mediationverse/blob/main/STATUS.md</a></td>
+</tr></tbody></table></div>
 <div class="section level3">
 <h3 id="related-packages">Related Packages<a class="anchor" aria-label="anchor" href="#related-packages"></a></h3>
-<table style="width:100%;" class="table"><colgroup><col width="23%"><col width="28%"><col width="23%"><col width="23%"></colgroup><thead><tr class="header"><th>Package</th>
-<th>Repository</th>
+<table class="table"><colgroup><col width="27%"><col width="27%"><col width="18%"><col width="27%"></colgroup><thead><tr class="header"><th>Package</th>
 <th>Purpose</th>
+<th>Role</th>
 <th>Website</th>
 </tr></thead><tbody><tr class="odd"><td>mediationverse</td>
-<td><a href="https://github.com/data-wise/mediationverse" class="external-link uri">https://github.com/data-wise/mediationverse</a></td>
 <td>Meta-package (loads all)</td>
+<td>Umbrella</td>
 <td><a href="https://data-wise.github.io/mediationverse/" class="external-link uri">https://data-wise.github.io/mediationverse/</a></td>
 </tr><tr class="even"><td>medfit</td>
-<td><a href="https://github.com/data-wise/medfit" class="external-link uri">https://github.com/data-wise/medfit</a></td>
-<td>Foundation (model fitting, extraction)</td>
+<td>Model fitting, extraction, bootstrap</td>
+<td>Foundation</td>
 <td><a href="https://data-wise.github.io/medfit/" class="external-link uri">https://data-wise.github.io/medfit/</a></td>
 </tr><tr class="odd"><td>probmed</td>
-<td><a href="https://github.com/data-wise/probmed" class="external-link uri">https://github.com/data-wise/probmed</a></td>
-<td>P_med effect size</td>
+<td>Probabilistic effect size (P_med)</td>
+<td>Application</td>
 <td><a href="https://data-wise.github.io/probmed/" class="external-link uri">https://data-wise.github.io/probmed/</a></td>
-</tr><tr class="even"><td>medrobust</td>
-<td><a href="https://github.com/data-wise/medrobust" class="external-link uri">https://github.com/data-wise/medrobust</a></td>
+</tr><tr class="even"><td>RMediation</td>
+<td>Confidence intervals (DOP, MBCO)</td>
+<td>Application</td>
+<td><a href="https://data-wise.github.io/rmediation/" class="uri">https://data-wise.github.io/rmediation/</a></td>
+</tr><tr class="odd"><td>medrobust</td>
 <td>Sensitivity analysis</td>
+<td>Application</td>
 <td><a href="https://data-wise.github.io/medrobust/" class="external-link uri">https://data-wise.github.io/medrobust/</a></td>
-</tr><tr class="odd"><td>medsim</td>
-<td><a href="https://github.com/data-wise/medsim" class="external-link uri">https://github.com/data-wise/medsim</a></td>
+</tr><tr class="even"><td>medsim</td>
 <td>Simulation infrastructure</td>
+<td>Support</td>
 <td><a href="https://data-wise.github.io/medsim/" class="external-link uri">https://data-wise.github.io/medsim/</a></td>
 </tr></tbody></table></div>
 <div class="section level3">
-<h3 id="integration-with-medfit-planned">Integration with medfit (planned)<a class="anchor" aria-label="anchor" href="#integration-with-medfit-planned"></a></h3>
+<h3 id="integration-with-medfit-v150-q1-2026">Integration with medfit (v1.5.0, Q1 2026)<a class="anchor" aria-label="anchor" href="#integration-with-medfit-v150-q1-2026"></a></h3>
 <ul><li>Model extraction will use medfit infrastructure</li>
 <li>Bootstrap utilities may be shared</li>
 <li>S7 classes may inherit from medfit base classes</li>
