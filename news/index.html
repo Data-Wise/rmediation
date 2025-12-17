@@ -59,6 +59,47 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="rmediation-development-version">RMediation (development version)<a class="anchor" aria-label="anchor" href="#rmediation-development-version"></a></h2>
 <div class="section level3">
+<h3 id="workflow-optimization--standardization-development-version">Workflow Optimization &amp; Standardization (2025-12-05)<a class="anchor" aria-label="anchor" href="#workflow-optimization--standardization-development-version"></a></h3>
+<div class="section level4">
+<h4 id="performance-improvements-development-version">Performance Improvements<a class="anchor" aria-label="anchor" href="#performance-improvements-development-version"></a></h4>
+<ul><li>
+<strong>Optimized R-CMD-check workflow</strong>: Reduced from 5 to 3 platforms (macOS, Windows, Ubuntu release)</li>
+<li>
+<strong>Removed failing platforms</strong>: Dropped <code>ubuntu-latest (devel)</code> and <code>ubuntu-latest (oldrel-1)</code> configurations</li>
+<li>
+<strong>Runtime improvement</strong>: Check workflows now complete in ~2 minutes (down from 6+ minutes, <strong>67% faster</strong>)</li>
+<li>
+<strong>Build optimization</strong>: Added <code>--ignore-vignettes</code> flag to skip vignette validation during CI checks</li>
+</ul></div>
+<div class="section level4">
+<h4 id="bug-fixes-development-version">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h4>
+<ul><li>
+<strong>Fixed pkgdown build errors</strong>:
+<ul><li>Removed non-existent <code>reexports</code> topic from <code>_pkgdown.yml</code> reference index</li>
+<li>Added missing <code>tidy</code> topic to <code>_pkgdown.yml</code> reference index</li>
+<li>pkgdown workflow now passes successfully</li>
+</ul></li>
+</ul></div>
+<div class="section level4">
+<h4 id="standardization-development-version">Standardization<a class="anchor" aria-label="anchor" href="#standardization-development-version"></a></h4>
+<ul><li>
+<strong>Badge order</strong>: Added R-hub badge to README, standardized order to match mediationverse ecosystem: CRAN, Lifecycle, R-CMD-check, Website, R-hub, Codecov</li>
+<li>
+<strong>.Rbuildignore</strong>: Added <code>^STATUS\.md$</code> to match ecosystem standards</li>
+<li>
+<strong>Website configuration</strong>: Already compliant with mediationverse standards:
+<ul><li>Academic blue color scheme (<a href="https://github.com/data-wise/rmediation/issues/0054" class="external-link">#0054</a>AD)</li>
+<li>Consistent fonts (Inter, Montserrat, Fira Code)</li>
+<li>Ecosystem and Status dropdown menus</li>
+</ul></li>
+</ul></div>
+<div class="section level4">
+<h4 id="documentation-development-version">Documentation<a class="anchor" aria-label="anchor" href="#documentation-development-version"></a></h4>
+<ul><li>Updated README badge order for consistency across ecosystem</li>
+<li>All workflows now passing on main branch</li>
+</ul></div>
+</div>
+<div class="section level3">
 <h3 id="dependency-reduction-development-version">Dependency Reduction<a class="anchor" aria-label="anchor" href="#dependency-reduction-development-version"></a></h3>
 <ul><li>
 <strong>Removed dependencies</strong>: <code>e1071</code>, <code>modelr</code>, and <code>generics</code> packages are no longer required.</li>
