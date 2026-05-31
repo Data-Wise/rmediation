@@ -1,5 +1,14 @@
 # RMediation (development version)
 
+## medfit Covariance Extraction
+
+* `ci()` for medfit `MediationData`/`SerialMediationData` now extracts the path
+  covariance by parameter name and uses the full covariance matrix (including
+  off-diagonals) for both simple and serial mediation. Removed the previous
+  positional/value-matching heuristics and the independence/diagonal fallbacks,
+  which could silently produce incorrect intervals; unresolved path labels now
+  raise an informative error.
+
 ## Workflow Optimization & Standardization (2025-12-05)
 
 ### Performance Improvements
