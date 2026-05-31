@@ -301,7 +301,9 @@ test_that("ci() type = 'asymp' returns a valid interval via the resolver", {
   expect_length(as.numeric(res$CI), 2L)
   expect_true(all(is.finite(as.numeric(res$CI))))
   expect_lt(as.numeric(res$CI)[1], as.numeric(res$CI)[2])
-  expect_equal(res$Estimate, 0.5 * 0.4)   # a*b point estimate
+  # The delta/asymptotic point estimate of E[ab] is bias-corrected:
+  # E[ab] = a*b + cov(a, b) = 0.2 + 0.003. (Not the naive product a*b.)
+  expect_equal(res$Estimate, 0.5 * 0.4 + 0.003)
   expect_gt(res$SE, 0)
 })
 
