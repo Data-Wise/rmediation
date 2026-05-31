@@ -1,7 +1,77 @@
-# Integration with medfit package
-#
-# This file provides ci() method for medfit's MediationData class,
-# enabling seamless use of RMediation's CI methods with medfit objects.
+# ---- internal name-based covariance resolvers --------------------------------
+
+#' Resolve path parameter labels to indices in a medfit object
+#'
+#' Locates each requested path label by NAME in the covariance matrix
+#' (\code{mu@vcov}), falling back to \code{names(mu@estimates)} when the
+#' covariance matrix carries no dimnames. There is no positional or
+#' value-based matching: if any label cannot be resolved by name the function
+#' stops with an informative error. This guarantees that path parameters are
+#' never silently mismatched or assumed independent.
+#'
+#' @param mu A medfit \code{MediationData} or \code{SerialMediationData} object.
+#' @param path_labels Ordered character vector of parameter labels to resolve
+#'   (e.g. \code{c("a", "b")} or \code{c("a", "d1", "b")}).
+#'
+#' @return Integer index vector in the same order as \code{path_labels}.
+#' @keywords internal
+#' @noRd
+.resolve_path_indices <- function(mu, path_labels) {
+  vcov_mat <- mu@vcov
+  estimates <- mu@estimates
+
+  # Prefer the covariance matrix's own labels; fall back to estimate names.
+  lookup <- rownames(vcov_mat)
+  if (is.null(lookup)) {
+    lookup <- names(estimates)
+  }
+
+  if (is.null(lookup)) {
+    stop(
+      "Cannot resolve path parameters by name: the covariance matrix has no ",
+      "dimnames and the estimates are unnamed. medfit must supply named ",
+      "estimates/vcov so that path labels (",
+      paste(path_labels, collapse = ", "),
+      ") can be located.",
+      call. = FALSE
+    )
+  }
+
+  idx <- match(path_labels, lookup)
+  if (anyNA(idx)) {
+    missing_labels <- path_labels[is.na(idx)]
+    stop(
+      "Could not resolve path label(s): ",
+      paste(missing_labels, collapse = ", "),
+      ". Available names: ",
+      paste(lookup, collapse = ", "),
+      ". medfit must supply named estimates/vcov whose names include the ",
+      "required path labels.",
+      call. = FALSE
+    )
+  }
+
+  as.integer(idx)
+}
+
+#' Extract the named covariance sub-matrix for a set of path parameters
+#'
+#' Returns the full square sub-matrix of \code{mu@vcov} for the requested
+#' path labels, preserving off-diagonal covariances. This is correct whether
+#' the off-diagonals are zero or non-zero.
+#'
+#' @inheritParams .resolve_path_indices
+#'
+#' @return A square numeric matrix of dimension
+#'   \code{length(path_labels)} by \code{length(path_labels)}.
+#' @keywords internal
+#' @noRd
+.extract_path_vcov <- function(mu, path_labels) {
+  idx <- .resolve_path_indices(mu, path_labels)
+  mu@vcov[idx, idx, drop = FALSE]
+}
+
+# ---- public ci methods -------------------------------------------------------
 
 #' Confidence Interval for MediationData Objects
 #'
@@ -24,7 +94,6 @@
 #'
 #' @details
 #' This method extracts the a and b path coefficients from the MediationData
-
 #' object, along with their standard errors and covariance, and computes
 #' confidence intervals using RMediation's methods.
 #'
@@ -66,180 +135,92 @@
 #' \code{\link{ProductNormal}} for the underlying distribution class
 #'
 #' @export
-ci_mediation_data <- function(mu, level = 0.95, type = "dop", n.mc = 1e5, ...) {
-  # Validate medfit is available
-
+ci_mediation_data <- function(mu, level = 0.95, type = "dop",
+                              n.mc = 1e5, ...) {
   if (!requireNamespace("medfit", quietly = TRUE)) {
-    stop("Package 'medfit' is required for this method. ",
-         "Install with: pak::pak('data-wise/medfit')",
-         call. = FALSE)
+    stop("Package 'medfit' is required for this method.", call. = FALSE)
   }
 
-  # Extract path coefficients
-  a <- mu@a_path
-  b <- mu@b_path
+  # Locate the a- and b-paths by name and build the full 2x2 covariance.
+  Sigma_2x2 <- .extract_path_vcov(mu, c("a", "b"))
 
-  # Get standard errors from estimates and vcov
-  # The estimates vector should have named elements or we need to find them
-  est_names <- names(mu@estimates)
-  vcov_mat <- mu@vcov
+  # ProductNormal's validator requires a plain square numeric matrix; strip
+  # dimnames so the named sub-matrix is accepted unconditionally.
+  dimnames(Sigma_2x2) <- NULL
 
-  # Try to find a and b in the estimates
-  # Common naming conventions: "a", "b", treatment name, mediator name
-  a_idx <- NULL
-  b_idx <- NULL
-
-  # Strategy 1: Look for "a" and "b" labels
-
-if (!is.null(est_names)) {
-    if ("a" %in% est_names) a_idx <- which(est_names == "a")
-    if ("b" %in% est_names) b_idx <- which(est_names == "b")
-  }
-
-  # Strategy 2: If vcov has row/col names, use those
-  if (is.null(a_idx) || is.null(b_idx)) {
-    vcov_names <- rownames(vcov_mat)
-    if (!is.null(vcov_names)) {
-      if ("a" %in% vcov_names) a_idx <- which(vcov_names == "a")
-      if ("b" %in% vcov_names) b_idx <- which(vcov_names == "b")
-    }
-  }
-
-  # Strategy 3: For simple mediation, a is typically position 1, b is position 2
-  # in a minimal parameter vector [a, b] or [a, b, c']
-  if (is.null(a_idx) || is.null(b_idx)) {
-    if (length(mu@estimates) >= 2) {
-      # Check if first two elements match a and b paths
-      if (abs(mu@estimates[1] - a) < 1e-10) a_idx <- 1
-      if (abs(mu@estimates[2] - b) < 1e-10) b_idx <- 2
-    }
-  }
-
-  # If we still can't find indices, compute SEs differently
-  if (is.null(a_idx) || is.null(b_idx)) {
-    # Use robust approach: extract SE from diagonal elements
-    # This is a fallback that may not capture covariance correctly
-    warning("Could not identify a and b parameters in vcov matrix. ",
-            "Using approximation assuming independent parameters.",
-            call. = FALSE)
-
-    # Estimate SEs from vcov diagonal
-    diag_var <- diag(vcov_mat)
-
-    # Find which diagonal element gives the closest match to typical SE
-    # This is a heuristic approach
-    se_a <- sqrt(diag_var[1])
-    se_b <- sqrt(diag_var[2])
-    cov_ab <- 0  # Assume independent as fallback
-  } else {
-    # Extract variances and covariance
-    se_a <- sqrt(vcov_mat[a_idx, a_idx])
-    se_b <- sqrt(vcov_mat[b_idx, b_idx])
-    cov_ab <- vcov_mat[a_idx, b_idx]
-  }
-
-  # Build covariance matrix for a, b
-  sigma_ab <- matrix(c(se_a^2, cov_ab, cov_ab, se_b^2), nrow = 2,
-                     dimnames = list(c("a", "b"), c("a", "b")))
-
-  # Create ProductNormal and compute CI
-  pn <- ProductNormal(
-    mu = c(a, b),
-    Sigma = sigma_ab
-  )
-
-  # Use the ProductNormal ci method
+  pn <- ProductNormal(mu = c(mu@a_path, mu@b_path), Sigma = Sigma_2x2)
   ci(pn, level = level, type = type, n.mc = n.mc, ...)
 }
 
 #' @rdname ci_mediation_data
 #' @export
-ci_serial_mediation_data <- function(mu, level = 0.95, type = "MC", n.mc = 1e5, ...) {
-  # Validate medfit is available
+ci_serial_mediation_data <- function(mu, level = 0.95, type = "MC",
+                                     n.mc = 1e5, ...) {
   if (!requireNamespace("medfit", quietly = TRUE)) {
-    stop("Package 'medfit' is required for this method. ",
-         "Install with: pak::pak('data-wise/medfit')",
-         call. = FALSE)
+    stop("Package 'medfit' is required for this method.", call. = FALSE)
   }
 
-  # For serial mediation (product of 3+), Monte Carlo is the practical choice
-  # since DOP doesn't generalize easily to products of 3+ normal RVs
+  checkmate::assert_count(n.mc, positive = TRUE)
+  checkmate::assert_number(level, lower = 0, upper = 1)
 
-  # Extract all path coefficients
-  a <- mu@a_path
-  d <- mu@d_path  # Vector for serial mediation
-  b <- mu@b_path
+  a_path <- mu@a_path
+  d_path <- mu@d_path
+  b_path <- mu@b_path
+  all_paths <- c(a_path, d_path, b_path)
 
-  # Total number of paths in product
-  all_paths <- c(a, d, b)
-  k <- length(all_paths)
+  # Documented label contract: the serial d-path parameters are addressed
+  # purely by NAME, using the literal labels "d1", "d2", ..., "dk" in order
+  # (k = length(mu@d_path)). There is NO positional or value-matching
+  # fallback (spec sections 3/4.1). medfit's serial extractor MUST emit
+  # named estimates/vcov whose names include "a", "b", and these "d<i>"
+  # labels (cross-reference: medfit blocker spec Open Question on d-labels).
+  # If any required label is absent, .resolve_path_indices() stops with an
+  # informative error.
+  d_labels <- .serial_d_labels(mu)
 
-  # Point estimate of indirect effect
-  indirect <- prod(all_paths)
+  Sigma <- .extract_path_vcov(mu, c("a", d_labels, "b"))
+  dimnames(Sigma) <- NULL
 
-  # For Monte Carlo, we need the full covariance matrix of [a, d1, d2, ..., b]
-  # This is complex because we need to map to the vcov matrix
-
-  # Get the vcov matrix
-  vcov_mat <- mu@vcov
-
-  # For now, use simplified approach assuming we can identify the parameters
-  # TODO: Implement full covariance extraction
-
-  # Use Monte Carlo simulation
-  # Generate samples from multivariate normal
-  if (!requireNamespace("MASS", quietly = TRUE)) {
-    stop("Package 'MASS' is required for Monte Carlo CI",
-         call. = FALSE)
-  }
-
-  # Try to extract sub-covariance matrix for the paths
-  # This is a placeholder - full implementation would need parameter mapping
-  n_params <- length(mu@estimates)
-
-  if (n_params == k) {
-    # Simple case: estimates are just the path coefficients
-    sigma_paths <- vcov_mat
-  } else {
-    # Complex case: need to extract relevant sub-matrix
-    # For now, use diagonal (assuming independence) with warning
-    warning("Full covariance extraction for serial mediation not yet implemented. ",
-            "Using diagonal variance approximation.",
-            call. = FALSE)
-    sigma_paths <- diag(diag(vcov_mat)[seq_len(k)])
-  }
-
-  # Monte Carlo simulation
-  samples <- MASS::mvrnorm(n = n.mc, mu = all_paths, Sigma = sigma_paths)
-
-  # Compute product for each sample (product across columns)
-  indirect_samples <- apply(samples, 1, prod)
-
-  # Compute CI from quantiles
+  # Defensive guard against a mean/covariance order mismatch: the mean vector
+  # passed to mvrnorm must align row-for-row with Sigma.
+  stopifnot(length(all_paths) == nrow(Sigma))
+  draws <- MASS::mvrnorm(n = n.mc, mu = all_paths, Sigma = Sigma)
+  products <- apply(draws, 1, prod)
   alpha <- 1 - level
-  ci_lower <- stats::quantile(indirect_samples, alpha / 2)
-  ci_upper <- stats::quantile(indirect_samples, 1 - alpha / 2)
+  ci_bounds <- stats::quantile(products, probs = c(alpha / 2, 1 - alpha / 2))
 
-  # Standard error from samples
-  se_indirect <- stats::sd(indirect_samples)
-
+  # Backward-compatible return shape (spec section 4.4): preserve the names
+  # and components of the original ci_serial_mediation_data() output.
   list(
-    CI = c(lower = unname(ci_lower), upper = unname(ci_upper)),
-    Estimate = indirect,
-    SE = se_indirect,
+    CI = c(lower = unname(ci_bounds[1]), upper = unname(ci_bounds[2])),
+    Estimate = prod(all_paths),
+    SE = stats::sd(products),
     type = "MC (serial mediation)",
     level = level,
     n.mc = n.mc,
-    k = k  # Number of paths in product
+    k = length(d_path)
   )
 }
 
+#' Derive the d-path labels for a serial mediation object
+#'
+#' Returns the literal, NAME-ONLY label contract for the serial d-paths:
+#' \code{paste0("d", seq_along(mu@d_path))} (i.e. "d1", "d2", ...). These are
+#' resolved purely by name downstream via \code{.resolve_path_indices()}; there
+#' is no positional or value-matching fallback (spec sections 3/4.1). medfit's
+#' serial extractor must emit estimates/vcov carrying these names.
+#'
+#' @inheritParams .resolve_path_indices
+#' @return Character vector of d-path labels of length \code{length(mu@d_path)}.
+#' @keywords internal
+#' @noRd
+.serial_d_labels <- function(mu) {
+  paste0("d", seq_along(mu@d_path))
+}
 
-# Dynamic method registration in .onLoad
-# This will be called from zzz.R
+# Dynamic method registration in .onLoad (called from zzz.R)
 .register_medfit_methods <- function() {
   if (requireNamespace("medfit", quietly = TRUE)) {
-    # Get the MediationData and SerialMediationData classes from medfit
     tryCatch({
       # Register ci method for MediationData
       MediationData_class <- medfit::MediationData
@@ -249,8 +230,13 @@ ci_serial_mediation_data <- function(mu, level = 0.95, type = "MC", n.mc = 1e5, 
       SerialMediationData_class <- medfit::SerialMediationData
       S7::method(ci, SerialMediationData_class) <- ci_serial_mediation_data
     }, error = function(e) {
-      # Silently fail if registration doesn't work
-      # Methods will still be available as regular functions
+      # Make registration failure visible (but non-fatal): the functions remain
+      # available as regular exported functions, but a broken S7 registration
+      # should be diagnosable rather than silently swallowed.
+      packageStartupMessage(
+        "RMediation: failed to register medfit S7 ci methods: ",
+        conditionMessage(e)
+      )
     })
   }
 }
