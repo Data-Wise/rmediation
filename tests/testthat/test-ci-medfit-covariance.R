@@ -288,3 +288,84 @@ test_that(".serial_d_labels returns the literal d1..dk name contract", {
   smd <- make_serial(off_diag = 0)  # d_path length 1 -> "d1"
   expect_equal(RMediation:::.serial_d_labels(smd), "d1")
 })
+
+# ---- 9. asymp (delta) method also routes through name-based extraction ------
+
+test_that("ci() type = 'asymp' returns a valid interval via the resolver", {
+  # The asymp/delta path is documented but was previously untested. It must
+  # produce a finite CI/Estimate/SE built from the name-resolved 2x2 Sigma.
+  md <- make_md(cov_ab = 0.003)
+  res <- RMediation::ci(md, type = "asymp")
+
+  expect_true(all(c("CI", "Estimate", "SE") %in% names(res)))
+  expect_length(as.numeric(res$CI), 2L)
+  expect_true(all(is.finite(as.numeric(res$CI))))
+  expect_lt(as.numeric(res$CI)[1], as.numeric(res$CI)[2])
+  expect_equal(res$Estimate, 0.5 * 0.4)   # a*b point estimate
+  expect_gt(res$SE, 0)
+})
+
+# ---- 10. serial input validation (n.mc, level) -----------------------------
+
+test_that("ci_serial_mediation_data validates n.mc and level", {
+  smd <- make_serial(off_diag = 0)
+
+  # n.mc must be a positive count.
+  expect_error(
+    RMediation::ci(smd, type = "MC", n.mc = -5),
+    regexp = "n.mc"
+  )
+  expect_error(
+    RMediation::ci(smd, type = "MC", n.mc = 0),
+    regexp = "n.mc"
+  )
+  # level must be in [0, 1].
+  expect_error(
+    RMediation::ci(smd, type = "MC", level = 1.5),
+    regexp = "level"
+  )
+})
+
+# ---- 11. three-mediator serial chain (d_path length 2 -> d1, d2) ------------
+
+test_that("serial ci handles a 3-mediator chain (d1, d2) with full covariance", {
+  # d_path length 2 exercises the multi-d label contract c("a", "d1", "d2", "b")
+  # and a 4x4 covariance sub-matrix -- the 2-mediator fixture only covers d1.
+  nm <- c("a", "d1", "d2", "b")
+  od <- 0.003
+  vcov_mat <- matrix(od, nrow = 4, ncol = 4, dimnames = list(nm, nm))
+  diag(vcov_mat) <- c(0.01, 0.02, 0.03, 0.04)
+
+  smd3 <- medfit::SerialMediationData(
+    a_path = 0.5, d_path = c(0.3, 0.35), b_path = 0.4, c_prime = 0.1,
+    estimates = c(a = 0.5, d1 = 0.3, d2 = 0.35, b = 0.4),
+    vcov = vcov_mat,
+    sigma_mediators = NULL, sigma_y = NULL,
+    treatment = "X", mediators = c("M1", "M2", "M3"), outcome = "Y",
+    mediator_predictors = list("X", c("X", "M1"), c("X", "M1", "M2")),
+    outcome_predictors = character(0),
+    data = NULL, n_obs = 200L, converged = TRUE, source_package = "manual"
+  )
+
+  # Labels and resolved indices span all four chain parameters.
+  expect_equal(RMediation:::.serial_d_labels(smd3), c("d1", "d2"))
+  expect_equal(
+    RMediation:::.resolve_path_indices(smd3, c("a", "d1", "d2", "b")),
+    1:4
+  )
+
+  set.seed(99)
+  res <- RMediation::ci(smd3, type = "MC", n.mc = 5e4)
+  expect_identical(res$k, 2L)
+  expect_equal(res$Estimate, 0.5 * 0.3 * 0.35 * 0.4)
+  expect_lt(res$CI[["lower"]], res$CI[["upper"]])
+
+  # Result must reflect the full (non-diagonal) Sigma: compare to a same-seed
+  # diagonal-only draw and require it to differ.
+  set.seed(99)
+  diag_draws <- MASS::mvrnorm(n = 5e4, mu = c(0.5, 0.3, 0.35, 0.4),
+                              Sigma = diag(diag(vcov_mat)))
+  diag_ci <- unname(stats::quantile(apply(diag_draws, 1, prod),
+                                    probs = c(0.025, 0.975)))
+  expect_false(isTRUE(all.equal(unname(res$CI), diag_ci, tolerance = 1e-6)))
+})
