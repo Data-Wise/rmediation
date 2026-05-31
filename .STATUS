@@ -1,0 +1,59 @@
+# rmediation
+
+## Status: Active
+## Progress: 100
+## Focus: medfit integration (v1.5.0 prep) — covariance extraction merged
+
+## Overview
+R package for confidence intervals of nonlinear functions of model parameters
+(indirect effects) in mediation analysis: Distribution of Product (DOP), Monte
+Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
+
+## CRAN
+- Published version: 1.4.0
+- Development version: 1.4.0 (dev)
+
+## Recent (2026-05-31)
+- Merged PR #4 (develop): name-based path -> covariance extraction for medfit
+  MediationData/SerialMediationData objects in ci(); removed positional/value-
+  matching and independence/diagonal fallbacks; full off-diagonal covariance now
+  used for simple and serial mediation. 240 tests pass; R CMD check clean except
+  the inherent Remotes/medfit-not-on-CRAN NOTE.
+- Upstream medfit Blocker A: MERGED to medfit dev via PR #19 (re-verified 2026-05-31,
+  22:3x — commit 3c2ebec on dev; feature branch cleaned up). lavaan extractor now
+  preserves off-diagonal path covariances; print.mediation_effect S3 dispatch fixed.
+  NOTE: a mid-session check briefly found it unmerged and this file was "corrected" to
+  say so — that was a timing artifact (PR #19 was merged in the medfit session shortly
+  after). Current verified truth: A is on dev, NOT yet on main (dev->main release pending).
+
+## Next (upstream medfit work, in order)
+- medfit Blocker A: DONE — merged to dev (PR #19). Will reach main on next dev->main release.
+- medfit Blocker B (serial mediation extractor): IN PROGRESS on branch feature/serial-extractor
+  (commit 082f1b9, not yet on dev). Verified via diff peek 2026-05-31:
+  * lavaan serial extractor DONE — .extract_serial_mediation_lavaan(), dispatched from
+    extract_mediation_lavaan() when `mediator` is a length->=2 ordered vector. Named
+    @vcov (a, d1.., b, c_prime) with off-diagonals tested vs lavaan::vcov for 2- and
+    3-mediator chains. Positional d1,d2 labels confirmed. Satisfies 3 of 4 acceptance items.
+  * OPEN GAP: lm/sequential-regression serial path NOT implemented — decision #2 scoped
+    v1 as lavaan + lm, so only half met. Resolve by implementing lm serial OR re-scoping
+    #2 to lavaan-only-for-v1. This is the live front in the medfit session.
+  No conflict risk: PR #19 was a true merge (not squash), so the serial branch's base
+  commits are already on dev with identical SHAs — merging serial -> dev only adds new commits.
+  Design decisions RESOLVED 2026-05-31: positional d1,d2,... labels; lavaan + lm scope;
+  auto-detect serial in extract_mediation(). Spec checklist updated + pushed
+  (mediation-planning bb6a1ae, branch docs/planning-update-2026-05-31):
+  specs/MEDFIT-COVARIANCE-EXTRACTION-BLOCKERS-SPEC.md
+- Then RMediation's serial lavaan pipeline is fully wireable end-to-end (lavaan path ready now;
+  lm path waits on the gap above).
+- RMediation v1.5.0: move medfit Suggests -> Imports once medfit reaches CRAN
+  (CRAN forbids Remotes:); then release
+- DONE 2026-05-31: renamed develop -> dev (local + origin; CI triggers, README
+  install refs updated). Default branch remains main.
+
+## Session end: 2026-05-31
+- Live front (medfit session, NOT rmediation): finish Blocker B's lm serial path
+  (or re-scope decision #2 to lavaan-only), then land feature/serial-extractor -> dev.
+- rmediation itself is fully parked: nothing actionable here until B lands on dev
+  (then wire the serial lavaan pipeline) and medfit reaches CRAN (then v1.5.0
+  Suggests->Imports). Re-verify medfit git log before trusting any A/B status above —
+  state churned mid-session once already.
