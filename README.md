@@ -44,10 +44,10 @@ install.packages("RMediation")
 
 ```r
 # Using pak (recommended)
-pak::pak("Data-Wise/rmediation@develop")
+pak::pak("Data-Wise/rmediation@dev")
 
 # Or using remotes
-remotes::install_github("Data-Wise/rmediation", ref = "develop")
+remotes::install_github("Data-Wise/rmediation", ref = "dev")
 ```
 
 ## Usage
