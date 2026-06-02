@@ -8,6 +8,12 @@
   positional/value-matching heuristics and the independence/diagonal fallbacks,
   which could silently produce incorrect intervals; unresolved path labels now
   raise an informative error.
+* The serial-mediation pipeline is now verified end-to-end against medfit's
+  released serial extractor (medfit >= 0.2.0): `medfit::extract_mediation()`
+  produces a `SerialMediationData` for both lavaan (ordered `mediator` vector)
+  and lm/glm (`mediator_models`) chains, and `ci()` consumes it via the
+  documented `d1, d2, ...` path-name contract. Added integration tests that fit a
+  real model, extract, and run `ci()` end-to-end (skipped when medfit < 0.2.0).
 
 ## Workflow Optimization & Standardization (2025-12-05)
 
