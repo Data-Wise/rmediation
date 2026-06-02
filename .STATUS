@@ -2,7 +2,7 @@
 
 ## Status: Active
 ## Progress: 100
-## Focus: medfit integration (v1.5.0 prep) — covariance extraction merged
+## Focus: v1.5.0 prep — serial pipeline merged + verified; awaiting medfit CRAN acceptance
 
 ## Overview
 R package for confidence intervals of nonlinear functions of model parameters
@@ -41,14 +41,17 @@ Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
   is CLOSED.
 - medfit CRAN: SUBMITTED — initial submission of v0.2.0 (R CMD check 0/0/1 new-submission note;
   win-builder + GHA matrix done). NOT yet accepted — treat as CRAN-PENDING.
-- rmediation serial pipeline: code already written (R/ci_medfit.R: ci_serial_mediation_data(),
-  .serial_d_labels = paste0("d", seq_along(@d_path)) -> the d1,d2 contract medfit now emits).
-  UNBLOCKED. REMAINING WORK: installed medfit is still 0.1.0 — (1) install medfit 0.2.0 locally,
-  (2) verify the serial pipeline end-to-end (fit serial model -> medfit::extract_mediation ->
-  ci()) against the REAL extractor, (3) add an integration test exercising real extraction
-  (existing serial tests likely use hand-built SerialMediationData). Do this on a feature branch.
+- rmediation serial pipeline: DONE & MERGED to dev (PR #5, 2026-06-02). Verified end-to-end against
+  the REAL medfit 0.2.0 extractor for BOTH lavaan (ordered mediator vector) and lm/glm
+  (mediator_models) chains; integration test test-serial-medfit-integration.R added (skips if
+  medfit < 0.2.0). CI green on all platforms (macOS/Windows/Ubuntu + coverage). Full suite
+  261 pass / 0 fail; R CMD check --as-cran 0/0/1 (only the expected Remotes/medfit NOTE).
+  CLAUDE.md medfit section refreshed to "implemented" (f616879).
 - RMediation v1.5.0: flip medfit Suggests -> Imports once medfit is ACCEPTED on CRAN (CRAN forbids
-  Remotes:), then release. Gated on CRAN ACCEPTANCE, not submission.
+  Remotes:), then release. Gated on CRAN ACCEPTANCE, not submission. (Deferred to v1.5.0: user-facing
+  serial+medfit vignette/README examples — medfit-gated, need requireNamespace guards.)
+- CRAN-acceptance monitor: daily routine trig_01YHbGpx42Hj1d5vyfLWf2oq (8am MDT) checks if medfit
+  is on CRAN; delete it once medfit lands. CRAN also emails the maintainer.
 - Then RMediation's serial lavaan pipeline is fully wireable end-to-end (lavaan path ready now;
   lm path waits on the gap above).
 - RMediation v1.5.0: move medfit Suggests -> Imports once medfit reaches CRAN
@@ -56,12 +59,16 @@ Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
 - DONE 2026-05-31: renamed develop -> dev (local + origin; CI triggers, README
   install refs updated). Default branch remains main.
 
-## Session end: 2026-05-31 (wrap via /workflow:done)
-- This session (rmediation): dev rename, .STATUS tracking + build-exclude, R CMD check
-  clean 0/0/0. All committed and pushed; repo clean and in sync on dev. No own-repo TODOs.
-- Live front (medfit session, NOT rmediation): finish Blocker B's lm serial path
-  (or re-scope decision #2 to lavaan-only), then land feature/serial-extractor -> dev.
-- rmediation itself is fully parked: nothing actionable here until B lands on dev
-  (then wire the serial lavaan pipeline) and medfit reaches CRAN (then v1.5.0
-  Suggests->Imports). Re-verify medfit git log before trusting any A/B status above —
-  state churned mid-session once already.
+## Session end: 2026-06-02 (wrap via /workflow:done)
+- This session: medfit v0.2.0 shipped Blockers A+B (lavaan + lm serial extractor) and is
+  CRAN-SUBMITTED. rmediation serial pipeline verified end-to-end + integration-tested + MERGED
+  to dev (PR #5, CI green all platforms). CLAUDE.md medfit section refreshed to "implemented".
+  CRAN-acceptance monitor routine set up. flow-cli v7.7.1 (terminal-handoff fix) released in a
+  separate session.
+- rmediation is RELEASE-READY for v1.5.0 except the single CRAN-gated step.
+- NEXT (when medfit is ACCEPTED on CRAN): on a branch, flip medfit Suggests->Imports, delete
+  `Remotes: data-wise/medfit` from DESCRIPTION, bump version + Date, finalize NEWS, then release.
+  --as-cran already confirms no other blockers (the lone NOTE clears when medfit is on CRAN).
+- Until then: nothing actionable here. Monitor watches medfit CRAN status daily.
+- Caution: re-verify medfit git log / `available.packages()` before trusting any medfit status
+  above — state has churned across sessions repeatedly (tags, CRAN, this session).
