@@ -65,9 +65,11 @@ Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
   ACCEPTANCE, not submission. Pre-staged diff: medfit/planning/CASCADE-cran-flip-2026-06-03.md.
   (Deferred to v1.5.0: user-facing serial+medfit vignette/README examples — medfit-gated, need
   requireNamespace guards.)
-- CRAN-acceptance monitors: TWO daily routines now watch this — trig_01YHbGpx42Hj1d5vyfLWf2oq
-  (8am MDT, rmediation-side) and trig_018qiNZMTUP5Az2UGXyv6vRf "medfit-cran-watch" (9am MDT,
-  page + Gmail, created 2026-06-03). Redundant — delete one once medfit lands. CRAN also emails.
+- CRAN-acceptance monitor: ONE active routine — trig_018qiNZMTUP5Az2UGXyv6vRf "medfit-cran-watch"
+  (9am MDT, checks CRAN page + Gmail, includes post-acceptance checklist). The older
+  trig_01YHbGpx42Hj1d5vyfLWf2oq (8am, rmediation-side) was DISABLED 2026-06-03 as a duplicate (its
+  prompt also gave the now-superseded "Suggests->Imports" advice); hard-delete via the routines UI
+  when convenient. CRAN also emails the maintainer.
 - Then RMediation's serial lavaan pipeline is fully wireable end-to-end (lavaan path ready now;
   lm path waits on the gap above).
 - RMediation v1.5.0: on CRAN acceptance, drop `Remotes:` + pin `medfit (>= 0.2.0)` in **Suggests**
