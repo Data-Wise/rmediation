@@ -4,6 +4,13 @@
 ## Progress: 100
 ## Focus: v1.5.0 code-complete + re-verified vs medfit 0.2.0 (2026-06-03); awaiting medfit CRAN acceptance
 
+## Active worktree
+- `~/.git-worktrees/rmediation/feature-v150-medfit-examples` (branch
+  `feature/v150-medfit-examples`, off `dev`, 2026-06-03): drafting the deferred
+  v1.5.0 user-facing examples. DONE so far (commit 59d69f4): new vignette
+  `vignettes/serial-mediation-with-medfit.Rmd` (medfit-guarded, knits clean) +
+  README "Serial Mediation via medfit" subsection. Not yet merged to dev.
+
 ## Verified 2026-06-03 (re-ran vs the medfit 0.2.0 RELEASE TARBALL)
 - Installed medfit 0.2.0 from `medfit_0.2.0.tar.gz` (R CMD INSTALL); both S7 classes exported.
 - medfit integration tests (test-serial-medfit-integration.R + test-ci-medfit-covariance.R):
