@@ -2,7 +2,19 @@
 
 ## Status: Active
 ## Progress: 100
-## Focus: v1.5.0 prep — serial pipeline merged + verified; awaiting medfit CRAN acceptance
+## Focus: v1.5.0 code-complete + re-verified vs medfit 0.2.0 (2026-06-03); awaiting medfit CRAN acceptance
+
+## Verified 2026-06-03 (re-ran vs the medfit 0.2.0 RELEASE TARBALL)
+- Installed medfit 0.2.0 from `medfit_0.2.0.tar.gz` (R CMD INSTALL); both S7 classes exported.
+- medfit integration tests (test-serial-medfit-integration.R + test-ci-medfit-covariance.R):
+  **68 pass / 0 fail / 0 skip**.
+- Full rmediation suite (12 files): **261 pass / 0 fail / 2 skip / 18 warn**. Skips = OpenMx/MxModel
+  mbco tests (OpenMx not installed). Warnings = pre-existing legacy-compat/deprecation in test-ci.R
+  + test-legacy-compat.R, none medfit-related.
+- Live demo: lavaan serial indirect = 0.2086 (95% CI [0.170, 0.251]); lm/glm = 0.2429
+  (95% CI [0.201, 0.289]); both bracket true a*d1*b = 0.21. Contract `a,d1,b,c_prime` confirmed.
+- Conclusion: v1.5.0 is code-complete & verified from source (no CRAN needed for correctness);
+  only the release flip waits on medfit CRAN acceptance.
 
 ## Overview
 R package for confidence intervals of nonlinear functions of model parameters
@@ -47,15 +59,19 @@ Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
   medfit < 0.2.0). CI green on all platforms (macOS/Windows/Ubuntu + coverage). Full suite
   261 pass / 0 fail; R CMD check --as-cran 0/0/1 (only the expected Remotes/medfit NOTE).
   CLAUDE.md medfit section refreshed to "implemented" (f616879).
-- RMediation v1.5.0: flip medfit Suggests -> Imports once medfit is ACCEPTED on CRAN (CRAN forbids
-  Remotes:), then release. Gated on CRAN ACCEPTANCE, not submission. (Deferred to v1.5.0: user-facing
-  serial+medfit vignette/README examples — medfit-gated, need requireNamespace guards.)
-- CRAN-acceptance monitor: daily routine trig_01YHbGpx42Hj1d5vyfLWf2oq (8am MDT) checks if medfit
-  is on CRAN; delete it once medfit lands. CRAN also emails the maintainer.
+- RMediation v1.5.0: on medfit CRAN ACCEPTANCE, KEEP medfit in **Suggests** (do NOT promote to
+  Imports — usage in R/ci_medfit.R is guarded by requireNamespace, the Suggests contract; decided
+  2026-06-03), drop the `Remotes:` line, pin `medfit (>= 0.2.0)`, then release. Gated on CRAN
+  ACCEPTANCE, not submission. Pre-staged diff: medfit/planning/CASCADE-cran-flip-2026-06-03.md.
+  (Deferred to v1.5.0: user-facing serial+medfit vignette/README examples — medfit-gated, need
+  requireNamespace guards.)
+- CRAN-acceptance monitors: TWO daily routines now watch this — trig_01YHbGpx42Hj1d5vyfLWf2oq
+  (8am MDT, rmediation-side) and trig_018qiNZMTUP5Az2UGXyv6vRf "medfit-cran-watch" (9am MDT,
+  page + Gmail, created 2026-06-03). Redundant — delete one once medfit lands. CRAN also emails.
 - Then RMediation's serial lavaan pipeline is fully wireable end-to-end (lavaan path ready now;
   lm path waits on the gap above).
-- RMediation v1.5.0: move medfit Suggests -> Imports once medfit reaches CRAN
-  (CRAN forbids Remotes:); then release
+- RMediation v1.5.0: on CRAN acceptance, drop `Remotes:` + pin `medfit (>= 0.2.0)` in **Suggests**
+  (keep Suggests, per 2026-06-03 decision above); then release
 - DONE 2026-05-31: renamed develop -> dev (local + origin; CI triggers, README
   install refs updated). Default branch remains main.
 
