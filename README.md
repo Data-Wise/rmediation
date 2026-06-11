@@ -50,6 +50,19 @@ pak::pak("Data-Wise/rmediation@dev")
 remotes::install_github("Data-Wise/rmediation", ref = "dev")
 ```
 
+### From r-universe (development binaries)
+
+The development version is also published at the
+[Data-Wise r-universe](https://data-wise.r-universe.dev/RMediation) as a
+pre-built binary (no compiler needed):
+
+```r
+install.packages(
+  "RMediation",
+  repos = c("https://data-wise.r-universe.dev", "https://cloud.r-project.org")
+)
+```
+
 ## Usage
 
 ### Basic Example: Single Mediator
