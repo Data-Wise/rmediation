@@ -7,6 +7,7 @@
 [![Website](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml/badge.svg)](https://data-wise.github.io/rmediation/)
 [![R-hub](https://github.com/data-wise/rmediation/actions/workflows/rhub.yaml/badge.svg)](https://github.com/data-wise/rmediation/actions/workflows/rhub.yaml)
 [![Codecov](https://codecov.io/gh/data-wise/rmediation/graph/badge.svg)](https://app.codecov.io/gh/data-wise/rmediation)
+[![r-universe](https://data-wise.r-universe.dev/badges/RMediation)](https://data-wise.r-universe.dev/RMediation)
 <!-- badges: end -->
 
 ## Overview
