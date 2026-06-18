@@ -16,6 +16,7 @@ To compute a confidence interval for a single mediator using summary
 statistics:
 
 ``` r
+
 # Example: Single mediator with known coefficients and standard errors
 result <- medci(
     mu.x = 0.5, # Effect of X on M
@@ -47,6 +48,7 @@ cat("Standard Error:", result$SE, "\n")
 For more complex mediation models with multiple mediators:
 
 ``` r
+
 # Example: Two sequential mediators
 result2 <- ci(
     mu = c(b1 = 1, b2 = .7, b3 = .6, b4 = .45),
@@ -73,6 +75,7 @@ str(result2)
 The package includes modern S7 object-oriented classes:
 
 ``` r
+
 # Create a ProductNormal distribution object
 pn <- ProductNormal(
     mu = c(0.5, 0.3), # Means of the two normal variables
@@ -96,6 +99,7 @@ RMediation offers several methods for computing confidence intervals:
 - `"all"`: All methods
 
 ``` r
+
 # Compare different methods
 comparison <- medci(
     mu.x = 0.5,
@@ -130,6 +134,7 @@ str(comparison)
 RMediation integrates seamlessly with popular SEM packages:
 
 ``` r
+
 library(lavaan)
 
 # Define a simple mediation model
@@ -166,6 +171,7 @@ ci(fit) # This would auto-detect 'ab' parameter
 The package includes robust validation for inputs:
 
 ``` r
+
 # These would throw helpful error messages:
 # medci(mu.x = 0.5, mu.y = 0.6, se.x = -0.1, se.y = 0.04)  # Invalid negative SE
 # ci(mu = c(0.5), Sigma = matrix(1), quant = ~ b1)  # Dimension mismatch

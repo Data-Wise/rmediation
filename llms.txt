@@ -26,28 +26,30 @@ modest.
 **RMediation** provides methods that correctly handle this
 non-normality:
 
-| Method                                          | Best For                                           | Speed    |
-|-------------------------------------------------|----------------------------------------------------|----------|
-| **DOP** (Distribution of Product)               | Two-variable products; publication-quality results | Fast     |
-| **Monte Carlo**                                 | Complex models; 3+ variable products               | Moderate |
-| **MBCO** (Model-Based Constrained Optimization) | Hypothesis testing; bootstrap inference            | Slower   |
+| Method | Best For | Speed |
+|----|----|----|
+| **DOP** (Distribution of Product) | Two-variable products; publication-quality results | Fast |
+| **Monte Carlo** | Complex models; 3+ variable products | Moderate |
+| **MBCO** (Model-Based Constrained Optimization) | Hypothesis testing; bootstrap inference | Slower |
 
 ## Installation
 
 ### From CRAN (Stable)
 
 ``` r
+
 install.packages("RMediation")
 ```
 
 ### From GitHub (Development)
 
 ``` r
+
 # Using pak (recommended)
-pak::pak("Data-Wise/rmediation@develop")
+pak::pak("Data-Wise/rmediation@dev")
 
 # Or using remotes
-remotes::install_github("Data-Wise/rmediation", ref = "develop")
+remotes::install_github("Data-Wise/rmediation", ref = "dev")
 ```
 
 ## Usage
@@ -58,6 +60,7 @@ When you have coefficient estimates and standard errors (e.g., from a
 published study):
 
 ``` r
+
 library(RMediation)
 
 # Path coefficients: a = 0.5 (SE = 0.08), b = 0.6 (SE = 0.04)
@@ -77,6 +80,7 @@ For models with multiple sequential mediators (X → M₁ → M₂ → Y), use t
 function with a formula:
 
 ``` r
+
 # Four-path indirect effect: b1 * b2 * b3 * b4
 ci(mu = c(b1 = 1.0, b2 = 0.7, b3 = 0.6, b4 = 0.45),
    Sigma = c(0.05, 0, 0, 0,    # Covariance matrix (lower triangle)
@@ -94,6 +98,7 @@ RMediation integrates directly with [lavaan](https://lavaan.ugent.be/)
 SEM models:
 
 ``` r
+
 library(lavaan)
 library(RMediation)
 
@@ -117,6 +122,7 @@ ci(fit, type = "dop")
 For programmatic use, create `ProductNormal` objects directly:
 
 ``` r
+
 # Define distribution of two correlated normal variables
 pn <- ProductNormal(
   mu = c(0.5, 0.3),
@@ -140,6 +146,7 @@ summary(pn)
 For formal hypothesis testing of indirect effects using bootstrap:
 
 ``` r
+
 # Requires OpenMx model
 library(OpenMx)
 
@@ -151,14 +158,14 @@ mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
 
 ## Key Functions
 
-| Function                                                                               | Purpose                                                             |
-|----------------------------------------------------------------------------------------|---------------------------------------------------------------------|
-| [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md)                 | CI for product of two normal variables                              |
-| [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md)                       | CI for any function of parameters (formulas, lavaan, ProductNormal) |
-| [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md)                   | Bootstrap hypothesis tests via MBCO                                 |
-| [`pprodnormal()`](https://data-wise.github.io/rmediation/reference/pprodnormal.md)     | CDF of product of two normals                                       |
-| [`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md)     | Quantiles of product of two normals                                 |
-| [`ProductNormal()`](https://data-wise.github.io/rmediation/reference/ProductNormal.md) | S7 class for product distributions                                  |
+| Function | Purpose |
+|----|----|
+| [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md) | CI for product of two normal variables |
+| [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) | CI for any function of parameters (formulas, lavaan, ProductNormal) |
+| [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md) | Bootstrap hypothesis tests via MBCO |
+| [`pprodnormal()`](https://data-wise.github.io/rmediation/reference/pprodnormal.md) | CDF of product of two normals |
+| [`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md) | Quantiles of product of two normals |
+| [`ProductNormal()`](https://data-wise.github.io/rmediation/reference/ProductNormal.md) | S7 class for product distributions |
 
 ## Part of the Mediationverse
 
@@ -166,18 +173,19 @@ mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
 [**mediationverse**](https://data-wise.github.io/mediationverse/)—a
 suite of R packages for comprehensive mediation analysis:
 
-| Package                                                           | Purpose                                       |
-|-------------------------------------------------------------------|-----------------------------------------------|
-| [**mediationverse**](https://data-wise.github.io/mediationverse/) | Meta-package: install and load all packages   |
-| [**medfit**](https://data-wise.github.io/medfit/)                 | Model fitting and coefficient extraction      |
-| [**probmed**](https://data-wise.github.io/probmed/)               | Probabilistic effect size (P_med)             |
-| **RMediation**                                                    | Confidence intervals (DOP, Monte Carlo, MBCO) |
-| [**medrobust**](https://data-wise.github.io/medrobust/)           | Sensitivity analysis                          |
-| [**medsim**](https://data-wise.github.io/medsim/)                 | Simulation infrastructure                     |
+| Package | Purpose |
+|----|----|
+| [**mediationverse**](https://data-wise.github.io/mediationverse/) | Meta-package: install and load all packages |
+| [**medfit**](https://data-wise.github.io/medfit/) | Model fitting and coefficient extraction |
+| [**probmed**](https://data-wise.github.io/probmed/) | Probabilistic effect size (P_med) |
+| **RMediation** | Confidence intervals (DOP, Monte Carlo, MBCO) |
+| [**medrobust**](https://github.com/data-wise/medrobust) | Sensitivity analysis |
+| [**medsim**](https://data-wise.github.io/medsim/) | Simulation infrastructure |
 
 Install the entire ecosystem:
 
 ``` r
+
 pak::pak("Data-Wise/mediationverse")
 library(mediationverse)  # Loads all packages
 ```

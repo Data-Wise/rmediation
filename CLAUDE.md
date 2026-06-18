@@ -20,18 +20,19 @@ Constrained Optimization (MBCO), and Monte Carlo methods.
 
 ### Key Methods
 
-| Method         | Description                   | Use When                                            |
-|----------------|-------------------------------|-----------------------------------------------------|
-| **DOP**        | Exact distribution of product | Accuracy matters, two-variable product              |
-| **MC**         | Monte Carlo sampling          | Flexibility needed, complex functions               |
-| **MBCO**       | Bootstrap chi-squared tests   | Hypothesis testing for indirect effects             |
-| **Asymptotic** | Delta method (Sobel)          | Quick approximation (not recommended for inference) |
+| Method | Description | Use When |
+|----|----|----|
+| **DOP** | Exact distribution of product | Accuracy matters, two-variable product |
+| **MC** | Monte Carlo sampling | Flexibility needed, complex functions |
+| **MBCO** | Bootstrap chi-squared tests | Hypothesis testing for indirect effects |
+| **Asymptotic** | Delta method (Sobel) | Quick approximation (not recommended for inference) |
 
 ------------------------------------------------------------------------
 
 ## Common Development Commands
 
 ``` r
+
 # Install dependencies and check package
 remotes::install_deps(dependencies = TRUE)
 rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
@@ -56,11 +57,11 @@ devtools::test()
 
 ### Naming Conventions (Current Codebase)
 
-| Type             | Convention          | Examples                                                                                                                                                                                                                                       |
-|------------------|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Main functions   | camelCase           | [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md), [`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md), [`pprodnormal()`](https://data-wise.github.io/rmediation/reference/pprodnormal.md) |
-| Internal helpers | camelCase lowercase | `medciMeeker()`, `medciMC()`                                                                                                                                                                                                                   |
-| Arguments        | dot.case            | `mu.x`, `mu.y`, `se.x`, `se.y`, `rho`                                                                                                                                                                                                          |
+| Type | Convention | Examples |
+|----|----|----|
+| Main functions | camelCase | [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md), [`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md), [`pprodnormal()`](https://data-wise.github.io/rmediation/reference/pprodnormal.md) |
+| Internal helpers | camelCase lowercase | `medciMeeker()`, `medciMC()` |
+| Arguments | dot.case | `mu.x`, `mu.y`, `se.x`, `se.y`, `rho` |
 
 **Note**: When adding new functions, maintain consistency with existing
 patterns.
@@ -71,11 +72,11 @@ patterns.
 
 ### Core Functions
 
-| Function                                                               | Purpose                        | Use For                             |
-|------------------------------------------------------------------------|--------------------------------|-------------------------------------|
-| [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md) | Product a\*b CIs               | Two-variable indirect effects       |
-| [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md)       | General nonlinear function CIs | Complex mediation models, formulas  |
-| [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md)   | Bootstrap chi-squared tests    | Hypothesis testing H₀: indirect = 0 |
+| Function | Purpose | Use For |
+|----|----|----|
+| [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md) | Product a\*b CIs | Two-variable indirect effects |
+| [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) | General nonlinear function CIs | Complex mediation models, formulas |
+| [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md) | Bootstrap chi-squared tests | Hypothesis testing H₀: indirect = 0 |
 
 ### Distribution Functions
 
@@ -119,28 +120,39 @@ ecosystem.
 
 ### Ecosystem Resources
 
-| Resource                 | URL                                                                   |
-|--------------------------|-----------------------------------------------------------------------|
-| Ecosystem Coordination   | <https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md> |
-| Development Roadmap      | <https://data-wise.github.io/mediationverse/articles/roadmap.html>    |
-| Package Status Dashboard | <https://github.com/data-wise/mediationverse/blob/main/STATUS.md>     |
+| Resource | URL |
+|----|----|
+| Ecosystem Coordination | <https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md> |
+| Development Roadmap | <https://data-wise.github.io/mediationverse/articles/roadmap.html> |
+| Package Status Dashboard | <https://github.com/data-wise/mediationverse/blob/main/STATUS.md> |
 
 ### Related Packages
 
-| Package        | Purpose                              | Role        | Website                                       |
-|----------------|--------------------------------------|-------------|-----------------------------------------------|
-| mediationverse | Meta-package (loads all)             | Umbrella    | <https://data-wise.github.io/mediationverse/> |
-| medfit         | Model fitting, extraction, bootstrap | Foundation  | <https://data-wise.github.io/medfit/>         |
-| probmed        | Probabilistic effect size (P_med)    | Application | <https://data-wise.github.io/probmed/>        |
-| RMediation     | Confidence intervals (DOP, MBCO)     | Application | <https://data-wise.github.io/rmediation/>     |
-| medrobust      | Sensitivity analysis                 | Application | <https://data-wise.github.io/medrobust/>      |
-| medsim         | Simulation infrastructure            | Support     | <https://data-wise.github.io/medsim/>         |
+| Package | Purpose | Role | Website |
+|----|----|----|----|
+| mediationverse | Meta-package (loads all) | Umbrella | <https://data-wise.github.io/mediationverse/> |
+| medfit | Model fitting, extraction, bootstrap | Foundation | <https://data-wise.github.io/medfit/> |
+| probmed | Probabilistic effect size (P_med) | Application | <https://data-wise.github.io/probmed/> |
+| RMediation | Confidence intervals (DOP, MBCO) | Application | <https://data-wise.github.io/rmediation/> |
+| medrobust | Sensitivity analysis | Application | <https://data-wise.github.io/medrobust/> |
+| medsim | Simulation infrastructure | Support | <https://data-wise.github.io/medsim/> |
 
-### Integration with medfit (v1.5.0, Q1 2026)
+### Integration with medfit (v1.5.0)
 
-- Model extraction will use medfit infrastructure
-- Bootstrap utilities may be shared
-- S7 classes may inherit from medfit base classes
+medfit integration is **implemented** as of 2026-06:
+[`ci()`](https://data-wise.github.io/rmediation/reference/ci.md)
+consumes medfit `MediationData`/`SerialMediationData` objects,
+extracting the path covariance by parameter name (the
+`a, d1, ..., b, c_prime` contract). The serial-mediation pipeline
+([`ci_serial_mediation_data()`](https://data-wise.github.io/rmediation/reference/ci_mediation_data.md))
+is verified end-to-end against medfit’s released serial extractor
+(medfit \>= 0.2.0), for both lavaan and lm/glm chains.
+
+**Remaining for v1.5.0 release:** medfit is submitted to CRAN and
+awaiting acceptance. Once accepted, move medfit from `Suggests` to
+`Imports` and remove `Remotes: data-wise/medfit` from DESCRIPTION (CRAN
+forbids `Remotes:`), then release. The flip is gated on CRAN acceptance,
+not submission.
 
 ------------------------------------------------------------------------
 
@@ -154,4 +166,4 @@ ecosystem.
 
 ------------------------------------------------------------------------
 
-**Last Updated**: 2025-12-04
+**Last Updated**: 2026-06-02

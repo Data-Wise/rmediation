@@ -25,6 +25,7 @@ for indirect effects:
 Let’s compare different methods using the same example:
 
 ``` r
+
 # Same example parameters
 mu.x <- 0.5  # Effect of X on M
 mu.y <- 0.6  # Effect of M on Y (controlling for X)
@@ -73,6 +74,7 @@ for(method_name in names(results)) {
 Different methods have different strengths and weaknesses:
 
 ``` r
+
 # Example of comparing results across different parameter values
 
 # Define parameter values to test
@@ -131,6 +133,7 @@ for(i in seq_along(param_sets)) {
 - **Disadvantages:** Computationally intensive for complex models
 
 ``` r
+
 # Example using DOP method
 result_dop <- medci(
   mu.x = 0.5, mu.y = 0.6,
@@ -155,6 +158,7 @@ str(result_dop)
 - **Disadvantages:** Requires large sample sizes for stability
 
 ``` r
+
 # Example using MC method
 result_mc <- medci(
   mu.x = 0.5, mu.y = 0.6,
@@ -181,6 +185,7 @@ str(result_mc)
 - **Disadvantages:** Can have poor Type I error control in small samples
 
 ``` r
+
 # Example using asymptotic method
 result_asymp <- medci(
   mu.x = 0.5, mu.y = 0.6,
@@ -203,6 +208,7 @@ str(result_asymp)
 The modern S7 implementation provides method-specific functionality:
 
 ``` r
+
 # Create a ProductNormal object (represents distribution of product)
 pn <- ProductNormal(
   mu = c(0.5, 0.6),  # Means of the two variables

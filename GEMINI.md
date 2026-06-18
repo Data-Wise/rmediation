@@ -49,6 +49,7 @@ To install the package locally for development, you can use
 ### Package Building and Checking
 
 ``` r
+
 # Install package dependencies
 install.packages(c("remotes", "rcmdcheck"))
 remotes::install_deps(dependencies = TRUE)
@@ -66,6 +67,7 @@ devtools::load_all()
 ### Documentation
 
 ``` r
+
 # Generate documentation from roxygen2 comments
 devtools::document()
 
@@ -260,6 +262,7 @@ speed
 **Usage pattern:**
 
 ``` r
+
 # Define full and null models in OpenMx
 full_model <- mxTryHard(full_model, checkHess=FALSE, silent=TRUE)
 null_model <- mxTryHard(null_model, checkHess=FALSE, silent=TRUE)
@@ -333,6 +336,7 @@ When implementing a new CI method:
 1.  **Create internal function** with signature:
 
     ``` r
+
     .ci_new_method <- function(mu.x, mu.y, se.x, se.y, rho, alpha) {
       # Returns list with: CI, Estimate, SE
       list(
@@ -359,6 +363,7 @@ The [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md)
 function can accept lavaan fitted objects directly:
 
 ``` r
+
 # Extract from lavaan
 if (isa(mu, "lavaan")) {
   pEst <- coef(fm1)                    # Parameter estimates
