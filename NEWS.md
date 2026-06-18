@@ -1,4 +1,10 @@
-# RMediation (development version)
+# RMediation 1.5.0 (2026-06-18)
+
+## Dependencies
+
+* **medfit is now available on CRAN** (v0.2.0/0.2.1). Removed `Remotes:
+  data-wise/medfit`; medfit now resolves from CRAN. Pinned `Suggests: medfit
+  (>= 0.2.0)`.
 
 ## medfit Covariance Extraction
 
