@@ -1,4 +1,52 @@
-# RMediation (development version)
+# RMediation 1.5.0 (2026-06-18)
+
+## Dependencies
+
+* **medfit is now available on CRAN** (v0.2.0/0.2.1). Removed `Remotes:
+  data-wise/medfit`; medfit now resolves from CRAN. Pinned `Suggests: medfit
+  (>= 0.2.0)`.
+
+## medfit Covariance Extraction
+
+* `ci()` for medfit `MediationData`/`SerialMediationData` now extracts the path
+  covariance by parameter name and uses the full covariance matrix (including
+  off-diagonals) for both simple and serial mediation. Removed the previous
+  positional/value-matching heuristics and the independence/diagonal fallbacks,
+  which could silently produce incorrect intervals; unresolved path labels now
+  raise an informative error.
+* The serial-mediation pipeline is now verified end-to-end against medfit's
+  released serial extractor (medfit >= 0.2.0): `medfit::extract_mediation()`
+  produces a `SerialMediationData` for both lavaan (ordered `mediator` vector)
+  and lm/glm (`mediator_models`) chains, and `ci()` consumes it via the
+  documented `d1, d2, ...` path-name contract. Added integration tests that fit a
+  real model, extract, and run `ci()` end-to-end (skipped when medfit < 0.2.0).
+
+## Workflow Optimization & Standardization (2025-12-05)
+
+### Performance Improvements
+* **Optimized R-CMD-check workflow**: Reduced from 5 to 3 platforms (macOS, Windows, Ubuntu release)
+* **Removed failing platforms**: Dropped `ubuntu-latest (devel)` and `ubuntu-latest (oldrel-1)` configurations
+* **Runtime improvement**: Check workflows now complete in ~2 minutes (down from 6+ minutes, **67% faster**)
+* **Build optimization**: Added `--ignore-vignettes` flag to skip vignette validation during CI checks
+
+### Bug Fixes
+* **Fixed pkgdown build errors**:
+  - Removed non-existent `reexports` topic from `_pkgdown.yml` reference index
+  - Added missing `tidy` topic to `_pkgdown.yml` reference index
+  - pkgdown workflow now passes successfully
+
+### Standardization
+* **Badge order**: Added R-hub badge to README, standardized order to match mediationverse ecosystem:
+  CRAN, Lifecycle, R-CMD-check, Website, R-hub, Codecov
+* **.Rbuildignore**: Added `^STATUS\.md$` to match ecosystem standards
+* **Website configuration**: Already compliant with mediationverse standards:
+  - Academic blue color scheme (#0054AD)
+  - Consistent fonts (Inter, Montserrat, Fira Code)
+  - Ecosystem and Status dropdown menus
+
+### Documentation
+* Updated README badge order for consistency across ecosystem
+* All workflows now passing on main branch
 
 ## Workflow Optimization & Standardization (2025-12-05)
 

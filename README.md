@@ -6,7 +6,7 @@
 [![R-CMD-check](https://github.com/data-wise/rmediation/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/data-wise/rmediation/actions/workflows/R-CMD-check.yaml)
 [![Website](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml/badge.svg)](https://data-wise.github.io/rmediation/)
 [![R-hub](https://github.com/data-wise/rmediation/actions/workflows/rhub.yaml/badge.svg)](https://github.com/data-wise/rmediation/actions/workflows/rhub.yaml)
-[![Codecov](https://codecov.io/gh/data-wise/rmediation/graph/badge.svg)](https://codecov.io/gh/data-wise/rmediation)
+[![Codecov](https://codecov.io/gh/data-wise/rmediation/graph/badge.svg)](https://app.codecov.io/gh/data-wise/rmediation)
 <!-- badges: end -->
 
 ## Overview
@@ -44,10 +44,10 @@ install.packages("RMediation")
 
 ```r
 # Using pak (recommended)
-pak::pak("Data-Wise/rmediation@develop")
+pak::pak("Data-Wise/rmediation@dev")
 
 # Or using remotes
-remotes::install_github("Data-Wise/rmediation", ref = "develop")
+remotes::install_github("Data-Wise/rmediation", ref = "dev")
 ```
 
 ## Usage
@@ -166,7 +166,7 @@ mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
 | [**medfit**](https://data-wise.github.io/medfit/) | Model fitting and coefficient extraction |
 | [**probmed**](https://data-wise.github.io/probmed/) | Probabilistic effect size (P_med) |
 | **RMediation** | Confidence intervals (DOP, Monte Carlo, MBCO) |
-| [**medrobust**](https://data-wise.github.io/medrobust/) | Sensitivity analysis |
+| [**medrobust**](https://github.com/data-wise/medrobust) | Sensitivity analysis | [github](https://github.com/data-wise/medrobust) |
 | [**medsim**](https://data-wise.github.io/medsim/) | Simulation infrastructure |
 
 Install the entire ecosystem:

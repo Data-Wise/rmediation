@@ -120,11 +120,18 @@ RMediation is an **application package** in the mediationverse ecosystem.
 | medrobust | Sensitivity analysis | Application | https://data-wise.github.io/medrobust/ |
 | medsim | Simulation infrastructure | Support | https://data-wise.github.io/medsim/ |
 
-### Integration with medfit (v1.5.0, Q1 2026)
+### Integration with medfit (v1.5.0)
 
-- Model extraction will use medfit infrastructure
-- Bootstrap utilities may be shared
-- S7 classes may inherit from medfit base classes
+medfit integration is **implemented** as of 2026-06: `ci()` consumes medfit
+`MediationData`/`SerialMediationData` objects, extracting the path covariance by
+parameter name (the `a, d1, ..., b, c_prime` contract). The serial-mediation
+pipeline (`ci_serial_mediation_data()`) is verified end-to-end against medfit's
+released serial extractor (medfit >= 0.2.0), for both lavaan and lm/glm chains.
+
+**Remaining for v1.5.0 release:** medfit is submitted to CRAN and awaiting
+acceptance. Once accepted, move medfit from `Suggests` to `Imports` and remove
+`Remotes: data-wise/medfit` from DESCRIPTION (CRAN forbids `Remotes:`), then
+release. The flip is gated on CRAN acceptance, not submission.
 
 ---
 
@@ -138,4 +145,4 @@ RMediation is an **application package** in the mediationverse ecosystem.
 
 ---
 
-**Last Updated**: 2025-12-04
+**Last Updated**: 2026-06-02

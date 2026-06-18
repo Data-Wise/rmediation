@@ -10,6 +10,8 @@
 ^\.claude$
 ^CLAUDE\.md$
 ^STATUS\.md$
+^\.STATUS$
+^\.STATUS\.backup$
 ^GEMINI\.md$
 ^QWEN\.md$
 ^\.git$

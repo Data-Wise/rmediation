@@ -1,8 +1,8 @@
 Package: RMediation
 Type: Package
 Title: Mediation Analysis Confidence Intervals
-Version: 1.4.0
-Date: 2025-11-18
+Version: 1.5.0
+Date: 2026-06-18
 Author: Davood Tofighi [aut, cre] (ORCID: <https://orcid.org/0000-0001-8523-7776>)
 Maintainer: Davood Tofighi <dtofighi@gmail.com>
 Authors@R: person("Davood", "Tofighi",
@@ -40,13 +40,11 @@ Imports:
     S7
 Suggests:
     knitr,
-    medfit,
+    medfit (>= 0.2.0),
     OpenMx (>= 2.13),
     rmarkdown,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
-Remotes:
-    data-wise/medfit
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE, roclets = c("rd", "collate", "namespace"))
