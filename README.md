@@ -167,7 +167,7 @@ mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
 | [**probmed**](https://data-wise.github.io/probmed/) | Probabilistic effect size (P_med) |
 | **RMediation** | Confidence intervals (DOP, Monte Carlo, MBCO) |
 | [**medrobust**](https://github.com/data-wise/medrobust) | Sensitivity analysis | [github](https://github.com/data-wise/medrobust) |
-| [**medsim**](https://data-wise.github.io/medsim/) | Simulation infrastructure |
+| [**medsim**](https://github.com/Data-Wise/medsim) | Simulation infrastructure |
 
 Install the entire ecosystem:
 
