@@ -56,6 +56,8 @@ navbar:
         href: articles/getting-started.html
       - text: CI Methods Comparison
         href: articles/methods-comparison.html
+      - text: Serial Mediation with medfit
+        href: articles/serial-mediation-with-medfit.html
     ecosystem:
       text: Ecosystem
       menu:

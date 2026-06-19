@@ -2,14 +2,10 @@
 
 ## Status: Active
 ## Progress: 100
-## Focus: v1.5.0 code-complete + re-verified vs medfit 0.2.0 (2026-06-03); awaiting medfit CRAN acceptance
+## Focus: post-v1.5.0 doc cleanup + serial-medfit docs (2026-06-19)
 
-## Active worktree
-- `~/.git-worktrees/rmediation/feature-v150-medfit-examples` (branch
-  `feature/v150-medfit-examples`, off `dev`, 2026-06-03): drafting the deferred
-  v1.5.0 user-facing examples. DONE so far (commit 59d69f4): new vignette
-  `vignettes/serial-mediation-with-medfit.Rmd` (medfit-guarded, knits clean) +
-  README "Serial Mediation via medfit" subsection. Not yet merged to dev.
+## Active worktrees
+None — all session worktrees removed 2026-06-19.
 
 ## Verified 2026-06-03 (re-ran vs the medfit 0.2.0 RELEASE TARBALL)
 - Installed medfit 0.2.0 from `medfit_0.2.0.tar.gz` (R CMD INSTALL); both S7 classes exported.
@@ -29,8 +25,8 @@ R package for confidence intervals of nonlinear functions of model parameters
 Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
 
 ## CRAN
-- Published version: 1.4.0
-- Development version: 1.4.0 (dev)
+- Published version: 1.5.0 (released 2026-06-18)
+- Development version: 1.5.0 (main)
 
 ## Recent (2026-05-31)
 - Merged PR #4 (develop): name-based path -> covariance extraction for medfit
@@ -52,48 +48,19 @@ Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
   * R CMD check (--no-manual, _R_CHECK_FORCE_SUGGESTS_=false) verified 0 errors /
     0 warnings / 0 NOTES. (--as-cran would still show the expected Remotes/medfit NOTE.)
 
-## Next (medfit blockers DONE — now rmediation-side verification + CRAN wait)
-- medfit Blockers A & B: DONE — RELEASED in medfit v0.2.0 (tagged; on origin/main via PR #27;
-  verified vs remote 2026-06-01). Serial extractor ships BOTH lavaan (ordered mediator vector)
-  AND lm/glm (new mediator_models arg); @vcov named a,d1..,b,c_prime per the agreed contract
-  (lavaan keeps off-diagonals; lm block-diagonal with cov(b,c') preserved). The earlier "lm gap"
-  is CLOSED.
-- medfit CRAN: SUBMITTED — initial submission of v0.2.0 (R CMD check 0/0/1 new-submission note;
-  win-builder + GHA matrix done). NOT yet accepted — treat as CRAN-PENDING.
-- rmediation serial pipeline: DONE & MERGED to dev (PR #5, 2026-06-02). Verified end-to-end against
-  the REAL medfit 0.2.0 extractor for BOTH lavaan (ordered mediator vector) and lm/glm
-  (mediator_models) chains; integration test test-serial-medfit-integration.R added (skips if
-  medfit < 0.2.0). CI green on all platforms (macOS/Windows/Ubuntu + coverage). Full suite
-  261 pass / 0 fail; R CMD check --as-cran 0/0/1 (only the expected Remotes/medfit NOTE).
-  CLAUDE.md medfit section refreshed to "implemented" (f616879).
-- RMediation v1.5.0: on medfit CRAN ACCEPTANCE, KEEP medfit in **Suggests** (do NOT promote to
-  Imports — usage in R/ci_medfit.R is guarded by requireNamespace, the Suggests contract; decided
-  2026-06-03), drop the `Remotes:` line, pin `medfit (>= 0.2.0)`, then release. Gated on CRAN
-  ACCEPTANCE, not submission. Pre-staged diff: medfit/planning/CASCADE-cran-flip-2026-06-03.md.
-  (Deferred to v1.5.0: user-facing serial+medfit vignette/README examples — medfit-gated, need
-  requireNamespace guards.)
-- CRAN-acceptance monitor: ONE active routine — trig_018qiNZMTUP5Az2UGXyv6vRf "medfit-cran-watch"
-  (9am MDT, checks CRAN page + Gmail, includes post-acceptance checklist). The older
-  trig_01YHbGpx42Hj1d5vyfLWf2oq (8am, rmediation-side) was DISABLED 2026-06-03 as a duplicate (its
-  prompt also gave the now-superseded "Suggests->Imports" advice); hard-delete via the routines UI
-  when convenient. CRAN also emails the maintainer.
-- Then RMediation's serial lavaan pipeline is fully wireable end-to-end (lavaan path ready now;
-  lm path waits on the gap above).
-- RMediation v1.5.0: on CRAN acceptance, drop `Remotes:` + pin `medfit (>= 0.2.0)` in **Suggests**
-  (keep Suggests, per 2026-06-03 decision above); then release
-- DONE 2026-05-31: renamed develop -> dev (local + origin; CI triggers, README
-  install refs updated). Default branch remains main.
+## Recent (2026-06-18 — v1.5.0 released)
+- medfit accepted on CRAN (v0.2.0+). Removed `Remotes: data-wise/medfit`; pinned
+  medfit in **Suggests** (>= 0.2.0) — intentionally NOT promoted to Imports
+  (requireNamespace guards, decided 2026-06-03).
+- v1.5.0 shipped to main (CRAN). R CMD check --as-cran: 0/0/0 (Remotes NOTE gone).
+- README: swapped broken medsim pkgdown URL → GitHub (commit 0e2c997).
+- r-universe: PR #6 open (CONFLICTING — needs rebase onto main after develop→dev rename).
+- Merged worktree `feature/medfit-covariance-extraction` pruned (2026-06-19).
 
-## Session end: 2026-06-02 (wrap via /workflow:done)
-- This session: medfit v0.2.0 shipped Blockers A+B (lavaan + lm serial extractor) and is
-  CRAN-SUBMITTED. rmediation serial pipeline verified end-to-end + integration-tested + MERGED
-  to dev (PR #5, CI green all platforms). CLAUDE.md medfit section refreshed to "implemented".
-  CRAN-acceptance monitor routine set up. flow-cli v7.7.1 (terminal-handoff fix) released in a
-  separate session.
-- rmediation is RELEASE-READY for v1.5.0 except the single CRAN-gated step.
-- NEXT (when medfit is ACCEPTED on CRAN): on a branch, flip medfit Suggests->Imports, delete
-  `Remotes: data-wise/medfit` from DESCRIPTION, bump version + Date, finalize NEWS, then release.
-  --as-cran already confirms no other blockers (the lone NOTE clears when medfit is on CRAN).
-- Until then: nothing actionable here. Monitor watches medfit CRAN status daily.
-- Caution: re-verify medfit git log / `available.packages()` before trusting any medfit status
-  above — state has churned across sessions repeatedly (tags, CRAN, this session).
+## Completed 2026-06-19
+- PR #6 (r-universe badge + install section): merged ✓
+- PR #8 (CLAUDE.md + .STATUS doc sync): merged ✓
+- PR #9 (serial-mediation-with-medfit vignette + README block + _pkgdown.yml): merged ✓
+- mediationverse PR #5 (dev → main, medfit CRAN badge): merged ✓
+- pkgdown rebuilt on both RMediation and mediationverse — sites live ✓
+- All worktrees and stale local branches removed ✓
