@@ -341,7 +341,7 @@ CRAN release: 2016-03-14
 
 - Two functions ‘pMC’ and ‘qMC’ are added.
 
-- for medci(), type=‘prodclin’ is replaced with ‘dop’.
+- for medci(), type=`’prodclin’` is replaced with `’dop’`.
 
 ## RMediation 1.1.3
 
