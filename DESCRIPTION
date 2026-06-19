@@ -46,6 +46,7 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Encoding: UTF-8
+Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE, roclets = c("rd", "collate", "namespace"))
 RoxygenNote: 7.3.3
@@ -53,4 +54,3 @@ Config/testthat/edition: 3
 Config/Needs/website:
     pkgdown,
     quarto
-SystemRequirements: GNU make
