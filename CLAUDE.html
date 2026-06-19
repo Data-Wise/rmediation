@@ -231,7 +231,7 @@
 <div class="section level3">
 <h3 id="integration-with-medfit-v150">Integration with medfit (v1.5.0)<a class="anchor" aria-label="anchor" href="#integration-with-medfit-v150"></a></h3>
 <p>medfit integration is <strong>implemented</strong> as of 2026-06: <code><a href="reference/ci.html">ci()</a></code> consumes medfit <code>MediationData</code>/<code>SerialMediationData</code> objects, extracting the path covariance by parameter name (the <code>a, d1, ..., b, c_prime</code> contract). The serial-mediation pipeline (<code><a href="reference/ci_mediation_data.html">ci_serial_mediation_data()</a></code>) is verified end-to-end against medfit’s released serial extractor (medfit &gt;= 0.2.0), for both lavaan and lm/glm chains.</p>
-<p><strong>Remaining for v1.5.0 release:</strong> medfit is submitted to CRAN and awaiting acceptance. Once accepted, move medfit from <code>Suggests</code> to <code>Imports</code> and remove <code>Remotes: data-wise/medfit</code> from DESCRIPTION (CRAN forbids <code>Remotes:</code>), then release. The flip is gated on CRAN acceptance, not submission.</p>
+<p><strong>v1.5.0 shipped (2026-06-18):</strong> medfit is on CRAN (v0.2.0+). <code>Remotes: data-wise/medfit</code> was removed from DESCRIPTION; medfit is pinned in <strong>Suggests</strong> at <code>&gt;= 0.2.0</code> and intentionally kept there — all usage in <code>R/ci_medfit.R</code> is guarded by <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace()</a></code>, satisfying the Suggests contract. Do NOT promote to Imports.</p>
 <hr></div>
 </div>
 <div class="section level2">
@@ -241,7 +241,7 @@
 <li>Meeker &amp; Escobar (1994): CDF computation algorithm</li>
 <li>Tofighi &amp; MacKinnon (2011): RMediation R package</li>
 <li>Tofighi (2020): MBCO bootstrap methods</li>
-</ul><hr><p><strong>Last Updated</strong>: 2026-06-02</p>
+</ul><hr><p><strong>Last Updated</strong>: 2026-06-19</p>
 </div>
 </div>
 

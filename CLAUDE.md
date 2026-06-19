@@ -148,11 +148,12 @@ extracting the path covariance by parameter name (the
 is verified end-to-end against medfit’s released serial extractor
 (medfit \>= 0.2.0), for both lavaan and lm/glm chains.
 
-**Remaining for v1.5.0 release:** medfit is submitted to CRAN and
-awaiting acceptance. Once accepted, move medfit from `Suggests` to
-`Imports` and remove `Remotes: data-wise/medfit` from DESCRIPTION (CRAN
-forbids `Remotes:`), then release. The flip is gated on CRAN acceptance,
-not submission.
+**v1.5.0 shipped (2026-06-18):** medfit is on CRAN (v0.2.0+).
+`Remotes: data-wise/medfit` was removed from DESCRIPTION; medfit is
+pinned in **Suggests** at `>= 0.2.0` and intentionally kept there — all
+usage in `R/ci_medfit.R` is guarded by
+[`requireNamespace()`](https://rdrr.io/r/base/ns-load.html), satisfying
+the Suggests contract. Do NOT promote to Imports.
 
 ------------------------------------------------------------------------
 
@@ -166,4 +167,4 @@ not submission.
 
 ------------------------------------------------------------------------
 
-**Last Updated**: 2026-06-02
+**Last Updated**: 2026-06-19
