@@ -7,6 +7,7 @@
 [![Website](https://github.com/data-wise/rmediation/actions/workflows/pkgdown.yaml/badge.svg)](https://data-wise.github.io/rmediation/)
 [![R-hub](https://github.com/data-wise/rmediation/actions/workflows/rhub.yaml/badge.svg)](https://github.com/data-wise/rmediation/actions/workflows/rhub.yaml)
 [![Codecov](https://codecov.io/gh/data-wise/rmediation/graph/badge.svg)](https://app.codecov.io/gh/data-wise/rmediation)
+[![r-universe](https://data-wise.r-universe.dev/badges/RMediation)](https://data-wise.r-universe.dev/RMediation)
 <!-- badges: end -->
 
 ## Overview
@@ -48,6 +49,19 @@ pak::pak("Data-Wise/rmediation@dev")
 
 # Or using remotes
 remotes::install_github("Data-Wise/rmediation", ref = "dev")
+```
+
+### From r-universe (development binaries)
+
+The development version is also published at the
+[Data-Wise r-universe](https://data-wise.r-universe.dev/RMediation) as a
+pre-built binary (no compiler needed):
+
+```r
+install.packages(
+  "RMediation",
+  repos = c("https://data-wise.r-universe.dev", "https://cloud.r-project.org")
+)
 ```
 
 ## Usage
@@ -167,7 +181,7 @@ mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
 | [**probmed**](https://data-wise.github.io/probmed/) | Probabilistic effect size (P_med) |
 | **RMediation** | Confidence intervals (DOP, Monte Carlo, MBCO) |
 | [**medrobust**](https://github.com/data-wise/medrobust) | Sensitivity analysis | [github](https://github.com/data-wise/medrobust) |
-| [**medsim**](https://data-wise.github.io/medsim/) | Simulation infrastructure |
+| [**medsim**](https://github.com/Data-Wise/medsim) | Simulation infrastructure |
 
 Install the entire ecosystem:
 
