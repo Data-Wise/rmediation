@@ -122,6 +122,27 @@ fit <- sem(model, data = mydata)
 ci(fit, type = "dop")
 ```
 
+### Serial Mediation via medfit
+
+For serial chains (`X → M1 → M2 → Y`), let [medfit](https://data-wise.github.io/medfit/)
+fit the model and extract the coefficients + covariance, then pass the result
+straight to `ci()`. medfit is an optional (`Suggests`) dependency.
+
+```r
+library(RMediation)
+
+# medfit extracts a SerialMediationData object from a lavaan or lm/glm fit...
+mu <- medfit::extract_mediation(
+  fit, treatment = "X", mediator = c("M1", "M2"), outcome = "Y"
+)
+
+# ...and RMediation computes the CI for the serial indirect effect a * d1 * b
+ci(mu, level = 0.95, type = "MC")
+```
+
+See `vignette("serial-mediation-with-medfit")` for the full lavaan and lm/glm
+workflow.
+
 ### Using the S7 ProductNormal Class
 
 For programmatic use, create `ProductNormal` objects directly:
