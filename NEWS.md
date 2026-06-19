@@ -185,7 +185,7 @@ RMediation 1.1.4 (3/12/2016)
 
 * Two functions 'pMC' and 'qMC' are added.
 
-* for medci(), type=‘prodclin’ is replaced with ‘dop’.
+* for medci(), type=`’prodclin’` is replaced with `’dop’`.
 
 RMediation 1.1.3
 =============
