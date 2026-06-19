@@ -5,11 +5,7 @@
 ## Focus: post-v1.5.0 doc cleanup + serial-medfit docs (2026-06-19)
 
 ## Active worktrees
-- `~/.git-worktrees/rmediation/feature-v150-medfit-examples` (branch
-  `feature/v150-medfit-examples`, 2026-06-03): serial-mediation vignette +
-  README block — content salvageable but branch is based on 1.4.0 tree (toxic
-  DESCRIPTION/NEWS reversions). Cherry-pick to `feature/serial-medfit-docs`
-  instead; do NOT merge this branch directly.
+None — all session worktrees removed 2026-06-19.
 
 ## Verified 2026-06-03 (re-ran vs the medfit 0.2.0 RELEASE TARBALL)
 - Installed medfit 0.2.0 from `medfit_0.2.0.tar.gz` (R CMD INSTALL); both S7 classes exported.
@@ -61,11 +57,10 @@ Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
 - r-universe: PR #6 open (CONFLICTING — needs rebase onto main after develop→dev rename).
 - Merged worktree `feature/medfit-covariance-extraction` pruned (2026-06-19).
 
-## Next (2026-06-19 — post-release doc cleanup)
-- PR #6 (`feature/r-universe-install`): rebase on main → resolve README conflict → merge.
-  Adds r-universe badge + install section; CI was green.
-- `feature/serial-medfit-docs` (new branch): cherry-pick vignette + README serial block
-  from the 1.4.0-based `feature/v150-medfit-examples` worktree; add `_pkgdown.yml` entry;
-  knit-check; PR → main. (Do NOT merge the v150 branch directly — it reverts DESCRIPTION.)
-- `feature/post-v150-docs`: stale-doc fixes to CLAUDE.md + .STATUS → PR → main (this branch).
-- After serial docs land: remove `feature-v150-medfit-examples` worktree + branch (obsolete).
+## Completed 2026-06-19
+- PR #6 (r-universe badge + install section): merged ✓
+- PR #8 (CLAUDE.md + .STATUS doc sync): merged ✓
+- PR #9 (serial-mediation-with-medfit vignette + README block + _pkgdown.yml): merged ✓
+- mediationverse PR #5 (dev → main, medfit CRAN badge): merged ✓
+- pkgdown rebuilt on both RMediation and mediationverse — sites live ✓
+- All worktrees and stale local branches removed ✓
