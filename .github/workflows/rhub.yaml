@@ -52,10 +52,17 @@ jobs:
 
     steps:
       - uses: r-hub/actions/checkout@v1
-      - name: Install jq
-        run: apt-get update -qy && apt-get install -y jq
       - name: Install Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
+        run: |
+          if command -v apt-get >/dev/null 2>&1; then
+            apt-get update -qy
+            apt-get install -yq curl jq
+            QUARTO_VER=$(curl -sf https://quarto.org/docs/download/_download.json | jq -r '.version')
+            curl -sfLo quarto.deb "https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VER}/quarto-${QUARTO_VER}-linux-amd64.deb"
+            dpkg -i quarto.deb && rm quarto.deb
+          else
+            echo "apt-get not available -- skipping Quarto install"
+          fi
       - uses: r-hub/actions/platform-info@v1
         with:
           token: ${{ secrets.RHUB_TOKEN }}
