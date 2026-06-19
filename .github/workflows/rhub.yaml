@@ -52,6 +52,8 @@ jobs:
 
     steps:
       - uses: r-hub/actions/checkout@v1
+      - name: Install jq
+        run: apt-get update -qy && apt-get install -y jq
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@v2
       - uses: r-hub/actions/platform-info@v1
