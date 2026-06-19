@@ -52,6 +52,20 @@ pak::pak("Data-Wise/rmediation@dev")
 remotes::install_github("Data-Wise/rmediation", ref = "dev")
 ```
 
+### From r-universe (development binaries)
+
+The development version is also published at the [Data-Wise
+r-universe](https://data-wise.r-universe.dev/RMediation) as a pre-built
+binary (no compiler needed):
+
+``` r
+
+install.packages(
+  "RMediation",
+  repos = c("https://data-wise.r-universe.dev", "https://cloud.r-project.org")
+)
+```
+
 ## Usage
 
 ### Basic Example: Single Mediator
@@ -180,7 +194,7 @@ suite of R packages for comprehensive mediation analysis:
 | [**probmed**](https://data-wise.github.io/probmed/) | Probabilistic effect size (P_med) |
 | **RMediation** | Confidence intervals (DOP, Monte Carlo, MBCO) |
 | [**medrobust**](https://github.com/data-wise/medrobust) | Sensitivity analysis |
-| [**medsim**](https://data-wise.github.io/medsim/) | Simulation infrastructure |
+| [**medsim**](https://github.com/Data-Wise/medsim) | Simulation infrastructure |
 
 Install the entire ecosystem:
 

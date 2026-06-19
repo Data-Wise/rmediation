@@ -168,6 +168,16 @@
 <span><span class="co"># Or using remotes</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Data-Wise/rmediation"</span>, ref <span class="op">=</span> <span class="st">"dev"</span><span class="op">)</span></span></code></pre></div>
 </div>
+<div class="section level3">
+<h3 id="from-r-universe-development-binaries">From r-universe (development binaries)<a class="anchor" aria-label="anchor" href="#from-r-universe-development-binaries"></a>
+</h3>
+<p>The development version is also published at the <a href="https://data-wise.r-universe.dev/RMediation" class="external-link">Data-Wise r-universe</a> as a pre-built binary (no compiler needed):</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span></span>
+<span>  <span class="st">"RMediation"</span>,</span>
+<span>  repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://data-wise.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -176,7 +186,7 @@
 <h3 id="basic-example-single-mediator">Basic Example: Single Mediator<a class="anchor" aria-label="anchor" href="#basic-example-single-mediator"></a>
 </h3>
 <p>When you have coefficient estimates and standard errors (e.g., from a published study):</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Path coefficients: a = 0.5 (SE = 0.08), b = 0.6 (SE = 0.04)</span></span>
@@ -192,7 +202,7 @@
 <h3 id="sequential-mediators-3-variables">Sequential Mediators (3+ Variables)<a class="anchor" aria-label="anchor" href="#sequential-mediators-3-variables"></a>
 </h3>
 <p>For models with multiple sequential mediators (X → M₁ → M₂ → Y), use the <code><a href="reference/ci.html">ci()</a></code> function with a formula:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Four-path indirect effect: b1 * b2 * b3 * b4</span></span>
 <span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">1.0</span>, b2 <span class="op">=</span> <span class="fl">0.7</span>, b3 <span class="op">=</span> <span class="fl">0.6</span>, b4 <span class="op">=</span> <span class="fl">0.45</span><span class="op">)</span>,</span>
 <span>   Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>,    <span class="co"># Covariance matrix (lower triangle)</span></span>
@@ -207,7 +217,7 @@
 <h3 id="with-lavaan-models">With lavaan Models<a class="anchor" aria-label="anchor" href="#with-lavaan-models"></a>
 </h3>
 <p>RMediation integrates directly with <a href="https://lavaan.ugent.be/" class="external-link">lavaan</a> SEM models:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
 <span></span>
@@ -229,7 +239,7 @@
 <h3 id="using-the-s7-productnormal-class">Using the S7 ProductNormal Class<a class="anchor" aria-label="anchor" href="#using-the-s7-productnormal-class"></a>
 </h3>
 <p>For programmatic use, create <code>ProductNormal</code> objects directly:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Define distribution of two correlated normal variables</span></span>
 <span><span class="va">pn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ProductNormal.html">ProductNormal</a></span><span class="op">(</span></span>
 <span>  mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.3</span><span class="op">)</span>,</span>
@@ -251,7 +261,7 @@
 <h3 id="hypothesis-testing-with-mbco">Hypothesis Testing with MBCO<a class="anchor" aria-label="anchor" href="#hypothesis-testing-with-mbco"></a>
 </h3>
 <p>For formal hypothesis testing of indirect effects using bootstrap:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Requires OpenMx model</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openmx.ssri.psu.edu/" class="external-link">OpenMx</a></span><span class="op">)</span></span>
 <span></span>
@@ -336,13 +346,13 @@
 <td>Sensitivity analysis</td>
 </tr>
 <tr>
-<td><a href="https://data-wise.github.io/medsim/" class="external-link"><strong>medsim</strong></a></td>
+<td><a href="https://github.com/Data-Wise/medsim" class="external-link"><strong>medsim</strong></a></td>
 <td>Simulation infrastructure</td>
 </tr>
 </tbody>
 </table>
 <p>Install the entire ecosystem:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Data-Wise/mediationverse"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mediationverse</span><span class="op">)</span>  <span class="co"># Loads all packages</span></span></code></pre></div>
 </div>
