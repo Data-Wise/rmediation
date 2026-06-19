@@ -1,0 +1,58 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "RMediation: Mediation Analysis Confidence Intervals"
+version: 1.5.0
+date-released: "2026-06-18"
+authors:
+  - family-names: Tofighi
+    given-names: Davood
+    email: dtofighi@gmail.com
+    orcid: "https://orcid.org/0000-0001-8523-7776"
+repository-code: "https://github.com/data-wise/rmediation"
+url: "https://data-wise.github.io/rmediation/"
+license: GPL-3.0-or-later
+abstract: >-
+  Computes confidence intervals for nonlinear functions of model parameters
+  (e.g., product of k coefficients) in single-level and multilevel structural
+  equation models. Methods include the distribution of the product, Monte Carlo
+  simulation, and bootstrap methods. Also performs the Model-Based Constrained
+  Optimization (MBCO) procedure for hypothesis testing of indirect effects.
+preferred-citation:
+  type: article
+  title: "RMediation: An R package for mediation analysis confidence intervals"
+  authors:
+    - family-names: Tofighi
+      given-names: Davood
+    - family-names: MacKinnon
+      given-names: David P.
+  journal: "Behavior Research Methods"
+  year: 2011
+  volume: 43
+  start: 692
+  end: 700
+  doi: "10.3758/s13428-011-0076-x"
+references:
+  - type: article
+    title: "Improved inference in mediation analysis: Introducing the model-based constrained optimization procedure"
+    authors:
+      - family-names: Tofighi
+        given-names: Davood
+      - family-names: Kelley
+        given-names: Ken
+    journal: "Psychological Methods"
+    year: 2020
+    volume: 25
+    issue: 4
+    start: 496
+    end: 515
+    doi: "10.1037/met0000259"
+  - type: article
+    title: "Bootstrap Model-Based Constrained Optimization Tests of Indirect Effects"
+    authors:
+      - family-names: Tofighi
+        given-names: Davood
+    journal: "Frontiers in Psychology"
+    year: 2020
+    volume: 10
+    doi: "10.3389/fpsyg.2019.02989"
