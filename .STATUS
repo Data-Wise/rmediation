@@ -2,7 +2,7 @@
 
 ## Status: Active
 ## Progress: 100
-## Focus: post-v1.5.0 doc cleanup + serial-medfit docs (2026-06-19)
+## Focus: ✅ ON CRAN — v1.5.0 ACCEPTED, published 2026-06-20 (verified on the CRAN page 2026-06-21; pkg_id 345448). Retires the RMediation dep for mediationverse/missingmed/medsim (each still gated on medrobust/medfit reaching CRAN).
 
 ## Active worktrees
 None — all session worktrees removed 2026-06-19.
