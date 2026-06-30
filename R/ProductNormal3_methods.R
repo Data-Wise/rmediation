@@ -1,4 +1,5 @@
 #' @importFrom S7 method
+#' @importFrom stats confint qnorm uniroot
 NULL
 
 #' @export
@@ -35,4 +36,57 @@ S7::method(cdf, ProductNormal3) <- function(object, q, lower.tail = TRUE, tol = 
   }
 
   p
+}
+
+#' @noRd
+.prod3_quantile <- function(p, mean, cov, lower, upper, tol = 1e-4) {
+  f <- function(q) p_prod3(q, mean = mean, cov = cov, tol = tol) - p
+  res <- stats::uniroot(f, interval = c(lower, upper), tol = tol, extendInt = "yes")
+  res$root
+}
+
+#' @noRd
+.confint_productnormal3 <- function(object, level = 0.95, tol = 1e-4) {
+  checkmate::assert_number(level, lower = 0, upper = 1)
+  checkmate::assert_number(tol, lower = 0)
+
+  mu <- object@mu
+  Sigma <- object@Sigma
+  alpha <- 1 - level
+  probs <- c(alpha / 2, 1 - alpha / 2)
+
+  mean_v <- prod(mu)
+  grad <- c(mu[2L] * mu[3L], mu[1L] * mu[3L], mu[1L] * mu[2L])
+  var_delta <- as.numeric(t(grad) %*% Sigma %*% grad)
+  sd_delta <- sqrt(max(var_delta, 0))
+  sds <- sqrt(pmax(diag(Sigma), 0))
+
+  if (sd_delta <= .Machine$double.eps) {
+    sd_delta <- prod(sds)
+  }
+
+  z <- stats::qnorm(1 - alpha / 2)
+  # Delta-method interval; expand generously to guarantee the true quantiles
+  # are bracketed.
+  delta_width <- 8 * sd_delta
+
+  quantiles <- vapply(probs, function(p) {
+    center <- mean_v + sign(p - 0.5) * z * sd_delta
+    lower <- center - delta_width
+    upper <- center + delta_width
+    .prod3_quantile(p, mean = mu, cov = Sigma, lower = lower, upper = upper, tol = tol)
+  }, FUN.VALUE = numeric(1))
+
+  c(lower = quantiles[1L], upper = quantiles[2L])
+}
+
+#' @export
+S7::method(confint, ProductNormal3) <- function(object, parm, level = 0.95, tol = 1e-5, ...) {
+  .confint_productnormal3(object, level = level, tol = tol)
+}
+
+#' @export
+S7::method(ci, ProductNormal3) <- function(mu, level = 0.95, tol = 1e-5, ...) {
+  object <- mu # S7 method signature requires 'mu' as first arg
+  .confint_productnormal3(object, level = level, tol = tol)
 }
