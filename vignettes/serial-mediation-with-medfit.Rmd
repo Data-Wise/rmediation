@@ -41,7 +41,7 @@ the mediationverse: it fits mediation models and extracts the path coefficients
 and their covariance matrix into a tidy S7 object. RMediation then computes a
 confidence interval for the (possibly serial) indirect effect from that object.
 
-This division of labour means you do **not** hand-build coefficient vectors and
+This division of labor means you do **not** hand-build coefficient vectors and
 covariance matrices yourself — `medfit::extract_mediation()` produces them, and
 `RMediation::ci()` consumes them directly. This vignette shows the full
 `fit → extract → ci()` workflow for a **serial** mediation chain

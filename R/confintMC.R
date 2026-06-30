@@ -22,7 +22,7 @@ confintMC <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "MC", plot =
   # Added for min null test 6-14-14
   # Calculates Acceptance Region
   if (H0) {
-    if (missing(Sigma0) | is.null(Sigma0)) Sigma0 <- Sigma
+    if (missing(Sigma0) || is.null(Sigma0)) Sigma0 <- Sigma
     if (!is.matrix(Sigma0)) {
       if (length(mu) != (sqrt(1 + 8 * length(Sigma0)) - 1) / 2) {
         stop(
@@ -34,7 +34,7 @@ confintMC <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "MC", plot =
     }
 
     # If mu0 is not specified, we use conservative min approach
-    if (is.null(mu0) | missing(mu0)) {
+    if (is.null(mu0) || missing(mu0)) {
       mu0 <- mu
       mu0s <- mu0 / sqrt(diag(Sigma0)) # Srandardized
       mu0[which(mu0s == min(mu0s))] <- 0 # setting the smallest z value to 0

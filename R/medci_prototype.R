@@ -4,6 +4,10 @@
 #' Confidence Interval for the Mediated Effect (PROTOTYPE S7 Wrapper)
 #'
 #' @inheritParams medci
+#' @return A list matching the \code{\link{medci}} return format. When
+#'   \code{type != "all"}, a named list with elements \code{CI},
+#'   \code{Estimate}, and \code{SE}. When \code{type = "all"}, a list of
+#'   three such lists (one per method).
 #' @keywords internal
 #' @export
 medci_prototype <- function(

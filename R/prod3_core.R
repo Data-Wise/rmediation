@@ -2,7 +2,7 @@
 #' @importFrom stats dnorm pnorm
 NULL
 
-#' Bivariate normal density for (X, Y) in standardised correlation scale
+#' Bivariate normal density for (X, Y) in standardized correlation scale
 #'
 #' @noRd
 .prod3_bivariate_density <- function(x, y, m, Rxy_inv, det_Rxy) {
@@ -64,7 +64,7 @@ NULL
 #'
 #' Computes `P(X1 * X2 * X3 <= q)` where `(X1, X2, X3)` follows a trivariate
 #' normal distribution with mean vector `mean` and covariance matrix `cov`.
-#' `Z` is marginalised analytically through the conditional Gaussian structure
+#' `Z` is marginalized analytically through the conditional Gaussian structure
 #' `Z | (X, Y)`, and the remaining two-dimensional integral is evaluated with
 #' adaptive cubature (dimension reduction; see Tofighi, 2026).
 #'
@@ -80,7 +80,7 @@ NULL
 #'   strictly positive.
 #'
 #' @return Probability `P(X1 * X2 * X3 <= q)` as a numeric scalar in `[0, 1]`.
-#' @note Numerical accuracy can degrade as the standardised `(X, Y)`
+#' @note Numerical accuracy can degrade as the standardized `(X, Y)`
 #'   correlation approaches `+-1` (the bivariate block becomes ill-conditioned).
 #'   For a fully degenerate point mass (all variances zero) with zero means,
 #'   `q == 0` returns `0.5` by the mid-distribution convention rather than `0`

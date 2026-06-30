@@ -3,7 +3,7 @@ confintAsymp <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "asymp", 
   q1 <- quant
   fx <- deriv(quant, names(mu), function.arg = TRUE)
   muList <- as.list(mu)
-  grad1 <- do.call("fx", muList)
+  grad1 <- do.call(fx, muList)
   grad <- as.vector(attr(grad1, "gradient"))
   quantSE <- sqrt(t(grad) %*% Sigma %*% grad)
   quant <- parse(text = sub("~", "", quant))
@@ -16,7 +16,7 @@ confintAsymp <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "asymp", 
   outer <- FALSE # outer position
   mcex <- .8
 
-  if (plot & quantSE > 40 * .Machine$double.eps) {
+  if (plot && quantSE > 40 * .Machine$double.eps) {
     if (type == "all") {
       f <- Vectorize(function(x) dnorm(x, quantMean, quantSE), "x")
       curve(f, lwd = 2, col = "blue", lty = 2, add = TRUE)
@@ -56,7 +56,7 @@ confintAsymp <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "asymp", 
     }
   } # if
 
-  if (plot & quantSE <= 40 * .Machine$double.eps) {
+  if (plot && quantSE <= 40 * .Machine$double.eps) {
     if (type %in% c("asymp", "Asymp")) {
       #     range1 <- c(quantMean-2.58*quantSE, quantMean+2.58*quantSE)
       #     max1 <- range1[2]

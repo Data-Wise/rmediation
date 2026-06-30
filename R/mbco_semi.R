@@ -55,7 +55,7 @@ mbco_semi <- function(h0 = NULL,
     OpenMx::mxCompare(h1, h0)$diffLL[2]
   }
 
-  null_samp <- sapply(seq.int(R), compare_boot, df = df_trans)
+  null_samp <- vapply(seq.int(R), compare_boot, FUN.VALUE = numeric(1), df = df_trans)
   mbco_pvalue <- mean(null_samp > mbco_chisq)
   mbco_boot <- list(
     chisq = mbco_chisq,

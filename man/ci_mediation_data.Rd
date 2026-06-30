@@ -58,8 +58,10 @@ fit_m <- lm(M ~ X + C, data = mydata)
 fit_y <- lm(Y ~ X + M + C, data = mydata)
 
 # Extract mediation structure
-med_data <- extract_mediation(fit_m, model_y = fit_y,
-                               treatment = "X", mediator = "M")
+med_data <- extract_mediation(fit_m,
+  model_y = fit_y,
+  treatment = "X", mediator = "M"
+)
 
 # Compute CI using Distribution of Product
 ci(med_data, type = "dop")

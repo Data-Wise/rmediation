@@ -1,6 +1,8 @@
 #' @importFrom S7 method
 NULL
 
+#' @return A numeric vector of CDF probabilities at \code{q}. When
+#'   \code{type = "all"}, a list with elements \code{dop} and \code{mc}.
 #' @export
 S7::method(cdf, ProductNormal) <- function(object, q, type = "dop", n.mc = 1e5, lower.tail = TRUE, ...) {
   checkmate::assert_numeric(q)
@@ -37,6 +39,8 @@ S7::method(cdf, ProductNormal) <- function(object, q, type = "dop", n.mc = 1e5, 
   }
 }
 
+#' @return A numeric vector of quantiles at probabilities \code{p}. When
+#'   \code{type = "all"}, a list with elements \code{dop} and \code{mc}.
 #' @export
 S7::method(dist_quantile, ProductNormal) <- function(object, p, type = "dop", n.mc = 1e5, lower.tail = TRUE, ...) {
   checkmate::assert_numeric(p, lower = 0, upper = 1)
@@ -63,6 +67,9 @@ S7::method(dist_quantile, ProductNormal) <- function(object, p, type = "dop", n.
   }
 }
 
+#' @return A list with elements \code{CI} (named lower/upper bounds),
+#'   \code{Estimate}, and \code{SE}. When \code{type = "all"}, a list of
+#'   three such lists.
 #' @export
 S7::method(ci, ProductNormal) <- function(mu, level = 0.95, type = "dop", n.mc = 1e5, ...) {
   object <- mu # S7 method signature requires 'mu' as first arg
@@ -91,6 +98,7 @@ S7::method(ci, ProductNormal) <- function(mu, level = 0.95, type = "dop", n.mc =
   return(result)
 }
 
+#' @return The object \code{x} invisibly.
 #' @export
 S7::method(print, ProductNormal) <- function(x, ...) {
   cat("ProductNormal Distribution\n")
@@ -105,6 +113,7 @@ S7::method(print, ProductNormal) <- function(x, ...) {
   invisible(x)
 }
 
+#' @return The object \code{object} invisibly.
 #' @export
 S7::method(summary, ProductNormal) <- function(object, ...) {
   cat("ProductNormal Distribution Summary\n")
@@ -131,6 +140,7 @@ S7::method(summary, ProductNormal) <- function(object, ...) {
   invisible(object)
 }
 
+#' @return The object \code{object} invisibly (via \code{print}).
 #' @export
 S7::method(show, ProductNormal) <- function(object) {
   print(object)

@@ -28,12 +28,12 @@ Probability \code{P(X1 * X2 * X3 <= q)} as a numeric scalar in \verb{[0, 1]}.
 \description{
 Computes \code{P(X1 * X2 * X3 <= q)} where \verb{(X1, X2, X3)} follows a trivariate
 normal distribution with mean vector \code{mean} and covariance matrix \code{cov}.
-\code{Z} is marginalised analytically through the conditional Gaussian structure
+\code{Z} is marginalized analytically through the conditional Gaussian structure
 \verb{Z | (X, Y)}, and the remaining two-dimensional integral is evaluated with
 adaptive cubature (dimension reduction; see Tofighi, 2026).
 }
 \note{
-Numerical accuracy can degrade as the standardised \verb{(X, Y)}
+Numerical accuracy can degrade as the standardized \verb{(X, Y)}
 correlation approaches \code{+-1} (the bivariate block becomes ill-conditioned).
 For a fully degenerate point mass (all variances zero) with zero means,
 \code{q == 0} returns \code{0.5} by the mid-distribution convention rather than \code{0}

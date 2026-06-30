@@ -165,7 +165,7 @@
       Sigma <- lavaan::lav_matrix_vech_reverse(Sigma) # converts to a symmetric matrix
     }
     if (is.null(names(mu))) {
-      names(mu) <- paste("b", 1:length(mu), sep = "")
+      names(mu) <- paste("b", seq_along(mu), sep = "")
     } # if mu names is NULL
 
     if (!all(all.vars(quant) %in% names(mu))) {

@@ -12,7 +12,9 @@ parse_product_string <- function(expr_str) {
   return(parts)
 }
 
-#' @export
+#' @return A named list with elements \code{CI}, \code{Estimate}, \code{SE},
+#'   and (for Monte Carlo) \code{MC.Error}. When \code{type = "all"}, a list
+#'   with elements \code{MC} and \code{Asymptotic}.
 #' @export
 S7::method(ci, S7::class_numeric) <- function(mu, Sigma, quant, alpha = 0.05, type = "MC", ...) {
   # Dispatch to legacy .ci_core
@@ -30,7 +32,8 @@ S7::method(ci, S7::class_numeric) <- function(mu, Sigma, quant, alpha = 0.05, ty
   .ci_core(mu = mu, Sigma = Sigma, quant = quant, alpha = alpha, type = type, ...)
 }
 
-#' @export
+#' @return A named list of CI results (one per defined parameter in the lavaan
+#'   object), each with elements \code{CI}, \code{Estimate}, and \code{SE}.
 #' @export
 S7::method(ci, S7::class_any) <- function(mu, level = 0.95, type = "dop", n.mc = 1e5, ...) {
   object <- mu # Alias for internal logic
@@ -126,6 +129,7 @@ S7::method(ci, S7::class_any) <- function(mu, level = 0.95, type = "dop", n.mc =
 # Note: removed quantile methods for class_numeric since dist_quantile is for distributions only
 # Data quantiles should use stats::quantile directly
 
+#' @return A numeric vector of empirical CDF values at \code{q}.
 #' @export
 S7::method(cdf, S7::class_numeric) <- function(object, q, ...) {
   # Empirical CDF for numeric vectors

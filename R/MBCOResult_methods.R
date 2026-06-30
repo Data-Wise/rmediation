@@ -1,3 +1,4 @@
+#' @return The value of the requested field, or \code{NULL} if not found.
 #' @export
 `$.RMediation::MBCOResult` <- function(x, name) {
   if (name == "chisq") {
@@ -11,6 +12,7 @@
   }
 }
 
+#' @return The value of the requested field, or the result of \code{NextMethod()}.
 #' @export
 `[[.RMediation::MBCOResult` <- function(x, i, exact = TRUE) {
   if (is.character(i)) {
@@ -25,12 +27,14 @@
   NextMethod()
 }
 
+#' @return A character vector of field names.
 #' @export
 `names.RMediation::MBCOResult` <- function(x) {
   # Return legacy names + new names
   unique(c("chisq", "p", S7::prop_names(x)))
 }
 
+#' @return The object \code{x} invisibly.
 #' @export
 S7::method(print, MBCOResult) <- function(x, ...) {
   cat("MBCO Test Result\n")
@@ -51,6 +55,7 @@ S7::method(print, MBCOResult) <- function(x, ...) {
   invisible(x)
 }
 
+#' @return The object \code{object} invisibly.
 #' @export
 S7::method(summary, MBCOResult) <- function(object, ...) {
   cat("MBCO Test Summary\n")
@@ -73,6 +78,7 @@ S7::method(summary, MBCOResult) <- function(object, ...) {
   invisible(object)
 }
 
+#' @return The object \code{object} invisibly (via \code{print}).
 #' @export
 S7::method(show, MBCOResult) <- function(object) {
   print(object)
