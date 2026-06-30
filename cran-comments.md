@@ -1,24 +1,23 @@
 ## Submission summary
 
-This is a resubmission of **RMediation** (version 1.5.0), an existing CRAN package.
+This is a resubmission of **RMediation** (version 1.6.0), an existing CRAN package.
 
 Key changes in this release:
-- New `medci()` argument `type = "dop"` (replaces deprecated `"prodclin"`)
-- MBCO procedure via `mbco()` using S7 class system
-- `Language: en-US` added to DESCRIPTION; `inst/WORDLIST` updated
+- New S7 class `ProductNormal3` for exact CDF of sequential indirect effects
+  (`a1 * a2 * b`) via the distribution-of-the-product framework
+- New `p_prod3()` computes `P(a1 * a2 * b <= q)` by a 2D conditional-expectation
+  dimension-reduction integral via `cubature::hcubature`
+- New `dist_quantile` S7 generic and `ProductNormal3` method for quantile inversion
+- `cdf()`, `confint()`, and `ci()` S7 methods for `ProductNormal3`
+- Added `cubature (>= 2.1.0)` to `Imports`
 
 ## Test environments
 
-* Local: macOS 15 (aarch64-apple-darwin25.4.0), R 4.6.0 — `R CMD check --as-cran`
-* win-builder R-oldrelease (R 4.5.3): token mKpQ5ycMhVBG — **Status: OK**
-* win-builder R-release (R 4.6.0): token 9Yl6dT037ae0 — **Status: OK**
-* win-builder R-devel: token KvUk0DM4QDqq — **Status: OK**
+* Local: macOS 15 (aarch64-apple-darwin25.5.0), R 4.6.1 — `R CMD check --as-cran`
+* win-builder R-oldrelease: token PENDING
+* win-builder R-release: token PENDING
+* win-builder R-devel: token PENDING
 * GitHub Actions: macOS-latest, ubuntu-latest, windows-latest — R release + oldrel-1
-* r-hub (major-viceroybutterfly, run 27854572331, on main/v1.5.0):
-  - `ubuntu-clang`: OK
-  - `ubuntu-gcc12`: OK
-  - `nosuggests`: FAILED — expected (see Notes below)
-  - `gcc-asan`: OK
 
 ## R CMD check results
 
@@ -26,14 +25,13 @@ Key changes in this release:
 
 ## Notes for the CRAN team
 
-* `medfit (>= 0.2.0)` in `Suggests` is a GitHub-only package and will appear as an
-  INFO note on CRAN's check machines. It is used only in examples/vignettes guarded by
-  `requireNamespace()`. This is expected and intentional.
+* `medfit (>= 0.2.0)` in `Suggests` is available on CRAN (v0.2.1). It is used
+  only in optional integration helpers guarded by `requireNamespace()`.
 
-* **r-hub `nosuggests` failure**: The `nosuggests` container intentionally does not
-  install packages listed in `Suggests`. Vignettes require `rmarkdown` (listed in
-  `Suggests`), so they cannot be re-built in this environment. CRAN's servers install
-  `Suggests` packages when building vignettes, so this is not a real-world issue.
+* **r-hub `nosuggests` failure** (if present): The `nosuggests` container
+  intentionally does not install `Suggests` packages. Vignettes require `rmarkdown`
+  (listed in `Suggests`), so they cannot be rebuilt in this environment. CRAN's
+  servers install `Suggests` when building vignettes — not a real-world issue.
 
 ## Downstream dependencies
 
