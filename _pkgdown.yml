@@ -60,23 +60,7 @@ navbar:
         href: articles/serial-mediation-with-medfit.html
     ecosystem:
       text: Ecosystem
-      menu:
-      - text: "mediationverse (Umbrella)"
-        href: https://data-wise.github.io/mediationverse/
-      - text: "---------"
-      - text: "Core Packages"
-      - text: "medfit (Foundation)"
-        href: https://data-wise.github.io/medfit/
-      - text: "probmed (P_med Effect Size)"
-        href: https://data-wise.github.io/probmed/
-      - text: "RMediation (Confidence Intervals)"
-        href: https://data-wise.github.io/rmediation/
-      - text: "medrobust (Sensitivity Analysis)"
-        href: https://data-wise.github.io/medrobust/
-      - text: "---------"
-      - text: "Support Packages"
-      - text: "medsim (Simulation Infrastructure)"
-        href: https://data-wise.github.io/medsim/
+      href: https://data-wise.github.io/mediationverse/articles/ecosystem.html
     status:
       icon: fas fa-chart-line
       text: Status
