@@ -2,13 +2,13 @@ status: in_progress
 priority: high
 progress: 100
 version: 1.6.0
-next: Submit to CRAN via devtools::submit_cran() — cadence gate 2026-07-04 (≥2 weeks since v1.5.0)
+next: Submit to CRAN via devtools::submit_cran() — cadence gate 2026-07-02 (≥2 weeks since v1.5.0)
 
 # rmediation
 
 ## Status: Active
 ## Progress: 100
-## Focus: v1.6.0 shipped to main + docs updated; CRAN submission pending cadence gate (2026-07-04).
+## Focus: v1.6.0 shipped to main + docs updated; CRAN submission pending cadence gate (2026-07-02).
 
 ## Session 2026-06-30 (release + docs)
 - win-builder R-release result recorded OK — all 3 win-builder flavors passed
@@ -92,7 +92,7 @@ Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
 ## CRAN
 - Published on CRAN: 1.5.0 (2026-06-18)
 - GitHub release (main): 1.6.0 (2026-06-29)
-- CRAN submission pending: cadence gate 2026-07-04 (≥2 weeks since v1.5.0)
+- CRAN submission pending: cadence gate 2026-07-02 (≥2 weeks since v1.5.0)
 
 ## Recent (2026-05-31)
 - Merged PR #4 (develop): name-based path -> covariance extraction for medfit
