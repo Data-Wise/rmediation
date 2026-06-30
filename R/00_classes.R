@@ -47,6 +47,48 @@ ProductNormal <- S7::new_class("ProductNormal",
 # Register S4 for compatibility with base generics
 S7::S4_register(ProductNormal)
 
+#' ProductNormal3 Class
+#'
+#' Represents the distribution of the product of three normal random variables.
+#' Intended for sequential indirect effects of the form `a1 * a2 * b`.
+#'
+#' @param mu Numeric vector of means of length 3.
+#' @param Sigma 3x3 covariance matrix.
+#' @param method Integration method, either `"hcubature"` or `"cuhre"`.
+#' @export
+ProductNormal3 <- S7::new_class("ProductNormal3",
+  properties = list(
+    mu = S7::class_numeric,
+    Sigma = S7::class_numeric,
+    method = S7::class_character
+  ),
+  validator = function(self) {
+    if (length(self@mu) != 3) {
+      stop("mu must have length 3")
+    }
+    if (!is.matrix(self@Sigma)) {
+      stop("Sigma must be a matrix")
+    }
+    if (nrow(self@Sigma) != 3 || ncol(self@Sigma) != 3) {
+      stop("Sigma must be a 3x3 matrix")
+    }
+    if (nrow(self@Sigma) != length(self@mu)) {
+      stop("Dimensions of Sigma must match length of mu")
+    }
+    eigen_vals <- eigen(self@Sigma, symmetric = TRUE, only.values = TRUE)$values
+    if (any(eigen_vals < -1e-8)) {
+      stop("Sigma must be positive semi-definite")
+    }
+    if (length(self@method) != 1 || !(self@method %in% c("hcubature", "cuhre"))) {
+      stop("method must be either 'hcubature' or 'cuhre'")
+    }
+    NULL
+  }
+)
+
+# Register S4 for compatibility with base generics
+S7::S4_register(ProductNormal3)
+
 #' Cumulative Distribution Function
 #'
 #' Generic function for computing cumulative distribution function.

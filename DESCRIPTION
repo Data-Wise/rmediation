@@ -1,8 +1,8 @@
 Package: RMediation
 Type: Package
 Title: Mediation Analysis Confidence Intervals
-Version: 1.5.0
-Date: 2026-06-18
+Version: 1.6.0
+Date: 2026-06-29
 Author: Davood Tofighi [aut, cre] (ORCID: <https://orcid.org/0000-0001-8523-7776>)
 Maintainer: Davood Tofighi <dtofighi@gmail.com>
 Authors@R: person("Davood", "Tofighi",
@@ -32,6 +32,7 @@ Depends:
     R (>= 4.1.0)
 Imports:
     checkmate (>= 2.1.0),
+    cubature (>= 2.1.0),
     graphics (>= 4.1.0),
     grDevices (>= 4.1.0),
     lavaan (>= 0.5-20),
