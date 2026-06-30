@@ -1,26 +1,33 @@
 status: in_progress
 priority: high
-progress: 99
+progress: 100
 version: 1.6.0
-next: Await win-builder R-release email → update cran-comments.md → PR dev→main → tag v1.6.0 → submit CRAN
+next: Submit to CRAN via devtools::submit_cran() — cadence gate 2026-07-04 (≥2 weeks since v1.5.0)
 
 # rmediation
 
 ## Status: Active
-## Progress: 99
-## Focus: v1.6.0 release gate — win-builder R-release result outstanding; all other pre-CRAN checks passed.
+## Progress: 100
+## Focus: v1.6.0 shipped to main + docs updated; CRAN submission pending cadence gate (2026-07-04).
 
-## Session 2026-06-30
-- PR #19 merged to dev (ProductNormal3 exact CDF for a1*a2*b, cubature dependency)
-- Fixed roxygen placement bug: .p_prod3_degenerate was intercepting p_prod3 @export
-- Fixed stats::deriv() partial-match warning (func → function.arg) — 18 warnings eliminated
-- Updated rhub.yaml: retired macos → macos-arm64
-- Removed broken .claude/skills symlink (was blocking win-builder cp -r)
-- cran-comments.md rewritten for v1.6.0
-- win-builder dispatched: R-oldrelease OK (4.5.3, Y0YVu51197F9), R-devel OK (r90199, MbTqhngibodc)
-- win-builder R-release: PENDING (email in flight)
-- rhub CI: passed (linux, windows, macos-arm64, atlas)
-- Dev cycle: 307 pass / 0 warn / 0 fail; R CMD check --as-cran 0E/0W/0N
+## Session 2026-06-30 (release + docs)
+- win-builder R-release result recorded OK — all 3 win-builder flavors passed
+- PR #21 merged to main (v1.6.0 release)
+- Tag v1.6.0 created + GitHub release published
+- pkgdown site triggered automatically (CI push-to-main workflow)
+- Live site audited: Reference and News pages current; home page, getting-started, methods-comparison updated
+- README.md, vignettes/getting-started.Rmd, vignettes/methods-comparison.Rmd updated for ProductNormal3/p_prod3
+- PR #22 merged (docs: update README and vignettes for v1.6.0 ProductNormal3/p_prod3)
+- Pre-v1.6.0 session work:
+  - PR #19 merged to dev (ProductNormal3 exact CDF for a1*a2*b, cubature dependency)
+  - Fixed roxygen placement bug: .p_prod3_degenerate was intercepting p_prod3 @export
+  - Fixed stats::deriv() partial-match warning (func → function.arg) — 18 warnings eliminated
+  - Updated rhub.yaml: retired macos → macos-arm64
+  - Removed broken .claude/skills symlink (was blocking win-builder cp -r)
+  - cran-comments.md rewritten for v1.6.0
+  - win-builder: R-oldrelease OK (4.5.3, Y0YVu51197F9), R-devel OK (r90199, MbTqhngibodc), R-release OK
+  - rhub CI: passed (linux, windows, macos-arm64, atlas)
+  - Dev cycle: 307 pass / 0 warn / 0 fail; R CMD check --as-cran 0E/0W/0N
 
 ## Active worktrees
 (none)
@@ -83,8 +90,9 @@ R package for confidence intervals of nonlinear functions of model parameters
 Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
 
 ## CRAN
-- Published version: 1.5.0 (released 2026-06-18)
-- Development version: 1.5.0 (main)
+- Published on CRAN: 1.5.0 (2026-06-18)
+- GitHub release (main): 1.6.0 (2026-06-29)
+- CRAN submission pending: cadence gate 2026-07-04 (≥2 weeks since v1.5.0)
 
 ## Recent (2026-05-31)
 - Merged PR #4 (develop): name-based path -> covariance extraction for medfit
