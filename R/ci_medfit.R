@@ -79,7 +79,7 @@
 #' Computes confidence intervals for the indirect effect from a medfit
 #' MediationData object using RMediation's methods (DOP, Monte Carlo, etc.).
 #'
-#' @param mu A MediationData object from the medfit package
+#' @param object A MediationData object from the medfit package
 #' @param level Confidence level (default 0.95 for 95% CI)
 #' @param type Type of CI method: "dop" (Distribution of Product),
 #'   "MC" (Monte Carlo), or "asymp" (asymptotic normal)
@@ -137,26 +137,26 @@
 #' \code{\link{ProductNormal}} for the underlying distribution class
 #'
 #' @export
-ci_mediation_data <- function(mu, level = 0.95, type = "dop",
+ci_mediation_data <- function(object, level = 0.95, type = "dop",
                               n.mc = 1e5, ...) {
   if (!requireNamespace("medfit", quietly = TRUE)) {
     stop("Package 'medfit' is required for this method.", call. = FALSE)
   }
 
   # Locate the a- and b-paths by name and build the full 2x2 covariance.
-  Sigma_2x2 <- .extract_path_vcov(mu, c("a", "b"))
+  Sigma_2x2 <- .extract_path_vcov(object, c("a", "b"))
 
   # ProductNormal's validator requires a plain square numeric matrix; strip
   # dimnames so the named sub-matrix is accepted unconditionally.
   dimnames(Sigma_2x2) <- NULL
 
-  pn <- ProductNormal(mu = c(mu@a_path, mu@b_path), Sigma = Sigma_2x2)
+  pn <- ProductNormal(mu = c(object@a_path, object@b_path), Sigma = Sigma_2x2)
   ci(pn, level = level, type = type, n.mc = n.mc, ...)
 }
 
 #' @rdname ci_mediation_data
 #' @export
-ci_serial_mediation_data <- function(mu, level = 0.95, type = "MC",
+ci_serial_mediation_data <- function(object, level = 0.95, type = "MC",
                                      n.mc = 1e5, ...) {
   if (!requireNamespace("medfit", quietly = TRUE)) {
     stop("Package 'medfit' is required for this method.", call. = FALSE)
@@ -165,22 +165,22 @@ ci_serial_mediation_data <- function(mu, level = 0.95, type = "MC",
   checkmate::assert_count(n.mc, positive = TRUE)
   checkmate::assert_number(level, lower = 0, upper = 1)
 
-  a_path <- mu@a_path
-  d_path <- mu@d_path
-  b_path <- mu@b_path
+  a_path <- object@a_path
+  d_path <- object@d_path
+  b_path <- object@b_path
   all_paths <- c(a_path, d_path, b_path)
 
   # Documented label contract: the serial d-path parameters are addressed
   # purely by NAME, using the literal labels "d1", "d2", ..., "dk" in order
-  # (k = length(mu@d_path)). There is NO positional or value-matching
+  # (k = length(object@d_path)). There is NO positional or value-matching
   # fallback (spec sections 3/4.1). medfit's serial extractor MUST emit
   # named estimates/vcov whose names include "a", "b", and these "d<i>"
   # labels (cross-reference: medfit blocker spec Open Question on d-labels).
   # If any required label is absent, .resolve_path_indices() stops with an
   # informative error.
-  d_labels <- .serial_d_labels(mu)
+  d_labels <- .serial_d_labels(object)
 
-  Sigma <- .extract_path_vcov(mu, c("a", d_labels, "b"))
+  Sigma <- .extract_path_vcov(object, c("a", d_labels, "b"))
   dimnames(Sigma) <- NULL
 
   # Defensive guard against a mean/covariance order mismatch: the mean vector

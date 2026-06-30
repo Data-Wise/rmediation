@@ -1,6 +1,6 @@
 ############# semi-parametric mbco
 
-mbco_semi <- function(h0 = NULL,
+.mbco_semi <- function(h0 = NULL,
                       h1 = NULL,
                       R = 10L,
                       alpha = .05,

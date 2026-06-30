@@ -3,7 +3,7 @@
 NULL
 
 # Helper function to parse product strings
-parse_product_string <- function(expr_str) {
+.parse_product_string <- function(expr_str) {
   expr_str <- gsub("\\s+", "", expr_str)
   parts <- strsplit(expr_str, "\\*")[[1]]
   if (any(grepl("[^a-zA-Z0-9_.]", parts))) {
@@ -16,9 +16,9 @@ parse_product_string <- function(expr_str) {
 #'   and (for Monte Carlo) \code{MC.Error}. When \code{type = "all"}, a list
 #'   with elements \code{MC} and \code{Asymptotic}.
 #' @export
-S7::method(ci, S7::class_numeric) <- function(mu, Sigma, quant, alpha = 0.05, type = "MC", ...) {
+S7::method(ci, S7::class_numeric) <- function(object, Sigma, quant, alpha = 0.05, type = "MC", ...) {
   # Dispatch to legacy .ci_core
-  # mu maps to mu
+  mu <- object
   checkmate::assert_numeric(mu)
   checkmate::assert(
     checkmate::check_matrix(Sigma, mode = "numeric"),
@@ -35,8 +35,7 @@ S7::method(ci, S7::class_numeric) <- function(mu, Sigma, quant, alpha = 0.05, ty
 #' @return A named list of CI results (one per defined parameter in the lavaan
 #'   object), each with elements \code{CI}, \code{Estimate}, and \code{SE}.
 #' @export
-S7::method(ci, S7::class_any) <- function(mu, level = 0.95, type = "dop", n.mc = 1e5, ...) {
-  object <- mu # Alias for internal logic
+S7::method(ci, S7::class_any) <- function(object, level = 0.95, type = "dop", n.mc = 1e5, ...) {
   checkmate::assert_number(level, lower = 0, upper = 1)
   type <- match.arg(type, c("dop", "MC", "asymp", "all", "prodclin"))
   checkmate::assert_count(n.mc, positive = TRUE)
@@ -85,7 +84,7 @@ S7::method(ci, S7::class_any) <- function(mu, level = 0.95, type = "dop", n.mc =
     label <- defined$lhs[i]
     rhs <- defined$rhs[i]
 
-    vars <- parse_product_string(rhs)
+    vars <- .parse_product_string(rhs)
 
     if (!is.null(vars) && length(vars) >= 2) {
       # Product of coefficients

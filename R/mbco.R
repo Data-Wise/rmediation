@@ -54,7 +54,7 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
       )
     } else if (type == "semi") {
       # Semiparametric bootstrap MBCO LRT
-      mbco_semi(
+      .mbco_semi(
         h0 = h0,
         h1 = h1,
         R = R,

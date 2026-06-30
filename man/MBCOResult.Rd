@@ -23,3 +23,6 @@ MBCOResult(
 \description{
 A class representing the results of a Model-Based Constrained Optimization (MBCO) test.
 }
+\examples{
+res <- MBCOResult(statistic = 4.2, df = 1, p_value = 0.04, type = "asymp")
+}

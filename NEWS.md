@@ -1,3 +1,29 @@
+# RMediation 1.6.1 (2026-06-30)
+
+## Naming convention cleanup
+
+* `p_prod3()` is renamed to `pprodnormal3()` to match the existing
+  `pprodnormal()`/`qprodnormal()` family. `p_prod3()` remains available as a
+  silent (non-warning) alias and will gain a formal deprecation warning in a
+  future release.
+* `ProductNormal2()` remains available but is superseded by `ProductNormal()`
+  for direct construction; internal callers now use `ProductNormal()`
+  directly.
+* The `ci()` generic's dispatch argument is renamed from `mu` to `object` for
+  consistency with the package's other S7 generics (`cdf()`, `dist_quantile()`).
+  This only affects callers using `ci(mu = ...)` as a named argument;
+  positional calls (`ci(mu, ...)`) are unaffected.
+* Undocumented internal helpers (`validate_ProductNormal()`,
+  `is_valid_for_computation()`, `ProductNormal_from_lavaan()`) are now hidden
+  from the package documentation index (`@noRd`); they remain available
+  internally but are not part of the public API.
+
+## Documentation and lint
+
+* Added `@examples` to all exported functions/generics that previously
+  lacked them, addressing `goodpractice::gp()` advisories ahead of CRAN
+  resubmission.
+
 # RMediation 1.6.0 (2026-06-29)
 
 ## ProductNormal3: exact CDF for the product of three normals

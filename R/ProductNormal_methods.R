@@ -71,8 +71,7 @@ S7::method(dist_quantile, ProductNormal) <- function(object, p, type = "dop", n.
 #'   \code{Estimate}, and \code{SE}. When \code{type = "all"}, a list of
 #'   three such lists.
 #' @export
-S7::method(ci, ProductNormal) <- function(mu, level = 0.95, type = "dop", n.mc = 1e5, ...) {
-  object <- mu # S7 method signature requires 'mu' as first arg
+S7::method(ci, ProductNormal) <- function(object, level = 0.95, type = "dop", n.mc = 1e5, ...) {
   checkmate::assert_number(level, lower = 0, upper = 1)
   type <- tolower(type) # Handle case insensitivity
   type <- match.arg(type, c("dop", "mc", "asymp", "all", "prodclin"))

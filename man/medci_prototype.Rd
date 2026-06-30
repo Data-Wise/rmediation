@@ -60,4 +60,7 @@ three such lists (one per method).
 \description{
 Confidence Interval for the Mediated Effect (PROTOTYPE S7 Wrapper)
 }
+\examples{
+medci_prototype(mu.x = 0.5, mu.y = 0.3, se.x = 0.1, se.y = 0.1)
+}
 \keyword{internal}

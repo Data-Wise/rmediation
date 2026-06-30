@@ -5,7 +5,7 @@ test_that("ci generic works with numeric input (legacy dispatch)", {
   quant <- ~ b1 * b2 * b3 * b4
 
   # This should dispatch to .ci_core via S7 method for numeric
-  res <- ci(mu = mu, Sigma = Sigma, quant = quant, type = "MC", plot = FALSE, plotCI = FALSE, n.mc = 1e4)
+  res <- ci(mu, Sigma = Sigma, quant = quant, type = "MC", plot = FALSE, plotCI = FALSE, n.mc = 1e4)
 
   expect_type(res, "list")
   expect_true("Estimate" %in% names(res))

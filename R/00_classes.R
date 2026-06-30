@@ -8,6 +8,8 @@ NULL
 #' @param mu Numeric vector of means.
 #' @param Sigma Covariance matrix.
 #' @export
+#' @examples
+#' pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
 ProductNormal <- S7::new_class("ProductNormal",
   properties = list(
     mu = S7::class_numeric,
@@ -108,6 +110,9 @@ S7::S4_register(ProductNormal3)
 #' @return A numeric vector of cumulative probabilities for the supplied
 #'   quantiles, as returned by the dispatched method.
 #' @export
+#' @examples
+#' pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
+#' cdf(pn, q = 0)
 cdf <- S7::new_generic("cdf", "object")
 
 #' Distribution Quantile Function
@@ -121,18 +126,24 @@ cdf <- S7::new_generic("cdf", "object")
 #' @return A numeric vector of quantiles for the supplied probabilities, as
 #'   returned by the dispatched method.
 #' @export
+#' @examples
+#' pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
+#' dist_quantile(pn, p = 0.025)
 dist_quantile <- S7::new_generic("dist_quantile", "object")
 
 #' Confidence Interval
 #'
 #' Generic function for computing confidence intervals.
 #'
-#' @param mu A distribution object or numeric vector of means.
+#' @param object A distribution object or numeric vector of means.
 #' @param ... Additional arguments passed to methods.
 #' @return A confidence interval (numeric vector of lower/upper bounds, or a
 #'   list) as returned by the dispatched method.
 #' @export
-ci <- S7::new_generic("ci", "mu")
+#' @examples
+#' pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
+#' ci(pn)
+ci <- S7::new_generic("ci", "object")
 
 # Note: print, summary, and show generics are NOT exported.
 # S7 methods will register directly with base generics to avoid masking.
@@ -146,6 +157,8 @@ ci <- S7::new_generic("ci", "mu")
 #' @param p_value Numeric p-value.
 #' @param type Character string indicating the type of test.
 #' @export
+#' @examples
+#' res <- MBCOResult(statistic = 4.2, df = 1, p_value = 0.04, type = "asymp")
 MBCOResult <- S7::new_class("MBCOResult",
   properties = list(
     statistic = S7::class_numeric,

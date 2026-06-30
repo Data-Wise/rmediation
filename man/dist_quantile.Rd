@@ -20,3 +20,7 @@ Compute quantiles for distribution objects. This function computes quantiles
 for product normal distributions, not data quantiles (use \code{stats::quantile}
 for data).
 }
+\examples{
+pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
+dist_quantile(pn, p = 0.025)
+}

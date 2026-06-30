@@ -15,7 +15,7 @@ NULL
 #'
 #' Computes `P(X*Y*Z <= q | X=x, Y=y) * f(x,y)` using the dimension-reduction
 #' formula from the prod3 algorithm.  The conditional-moment coefficients
-#' (`beta`, `cond_sd`) are precomputed once by [p_prod3()] and passed in, so no
+#' (`beta`, `cond_sd`) are precomputed once by [pprodnormal3()] and passed in, so no
 #' linear solve is performed per integrand evaluation.
 #'
 #' @noRd
@@ -78,6 +78,8 @@ NULL
 #'   supported.
 #' @param tol Numeric tolerance passed to the integration routine; must be
 #'   strictly positive.
+#' @param ... Additional arguments (unused; present for the `p_prod3`
+#'   deprecated alias).
 #'
 #' @return Probability `P(X1 * X2 * X3 <= q)` as a numeric scalar in `[0, 1]`.
 #' @note Numerical accuracy can degrade as the standardized `(X, Y)`
@@ -88,8 +90,8 @@ NULL
 #' @export
 #' @examples
 #' Sigma <- diag(3)
-#' p_prod3(q = 0, mean = c(0, 0, 0), cov = Sigma)
-p_prod3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
+#' pprodnormal3(q = 0, mean = c(0, 0, 0), cov = Sigma)
+pprodnormal3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
   checkmate::assert_number(q, finite = TRUE)
   checkmate::assert_numeric(mean, finite = TRUE, len = 3)
   checkmate::assert_matrix(cov, mode = "numeric", nrows = 3, ncols = 3)
@@ -184,3 +186,7 @@ p_prod3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
   p <- res$integral
   min(max(p, 0), 1)
 }
+
+#' @export
+#' @rdname pprodnormal3
+p_prod3 <- function(...) pprodnormal3(...)

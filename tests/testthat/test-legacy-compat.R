@@ -27,7 +27,7 @@ test_that("Legacy ci works with named arguments", {
   names(mu) <- c("b1", "b2")
   colnames(Sigma) <- rownames(Sigma) <- names(mu)
 
-  # This should now work because generic argument is 'mu'
-  res <- ci(mu = mu, Sigma = Sigma, quant = ~ b1 * b2, type = "asymp")
+  # This should now work because generic argument is 'object'
+  res <- ci(mu, Sigma = Sigma, quant = ~ b1 * b2, type = "asymp")
   expect_true(is.list(res) || is.matrix(res))
 })

@@ -1,6 +1,7 @@
 #' Enhanced validation and utility functions for ProductNormal class
 #'
 #' @name utils_validation
+#' @noRd
 #' @importFrom S7 method new_class
 #' @importFrom checkmate assert check_numeric check_matrix qtest
 NULL
@@ -10,6 +11,7 @@ NULL
 #' @param object A ProductNormal object
 #' @param verbose Whether to show detailed validation messages
 #' @return TRUE if valid, throws error if invalid
+#' @noRd
 validate_ProductNormal <- function(object, verbose = FALSE) {
   # Check if it's actually a ProductNormal object
   if (!S7::S7_inherits(object, ProductNormal)) {
@@ -74,6 +76,8 @@ validate_ProductNormal <- function(object, verbose = FALSE) {
 #' @param Sigma Covariance matrix
 #' @param validate Whether to run additional validation (default: TRUE)
 #' @export
+#' @examples
+#' pn <- ProductNormal2(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
 ProductNormal2 <- function(mu, Sigma, validate = TRUE) {
   # Basic input validation before creating the object
   assert_that <- function(condition, message) {
@@ -127,6 +131,7 @@ ProductNormal2 <- function(mu, Sigma, validate = TRUE) {
 #'
 #' @param object A ProductNormal object
 #' @return TRUE if object is valid for computation methods
+#' @noRd
 is_valid_for_computation <- function(object) {
   if (!S7::S7_inherits(object, ProductNormal)) {
     return(FALSE)
@@ -160,6 +165,7 @@ is_valid_for_computation <- function(object) {
 #' @param lavaan_model A fitted lavaan model object
 #' @param param_names Names of parameters to include in the product (e.g., c("a", "b"))
 #' @return A ProductNormal object
+#' @noRd
 ProductNormal_from_lavaan <- function(lavaan_model, param_names) {
   if (!inherits(lavaan_model, "lavaan")) {
     stop("lavaan_model must be a lavaan object")
@@ -184,5 +190,5 @@ ProductNormal_from_lavaan <- function(lavaan_model, param_names) {
     warning("Covariance matrix contains NA or infinite values. Results may be unreliable.")
   }
 
-  return(ProductNormal2(mu = as.numeric(mu_vals), Sigma = Sigma_vals))
+  return(ProductNormal(mu = as.numeric(mu_vals), Sigma = Sigma_vals))
 }

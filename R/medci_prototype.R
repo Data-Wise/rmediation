@@ -8,6 +8,8 @@
 #'   \code{type != "all"}, a named list with elements \code{CI},
 #'   \code{Estimate}, and \code{SE}. When \code{type = "all"}, a list of
 #'   three such lists (one per method).
+#' @examples
+#' medci_prototype(mu.x = 0.5, mu.y = 0.3, se.x = 0.1, se.y = 0.1)
 #' @keywords internal
 #' @export
 medci_prototype <- function(
