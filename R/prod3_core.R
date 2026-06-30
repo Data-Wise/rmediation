@@ -2,7 +2,7 @@
 #' @importFrom stats dnorm pnorm
 NULL
 
-#' Bivariate normal density for (X, Y) in standardised correlation scale
+#' Bivariate normal density for (X, Y) in standardized correlation scale
 #'
 #' @noRd
 .prod3_bivariate_density <- function(x, y, m, Rxy_inv, det_Rxy) {
@@ -15,7 +15,7 @@ NULL
 #'
 #' Computes `P(X*Y*Z <= q | X=x, Y=y) * f(x,y)` using the dimension-reduction
 #' formula from the prod3 algorithm.  The conditional-moment coefficients
-#' (`beta`, `cond_sd`) are precomputed once by [p_prod3()] and passed in, so no
+#' (`beta`, `cond_sd`) are precomputed once by [pprodnormal3()] and passed in, so no
 #' linear solve is performed per integrand evaluation.
 #'
 #' @noRd
@@ -64,7 +64,7 @@ NULL
 #'
 #' Computes `P(X1 * X2 * X3 <= q)` where `(X1, X2, X3)` follows a trivariate
 #' normal distribution with mean vector `mean` and covariance matrix `cov`.
-#' `Z` is marginalised analytically through the conditional Gaussian structure
+#' `Z` is marginalized analytically through the conditional Gaussian structure
 #' `Z | (X, Y)`, and the remaining two-dimensional integral is evaluated with
 #' adaptive cubature (dimension reduction; see Tofighi, 2026).
 #'
@@ -78,18 +78,25 @@ NULL
 #'   supported.
 #' @param tol Numeric tolerance passed to the integration routine; must be
 #'   strictly positive.
+#' @param ... Additional arguments (unused; present for the `p_prod3`
+#'   deprecated alias).
 #'
 #' @return Probability `P(X1 * X2 * X3 <= q)` as a numeric scalar in `[0, 1]`.
-#' @note Numerical accuracy can degrade as the standardised `(X, Y)`
+#' @note Numerical accuracy can degrade as the standardized `(X, Y)`
 #'   correlation approaches `+-1` (the bivariate block becomes ill-conditioned).
 #'   For a fully degenerate point mass (all variances zero) with zero means,
 #'   `q == 0` returns `0.5` by the mid-distribution convention rather than `0`
 #'   or `1`.
+#' @seealso [pprodnormal()] and [qprodnormal()] for the two-variable product-
+#'   normal CDF/quantile; [ProductNormal3] for the corresponding S7 class.
+#' @section Note:
+#' `p_prod3()` is a superseded alias for `pprodnormal3()`, kept for backward
+#' compatibility; use `pprodnormal3()` in new code.
 #' @export
 #' @examples
 #' Sigma <- diag(3)
-#' p_prod3(q = 0, mean = c(0, 0, 0), cov = Sigma)
-p_prod3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
+#' pprodnormal3(q = 0, mean = c(0, 0, 0), cov = Sigma)
+pprodnormal3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
   checkmate::assert_number(q, finite = TRUE)
   checkmate::assert_numeric(mean, finite = TRUE, len = 3)
   checkmate::assert_matrix(cov, mode = "numeric", nrows = 3, ncols = 3)
@@ -107,17 +114,23 @@ p_prod3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
   # Degenerate cases: reduce to the two-variable product-normal problem ----
   if (sds[1L] < .Machine$double.eps) {
     x1 <- mean[1L]
-    if (abs(x1) < .Machine$double.eps) return(if (q == 0) 0.5 else as.numeric(q > 0))
+    if (abs(x1) < .Machine$double.eps) {
+      return(if (q == 0) 0.5 else as.numeric(q > 0))
+    }
     return(.p_prod3_degenerate(q, x1, c(2L, 3L), mean, sds, cov))
   }
   if (sds[2L] < .Machine$double.eps) {
     x2 <- mean[2L]
-    if (abs(x2) < .Machine$double.eps) return(as.numeric(q >= 0))
+    if (abs(x2) < .Machine$double.eps) {
+      return(as.numeric(q >= 0))
+    }
     return(.p_prod3_degenerate(q, x2, c(1L, 3L), mean, sds, cov))
   }
   if (sds[3L] < .Machine$double.eps) {
     x3 <- mean[3L]
-    if (abs(x3) < .Machine$double.eps) return(as.numeric(q >= 0))
+    if (abs(x3) < .Machine$double.eps) {
+      return(as.numeric(q >= 0))
+    }
     return(.p_prod3_degenerate(q, x3, c(1L, 2L), mean, sds, cov))
   }
 
@@ -178,3 +191,7 @@ p_prod3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
   p <- res$integral
   min(max(p, 0), 1)
 }
+
+#' @export
+#' @rdname pprodnormal3
+p_prod3 <- function(...) pprodnormal3(...)

@@ -4,6 +4,12 @@
 #' Confidence Interval for the Mediated Effect (PROTOTYPE S7 Wrapper)
 #'
 #' @inheritParams medci
+#' @return A list matching the \code{\link{medci}} return format. When
+#'   \code{type != "all"}, a named list with elements \code{CI},
+#'   \code{Estimate}, and \code{SE}. When \code{type = "all"}, a list of
+#'   three such lists (one per method).
+#' @examples
+#' medci_prototype(mu.x = 0.5, mu.y = 0.3, se.x = 0.1, se.y = 0.1)
 #' @keywords internal
 #' @export
 medci_prototype <- function(
@@ -98,8 +104,10 @@ medci_prototype <- function(
       yci <- 0
 
       # Use S7 core for CI calculation
-      Sigma <- matrix(c(se.x^2, rho * se.x * se.y,
-                        rho * se.x * se.y, se.y^2), nrow = 2)
+      Sigma <- matrix(c(
+        se.x^2, rho * se.x * se.y,
+        rho * se.x * se.y, se.y^2
+      ), nrow = 2)
       pn <- ProductNormal(mu = c(mu.x, mu.y), Sigma = Sigma)
       s7_result <- ci(pn, level = 1 - alpha, type = "dop")
       MedCI <- list(s7_result$CI)

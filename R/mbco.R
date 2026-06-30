@@ -1,4 +1,3 @@
-
 S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
   h0,
   h1,
@@ -24,7 +23,7 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
   # Input validation (check class without requiring OpenMx at load time)
   if (!"MxModel" %in% class(h0)) stop("h0 must be an MxModel")
   if (!"MxModel" %in% class(h1)) stop("h1 must be an MxModel")
-  
+
   checkmate::assert_count(R, positive = TRUE)
   type <- match.arg(type, c("asymp", "parametric", "semi"))
   checkmate::assert_number(alpha, lower = 0, upper = 1, finite = TRUE)
@@ -55,7 +54,7 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
       )
     } else if (type == "semi") {
       # Semiparametric bootstrap MBCO LRT
-      mbco_semi(
+      .mbco_semi(
         h0 = h0,
         h1 = h1,
         R = R,

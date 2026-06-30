@@ -89,7 +89,7 @@ For models with multiple sequential mediators (X → M₁ → M₂ → Y), use t
 
 ```r
 # Four-path indirect effect: b1 * b2 * b3 * b4
-ci(mu = c(b1 = 1.0, b2 = 0.7, b3 = 0.6, b4 = 0.45),
+ci(c(b1 = 1.0, b2 = 0.7, b3 = 0.6, b4 = 0.45),
    Sigma = c(0.05, 0, 0, 0,    # Covariance matrix (lower triangle)
              0.05, 0, 0,
              0.03, 0,
@@ -146,7 +146,7 @@ workflow.
 ### Three-Variable Indirect Effects (ProductNormal3)
 
 For sequential indirect effects of the form `a1 * a2 * b` (e.g., X → M1 → M2 → Y),
-use `ProductNormal3` and its exact `p_prod3()` CDF:
+use `ProductNormal3` and its exact `pprodnormal3()` CDF:
 
 ```r
 library(RMediation)
@@ -163,7 +163,7 @@ ci(pn3, level = 0.95)
 #> Estimate: 0.120
 
 # Direct CDF query
-p_prod3(q = 0, mean = mu, cov = Sigma)  # P(a1*a2*b <= 0)
+pprodnormal3(q = 0, mean = mu, cov = Sigma)  # P(a1*a2*b <= 0)
 ```
 
 ### Using the S7 ProductNormal Class
@@ -212,7 +212,7 @@ mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
 | `mbco()` | Bootstrap hypothesis tests via MBCO |
 | `pprodnormal()` | CDF of product of two normals |
 | `qprodnormal()` | Quantiles of product of two normals |
-| `p_prod3()` | Exact CDF of product of three normals (`a1*a2*b`) |
+| `pprodnormal3()` | Exact CDF of product of three normals (`a1*a2*b`) |
 | `ProductNormal()` | S7 class for two-variable product distributions |
 | `ProductNormal3()` | S7 class for three-variable sequential indirect effects |
 

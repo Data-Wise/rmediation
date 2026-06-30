@@ -5,12 +5,12 @@
 \alias{ci_serial_mediation_data}
 \title{Confidence Interval for MediationData Objects}
 \usage{
-ci_mediation_data(mu, level = 0.95, type = "dop", n.mc = 1e+05, ...)
+ci_mediation_data(object, level = 0.95, type = "dop", n.mc = 1e+05, ...)
 
-ci_serial_mediation_data(mu, level = 0.95, type = "MC", n.mc = 1e+05, ...)
+ci_serial_mediation_data(object, level = 0.95, type = "MC", n.mc = 1e+05, ...)
 }
 \arguments{
-\item{mu}{A MediationData object from the medfit package}
+\item{object}{A MediationData object from the medfit package}
 
 \item{level}{Confidence level (default 0.95 for 95\% CI)}
 
@@ -58,8 +58,10 @@ fit_m <- lm(M ~ X + C, data = mydata)
 fit_y <- lm(Y ~ X + M + C, data = mydata)
 
 # Extract mediation structure
-med_data <- extract_mediation(fit_m, model_y = fit_y,
-                               treatment = "X", mediator = "M")
+med_data <- extract_mediation(fit_m,
+  model_y = fit_y,
+  treatment = "X", mediator = "M"
+)
 
 # Compute CI using Distribution of Product
 ci(med_data, type = "dop")

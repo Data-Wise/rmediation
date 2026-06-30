@@ -3,7 +3,7 @@ test_that("ProductNormal class creation works", {
   pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = matrix(c(1, 0, 0, 1), 2))
   expect_true(S7::S7_inherits(pn, ProductNormal))
   expect_equal(pn@mu, c(0.5, 0.3))
-  
+
   # Invalid creation
   # expect_error(ProductNormal(mu = c(0.5), Sigma = matrix(1)))
   # Note: Validator runs (confirmed by debug) but expect_error fails to catch it in testthat/S7 context.
@@ -15,11 +15,11 @@ test_that("cdf method works for 2 variables (dispatch to pprodnormal)", {
   mu <- c(0.5, 0.3)
   Sigma <- matrix(c(1, 0, 0, 1), 2)
   pn <- ProductNormal(mu = mu, Sigma = Sigma)
-  
+
   # Compare with direct pprodnormal call
   p_s7 <- cdf(pn, q = 0.1, type = "dop")
   p_orig <- pprodnormal(q = 0.1, mu.x = 0.5, mu.y = 0.3, se.x = 1, se.y = 1, rho = 0, type = "dop")
-  
+
   expect_equal(p_s7, p_orig)
 })
 
@@ -27,10 +27,10 @@ test_that("quantile method works for 2 variables (dispatch to qprodnormal)", {
   mu <- c(0.5, 0.3)
   Sigma <- matrix(c(1, 0, 0, 1), 2)
   pn <- ProductNormal(mu = mu, Sigma = Sigma)
-  
+
   q_s7 <- dist_quantile(pn, p = 0.05, type = "dop")
   q_orig <- qprodnormal(p = 0.05, mu.x = 0.5, mu.y = 0.3, se.x = 1, se.y = 1, rho = 0, type = "dop")
-  
+
   expect_equal(q_s7, q_orig)
 })
 
@@ -38,7 +38,7 @@ test_that("ci method works for 2 variables (dispatch to medci)", {
   mu <- c(0.5, 0.3)
   Sigma <- matrix(c(1, 0, 0, 1), 2)
   pn <- ProductNormal(mu = mu, Sigma = Sigma)
-  
+
   ci_s7 <- ci(pn, level = 0.95, type = "dop")
   ci_orig <- medci(mu.x = 0.5, mu.y = 0.3, se.x = 1, se.y = 1, rho = 0, alpha = 0.05, type = "dop", plot = FALSE)
 

@@ -16,3 +16,6 @@ ProductNormal2(mu, Sigma, validate = TRUE)
 \description{
 Enhanced ProductNormal constructor with better validation
 }
+\examples{
+pn <- ProductNormal2(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
+}

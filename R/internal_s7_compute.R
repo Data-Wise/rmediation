@@ -36,10 +36,10 @@
   quantMean <- mu.x * mu.y + se.x * se.y * rho
   quantSE <- sqrt(
     se.y^2 * mu.x^2 +
-    se.x^2 * mu.y^2 +
-    2 * mu.x * mu.y * rho * se.x * se.y +
-    se.x^2 * se.y^2 +
-    se.x^2 * se.y^2 * rho^2
+      se.x^2 * mu.y^2 +
+      2 * mu.x * mu.y * rho * se.x * se.y +
+      se.x^2 * se.y^2 +
+      se.x^2 * se.y^2 * rho^2
   )
 
   list(
@@ -183,10 +183,10 @@
   quantMean <- mu.x * mu.y + se.x * se.y * rho
   quantSE <- sqrt(
     se.y^2 * mu.x^2 +
-    se.x^2 * mu.y^2 +
-    2 * mu.x * mu.y * rho * se.x * se.y +
-    se.x^2 * se.y^2 +
-    se.x^2 * se.y^2 * rho^2
+      se.x^2 * mu.y^2 +
+      2 * mu.x * mu.y * rho * se.x * se.y +
+      se.x^2 * se.y^2 +
+      se.x^2 * se.y^2 * rho^2
   )
 
   # Asymptotic CI using normal approximation (Sobel test)

@@ -137,16 +137,20 @@ res <- medci(
   type = "dop", plot = TRUE, plotCI = TRUE
 )
 ## Example 2
-res <- medci(mu.x = .2, mu.y = .4, se.x = 1, se.y = 1, rho = 0,
- alpha = .05, type = "all", plot = TRUE, plotCI = TRUE)
+res <- medci(
+  mu.x = .2, mu.y = .4, se.x = 1, se.y = 1, rho = 0,
+  alpha = .05, type = "all", plot = TRUE, plotCI = TRUE
+)
 ## Example 1
 res <- medci(
   mu.x = .2, mu.y = .4, se.x = 1, se.y = 1, rho = 0, alpha = .05,
   type = "dop", plot = TRUE, plotCI = TRUE
 )
 ## Example 2
-res <- medci(mu.x = .2, mu.y = .4, se.x = 1, se.y = 1, rho = 0,
- alpha = .05, type = "all", plot = TRUE, plotCI = TRUE)
+res <- medci(
+  mu.x = .2, mu.y = .4, se.x = 1, se.y = 1, rho = 0,
+  alpha = .05, type = "all", plot = TRUE, plotCI = TRUE
+)
 }
 \references{
 Craig, C. C. (1936). On the frequency function of \eqn{xy}.

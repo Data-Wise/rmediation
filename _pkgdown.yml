@@ -61,6 +61,9 @@ navbar:
     ecosystem:
       text: Ecosystem
       menu:
+      - text: "mediationverse (Umbrella)"
+        href: https://data-wise.github.io/mediationverse/
+      - text: "---------"
       - text: "Core Packages"
       - text: "medfit (Foundation)"
         href: https://data-wise.github.io/medfit/
@@ -113,7 +116,7 @@ reference:
   contents:
   - pprodnormal
   - qprodnormal
-  - p_prod3
+  - pprodnormal3
   - pMC
   - qMC
 
@@ -137,11 +140,7 @@ reference:
   desc: >
     S3 methods, validation helpers, and utility functions.
   contents:
-  - utils_validation
   - ProductNormal2
-  - ProductNormal_from_lavaan
-  - validate_ProductNormal
-  - is_valid_for_computation
   - tidy
   - tidy.logLik
 

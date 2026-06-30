@@ -187,8 +187,10 @@ test_that("p_prod3 rejects non-positive tolerance", {
 })
 
 test_that("cdf lower.tail = FALSE is the complement of lower.tail = TRUE", {
-  obj <- ProductNormal3(mu = c(0.4, 0.3, 0.2), Sigma = diag(3),
-                        method = "hcubature")
+  obj <- ProductNormal3(
+    mu = c(0.4, 0.3, 0.2), Sigma = diag(3),
+    method = "hcubature"
+  )
   expect_equal(cdf(obj, 0.1, lower.tail = FALSE), 1 - cdf(obj, 0.1))
 })
 

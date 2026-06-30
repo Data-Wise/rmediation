@@ -186,9 +186,11 @@ test_that("pprodnormal lower.tail parameter works", {
   se.y <- 0.1
 
   result_lower <- pprodnormal(q, mu.x, mu.y, se.x, se.y,
-                              lower.tail = TRUE, type = "MC", n.mc = 1e4)
+    lower.tail = TRUE, type = "MC", n.mc = 1e4
+  )
   result_upper <- pprodnormal(q, mu.x, mu.y, se.x, se.y,
-                              lower.tail = FALSE, type = "MC", n.mc = 1e4)
+    lower.tail = FALSE, type = "MC", n.mc = 1e4
+  )
 
   # Should be complements
   expect_equal(result_lower + result_upper, 1, tolerance = 0.01)

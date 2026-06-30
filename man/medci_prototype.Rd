@@ -51,7 +51,16 @@ the Monte Carlo method. The default sample size is 1E5.}
 
 \item{...}{additional arguments to be passed on to the function.}
 }
+\value{
+A list matching the \code{\link{medci}} return format. When
+\code{type != "all"}, a named list with elements \code{CI},
+\code{Estimate}, and \code{SE}. When \code{type = "all"}, a list of
+three such lists (one per method).
+}
 \description{
 Confidence Interval for the Mediated Effect (PROTOTYPE S7 Wrapper)
+}
+\examples{
+medci_prototype(mu.x = 0.5, mu.y = 0.3, se.x = 0.1, se.y = 0.1)
 }
 \keyword{internal}

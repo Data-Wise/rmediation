@@ -18,3 +18,7 @@ quantiles, as returned by the dispatched method.
 \description{
 Generic function for computing cumulative distribution function.
 }
+\examples{
+pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
+cdf(pn, q = 0)
+}

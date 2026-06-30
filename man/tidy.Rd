@@ -17,3 +17,8 @@ A tibble or data.frame with tidy output
 \description{
 Tidy generic function
 }
+\examples{
+\dontrun{
+tidy(mbco_result)
+}
+}

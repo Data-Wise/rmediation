@@ -4,10 +4,10 @@
 \alias{ci}
 \title{Confidence Interval}
 \usage{
-ci(mu, ...)
+ci(object, ...)
 }
 \arguments{
-\item{mu}{A distribution object or numeric vector of means.}
+\item{object}{A distribution object or numeric vector of means.}
 
 \item{...}{Additional arguments passed to methods.}
 }
@@ -17,4 +17,8 @@ list) as returned by the dispatched method.
 }
 \description{
 Generic function for computing confidence intervals.
+}
+\examples{
+pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
+ci(pn)
 }

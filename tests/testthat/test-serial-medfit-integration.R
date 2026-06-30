@@ -18,10 +18,10 @@ skip_if(
 test_that("lavaan 2-mediator chain: extract_mediation() -> ci() recovers the indirect effect", {
   set.seed(42)
   n <- 800
-  X  <- rnorm(n)
-  M1 <- 0.5 * X  + rnorm(n)
+  X <- rnorm(n)
+  M1 <- 0.5 * X + rnorm(n)
   M2 <- 0.6 * M1 + rnorm(n)
-  Y  <- 0.7 * M2 + 0.2 * X + rnorm(n)
+  Y <- 0.7 * M2 + 0.2 * X + rnorm(n)
   dat <- data.frame(X, M1, M2, Y)
 
   model <- "M1 ~ a*X
@@ -30,7 +30,8 @@ test_that("lavaan 2-mediator chain: extract_mediation() -> ci() recovers the ind
   fit <- lavaan::sem(model, data = dat)
 
   mu <- medfit::extract_mediation(
-    fit, treatment = "X", mediator = c("M1", "M2"), outcome = "Y"
+    fit,
+    treatment = "X", mediator = c("M1", "M2"), outcome = "Y"
   )
 
   # medfit emits the name contract rmediation's resolver depends on
@@ -63,18 +64,19 @@ test_that("lm/glm 2-mediator chain: extract_mediation(mediator_models=) -> ci() 
   # block-structured (separate equations), distinct from the lavaan single-equation case.
   set.seed(7)
   n <- 800
-  X  <- rnorm(n)
-  M1 <- 0.5 * X  + rnorm(n)
+  X <- rnorm(n)
+  M1 <- 0.5 * X + rnorm(n)
   M2 <- 0.6 * M1 + rnorm(n)
-  Y  <- 0.7 * M2 + 0.2 * X + rnorm(n)
+  Y <- 0.7 * M2 + 0.2 * X + rnorm(n)
   dat <- data.frame(X, M1, M2, Y)
 
-  fit_m1 <- lm(M1 ~ X, data = dat)      # first mediator model
-  fit_m2 <- lm(M2 ~ M1, data = dat)     # mediators 2..k
-  fit_y  <- lm(Y ~ M2 + X, data = dat)  # outcome model
+  fit_m1 <- lm(M1 ~ X, data = dat) # first mediator model
+  fit_m2 <- lm(M2 ~ M1, data = dat) # mediators 2..k
+  fit_y <- lm(Y ~ M2 + X, data = dat) # outcome model
 
   mu <- medfit::extract_mediation(
-    fit_m1, model_y = fit_y, treatment = "X",
+    fit_m1,
+    model_y = fit_y, treatment = "X",
     mediator = c("M1", "M2"), mediator_models = list(fit_m2)
   )
 

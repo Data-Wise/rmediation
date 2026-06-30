@@ -76,8 +76,10 @@
 #'   type = "dop", plot = TRUE, plotCI = TRUE
 #' )
 #' ## Example 2
-#' res <- medci(mu.x = .2, mu.y = .4, se.x = 1, se.y = 1, rho = 0,
-#'  alpha = .05, type = "all", plot = TRUE, plotCI = TRUE)
+#' res <- medci(
+#'   mu.x = .2, mu.y = .4, se.x = 1, se.y = 1, rho = 0,
+#'   alpha = .05, type = "all", plot = TRUE, plotCI = TRUE
+#' )
 #' @seealso \code{\link{qprodnormal}} \code{\link{pprodnormal}} \code{\link{ci}}
 #'   \code{\link{RMediation-package}}
 #'
