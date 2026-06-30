@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.5.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,7 +58,20 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.5.0" id="rmediation-150-2026-06-18">RMediation 1.5.0 (2026-06-18)<a class="anchor" aria-label="anchor" href="#rmediation-150-2026-06-18"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.6.0" id="rmediation-160-2026-06-29">RMediation 1.6.0 (2026-06-29)<a class="anchor" aria-label="anchor" href="#rmediation-160-2026-06-29"></a></h2>
+<div class="section level3">
+<h3 id="productnormal3-exact-cdf-for-the-product-of-three-normals-1-6-0">ProductNormal3: exact CDF for the product of three normals<a class="anchor" aria-label="anchor" href="#productnormal3-exact-cdf-for-the-product-of-three-normals-1-6-0"></a></h3>
+<ul><li>New S7 class <code>ProductNormal3</code> for sequential indirect effects of the form <code>a1 * a2 * b</code>, with <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="../reference/cdf.html">cdf()</a></code>, <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code>, and <code><a href="../reference/ci.html">ci()</a></code> methods.</li>
+<li>New core engine <code><a href="../reference/p_prod3.html">p_prod3()</a></code> computes <code>P(a1 * a2 * b &lt;= q)</code> via the conditional-expectation dimension-reduction double integral (Tofighi, 2026).</li>
+<li>Integration is performed by <code><a href="https://bnaras.github.io/cubature/reference/hcubature.html" class="external-link">cubature::hcubature</a></code>; degenerate covariances are reduced to the existing two-variable product-normal CDF.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="dependencies-1-6-0">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies-1-6-0"></a></h3>
+<ul><li>Added <code>cubature (&gt;= 2.1.0)</code> to <code>Imports</code>.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.5.0" id="rmediation-150-2026-06-18">RMediation 1.5.0 (2026-06-18)<a class="anchor" aria-label="anchor" href="#rmediation-150-2026-06-18"></a></h2><p class="text-muted">CRAN release: 2026-06-20</p>
 <div class="section level3">
 <h3 id="dependencies-1-5-0">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies-1-5-0"></a></h3>
 <ul><li>

@@ -1,6 +1,32 @@
 # Changelog
 
+## RMediation 1.6.0 (2026-06-29)
+
+### ProductNormal3: exact CDF for the product of three normals
+
+- New S7 class `ProductNormal3` for sequential indirect effects of the
+  form `a1 * a2 * b`, with
+  [`print()`](https://rdrr.io/r/base/print.html),
+  [`cdf()`](https://data-wise.github.io/rmediation/reference/cdf.md),
+  [`confint()`](https://rdrr.io/r/stats/confint.html), and
+  [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md)
+  methods.
+- New core engine
+  [`p_prod3()`](https://data-wise.github.io/rmediation/reference/p_prod3.md)
+  computes `P(a1 * a2 * b <= q)` via the conditional-expectation
+  dimension-reduction double integral (Tofighi, 2026).
+- Integration is performed by
+  [`cubature::hcubature`](https://bnaras.github.io/cubature/reference/hcubature.html);
+  degenerate covariances are reduced to the existing two-variable
+  product-normal CDF.
+
+### Dependencies
+
+- Added `cubature (>= 2.1.0)` to `Imports`.
+
 ## RMediation 1.5.0 (2026-06-18)
+
+CRAN release: 2026-06-20
 
 ### Dependencies
 

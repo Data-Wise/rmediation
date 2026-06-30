@@ -17,3 +17,8 @@ ci(mu, ...)
 - ...:
 
   Additional arguments passed to methods.
+
+## Value
+
+A confidence interval (numeric vector of lower/upper bounds, or a list)
+as returned by the dispatched method.

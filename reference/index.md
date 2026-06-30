@@ -17,12 +17,16 @@ and hypothesis testing.
 
 ## Distribution Functions
 
-Distribution functions for the product of two normal random variables.
+Distribution functions for the product of two or three normal random
+variables.
 
 - [`pprodnormal()`](https://data-wise.github.io/rmediation/reference/pprodnormal.md)
   : Percentile for the Distribution of Product of Two Normal Variables
 - [`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md)
   : Quantile for the Distribution of Product of Two Normal Variables
+- [`p_prod3()`](https://data-wise.github.io/rmediation/reference/p_prod3.md)
+  : Cumulative Distribution Function for the Product of Three Normal
+  Variables
 - [`pMC()`](https://data-wise.github.io/rmediation/reference/pMC.md) :
   Probability (percentile) for the Monte Carlo Sampling Distribution of
   a nonlinear function of coefficients estimates
@@ -44,6 +48,8 @@ mediation analysis.
 
 - [`ProductNormal()`](https://data-wise.github.io/rmediation/reference/ProductNormal.md)
   : ProductNormal Class
+- [`ProductNormal3()`](https://data-wise.github.io/rmediation/reference/ProductNormal3.md)
+  : ProductNormal3 Class
 - [`MBCOResult()`](https://data-wise.github.io/rmediation/reference/MBCOResult.md)
   : MBCO Result Class
 - [`cdf()`](https://data-wise.github.io/rmediation/reference/cdf.md) :

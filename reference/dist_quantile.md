@@ -19,3 +19,8 @@ dist_quantile(object, ...)
 - ...:
 
   Additional arguments passed to methods.
+
+## Value
+
+A numeric vector of quantiles for the supplied probabilities, as
+returned by the dispatched method.

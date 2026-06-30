@@ -54,7 +54,7 @@ qprodnormal(
 - type:
 
   method used to compute confidence interval. It takes on the values
-  `"dop"` (default), `"MC"`, `"asymp"` or `"all"`
+  `"dop"` (default), `"MC"`, or `"all"`
 
 - n.mc:
 

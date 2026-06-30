@@ -1,7 +1,9 @@
 # CLAUDE.md for RMediation Package
 
 This file provides guidance to Claude Code (claude.ai/code) when working
-with code in this repository.
+with code in this repository. For global workflow rules — git, branch
+guards, worktrees, pre-PR/release checklists, hooks, and tooling notes —
+see `~/.config/opencode/AGENTS.md`.
 
 ------------------------------------------------------------------------
 
@@ -167,4 +169,4 @@ the Suggests contract. Do NOT promote to Imports.
 
 ------------------------------------------------------------------------
 
-**Last Updated**: 2026-06-19
+**Last Updated**: 2026-06-29
