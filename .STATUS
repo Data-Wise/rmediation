@@ -1,17 +1,35 @@
-status: released
-priority: --
-progress: 100
-version: 1.5.0
-next: ✅ ON CRAN (v1.5.0 accepted 2026-06-20, pkg_id 345448). Retires the RMediation dep for downstream.
+status: in_progress
+priority: high
+progress: 95
+version: 1.6.0
+next: Final commit of ProductNormal3 coverage fix + PR to main for v1.6.0 release.
 
 # rmediation
 
 ## Status: Active
-## Progress: 100
-## Focus: ✅ ON CRAN — v1.5.0 ACCEPTED, published 2026-06-20 (verified on the CRAN page 2026-06-21; pkg_id 345448). Retires the RMediation dep for mediationverse/missingmed/medsim (each still gated on medrobust/medfit reaching CRAN).
+## Progress: 95
+## Focus: ProductNormal3 feature — exact CDF for a1*a2*b sequential indirect effects (v1.6.0). Implementation complete; coverage and check verified. Ready to commit and PR.
 
 ## Active worktrees
-None — all session worktrees removed 2026-06-19.
+- `feature-product-normal3` (current worktree): implementing ProductNormal3 S7 class + `p_prod3()` exact CDF + methods + tests + docs.
+
+## Recent (2026-06-29 — ProductNormal3 v1.6.0)
+- Added `ProductNormal3` S7 class for exact distribution of product of three
+  correlated normals (`a1 * a2 * b` sequential indirect effect).
+- Implemented `p_prod3()` exact CDF using 2D conditional-expectation
+  dimension-reduction integral via `cubature::hcubature`; `cuhre` integration
+  method dropped after local segfaults on macOS aarch64/R 4.6.1.
+- Added S7 methods: `cdf()`, `confint()`, `ci()` for `ProductNormal3` objects.
+- Added `print()`/`show()` methods and registered S4 compatibility.
+- Added `tests/testthat/test-product-normal3.R` (31 tests).
+- Coverage on new files: `R/prod3_core.R` 93.41%, `R/ProductNormal3_methods.R`
+  95.92% (target >= 90%).
+- Full test suite: **300 pass / 0 fail / 0 skip / 18 warn** (warnings are
+  pre-existing `partial argument match` in `test-ci.R` and `test-legacy-compat.R`).
+- `R CMD check --as-cran`: **0 errors / 0 warnings / 2 pre-existing NOTEs**
+  (`CITATION.cff` and `cran-comments.md` at top level).
+- Documentation regenerated (`devtools::document()`); `NEWS.md`, `_pkgdown.yml`,
+  and reference docs updated for v1.6.0.
 
 ## Verified 2026-06-03 (re-ran vs the medfit 0.2.0 RELEASE TARBALL)
 - Installed medfit 0.2.0 from `medfit_0.2.0.tar.gz` (R CMD INSTALL); both S7 classes exported.
