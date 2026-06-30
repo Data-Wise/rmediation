@@ -108,10 +108,12 @@ reference:
 
 - title: Distribution Functions
   desc: >
-    Distribution functions for the product of two normal random variables.
+    Distribution functions for the product of two or three normal random
+    variables.
   contents:
   - pprodnormal
   - qprodnormal
+  - p_prod3
   - pMC
   - qMC
 
@@ -126,6 +128,7 @@ reference:
     mediation analysis.
   contents:
   - ProductNormal
+  - ProductNormal3
   - MBCOResult
   - cdf
   - dist_quantile

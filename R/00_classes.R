@@ -50,13 +50,23 @@ S7::S4_register(ProductNormal)
 #' ProductNormal3 Class
 #'
 #' Represents the distribution of the product of three normal random variables.
-#' Intended for sequential indirect effects of the form `a1 * a2 * b`.
+#' Intended for sequential indirect effects of the form `a1 * a2 * b`, where
+#' `(a1, a2, b)` is asymptotically trivariate normal.
 #'
-#' @param mu Numeric vector of means of length 3.
-#' @param Sigma 3x3 covariance matrix.
+#' @param mu Numeric vector of means of length 3: `c(a1_hat, a2_hat, b_hat)`.
+#' @param Sigma 3x3 asymptotic covariance matrix of `(a1, a2, b)`.
 #' @param method Integration method. Currently only `"hcubature"` is
 #'   supported.
 #' @export
+#' @examples
+#' obj <- ProductNormal3(
+#'   mu = c(0.5, 0.3, 0.2),
+#'   Sigma = diag(3),
+#'   method = "hcubature"
+#' )
+#' obj
+#' cdf(obj, q = 1)
+#' confint(obj, level = 0.95)
 ProductNormal3 <- S7::new_class("ProductNormal3",
   properties = list(
     mu = S7::class_numeric,
