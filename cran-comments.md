@@ -14,7 +14,7 @@ Key changes in this release:
 ## Test environments
 
 * Local: macOS 15 (aarch64-apple-darwin25.5.0), R 4.6.1 — `R CMD check --as-cran`
-* win-builder R-oldrelease: token PENDING
+* win-builder R-oldrelease (4.5.3): https://win-builder.r-project.org/Y0YVu51197F9 — OK
 * win-builder R-release: token PENDING
 * win-builder R-devel: token PENDING
 * GitHub Actions: macOS-latest, ubuntu-latest, windows-latest — R release + oldrel-1
