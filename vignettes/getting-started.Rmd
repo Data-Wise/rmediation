@@ -63,6 +63,24 @@ result2 <- ci(
 str(result2)
 ```
 
+### Three-Variable Indirect Effects (ProductNormal3)
+
+For sequential indirect effects of the form `a1 * a2 * b` (e.g., X → M1 → M2 → Y),
+use the `ProductNormal3` S7 class and its exact `p_prod3()` CDF engine:
+
+```{r example3b, eval = FALSE}
+# Path coefficients (a1, a2, b) and their joint covariance
+mu3 <- c(a1 = 0.5, a2 = 0.4, b = 0.6)
+Sigma3 <- diag(c(0.01, 0.01, 0.01))  # independent paths
+
+# Create the distribution object and compute 95% CI
+pn3 <- ProductNormal3(mu = mu3, Sigma = Sigma3)
+ci(pn3, level = 0.95)
+
+# Direct CDF query: P(a1*a2*b <= 0)
+p_prod3(q = 0, mean = mu3, cov = Sigma3)
+```
+
 ### Using S7 Classes
 
 The package includes modern S7 object-oriented classes:

@@ -29,8 +29,8 @@ Traditional methods (e.g., Sobel test) assume the indirect effect *ab* follows a
 
 | Method | Best For | Speed |
 |--------|----------|-------|
-| **DOP** (Distribution of Product) | Two-variable products; publication-quality results | Fast |
-| **Monte Carlo** | Complex models; 3+ variable products | Moderate |
+| **DOP** (Distribution of Product) | Two- and three-variable products; publication-quality results | Fast |
+| **Monte Carlo** | Complex models; 4+ variable products | Moderate |
 | **MBCO** (Model-Based Constrained Optimization) | Hypothesis testing; bootstrap inference | Slower |
 
 ## Installation
@@ -143,6 +143,29 @@ ci(mu, level = 0.95, type = "MC")
 See `vignette("serial-mediation-with-medfit")` for the full lavaan and lm/glm
 workflow.
 
+### Three-Variable Indirect Effects (ProductNormal3)
+
+For sequential indirect effects of the form `a1 * a2 * b` (e.g., X → M1 → M2 → Y),
+use `ProductNormal3` and its exact `p_prod3()` CDF:
+
+```r
+library(RMediation)
+
+# Path coefficients and their joint covariance
+mu  <- c(a1 = 0.5, a2 = 0.4, b = 0.6)
+Sigma <- diag(c(0.01, 0.01, 0.01))  # independent paths
+
+# Exact 95% CI for the a1*a2*b sequential indirect effect
+pn3 <- ProductNormal3(mu = mu, Sigma = Sigma)
+ci(pn3, level = 0.95)
+
+#> 95% CI: [0.024, 0.248]
+#> Estimate: 0.120
+
+# Direct CDF query
+p_prod3(q = 0, mean = mu, cov = Sigma)  # P(a1*a2*b <= 0)
+```
+
 ### Using the S7 ProductNormal Class
 
 For programmatic use, create `ProductNormal` objects directly:
@@ -185,11 +208,13 @@ mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
 | Function | Purpose |
 |----------|---------|
 | `medci()` | CI for product of two normal variables |
-| `ci()` | CI for any function of parameters (formulas, lavaan, ProductNormal) |
+| `ci()` | CI for any function of parameters (formulas, lavaan, ProductNormal, ProductNormal3) |
 | `mbco()` | Bootstrap hypothesis tests via MBCO |
 | `pprodnormal()` | CDF of product of two normals |
 | `qprodnormal()` | Quantiles of product of two normals |
-| `ProductNormal()` | S7 class for product distributions |
+| `p_prod3()` | Exact CDF of product of three normals (`a1*a2*b`) |
+| `ProductNormal()` | S7 class for two-variable product distributions |
+| `ProductNormal3()` | S7 class for three-variable sequential indirect effects |
 
 ## Part of the Mediationverse
 
