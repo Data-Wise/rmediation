@@ -2,13 +2,25 @@ status: in_progress
 priority: high
 progress: 99
 version: 1.6.0
-next: v1.6.0 release — bump version, update CRAN comments, PR dev→main, tag.
+next: Await win-builder R-release email → update cran-comments.md → PR dev→main → tag v1.6.0 → submit CRAN
 
 # rmediation
 
 ## Status: Active
 ## Progress: 99
-## Focus: v1.6.0 release — ProductNormal3 merged to dev (PR #19, 2026-06-30); ready for release pipeline.
+## Focus: v1.6.0 release gate — win-builder R-release result outstanding; all other pre-CRAN checks passed.
+
+## Session 2026-06-30
+- PR #19 merged to dev (ProductNormal3 exact CDF for a1*a2*b, cubature dependency)
+- Fixed roxygen placement bug: .p_prod3_degenerate was intercepting p_prod3 @export
+- Fixed stats::deriv() partial-match warning (func → function.arg) — 18 warnings eliminated
+- Updated rhub.yaml: retired macos → macos-arm64
+- Removed broken .claude/skills symlink (was blocking win-builder cp -r)
+- cran-comments.md rewritten for v1.6.0
+- win-builder dispatched: R-oldrelease OK (4.5.3, Y0YVu51197F9), R-devel OK (r90199, MbTqhngibodc)
+- win-builder R-release: PENDING (email in flight)
+- rhub CI: passed (linux, windows, macos-arm64, atlas)
+- Dev cycle: 307 pass / 0 warn / 0 fail; R CMD check --as-cran 0E/0W/0N
 
 ## Active worktrees
 (none)
