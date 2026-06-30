@@ -1,8 +1,8 @@
 status: in_progress
 priority: high
-progress: 95
+progress: 98
 version: 1.6.0
-next: Final commit of ProductNormal3 coverage fix + PR to main for v1.6.0 release.
+next: prod3 hardened (issue #20) + --as-cran 0E/0W/0N; PR #19 (→dev) ready to merge, then v1.6.0 release.
 
 # rmediation
 
@@ -12,6 +12,28 @@ next: Final commit of ProductNormal3 coverage fix + PR to main for v1.6.0 releas
 
 ## Active worktrees
 - `feature-product-normal3` (current worktree): implementing ProductNormal3 S7 class + `p_prod3()` exact CDF + methods + tests + docs.
+
+## Recent (2026-06-29 — prod3 hardening, issue #20, commit f7226f1)
+- Two independent reviews (algorithm-correctness + rforge) confirmed the core is
+  correct (full-domain hcubature agrees with the manuscript split-domain reference
+  to 1e-8) and CRAN-ready; fixed the surfaced robustness/doc/test gaps:
+- **HIGH-1:** `p_prod3` now rejects non-PD `cov` up front (eigen check). An
+  indefinite matrix whose (X,Y) block is still PD previously hung in `hcubature`
+  (>120s, no error); perfect X-Y correlation now errors cleanly (was raw Lapack).
+- **HIGH-2:** conditional-moment solve hoisted out of the per-evaluation path and
+  switched `solve()` → Cholesky (chol + fwd/back) — computed once, not ~5e4x/CDF,
+  better conditioned; the dead det<=0 regularization branch removed. Numerically
+  inert (verified 3.9e-16 on the manuscript reference, production R 4.4.0).
+- **LOW/docs:** `tol` strictly positive; `@note` (near-singular accuracy +
+  point-mass mid-CDF convention); `@return` on cdf/ci/dist_quantile; `@importFrom
+  stats cov2cor`; dropped non-existent `"asymp"` from pprodnormal/qprodnormal docs;
+  `.Rbuildignore` cran-comments.md + CITATION.cff; WORDLIST `trivariate`.
+- **Tests:** +5 (non-PD error, corr=1, tol=0, cdf lower.tail complement,
+  negative-mean degenerate) → **38/38 prod3 tests pass**; roxygen re-documented.
+- `R CMD check --as-cran`: **0E / 0W / 0N** (the 2 prior NOTEs cleared by
+  .Rbuildignore). PR #19 retargeted main → **dev**.
+- Deferred (pre-existing, not prod3): DESCRIPTION Author/Maintainer vs Authors@R;
+  dead-var cleanup in qprodnormalMC/Meeker.
 
 ## Recent (2026-06-29 — ProductNormal3 v1.6.0)
 - Added `ProductNormal3` S7 class for exact distribution of product of three
