@@ -2,7 +2,7 @@ status: released
 priority: --
 progress: 100
 version: 1.5.0
-next: ✅ ON CRAN (v1.5.0 accepted 2026-06-20, pkg_id 345448). Retires the RMediation dep for downstream.
+next: Continue ProductNormal3 implementation in worktree ~/.git-worktrees/rmediation/feature-product-normal3 (issue #18).
 
 # rmediation
 
@@ -11,7 +11,12 @@ next: ✅ ON CRAN (v1.5.0 accepted 2026-06-20, pkg_id 345448). Retires the RMedi
 ## Focus: ✅ ON CRAN — v1.5.0 ACCEPTED, published 2026-06-20 (verified on the CRAN page 2026-06-21; pkg_id 345448). Retires the RMediation dep for mediationverse/missingmed/medsim (each still gated on medrobust/medfit reaching CRAN).
 
 ## Active worktrees
-None — all session worktrees removed 2026-06-19.
+- `feature/product-normal3` at `~/.git-worktrees/rmediation/feature-product-normal3` — ORCHESTRATE committed, awaiting implementation (issue #18).
+
+## Recent (2026-06-29)
+- Fixed issue #17: added machine-readable YAML header to `.STATUS` so atlas/rforge/MediationVerse dashboard parse status correctly. Committed to `dev` (10a377b) and pushed to origin.
+- Created worktree `feature/product-normal3` for issue #18 and committed `ORCHESTRATE-product-normal3.md` (720d7ab). Implementation blocked by prod3 manuscript was waived; work can proceed in the worktree.
+- Created opencode skill `r-dev-workflow` at `~/.config/opencode/skills/r-dev-workflow/SKILL.md` to encode rforge-derived R-package engineering conventions for r-dev.
 
 ## Verified 2026-06-03 (re-ran vs the medfit 0.2.0 RELEASE TARBALL)
 - Installed medfit 0.2.0 from `medfit_0.2.0.tar.gz` (R CMD INSTALL); both S7 classes exported.
