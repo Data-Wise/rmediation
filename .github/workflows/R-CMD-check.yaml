@@ -20,14 +20,22 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macos-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'devel'}
+          # Routine release-R jobs: full Suggests (incl. OpenMx/medfit) install
+          # fast from prebuilt binaries via RSPM.
+          - {os: macos-latest,   r: 'release', pkg-deps: '"all"',                       extra: 'any::rcmdcheck'}
+          - {os: windows-latest, r: 'release', pkg-deps: '"all"',                       extra: 'any::rcmdcheck'}
+          - {os: ubuntu-latest,   r: 'release', pkg-deps: '"all"',                      extra: 'any::rcmdcheck'}
+          # Routine R-devel job: skip OpenMx/medfit (no R-devel binaries, build
+          # from source = 15-25 min). Both are Suggests with requireNamespace()
+          # guards + skip_if_not_installed() tests, so the package still checks
+          # cleanly without them; the full Suggests set (incl. OpenMx/medfit)
+          # is exercised by the pre-submission r-hub/win-builder pass instead.
+          - {os: ubuntu-latest,   r: 'devel',   pkg-deps: '"Depends,Imports,LinkingTo"', extra: 'any::rcmdcheck, any::testthat, any::lavaan, any::knitr'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      _R_CHECK_FORCE_SUGGESTS_: false
 
     steps:
       - uses: actions/checkout@v4
@@ -42,7 +50,8 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: ${{ matrix.config.extra }}
+          dependencies: ${{ matrix.config.pkg-deps }}
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
