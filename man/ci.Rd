@@ -11,6 +11,10 @@ ci(mu, ...)
 
 \item{...}{Additional arguments passed to methods.}
 }
+\value{
+A confidence interval (numeric vector of lower/upper bounds, or a
+list) as returned by the dispatched method.
+}
 \description{
 Generic function for computing confidence intervals.
 }

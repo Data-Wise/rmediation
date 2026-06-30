@@ -47,12 +47,66 @@ ProductNormal <- S7::new_class("ProductNormal",
 # Register S4 for compatibility with base generics
 S7::S4_register(ProductNormal)
 
+#' ProductNormal3 Class
+#'
+#' Represents the distribution of the product of three normal random variables.
+#' Intended for sequential indirect effects of the form `a1 * a2 * b`, where
+#' `(a1, a2, b)` is asymptotically trivariate normal.
+#'
+#' @param mu Numeric vector of means of length 3: `c(a1_hat, a2_hat, b_hat)`.
+#' @param Sigma 3x3 asymptotic covariance matrix of `(a1, a2, b)`.
+#' @param method Integration method. Currently only `"hcubature"` is
+#'   supported.
+#' @export
+#' @examples
+#' obj <- ProductNormal3(
+#'   mu = c(0.5, 0.3, 0.2),
+#'   Sigma = diag(3),
+#'   method = "hcubature"
+#' )
+#' obj
+#' cdf(obj, q = 1)
+#' \dontrun{
+#' confint(obj, level = 0.95)
+#' }
+ProductNormal3 <- S7::new_class("ProductNormal3",
+  properties = list(
+    mu = S7::class_numeric,
+    Sigma = S7::class_numeric,
+    method = S7::class_character
+  ),
+  validator = function(self) {
+    if (length(self@mu) != 3) {
+      stop("mu must have length 3")
+    }
+    if (!is.matrix(self@Sigma)) {
+      stop("Sigma must be a matrix")
+    }
+    if (nrow(self@Sigma) != 3 || ncol(self@Sigma) != 3) {
+      stop("Sigma must be a 3x3 matrix")
+    }
+    eigen_vals <- eigen(self@Sigma, symmetric = TRUE, only.values = TRUE)$values
+    if (any(eigen_vals < -1e-8)) {
+      stop("Sigma must be positive semi-definite")
+    }
+    if (length(self@method) != 1 || !(self@method %in% "hcubature")) {
+      stop("method must be 'hcubature'")
+    }
+    NULL
+  }
+)
+
+# Register S4 for compatibility with base generics
+S7::S4_register(ProductNormal3)
+
 #' Cumulative Distribution Function
 #'
 #' Generic function for computing cumulative distribution function.
 #'
 #' @param object A distribution object.
 #' @param ... Additional arguments passed to methods.
+#' @return A numeric vector of cumulative probabilities for the supplied
+#'   quantiles, as returned by the dispatched method.
 #' @export
 cdf <- S7::new_generic("cdf", "object")
 
@@ -64,6 +118,8 @@ cdf <- S7::new_generic("cdf", "object")
 #'
 #' @param object A distribution object (e.g., ProductNormal).
 #' @param ... Additional arguments passed to methods.
+#' @return A numeric vector of quantiles for the supplied probabilities, as
+#'   returned by the dispatched method.
 #' @export
 dist_quantile <- S7::new_generic("dist_quantile", "object")
 
@@ -73,6 +129,8 @@ dist_quantile <- S7::new_generic("dist_quantile", "object")
 #'
 #' @param mu A distribution object or numeric vector of means.
 #' @param ... Additional arguments passed to methods.
+#' @return A confidence interval (numeric vector of lower/upper bounds, or a
+#'   list) as returned by the dispatched method.
 #' @export
 ci <- S7::new_generic("ci", "mu")
 

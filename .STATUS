@@ -1,11 +1,69 @@
+status: in_progress
+priority: high
+progress: 99
+version: 1.6.0
+next: Await win-builder R-release email → update cran-comments.md → PR dev→main → tag v1.6.0 → submit CRAN
+
 # rmediation
 
 ## Status: Active
-## Progress: 100
-## Focus: post-v1.5.0 doc cleanup + serial-medfit docs (2026-06-19)
+## Progress: 99
+## Focus: v1.6.0 release gate — win-builder R-release result outstanding; all other pre-CRAN checks passed.
+
+## Session 2026-06-30
+- PR #19 merged to dev (ProductNormal3 exact CDF for a1*a2*b, cubature dependency)
+- Fixed roxygen placement bug: .p_prod3_degenerate was intercepting p_prod3 @export
+- Fixed stats::deriv() partial-match warning (func → function.arg) — 18 warnings eliminated
+- Updated rhub.yaml: retired macos → macos-arm64
+- Removed broken .claude/skills symlink (was blocking win-builder cp -r)
+- cran-comments.md rewritten for v1.6.0
+- win-builder dispatched: R-oldrelease OK (4.5.3, Y0YVu51197F9), R-devel OK (r90199, MbTqhngibodc)
+- win-builder R-release: PENDING (email in flight)
+- rhub CI: passed (linux, windows, macos-arm64, atlas)
+- Dev cycle: 307 pass / 0 warn / 0 fail; R CMD check --as-cran 0E/0W/0N
 
 ## Active worktrees
-None — all session worktrees removed 2026-06-19.
+(none)
+
+## Recent (2026-06-29 — prod3 hardening, issue #20, commit f7226f1)
+- Two independent reviews (algorithm-correctness + rforge) confirmed the core is
+  correct (full-domain hcubature agrees with the manuscript split-domain reference
+  to 1e-8) and CRAN-ready; fixed the surfaced robustness/doc/test gaps:
+- **HIGH-1:** `p_prod3` now rejects non-PD `cov` up front (eigen check). An
+  indefinite matrix whose (X,Y) block is still PD previously hung in `hcubature`
+  (>120s, no error); perfect X-Y correlation now errors cleanly (was raw Lapack).
+- **HIGH-2:** conditional-moment solve hoisted out of the per-evaluation path and
+  switched `solve()` → Cholesky (chol + fwd/back) — computed once, not ~5e4x/CDF,
+  better conditioned; the dead det<=0 regularization branch removed. Numerically
+  inert (verified 3.9e-16 on the manuscript reference, production R 4.4.0).
+- **LOW/docs:** `tol` strictly positive; `@note` (near-singular accuracy +
+  point-mass mid-CDF convention); `@return` on cdf/ci/dist_quantile; `@importFrom
+  stats cov2cor`; dropped non-existent `"asymp"` from pprodnormal/qprodnormal docs;
+  `.Rbuildignore` cran-comments.md + CITATION.cff; WORDLIST `trivariate`.
+- **Tests:** +5 (non-PD error, corr=1, tol=0, cdf lower.tail complement,
+  negative-mean degenerate) → **38/38 prod3 tests pass**; roxygen re-documented.
+- `R CMD check --as-cran`: **0E / 0W / 0N** (the 2 prior NOTEs cleared by
+  .Rbuildignore). PR #19 retargeted main → **dev**.
+- Deferred (pre-existing, not prod3): DESCRIPTION Author/Maintainer vs Authors@R;
+  dead-var cleanup in qprodnormalMC/Meeker.
+
+## Recent (2026-06-29 — ProductNormal3 v1.6.0)
+- Added `ProductNormal3` S7 class for exact distribution of product of three
+  correlated normals (`a1 * a2 * b` sequential indirect effect).
+- Implemented `p_prod3()` exact CDF using 2D conditional-expectation
+  dimension-reduction integral via `cubature::hcubature`; `cuhre` integration
+  method dropped after local segfaults on macOS aarch64/R 4.6.1.
+- Added S7 methods: `cdf()`, `confint()`, `ci()` for `ProductNormal3` objects.
+- Added `print()`/`show()` methods and registered S4 compatibility.
+- Added `tests/testthat/test-product-normal3.R` (31 tests).
+- Coverage on new files: `R/prod3_core.R` 93.41%, `R/ProductNormal3_methods.R`
+  95.92% (target >= 90%).
+- Full test suite: **300 pass / 0 fail / 0 skip / 18 warn** (warnings are
+  pre-existing `partial argument match` in `test-ci.R` and `test-legacy-compat.R`).
+- `R CMD check --as-cran`: **0 errors / 0 warnings / 2 pre-existing NOTEs**
+  (`CITATION.cff` and `cran-comments.md` at top level).
+- Documentation regenerated (`devtools::document()`); `NEWS.md`, `_pkgdown.yml`,
+  and reference docs updated for v1.6.0.
 
 ## Verified 2026-06-03 (re-ran vs the medfit 0.2.0 RELEASE TARBALL)
 - Installed medfit 0.2.0 from `medfit_0.2.0.tar.gz` (R CMD INSTALL); both S7 classes exported.

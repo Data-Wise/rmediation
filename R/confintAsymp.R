@@ -1,7 +1,7 @@
 confintAsymp <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "asymp", plot = FALSE, plotCI = FALSE) {
   # Sigma <- vech.reverse(Sigma)
   q1 <- quant
-  fx <- deriv(quant, names(mu), func = TRUE)
+  fx <- deriv(quant, names(mu), function.arg = TRUE)
   muList <- as.list(mu)
   grad1 <- do.call("fx", muList)
   grad <- as.vector(attr(grad1, "gradient"))
