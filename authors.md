@@ -10,4 +10,4 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/data-wise/rmediation/blob/v1.6.0/inst/CITATION)
+[`inst/CITATION`](https://github.com/data-wise/rmediation/blob/main/inst/CITATION)

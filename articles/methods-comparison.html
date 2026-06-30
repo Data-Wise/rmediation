@@ -95,7 +95,7 @@
 Development Team</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/data-wise/rmediation/blob/v1.6.0/vignettes/methods-comparison.Rmd" class="external-link"><code>vignettes/methods-comparison.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/data-wise/rmediation/blob/main/vignettes/methods-comparison.Rmd" class="external-link"><code>vignettes/methods-comparison.Rmd</code></a></small>
       <div class="d-none name"><code>methods-comparison.Rmd</code></div>
     </div>
 
@@ -117,7 +117,8 @@ intervals for indirect effects:</p>
 <ul>
 <li>
 <strong>Distribution of Product (DOP)</strong>: Exact method for the
-product of two normal random variables</li>
+product of two or three normal random variables (<code><a href="../reference/medci.html">medci()</a></code> /
+<code>ProductNormal3</code>)</li>
 <li>
 <strong>Monte Carlo (MC)</strong>: Simulation-based approach using
 random sampling</li>
@@ -237,13 +238,14 @@ Advanced frequentist method for hypothesis testing</li>
 <ul>
 <li>
 <strong>Best for:</strong> Small samples where normality assumptions
-may not hold</li>
+may not hold; two- and three-variable products</li>
 <li>
-<strong>Advantages:</strong> Exact method for product of two
-normals, maintains Type I error rates</li>
+<strong>Advantages:</strong> Exact method for product of two or
+three normals (<code>ProductNormal3</code>), maintains Type I error
+rates</li>
 <li>
-<strong>Disadvantages:</strong> Computationally intensive for
-complex models</li>
+<strong>Disadvantages:</strong> Limited to products of two or three
+variables; use MC for more complex functions</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Example using DOP method</span></span>

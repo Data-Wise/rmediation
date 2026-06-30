@@ -13,7 +13,9 @@ RMediation provides several methods for computing confidence intervals
 for indirect effects:
 
 - **Distribution of Product (DOP)**: Exact method for the product of two
-  normal random variables
+  or three normal random variables
+  ([`medci()`](https://data-wise.github.io/rmediation/reference/medci.md)
+  / `ProductNormal3`)
 - **Monte Carlo (MC)**: Simulation-based approach using random sampling
 - **Asymptotic Normal**: Traditional approach based on normal theory
   (e.g., Sobel test)
@@ -127,10 +129,12 @@ for(i in seq_along(param_sets)) {
 
 ### Distribution of Product (DOP)
 
-- **Best for:** Small samples where normality assumptions may not hold
-- **Advantages:** Exact method for product of two normals, maintains
-  Type I error rates
-- **Disadvantages:** Computationally intensive for complex models
+- **Best for:** Small samples where normality assumptions may not hold;
+  two- and three-variable products
+- **Advantages:** Exact method for product of two or three normals
+  (`ProductNormal3`), maintains Type I error rates
+- **Disadvantages:** Limited to products of two or three variables; use
+  MC for more complex functions
 
 ``` r
 

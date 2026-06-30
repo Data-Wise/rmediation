@@ -95,7 +95,7 @@
 Development Team</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/data-wise/rmediation/blob/v1.6.0/vignettes/getting-started.Rmd" class="external-link"><code>vignettes/getting-started.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/data-wise/rmediation/blob/main/vignettes/getting-started.Rmd" class="external-link"><code>vignettes/getting-started.Rmd</code></a></small>
       <div class="d-none name"><code>getting-started.Rmd</code></div>
     </div>
 
@@ -170,10 +170,28 @@ statistics:</p>
 <span><span class="co">#&gt;   .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt;</span></span></code></pre></div>
 </div>
 <div class="section level3">
+<h3 id="three-variable-indirect-effects-productnormal3">Three-Variable Indirect Effects (ProductNormal3)<a class="anchor" aria-label="anchor" href="#three-variable-indirect-effects-productnormal3"></a>
+</h3>
+<p>For sequential indirect effects of the form <code>a1 * a2 * b</code>
+(e.g., X → M1 → M2 → Y), use the <code>ProductNormal3</code> S7 class
+and its exact <code><a href="../reference/p_prod3.html">p_prod3()</a></code> CDF engine:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Path coefficients (a1, a2, b) and their joint covariance</span></span>
+<span><span class="va">mu3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>a1 <span class="op">=</span> <span class="fl">0.5</span>, a2 <span class="op">=</span> <span class="fl">0.4</span>, b <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span></span>
+<span><span class="va">Sigma3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.01</span>, <span class="fl">0.01</span><span class="op">)</span><span class="op">)</span>  <span class="co"># independent paths</span></span>
+<span></span>
+<span><span class="co"># Create the distribution object and compute 95% CI</span></span>
+<span><span class="va">pn3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ProductNormal3.html">ProductNormal3</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="va">mu3</span>, Sigma <span class="op">=</span> <span class="va">Sigma3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/ci.html">ci</a></span><span class="op">(</span><span class="va">pn3</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Direct CDF query: P(a1*a2*b &lt;= 0)</span></span>
+<span><span class="fu"><a href="../reference/p_prod3.html">p_prod3</a></span><span class="op">(</span>q <span class="op">=</span> <span class="fl">0</span>, mean <span class="op">=</span> <span class="va">mu3</span>, cov <span class="op">=</span> <span class="va">Sigma3</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="using-s7-classes">Using S7 Classes<a class="anchor" aria-label="anchor" href="#using-s7-classes"></a>
 </h3>
 <p>The package includes modern S7 object-oriented classes:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a ProductNormal distribution object</span></span>
 <span><span class="va">pn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ProductNormal.html">ProductNormal</a></span><span class="op">(</span></span>
 <span>    mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.3</span><span class="op">)</span>, <span class="co"># Means of the two normal variables</span></span>
@@ -203,7 +221,7 @@ medci)</li>
 <li>
 <code>"all"</code>: All methods</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compare different methods</span></span>
 <span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/medci.html">medci</a></span><span class="op">(</span></span>
 <span>    mu.x <span class="op">=</span> <span class="fl">0.5</span>,</span>
@@ -236,7 +254,7 @@ medci)</li>
 <h2 id="integration-with-structural-equation-modeling">Integration with Structural Equation Modeling<a class="anchor" aria-label="anchor" href="#integration-with-structural-equation-modeling"></a>
 </h2>
 <p>RMediation integrates seamlessly with popular SEM packages:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://lavaan.ugent.be" class="external-link">lavaan</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Define a simple mediation model</span></span>
@@ -271,7 +289,7 @@ medci)</li>
 <h2 id="validation-and-error-handling">Validation and Error Handling<a class="anchor" aria-label="anchor" href="#validation-and-error-handling"></a>
 </h2>
 <p>The package includes robust validation for inputs:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># These would throw helpful error messages:</span></span>
 <span><span class="co"># medci(mu.x = 0.5, mu.y = 0.6, se.x = -0.1, se.y = 0.04)  # Invalid negative SE</span></span>
 <span><span class="co"># ci(mu = c(0.5), Sigma = matrix(1), quant = ~ b1)  # Dimension mismatch</span></span></code></pre></div>

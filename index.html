@@ -133,12 +133,12 @@
 <tr>
 <td>
 <strong>DOP</strong> (Distribution of Product)</td>
-<td>Two-variable products; publication-quality results</td>
+<td>Two- and three-variable products; publication-quality results</td>
 <td>Fast</td>
 </tr>
 <tr>
 <td><strong>Monte Carlo</strong></td>
-<td>Complex models; 3+ variable products</td>
+<td>Complex models; 4+ variable products</td>
 <td>Moderate</td>
 </tr>
 <tr>
@@ -253,10 +253,31 @@
 <p>See <code><a href="articles/serial-mediation-with-medfit.html">vignette("serial-mediation-with-medfit")</a></code> for the full lavaan and lm/glm workflow.</p>
 </div>
 <div class="section level3">
+<h3 id="three-variable-indirect-effects-productnormal3">Three-Variable Indirect Effects (ProductNormal3)<a class="anchor" aria-label="anchor" href="#three-variable-indirect-effects-productnormal3"></a>
+</h3>
+<p>For sequential indirect effects of the form <code>a1 * a2 * b</code> (e.g., X → M1 → M2 → Y), use <code>ProductNormal3</code> and its exact <code><a href="reference/p_prod3.html">p_prod3()</a></code> CDF:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Path coefficients and their joint covariance</span></span>
+<span><span class="va">mu</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>a1 <span class="op">=</span> <span class="fl">0.5</span>, a2 <span class="op">=</span> <span class="fl">0.4</span>, b <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span></span>
+<span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.01</span>, <span class="fl">0.01</span><span class="op">)</span><span class="op">)</span>  <span class="co"># independent paths</span></span>
+<span></span>
+<span><span class="co"># Exact 95% CI for the a1*a2*b sequential indirect effect</span></span>
+<span><span class="va">pn3</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ProductNormal3.html">ProductNormal3</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="va">mu</span>, Sigma <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span><span class="va">pn3</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#&gt; 95% CI: [0.024, 0.248]</span></span>
+<span><span class="co">#&gt; Estimate: 0.120</span></span>
+<span></span>
+<span><span class="co"># Direct CDF query</span></span>
+<span><span class="fu"><a href="reference/p_prod3.html">p_prod3</a></span><span class="op">(</span>q <span class="op">=</span> <span class="fl">0</span>, mean <span class="op">=</span> <span class="va">mu</span>, cov <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span>  <span class="co"># P(a1*a2*b &lt;= 0)</span></span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="using-the-s7-productnormal-class">Using the S7 ProductNormal Class<a class="anchor" aria-label="anchor" href="#using-the-s7-productnormal-class"></a>
 </h3>
 <p>For programmatic use, create <code>ProductNormal</code> objects directly:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Define distribution of two correlated normal variables</span></span>
 <span><span class="va">pn</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ProductNormal.html">ProductNormal</a></span><span class="op">(</span></span>
 <span>  mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.3</span><span class="op">)</span>,</span>
@@ -278,7 +299,7 @@
 <h3 id="hypothesis-testing-with-mbco">Hypothesis Testing with MBCO<a class="anchor" aria-label="anchor" href="#hypothesis-testing-with-mbco"></a>
 </h3>
 <p>For formal hypothesis testing of indirect effects using bootstrap:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Requires OpenMx model</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openmx.ssri.psu.edu/" class="external-link">OpenMx</a></span><span class="op">)</span></span>
 <span></span>
@@ -307,7 +328,7 @@
 </tr>
 <tr>
 <td><code><a href="reference/ci.html">ci()</a></code></td>
-<td>CI for any function of parameters (formulas, lavaan, ProductNormal)</td>
+<td>CI for any function of parameters (formulas, lavaan, ProductNormal, ProductNormal3)</td>
 </tr>
 <tr>
 <td><code><a href="reference/mbco.html">mbco()</a></code></td>
@@ -322,8 +343,16 @@
 <td>Quantiles of product of two normals</td>
 </tr>
 <tr>
+<td><code><a href="reference/p_prod3.html">p_prod3()</a></code></td>
+<td>Exact CDF of product of three normals (<code>a1*a2*b</code>)</td>
+</tr>
+<tr>
 <td><code><a href="reference/ProductNormal.html">ProductNormal()</a></code></td>
-<td>S7 class for product distributions</td>
+<td>S7 class for two-variable product distributions</td>
+</tr>
+<tr>
+<td><code><a href="reference/ProductNormal3.html">ProductNormal3()</a></code></td>
+<td>S7 class for three-variable sequential indirect effects</td>
 </tr>
 </tbody>
 </table>
@@ -369,7 +398,7 @@
 </tbody>
 </table>
 <p>Install the entire ecosystem:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Data-Wise/mediationverse"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mediationverse</span><span class="op">)</span>  <span class="co"># Loads all packages</span></span></code></pre></div>
 </div>
