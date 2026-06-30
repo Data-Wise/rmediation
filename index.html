@@ -34,7 +34,7 @@
 
     <a class="navbar-brand me-2" href="index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,9 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-ecosystem" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Ecosystem</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-ecosystem">
-<li><h6 class="dropdown-header" data-toc-skip>Core Packages</h6></li>
+<li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/">mediationverse (Umbrella)</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Core Packages</h6></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/medfit/">medfit (Foundation)</a></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/probmed/">probmed (P_med Effect Size)</a></li>
     <li><a class="dropdown-item" href="https://data-wise.github.io/rmediation/">RMediation (Confidence Intervals)</a></li>
@@ -205,7 +207,7 @@
 <p>For models with multiple sequential mediators (X → M₁ → M₂ → Y), use the <code><a href="reference/ci.html">ci()</a></code> function with a formula:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Four-path indirect effect: b1 * b2 * b3 * b4</span></span>
-<span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">1.0</span>, b2 <span class="op">=</span> <span class="fl">0.7</span>, b3 <span class="op">=</span> <span class="fl">0.6</span>, b4 <span class="op">=</span> <span class="fl">0.45</span><span class="op">)</span>,</span>
+<span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">1.0</span>, b2 <span class="op">=</span> <span class="fl">0.7</span>, b3 <span class="op">=</span> <span class="fl">0.6</span>, b4 <span class="op">=</span> <span class="fl">0.45</span><span class="op">)</span>,</span>
 <span>   Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>,    <span class="co"># Covariance matrix (lower triangle)</span></span>
 <span>             <span class="fl">0.05</span>, <span class="fl">0</span>, <span class="fl">0</span>,</span>
 <span>             <span class="fl">0.03</span>, <span class="fl">0</span>,</span>
@@ -255,7 +257,7 @@
 <div class="section level3">
 <h3 id="three-variable-indirect-effects-productnormal3">Three-Variable Indirect Effects (ProductNormal3)<a class="anchor" aria-label="anchor" href="#three-variable-indirect-effects-productnormal3"></a>
 </h3>
-<p>For sequential indirect effects of the form <code>a1 * a2 * b</code> (e.g., X → M1 → M2 → Y), use <code>ProductNormal3</code> and its exact <code><a href="reference/p_prod3.html">p_prod3()</a></code> CDF:</p>
+<p>For sequential indirect effects of the form <code>a1 * a2 * b</code> (e.g., X → M1 → M2 → Y), use <code>ProductNormal3</code> and its exact <code><a href="reference/pprodnormal3.html">pprodnormal3()</a></code> CDF:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://data-wise.github.io/rmediation/">RMediation</a></span><span class="op">)</span></span>
 <span></span>
@@ -271,7 +273,7 @@
 <span><span class="co">#&gt; Estimate: 0.120</span></span>
 <span></span>
 <span><span class="co"># Direct CDF query</span></span>
-<span><span class="fu"><a href="reference/p_prod3.html">p_prod3</a></span><span class="op">(</span>q <span class="op">=</span> <span class="fl">0</span>, mean <span class="op">=</span> <span class="va">mu</span>, cov <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span>  <span class="co"># P(a1*a2*b &lt;= 0)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/pprodnormal3.html">pprodnormal3</a></span><span class="op">(</span>q <span class="op">=</span> <span class="fl">0</span>, mean <span class="op">=</span> <span class="va">mu</span>, cov <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span>  <span class="co"># P(a1*a2*b &lt;= 0)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="using-the-s7-productnormal-class">Using the S7 ProductNormal Class<a class="anchor" aria-label="anchor" href="#using-the-s7-productnormal-class"></a>
@@ -343,7 +345,7 @@
 <td>Quantiles of product of two normals</td>
 </tr>
 <tr>
-<td><code><a href="reference/p_prod3.html">p_prod3()</a></code></td>
+<td><code><a href="reference/pprodnormal3.html">pprodnormal3()</a></code></td>
 <td>Exact CDF of product of three normals (<code>a1*a2*b</code>)</td>
 </tr>
 <tr>

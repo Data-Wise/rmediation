@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +25,9 @@
   </ul></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-ecosystem" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Ecosystem</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-ecosystem"><li><h6 class="dropdown-header" data-toc-skip>Core Packages</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-ecosystem"><li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/">mediationverse (Umbrella)</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Core Packages</h6></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/medfit/">medfit (Foundation)</a></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/probmed/">probmed (P_med Effect Size)</a></li>
     <li><a class="dropdown-item" href="https://data-wise.github.io/rmediation/">RMediation (Confidence Intervals)</a></li>
@@ -58,11 +60,34 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.6.1" id="rmediation-161-2026-06-30">RMediation 1.6.1 (2026-06-30)<a class="anchor" aria-label="anchor" href="#rmediation-161-2026-06-30"></a></h2>
+<div class="section level3">
+<h3 id="naming-convention-cleanup-1-6-1">Naming convention cleanup<a class="anchor" aria-label="anchor" href="#naming-convention-cleanup-1-6-1"></a></h3>
+<ul><li><p><code><a href="../reference/pprodnormal3.html">p_prod3()</a></code> is renamed to <code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code> to match the existing <code><a href="../reference/pprodnormal.html">pprodnormal()</a></code>/<code><a href="../reference/qprodnormal.html">qprodnormal()</a></code> family. <code><a href="../reference/pprodnormal3.html">p_prod3()</a></code> remains available as a silent (non-warning) alias and will gain a formal deprecation warning in a future release.</p></li>
+<li><p><code><a href="../reference/ProductNormal2.html">ProductNormal2()</a></code> remains available but is superseded by <code><a href="../reference/ProductNormal.html">ProductNormal()</a></code> for direct construction; internal callers now use <code><a href="../reference/ProductNormal.html">ProductNormal()</a></code> directly.</p></li>
+<li><p>The <code><a href="../reference/ci.html">ci()</a></code> generic’s dispatch argument is renamed from <code>mu</code> to <code>object</code> for consistency with the package’s other S7 generics (<code><a href="../reference/cdf.html">cdf()</a></code>, <code><a href="../reference/dist_quantile.html">dist_quantile()</a></code>). This only affects callers using <code>ci(mu = ...)</code> as a named argument; positional calls (<code>ci(mu, ...)</code>) are unaffected.</p></li>
+<li>
+<p>Undocumented internal helpers (<code>validate_ProductNormal()</code>, <code>is_valid_for_computation()</code>, <code>ProductNormal_from_lavaan()</code>) are now hidden from the package documentation index (<code>@noRd</code>); they remain available internally but are not part of the public API.</p>
+<table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr><th>Old</th>
+<th>New</th>
+</tr></thead><tbody><tr><td><code>p_prod3(q, mean, cov, ...)</code></td>
+<td><code>pprodnormal3(q, mean, cov, ...)</code></td>
+</tr><tr><td><code>ci(mu = ..., Sigma = ..., quant = ...)</code></td>
+<td>
+<code>ci(..., Sigma = ..., quant = ...)</code> (positional)</td>
+</tr></tbody></table></li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-and-lint-1-6-1">Documentation and lint<a class="anchor" aria-label="anchor" href="#documentation-and-lint-1-6-1"></a></h3>
+<ul><li>Added <code>@examples</code> to all exported functions/generics that previously lacked them, addressing <code>goodpractice::gp()</code> advisories ahead of CRAN resubmission.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.6.0" id="rmediation-160-2026-06-29">RMediation 1.6.0 (2026-06-29)<a class="anchor" aria-label="anchor" href="#rmediation-160-2026-06-29"></a></h2>
 <div class="section level3">
 <h3 id="productnormal3-exact-cdf-for-the-product-of-three-normals-1-6-0">ProductNormal3: exact CDF for the product of three normals<a class="anchor" aria-label="anchor" href="#productnormal3-exact-cdf-for-the-product-of-three-normals-1-6-0"></a></h3>
 <ul><li>New S7 class <code>ProductNormal3</code> for sequential indirect effects of the form <code>a1 * a2 * b</code>, with <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>, <code><a href="../reference/cdf.html">cdf()</a></code>, <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code>, and <code><a href="../reference/ci.html">ci()</a></code> methods.</li>
-<li>New core engine <code><a href="../reference/p_prod3.html">p_prod3()</a></code> computes <code>P(a1 * a2 * b &lt;= q)</code> via the conditional-expectation dimension-reduction double integral (Tofighi, 2026).</li>
+<li>New core engine <code><a href="../reference/pprodnormal3.html">p_prod3()</a></code> computes <code>P(a1 * a2 * b &lt;= q)</code> via the conditional-expectation dimension-reduction double integral (Tofighi, 2026).</li>
 <li>Integration is performed by <code><a href="https://bnaras.github.io/cubature/reference/hcubature.html" class="external-link">cubature::hcubature</a></code>; degenerate covariances are reduced to the existing two-variable product-normal CDF.</li>
 </ul></div>
 <div class="section level3">

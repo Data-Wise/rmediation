@@ -75,3 +75,26 @@ medci_prototype(
 - ...:
 
   additional arguments to be passed on to the function.
+
+## Value
+
+A list matching the
+[`medci`](https://data-wise.github.io/rmediation/reference/medci.md)
+return format. When `type != "all"`, a named list with elements `CI`,
+`Estimate`, and `SE`. When `type = "all"`, a list of three such lists
+(one per method).
+
+## Examples
+
+``` r
+medci_prototype(mu.x = 0.5, mu.y = 0.3, se.x = 0.1, se.y = 0.1)
+#> $`95% CI`
+#> [1] 0.04680576 0.27787049
+#> 
+#> $Estimate
+#> [1] 0.15
+#> 
+#> $SE
+#> [1] 0.0591608
+#> 
+```

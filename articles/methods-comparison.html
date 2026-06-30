@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +51,9 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-ecosystem" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Ecosystem</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-ecosystem">
-<li><h6 class="dropdown-header" data-toc-skip>Core Packages</h6></li>
+<li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/">mediationverse (Umbrella)</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Core Packages</h6></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/medfit/">medfit (Foundation)</a></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/probmed/">probmed (P_med Effect Size)</a></li>
     <li><a class="dropdown-item" href="https://data-wise.github.io/rmediation/">RMediation (Confidence Intervals)</a></li>
@@ -136,23 +138,23 @@ Advanced frequentist method for hypothesis testing</li>
 <p>Let’s compare different methods using the same example:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Same example parameters</span></span>
-<span><span class="va">mu.x</span> <span class="op">&lt;-</span> <span class="fl">0.5</span>  <span class="co"># Effect of X on M</span></span>
-<span><span class="va">mu.y</span> <span class="op">&lt;-</span> <span class="fl">0.6</span>  <span class="co"># Effect of M on Y (controlling for X)</span></span>
+<span><span class="va">mu.x</span> <span class="op">&lt;-</span> <span class="fl">0.5</span> <span class="co"># Effect of X on M</span></span>
+<span><span class="va">mu.y</span> <span class="op">&lt;-</span> <span class="fl">0.6</span> <span class="co"># Effect of M on Y (controlling for X)</span></span>
 <span><span class="va">se.x</span> <span class="op">&lt;-</span> <span class="fl">0.08</span> <span class="co"># Standard error of a path</span></span>
 <span><span class="va">se.y</span> <span class="op">&lt;-</span> <span class="fl">0.04</span> <span class="co"># Standard error of b path</span></span>
-<span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fl">0</span>     <span class="co"># Correlation between a and b</span></span>
+<span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fl">0</span> <span class="co"># Correlation between a and b</span></span>
 <span></span>
 <span><span class="co"># Compare all methods</span></span>
 <span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/medci.html">medci</a></span><span class="op">(</span></span>
 <span>  mu.x <span class="op">=</span> <span class="va">mu.x</span>, mu.y <span class="op">=</span> <span class="va">mu.y</span>,</span>
 <span>  se.x <span class="op">=</span> <span class="va">se.x</span>, se.y <span class="op">=</span> <span class="va">se.y</span>,</span>
 <span>  rho <span class="op">=</span> <span class="va">rho</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"all"</span>,  <span class="co"># This gives results for all methods</span></span>
+<span>  type <span class="op">=</span> <span class="st">"all"</span>, <span class="co"># This gives results for all methods</span></span>
 <span>  plot <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Print results</span></span>
-<span><span class="kw">for</span><span class="op">(</span><span class="va">method_name</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">method_name</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\n"</span>, <span class="va">method_name</span>, <span class="st">":\n"</span><span class="op">)</span></span>
 <span>  <span class="co"># Display the structure of each result</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">results</span><span class="op">[[</span><span class="va">method_name</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
@@ -191,7 +193,7 @@ Advanced frequentist method for hypothesis testing</li>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mu.x <span class="op">=</span> <span class="fl">0.1</span>, mu.y <span class="op">=</span> <span class="fl">0.2</span>, se.x <span class="op">=</span> <span class="fl">0.05</span>, se.y <span class="op">=</span> <span class="fl">0.03</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">param_sets</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">param_sets</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">params</span> <span class="op">&lt;-</span> <span class="va">param_sets</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\nParameter set"</span>, <span class="va">i</span>, <span class="st">":\n"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Effect sizes: a ="</span>, <span class="va">params</span><span class="op">$</span><span class="va">mu.x</span>, <span class="st">", b ="</span>, <span class="va">params</span><span class="op">$</span><span class="va">mu.y</span>, <span class="st">"\n"</span><span class="op">)</span></span>
@@ -205,8 +207,8 @@ Advanced frequentist method for hypothesis testing</li>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="co"># Print confidence intervals from each method</span></span>
-<span>  <span class="kw">for</span><span class="op">(</span><span class="va">method_name</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">results_subset</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">ci_values</span> <span class="op">&lt;-</span> <span class="va">results_subset</span><span class="op">[[</span><span class="va">method_name</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>  <span class="co"># Extract CI values</span></span>
+<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">method_name</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">results_subset</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">ci_values</span> <span class="op">&lt;-</span> <span class="va">results_subset</span><span class="op">[[</span><span class="va">method_name</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="co"># Extract CI values</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%-25s: [%.3f, %.3f]\n"</span>, <span class="va">method_name</span>, <span class="va">ci_values</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">ci_values</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span>
@@ -285,7 +287,7 @@ stability</li>
 <span>  se.x <span class="op">=</span> <span class="fl">0.08</span>, se.y <span class="op">=</span> <span class="fl">0.04</span>,</span>
 <span>  rho <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"mc"</span>,</span>
-<span>  n.mc <span class="op">=</span> <span class="fl">1e5</span>  <span class="co"># Specify Monte Carlo sample size</span></span>
+<span>  n.mc <span class="op">=</span> <span class="fl">1e5</span> <span class="co"># Specify Monte Carlo sample size</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Monte Carlo Method Results:\n"</span><span class="op">)</span></span>
@@ -336,8 +338,8 @@ functionality:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a ProductNormal object (represents distribution of product)</span></span>
 <span><span class="va">pn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ProductNormal.html">ProductNormal</a></span><span class="op">(</span></span>
-<span>  mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.6</span><span class="op">)</span>,  <span class="co"># Means of the two variables</span></span>
-<span>  Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.0064</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0.0016</span><span class="op">)</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>  <span class="co"># Covariance matrix (se.x^2, 0, 0, se.y^2)</span></span>
+<span>  mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.6</span><span class="op">)</span>, <span class="co"># Means of the two variables</span></span>
+<span>  Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.0064</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0.0016</span><span class="op">)</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span> <span class="co"># Covariance matrix (se.x^2, 0, 0, se.y^2)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Compute cumulative distribution function</span></span>
@@ -353,8 +355,8 @@ functionality:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"95% Confidence Interval:"</span>, <span class="va">ci_result</span>, <span class="st">"\n"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Print and summary methods</span></span>
-<span><span class="fu">show</span><span class="op">(</span><span class="va">pn</span><span class="op">)</span>  <span class="co"># Use show instead of print</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pn</span><span class="op">)</span>  <span class="co"># This should work as it's a different S7 method</span></span></code></pre></div>
+<span><span class="fu">show</span><span class="op">(</span><span class="va">pn</span><span class="op">)</span> <span class="co"># Use show instead of print</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pn</span><span class="op">)</span> <span class="co"># This should work as it's a different S7 method</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="practical-recommendations">Practical Recommendations<a class="anchor" aria-label="anchor" href="#practical-recommendations"></a>

@@ -13,7 +13,7 @@ normal random variables"><meta property="og:image" content="https://data-wise.gi
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,7 +31,9 @@ normal random variables"><meta property="og:image" content="https://data-wise.gi
   </ul></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-ecosystem" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Ecosystem</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-ecosystem"><li><h6 class="dropdown-header" data-toc-skip>Core Packages</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-ecosystem"><li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/">mediationverse (Umbrella)</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Core Packages</h6></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/medfit/">medfit (Foundation)</a></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/probmed/">probmed (P_med Effect Size)</a></li>
     <li><a class="dropdown-item" href="https://data-wise.github.io/rmediation/">RMediation (Confidence Intervals)</a></li>
@@ -281,8 +283,10 @@ confidence intervals. <em>Behavior Research Methods</em>, <b>43</b>,
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>'length', 'angle', or 'code' greater than length 1; values after the first are ignored</span>
 <span class="r-plt img"><img src="medci-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co">## Example 2</span></span></span>
-<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">medci</span><span class="op">(</span>mu.x <span class="op">=</span> <span class="fl">.2</span>, mu.y <span class="op">=</span> <span class="fl">.4</span>, se.x <span class="op">=</span> <span class="fl">1</span>, se.y <span class="op">=</span> <span class="fl">1</span>, rho <span class="op">=</span> <span class="fl">0</span>,</span></span>
-<span class="r-in"><span> alpha <span class="op">=</span> <span class="fl">.05</span>, type <span class="op">=</span> <span class="st">"all"</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, plotCI <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">medci</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  mu.x <span class="op">=</span> <span class="fl">.2</span>, mu.y <span class="op">=</span> <span class="fl">.4</span>, se.x <span class="op">=</span> <span class="fl">1</span>, se.y <span class="op">=</span> <span class="fl">1</span>, rho <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>  alpha <span class="op">=</span> <span class="fl">.05</span>, type <span class="op">=</span> <span class="st">"all"</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, plotCI <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>'length', 'angle', or 'code' greater than length 1; values after the first are ignored</span>
 <span class="r-plt img"><img src="medci-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co">## Example 1</span></span></span>
@@ -293,8 +297,10 @@ confidence intervals. <em>Behavior Research Methods</em>, <b>43</b>,
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>'length', 'angle', or 'code' greater than length 1; values after the first are ignored</span>
 <span class="r-plt img"><img src="medci-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co">## Example 2</span></span></span>
-<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">medci</span><span class="op">(</span>mu.x <span class="op">=</span> <span class="fl">.2</span>, mu.y <span class="op">=</span> <span class="fl">.4</span>, se.x <span class="op">=</span> <span class="fl">1</span>, se.y <span class="op">=</span> <span class="fl">1</span>, rho <span class="op">=</span> <span class="fl">0</span>,</span></span>
-<span class="r-in"><span> alpha <span class="op">=</span> <span class="fl">.05</span>, type <span class="op">=</span> <span class="st">"all"</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, plotCI <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">medci</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  mu.x <span class="op">=</span> <span class="fl">.2</span>, mu.y <span class="op">=</span> <span class="fl">.4</span>, se.x <span class="op">=</span> <span class="fl">1</span>, se.y <span class="op">=</span> <span class="fl">1</span>, rho <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>  alpha <span class="op">=</span> <span class="fl">.05</span>, type <span class="op">=</span> <span class="st">"all"</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, plotCI <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>'length', 'angle', or 'code' greater than length 1; values after the first are ignored</span>
 <span class="r-plt img"><img src="medci-4.png" alt="" width="700" height="433"></span>
 </code></pre></div>

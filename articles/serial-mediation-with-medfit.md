@@ -8,7 +8,7 @@ path coefficients and their covariance matrix into a tidy S7 object.
 RMediation then computes a confidence interval for the (possibly serial)
 indirect effect from that object.
 
-This division of labour means you do **not** hand-build coefficient
+This division of labor means you do **not** hand-build coefficient
 vectors and covariance matrices yourself —
 [`medfit::extract_mediation()`](https://data-wise.github.io/medfit/reference/extract_mediation.html)
 produces them, and
@@ -30,11 +30,11 @@ medfit extract a `SerialMediationData` object.
 ``` r
 
 set.seed(42)
-n  <- 800
-X  <- rnorm(n)
-M1 <- 0.5 * X  + rnorm(n)
+n <- 800
+X <- rnorm(n)
+M1 <- 0.5 * X + rnorm(n)
 M2 <- 0.6 * M1 + rnorm(n)
-Y  <- 0.7 * M2 + 0.2 * X + rnorm(n)
+Y <- 0.7 * M2 + 0.2 * X + rnorm(n)
 dat <- data.frame(X, M1, M2, Y)
 
 model <- "M1 ~ a*X
@@ -44,7 +44,8 @@ fit <- lavaan::sem(model, data = dat)
 
 # medfit extracts the named estimates + covariance RMediation expects.
 mu <- medfit::extract_mediation(
-  fit, treatment = "X", mediator = c("M1", "M2"), outcome = "Y"
+  fit,
+  treatment = "X", mediator = c("M1", "M2"), outcome = "Y"
 )
 class(mu)
 #> [1] "medfit::SerialMediationData" "S7_object"
@@ -81,11 +82,11 @@ construction, with `cov(b, c')` preserved).
 ``` r
 
 set.seed(7)
-n  <- 800
-X  <- rnorm(n)
-M1 <- 0.5 * X  + rnorm(n)
+n <- 800
+X <- rnorm(n)
+M1 <- 0.5 * X + rnorm(n)
 M2 <- 0.6 * M1 + rnorm(n)
-Y  <- 0.7 * M2 + 0.2 * X + rnorm(n)
+Y <- 0.7 * M2 + 0.2 * X + rnorm(n)
 dat <- data.frame(X, M1, M2, Y)
 
 mu_lm <- medfit::extract_mediation(

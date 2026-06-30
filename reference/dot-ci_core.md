@@ -162,7 +162,7 @@ Davood Tofighi <dtofighi@gmail.com>
 
 ``` r
 ci(
-  mu = c(b1 = 1, b2 = .7, b3 = .6, b4 = .45),
+  c(b1 = 1, b2 = .7, b3 = .6, b4 = .45),
   Sigma = c(.05, 0, 0, 0, .05, 0, 0, .03, 0, .03),
   quant = ~ b1 * b2 * b3 * b4, type = "all", plot = TRUE, plotCI = TRUE
 )
@@ -186,7 +186,7 @@ ci(
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3 * b4
-#> <environment: 0x563979e52f30>
+#> <environment: 0x55658ca987d8>
 #> 
 #> $Asymptotic
 #> $Asymptotic$`97.5% CI`
@@ -201,12 +201,12 @@ ci(
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3 * b4
-#> <environment: 0x563979e52f30>
+#> <environment: 0x55658ca987d8>
 #> 
 # An Example of Conservative Null Sampling Distribution
 ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
   quant = ~ b1 * b2 * b3, type = "MC", plot = TRUE, plotCI = TRUE,
-   H0 = TRUE, mu0 = c(b1 = .3, b2 = .4, b3 = 0)
+  H0 = TRUE, mu0 = c(b1 = .3, b2 = .4, b3 = 0)
 )
 
 #> [[1]]
@@ -228,7 +228,7 @@ ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3
-#> <environment: 0x563979e52f30>
+#> <environment: 0x55658ca987d8>
 #> 
 #> [[2]]
 #> [[2]]$CI
@@ -274,7 +274,7 @@ ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3
-#> <environment: 0x563979e52f30>
+#> <environment: 0x55658ca987d8>
 #> 
 #> [[2]]
 #> [[2]]$CI

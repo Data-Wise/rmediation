@@ -29,23 +29,23 @@ Let’s compare different methods using the same example:
 ``` r
 
 # Same example parameters
-mu.x <- 0.5  # Effect of X on M
-mu.y <- 0.6  # Effect of M on Y (controlling for X)
+mu.x <- 0.5 # Effect of X on M
+mu.y <- 0.6 # Effect of M on Y (controlling for X)
 se.x <- 0.08 # Standard error of a path
 se.y <- 0.04 # Standard error of b path
-rho <- 0     # Correlation between a and b
+rho <- 0 # Correlation between a and b
 
 # Compare all methods
 results <- medci(
   mu.x = mu.x, mu.y = mu.y,
   se.x = se.x, se.y = se.y,
   rho = rho,
-  type = "all",  # This gives results for all methods
+  type = "all", # This gives results for all methods
   plot = FALSE
 )
 
 # Print results
-for(method_name in names(results)) {
+for (method_name in names(results)) {
   cat("\n", method_name, ":\n")
   # Display the structure of each result
   str(results[[method_name]])
@@ -86,7 +86,7 @@ param_sets <- list(
   list(mu.x = 0.1, mu.y = 0.2, se.x = 0.05, se.y = 0.03)
 )
 
-for(i in seq_along(param_sets)) {
+for (i in seq_along(param_sets)) {
   params <- param_sets[[i]]
   cat("\nParameter set", i, ":\n")
   cat("Effect sizes: a =", params$mu.x, ", b =", params$mu.y, "\n")
@@ -100,8 +100,8 @@ for(i in seq_along(param_sets)) {
   )
 
   # Print confidence intervals from each method
-  for(method_name in names(results_subset)) {
-    ci_values <- results_subset[[method_name]][[1]]  # Extract CI values
+  for (method_name in names(results_subset)) {
+    ci_values <- results_subset[[method_name]][[1]] # Extract CI values
     cat(sprintf("%-25s: [%.3f, %.3f]\n", method_name, ci_values[1], ci_values[2]))
   }
 }
@@ -169,7 +169,7 @@ result_mc <- medci(
   se.x = 0.08, se.y = 0.04,
   rho = 0,
   type = "mc",
-  n.mc = 1e5  # Specify Monte Carlo sample size
+  n.mc = 1e5 # Specify Monte Carlo sample size
 )
 
 cat("Monte Carlo Method Results:\n")
@@ -215,8 +215,8 @@ The modern S7 implementation provides method-specific functionality:
 
 # Create a ProductNormal object (represents distribution of product)
 pn <- ProductNormal(
-  mu = c(0.5, 0.6),  # Means of the two variables
-  Sigma = matrix(c(0.0064, 0, 0, 0.0016), 2, 2)  # Covariance matrix (se.x^2, 0, 0, se.y^2)
+  mu = c(0.5, 0.6), # Means of the two variables
+  Sigma = matrix(c(0.0064, 0, 0, 0.0016), 2, 2) # Covariance matrix (se.x^2, 0, 0, se.y^2)
 )
 
 # Compute cumulative distribution function
@@ -232,8 +232,8 @@ ci_result <- ci(pn, level = 0.95)
 cat("95% Confidence Interval:", ci_result, "\n")
 
 # Print and summary methods
-show(pn)  # Use show instead of print
-summary(pn)  # This should work as it's a different S7 method
+show(pn) # Use show instead of print
+summary(pn) # This should work as it's a different S7 method
 ```
 
 ## Practical Recommendations

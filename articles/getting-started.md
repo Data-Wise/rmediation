@@ -19,12 +19,12 @@ statistics:
 
 # Example: Single mediator with known coefficients and standard errors
 result <- medci(
-    mu.x = 0.5, # Effect of X on M
-    mu.y = 0.6, # Effect of M on Y (controlling for X)
-    se.x = 0.08, # Standard error of a path
-    se.y = 0.04, # Standard error of b path
-    rho = 0, # Correlation between a and b (often 0 for experimental X)
-    type = "dop" # Distribution of the product method
+  mu.x = 0.5, # Effect of X on M
+  mu.y = 0.6, # Effect of M on Y (controlling for X)
+  se.x = 0.08, # Standard error of a path
+  se.y = 0.04, # Standard error of b path
+  rho = 0, # Correlation between a and b (often 0 for experimental X)
+  type = "dop" # Distribution of the product method
 )
 
 # Display the structure of the result
@@ -51,11 +51,11 @@ For more complex mediation models with multiple mediators:
 
 # Example: Two sequential mediators
 result2 <- ci(
-    mu = c(b1 = 1, b2 = .7, b3 = .6, b4 = .45),
-    Sigma = c(.05, 0, 0, 0, .05, 0, 0, .03, 0, .03),
-    quant = ~ b1 * b2 * b3 * b4,
-    type = "MC",
-    plot = FALSE # Set to TRUE to see visualization
+  c(b1 = 1, b2 = .7, b3 = .6, b4 = .45),
+  Sigma = c(.05, 0, 0, 0, .05, 0, 0, .03, 0, .03),
+  quant = ~ b1 * b2 * b3 * b4,
+  type = "MC",
+  plot = FALSE # Set to TRUE to see visualization
 )
 
 str(result2)
@@ -74,21 +74,21 @@ str(result2)
 
 For sequential indirect effects of the form `a1 * a2 * b` (e.g., X → M1
 → M2 → Y), use the `ProductNormal3` S7 class and its exact
-[`p_prod3()`](https://data-wise.github.io/rmediation/reference/p_prod3.md)
+[`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)
 CDF engine:
 
 ``` r
 
 # Path coefficients (a1, a2, b) and their joint covariance
 mu3 <- c(a1 = 0.5, a2 = 0.4, b = 0.6)
-Sigma3 <- diag(c(0.01, 0.01, 0.01))  # independent paths
+Sigma3 <- diag(c(0.01, 0.01, 0.01)) # independent paths
 
 # Create the distribution object and compute 95% CI
 pn3 <- ProductNormal3(mu = mu3, Sigma = Sigma3)
 ci(pn3, level = 0.95)
 
 # Direct CDF query: P(a1*a2*b <= 0)
-p_prod3(q = 0, mean = mu3, cov = Sigma3)
+pprodnormal3(q = 0, mean = mu3, cov = Sigma3)
 ```
 
 ### Using S7 Classes
@@ -99,8 +99,8 @@ The package includes modern S7 object-oriented classes:
 
 # Create a ProductNormal distribution object
 pn <- ProductNormal(
-    mu = c(0.5, 0.3), # Means of the two normal variables
-    Sigma = matrix(c(0.01, 0.002, 0.002, 0.01), 2, 2) # Covariance matrix
+  mu = c(0.5, 0.3), # Means of the two normal variables
+  Sigma = matrix(c(0.01, 0.002, 0.002, 0.01), 2, 2) # Covariance matrix
 )
 
 # Compute confidence interval
@@ -123,13 +123,13 @@ RMediation offers several methods for computing confidence intervals:
 
 # Compare different methods
 comparison <- medci(
-    mu.x = 0.5,
-    mu.y = 0.6,
-    se.x = 0.08,
-    se.y = 0.04,
-    rho = 0,
-    type = "all",
-    plot = FALSE
+  mu.x = 0.5,
+  mu.y = 0.6,
+  se.x = 0.08,
+  se.y = 0.04,
+  rho = 0,
+  type = "all",
+  plot = FALSE
 )
 
 # Show comparison
@@ -159,7 +159,7 @@ RMediation integrates seamlessly with popular SEM packages:
 library(lavaan)
 
 # Define a simple mediation model
-model <- '
+model <- "
   # Direct effect
   Y ~ c*X
 
@@ -171,7 +171,7 @@ model <- '
   ab := a*b
   # Total effect
   total := c + (a*b)
-'
+"
 # Simulate data
 set.seed(123)
 n <- 1000

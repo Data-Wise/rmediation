@@ -9,7 +9,7 @@ MediationData object using RMediation's methods (DOP, Monte Carlo, etc.)."><meta
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,7 +27,9 @@ MediationData object using RMediation's methods (DOP, Monte Carlo, etc.)."><meta
   </ul></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-ecosystem" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Ecosystem</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-ecosystem"><li><h6 class="dropdown-header" data-toc-skip>Core Packages</h6></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-ecosystem"><li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/">mediationverse (Umbrella)</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Core Packages</h6></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/medfit/">medfit (Foundation)</a></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/probmed/">probmed (P_med Effect Size)</a></li>
     <li><a class="dropdown-item" href="https://data-wise.github.io/rmediation/">RMediation (Confidence Intervals)</a></li>
@@ -67,16 +69,16 @@ MediationData object using RMediation's methods (DOP, Monte Carlo, etc.).</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ci_mediation_data</span><span class="op">(</span><span class="va">mu</span>, level <span class="op">=</span> <span class="fl">0.95</span>, type <span class="op">=</span> <span class="st">"dop"</span>, n.mc <span class="op">=</span> <span class="fl">1e+05</span>, <span class="va">...</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ci_mediation_data</span><span class="op">(</span><span class="va">object</span>, level <span class="op">=</span> <span class="fl">0.95</span>, type <span class="op">=</span> <span class="st">"dop"</span>, n.mc <span class="op">=</span> <span class="fl">1e+05</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">ci_serial_mediation_data</span><span class="op">(</span><span class="va">mu</span>, level <span class="op">=</span> <span class="fl">0.95</span>, type <span class="op">=</span> <span class="st">"MC"</span>, n.mc <span class="op">=</span> <span class="fl">1e+05</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">ci_serial_mediation_data</span><span class="op">(</span><span class="va">object</span>, level <span class="op">=</span> <span class="fl">0.95</span>, type <span class="op">=</span> <span class="st">"MC"</span>, n.mc <span class="op">=</span> <span class="fl">1e+05</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-mu">mu<a class="anchor" aria-label="anchor" href="#arg-mu"></a></dt>
+<dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
 <dd><p>A MediationData object from the medfit package</p></dd>
 
 
@@ -148,8 +150,10 @@ Fast but may be inaccurate for small samples or non-normal distributions.</p></l
 <span class="r-in"><span><span class="va">fit_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Y</span> <span class="op">~</span> <span class="va">X</span> <span class="op">+</span> <span class="va">M</span> <span class="op">+</span> <span class="va">C</span>, data <span class="op">=</span> <span class="va">mydata</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Extract mediation structure</span></span></span>
-<span class="r-in"><span><span class="va">med_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://data-wise.github.io/medfit/reference/extract_mediation.html" class="external-link">extract_mediation</a></span><span class="op">(</span><span class="va">fit_m</span>, model_y <span class="op">=</span> <span class="va">fit_y</span>,</span></span>
-<span class="r-in"><span>                               treatment <span class="op">=</span> <span class="st">"X"</span>, mediator <span class="op">=</span> <span class="st">"M"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">med_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://data-wise.github.io/medfit/reference/extract_mediation.html" class="external-link">extract_mediation</a></span><span class="op">(</span><span class="va">fit_m</span>,</span></span>
+<span class="r-in"><span>  model_y <span class="op">=</span> <span class="va">fit_y</span>,</span></span>
+<span class="r-in"><span>  treatment <span class="op">=</span> <span class="st">"X"</span>, mediator <span class="op">=</span> <span class="st">"M"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compute CI using Distribution of Product</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="ci.html">ci</a></span><span class="op">(</span><span class="va">med_data</span>, type <span class="op">=</span> <span class="st">"dop"</span><span class="op">)</span></span></span>

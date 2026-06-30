@@ -24,7 +24,8 @@ variables.
   : Percentile for the Distribution of Product of Two Normal Variables
 - [`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md)
   : Quantile for the Distribution of Product of Two Normal Variables
-- [`p_prod3()`](https://data-wise.github.io/rmediation/reference/p_prod3.md)
+- [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)
+  [`p_prod3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)
   : Cumulative Distribution Function for the Product of Three Normal
   Variables
 - [`pMC()`](https://data-wise.github.io/rmediation/reference/pMC.md) :
@@ -61,18 +62,8 @@ mediation analysis.
 
 S3 methods, validation helpers, and utility functions.
 
-- [`utils_validation`](https://data-wise.github.io/rmediation/reference/utils_validation.md)
-  : Enhanced validation and utility functions for ProductNormal class
 - [`ProductNormal2()`](https://data-wise.github.io/rmediation/reference/ProductNormal2.md)
   : Enhanced ProductNormal constructor with better validation
-- [`ProductNormal_from_lavaan()`](https://data-wise.github.io/rmediation/reference/ProductNormal_from_lavaan.md)
-  : Utility function to create ProductNormal from lavaan parameter
-  estimates
-- [`validate_ProductNormal()`](https://data-wise.github.io/rmediation/reference/validate_ProductNormal.md)
-  : Additional validation for ProductNormal objects
-- [`is_valid_for_computation()`](https://data-wise.github.io/rmediation/reference/is_valid_for_computation.md)
-  : Method to check if ProductNormal object is properly specified for
-  computation
 - [`tidy()`](https://data-wise.github.io/rmediation/reference/tidy.md) :
   Tidy generic function
 - [`tidy(`*`<logLik>`*`)`](https://data-wise.github.io/rmediation/reference/tidy_logLik.md)

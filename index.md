@@ -96,7 +96,7 @@ function with a formula:
 ``` r
 
 # Four-path indirect effect: b1 * b2 * b3 * b4
-ci(mu = c(b1 = 1.0, b2 = 0.7, b3 = 0.6, b4 = 0.45),
+ci(c(b1 = 1.0, b2 = 0.7, b3 = 0.6, b4 = 0.45),
    Sigma = c(0.05, 0, 0, 0,    # Covariance matrix (lower triangle)
              0.05, 0, 0,
              0.03, 0,
@@ -160,7 +160,7 @@ for the full lavaan and lm/glm workflow.
 
 For sequential indirect effects of the form `a1 * a2 * b` (e.g., X → M1
 → M2 → Y), use `ProductNormal3` and its exact
-[`p_prod3()`](https://data-wise.github.io/rmediation/reference/p_prod3.md)
+[`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)
 CDF:
 
 ``` r
@@ -179,7 +179,7 @@ ci(pn3, level = 0.95)
 #> Estimate: 0.120
 
 # Direct CDF query
-p_prod3(q = 0, mean = mu, cov = Sigma)  # P(a1*a2*b <= 0)
+pprodnormal3(q = 0, mean = mu, cov = Sigma)  # P(a1*a2*b <= 0)
 ```
 
 ### Using the S7 ProductNormal Class
@@ -230,7 +230,7 @@ mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
 | [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md) | Bootstrap hypothesis tests via MBCO |
 | [`pprodnormal()`](https://data-wise.github.io/rmediation/reference/pprodnormal.md) | CDF of product of two normals |
 | [`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md) | Quantiles of product of two normals |
-| [`p_prod3()`](https://data-wise.github.io/rmediation/reference/p_prod3.md) | Exact CDF of product of three normals (`a1*a2*b`) |
+| [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md) | Exact CDF of product of three normals (`a1*a2*b`) |
 | [`ProductNormal()`](https://data-wise.github.io/rmediation/reference/ProductNormal.md) | S7 class for two-variable product distributions |
 | [`ProductNormal3()`](https://data-wise.github.io/rmediation/reference/ProductNormal3.md) | S7 class for three-variable sequential indirect effects |
 

@@ -22,3 +22,11 @@ cdf(object, ...)
 
 A numeric vector of cumulative probabilities for the supplied quantiles,
 as returned by the dispatched method.
+
+## Examples
+
+``` r
+pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
+cdf(pn, q = 0)
+#> [1] 0.2088018
+```

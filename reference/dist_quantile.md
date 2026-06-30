@@ -24,3 +24,11 @@ dist_quantile(object, ...)
 
 A numeric vector of quantiles for the supplied probabilities, as
 returned by the dispatched method.
+
+## Examples
+
+``` r
+pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
+dist_quantile(pn, p = 0.025)
+#> [1] -0.1842996
+```

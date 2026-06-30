@@ -21,3 +21,11 @@ tidy(x, ...)
 ## Value
 
 A tibble or data.frame with tidy output
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+tidy(mbco_result)
+} # }
+```

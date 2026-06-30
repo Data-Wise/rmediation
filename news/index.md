@@ -1,5 +1,50 @@
 # Changelog
 
+## RMediation 1.6.1 (2026-06-30)
+
+### Naming convention cleanup
+
+- [`p_prod3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)
+  is renamed to
+  [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)
+  to match the existing
+  [`pprodnormal()`](https://data-wise.github.io/rmediation/reference/pprodnormal.md)/[`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md)
+  family.
+  [`p_prod3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)
+  remains available as a silent (non-warning) alias and will gain a
+  formal deprecation warning in a future release.
+
+- [`ProductNormal2()`](https://data-wise.github.io/rmediation/reference/ProductNormal2.md)
+  remains available but is superseded by
+  [`ProductNormal()`](https://data-wise.github.io/rmediation/reference/ProductNormal.md)
+  for direct construction; internal callers now use
+  [`ProductNormal()`](https://data-wise.github.io/rmediation/reference/ProductNormal.md)
+  directly.
+
+- The [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md)
+  generic’s dispatch argument is renamed from `mu` to `object` for
+  consistency with the package’s other S7 generics
+  ([`cdf()`](https://data-wise.github.io/rmediation/reference/cdf.md),
+  [`dist_quantile()`](https://data-wise.github.io/rmediation/reference/dist_quantile.md)).
+  This only affects callers using `ci(mu = ...)` as a named argument;
+  positional calls (`ci(mu, ...)`) are unaffected.
+
+- Undocumented internal helpers (`validate_ProductNormal()`,
+  `is_valid_for_computation()`, `ProductNormal_from_lavaan()`) are now
+  hidden from the package documentation index (`@noRd`); they remain
+  available internally but are not part of the public API.
+
+  | Old | New |
+  |----|----|
+  | `p_prod3(q, mean, cov, ...)` | `pprodnormal3(q, mean, cov, ...)` |
+  | `ci(mu = ..., Sigma = ..., quant = ...)` | `ci(..., Sigma = ..., quant = ...)` (positional) |
+
+### Documentation and lint
+
+- Added `@examples` to all exported functions/generics that previously
+  lacked them, addressing `goodpractice::gp()` advisories ahead of CRAN
+  resubmission.
+
 ## RMediation 1.6.0 (2026-06-29)
 
 ### ProductNormal3: exact CDF for the product of three normals
@@ -12,7 +57,7 @@
   [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md)
   methods.
 - New core engine
-  [`p_prod3()`](https://data-wise.github.io/rmediation/reference/p_prod3.md)
+  [`p_prod3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)
   computes `P(a1 * a2 * b <= q)` via the conditional-expectation
   dimension-reduction double integral (Tofighi, 2026).
 - Integration is performed by
