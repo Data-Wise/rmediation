@@ -25,7 +25,7 @@ S7::method(cdf, ProductNormal3) <- function(object, q, lower.tail = TRUE, tol = 
   checkmate::assert_number(tol, lower = 0)
 
   p <- vapply(q, function(qq) {
-    p_prod3(qq,
+    p_prod3(qq, # nolint: object_usage_linter.
       mean = object@mu, cov = object@Sigma,
       method = object@method, tol = tol
     )
@@ -40,7 +40,7 @@ S7::method(cdf, ProductNormal3) <- function(object, q, lower.tail = TRUE, tol = 
 
 #' @noRd
 .prod3_quantile <- function(p, mean, cov, lower, upper, tol = 1e-4) {
-  f <- function(q) p_prod3(q, mean = mean, cov = cov, tol = tol) - p
+  f <- function(q) p_prod3(q, mean = mean, cov = cov, tol = tol) - p # nolint: object_usage_linter.
   res <- stats::uniroot(f, interval = c(lower, upper), tol = tol, extendInt = "yes")
   res$root
 }
@@ -67,7 +67,7 @@ S7::method(dist_quantile, ProductNormal3) <- function(object, p, tol = 1e-4, ...
   vapply(p, function(pp) {
     center <- mean_v + sign(pp - 0.5) * z * sd_delta
     .prod3_quantile(pp, mean = mu, cov = Sigma,
-      lower = center - delta_width, upper = center + delta_width, tol = tol)
+                    lower = center - delta_width, upper = center + delta_width, tol = tol)
   }, FUN.VALUE = numeric(1))
 }
 

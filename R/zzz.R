@@ -3,7 +3,7 @@
 .onLoad <- function(libname, pkgname) {
   # Register S4 classes for S7
   S7::S4_register(ProductNormal)
-  S7::S4_register(ProductNormal3)
+  S7::S4_register(ProductNormal3) # nolint: object_usage_linter.
   S7::S4_register(MBCOResult)
 
   # Register S7 methods
