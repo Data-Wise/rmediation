@@ -61,8 +61,10 @@ stopifnot(
 
 # Ensure x is a factor
 if (!is.factor(memory_exp$x)) {
-  memory_exp$x <- factor(memory_exp$x, levels = c(0, 1),
-                         labels = c("repetition", "imagery"))
+  memory_exp$x <- factor(memory_exp$x,
+    levels = c(0, 1),
+    labels = c("repetition", "imagery")
+  )
 }
 
 # ------------------------------------------------------------------------------

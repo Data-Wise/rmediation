@@ -4,7 +4,7 @@ NULL
 #' @export
 S7::method(cdf, ProductNormal) <- function(object, q, type = "dop", n.mc = 1e5, lower.tail = TRUE, ...) {
   checkmate::assert_numeric(q)
-  type <- tolower(type)  # Handle case insensitivity
+  type <- tolower(type) # Handle case insensitivity
   type <- match.arg(type, c("dop", "mc", "all"))
   checkmate::assert_count(n.mc, positive = TRUE)
   checkmate::assert_logical(lower.tail)
@@ -40,7 +40,7 @@ S7::method(cdf, ProductNormal) <- function(object, q, type = "dop", n.mc = 1e5, 
 #' @export
 S7::method(dist_quantile, ProductNormal) <- function(object, p, type = "dop", n.mc = 1e5, lower.tail = TRUE, ...) {
   checkmate::assert_numeric(p, lower = 0, upper = 1)
-  type <- tolower(type)  # Handle case insensitivity
+  type <- tolower(type) # Handle case insensitivity
   type <- match.arg(type, c("dop", "mc", "all"))
   checkmate::assert_count(n.mc, positive = TRUE)
   checkmate::assert_logical(lower.tail)
@@ -67,7 +67,7 @@ S7::method(dist_quantile, ProductNormal) <- function(object, p, type = "dop", n.
 S7::method(ci, ProductNormal) <- function(mu, level = 0.95, type = "dop", n.mc = 1e5, ...) {
   object <- mu # S7 method signature requires 'mu' as first arg
   checkmate::assert_number(level, lower = 0, upper = 1)
-  type <- tolower(type)  # Handle case insensitivity
+  type <- tolower(type) # Handle case insensitivity
   type <- match.arg(type, c("dop", "mc", "asymp", "all", "prodclin"))
   checkmate::assert_count(n.mc, positive = TRUE)
 
@@ -112,13 +112,17 @@ S7::method(summary, ProductNormal) <- function(object, ...) {
   cat("Number of variables:", length(object@mu), "\n\n")
 
   cat("Means:\n")
-  base::print.default(data.frame(Variable = paste0("V", seq_along(object@mu)),
-                         Mean = object@mu))
+  base::print.default(data.frame(
+    Variable = paste0("V", seq_along(object@mu)),
+    Mean = object@mu
+  ))
 
   cat("\nStandard Deviations:\n")
   sds <- sqrt(diag(object@Sigma))
-  base::print.default(data.frame(Variable = paste0("V", seq_along(sds)),
-                         SD = sds))
+  base::print.default(data.frame(
+    Variable = paste0("V", seq_along(sds)),
+    SD = sds
+  ))
 
   cat("\nCorrelation Matrix:\n")
   cor_mat <- cov2cor(object@Sigma)

@@ -107,17 +107,23 @@ p_prod3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
   # Degenerate cases: reduce to the two-variable product-normal problem ----
   if (sds[1L] < .Machine$double.eps) {
     x1 <- mean[1L]
-    if (abs(x1) < .Machine$double.eps) return(if (q == 0) 0.5 else as.numeric(q > 0))
+    if (abs(x1) < .Machine$double.eps) {
+      return(if (q == 0) 0.5 else as.numeric(q > 0))
+    }
     return(.p_prod3_degenerate(q, x1, c(2L, 3L), mean, sds, cov))
   }
   if (sds[2L] < .Machine$double.eps) {
     x2 <- mean[2L]
-    if (abs(x2) < .Machine$double.eps) return(as.numeric(q >= 0))
+    if (abs(x2) < .Machine$double.eps) {
+      return(as.numeric(q >= 0))
+    }
     return(.p_prod3_degenerate(q, x2, c(1L, 3L), mean, sds, cov))
   }
   if (sds[3L] < .Machine$double.eps) {
     x3 <- mean[3L]
-    if (abs(x3) < .Machine$double.eps) return(as.numeric(q >= 0))
+    if (abs(x3) < .Machine$double.eps) {
+      return(as.numeric(q >= 0))
+    }
     return(.p_prod3_degenerate(q, x3, c(1L, 2L), mean, sds, cov))
   }
 

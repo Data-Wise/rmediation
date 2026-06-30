@@ -4,18 +4,21 @@
 #' @noRd
 #' @keywords internal
 .skewness <- function(x, type = 2, na.rm = TRUE) {
-
   # Replicates e1071::skewness with type = 2 (sample skewness)
   # Type 2 is the SAS and SPSS default: g1 * sqrt(n*(n-1)) / (n-2)
   if (na.rm) x <- x[!is.na(x)]
   n <- length(x)
-  if (n < 3) return(NA_real_)
+  if (n < 3) {
+    return(NA_real_)
+  }
 
   m <- mean(x)
-  s <- sqrt(sum((x - m)^2) / n)  # population sd
-  if (s == 0) return(NA_real_)
+  s <- sqrt(sum((x - m)^2) / n) # population sd
+  if (s == 0) {
+    return(NA_real_)
+  }
 
-  g1 <- sum((x - m)^3) / (n * s^3)  # moment coefficient of skewness
+  g1 <- sum((x - m)^3) / (n * s^3) # moment coefficient of skewness
 
   if (type == 1) {
     return(g1)
@@ -24,7 +27,7 @@
     return(g1 * sqrt(n * (n - 1)) / (n - 2))
   } else if (type == 3) {
     # b1 type
-    return(g1 * ((n - 1) / n)^(3/2))
+    return(g1 * ((n - 1) / n)^(3 / 2))
   } else {
     return(g1)
   }
@@ -37,14 +40,18 @@
   # Type 2 uses: ((n+1)*G2 + 6) * (n-1) / ((n-2)*(n-3))
   if (na.rm) x <- x[!is.na(x)]
   n <- length(x)
-  if (n < 4) return(NA_real_)
+  if (n < 4) {
+    return(NA_real_)
+  }
 
   m <- mean(x)
-  s2 <- sum((x - m)^2) / n  # population variance
-  if (s2 == 0) return(NA_real_)
+  s2 <- sum((x - m)^2) / n # population variance
+  if (s2 == 0) {
+    return(NA_real_)
+  }
 
   m4 <- sum((x - m)^4) / n
-  g2 <- m4 / s2^2 - 3  # excess kurtosis (moment coefficient)
+  g2 <- m4 / s2^2 - 3 # excess kurtosis (moment coefficient)
 
   if (type == 1) {
     return(g2)

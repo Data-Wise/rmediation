@@ -119,8 +119,10 @@
 #' fit_y <- lm(Y ~ X + M + C, data = mydata)
 #'
 #' # Extract mediation structure
-#' med_data <- extract_mediation(fit_m, model_y = fit_y,
-#'                                treatment = "X", mediator = "M")
+#' med_data <- extract_mediation(fit_m,
+#'   model_y = fit_y,
+#'   treatment = "X", mediator = "M"
+#' )
 #'
 #' # Compute CI using Distribution of Product
 #' ci(med_data, type = "dop")
@@ -221,22 +223,25 @@ ci_serial_mediation_data <- function(mu, level = 0.95, type = "MC",
 # Dynamic method registration in .onLoad (called from zzz.R)
 .register_medfit_methods <- function() {
   if (requireNamespace("medfit", quietly = TRUE)) {
-    tryCatch({
-      # Register ci method for MediationData
-      MediationData_class <- medfit::MediationData
-      S7::method(ci, MediationData_class) <- ci_mediation_data
+    tryCatch(
+      {
+        # Register ci method for MediationData
+        MediationData_class <- medfit::MediationData
+        S7::method(ci, MediationData_class) <- ci_mediation_data
 
-      # Register ci method for SerialMediationData
-      SerialMediationData_class <- medfit::SerialMediationData
-      S7::method(ci, SerialMediationData_class) <- ci_serial_mediation_data
-    }, error = function(e) {
-      # Make registration failure visible (but non-fatal): the functions remain
-      # available as regular exported functions, but a broken S7 registration
-      # should be diagnosable rather than silently swallowed.
-      packageStartupMessage(
-        "RMediation: failed to register medfit S7 ci methods: ",
-        conditionMessage(e)
-      )
-    })
+        # Register ci method for SerialMediationData
+        SerialMediationData_class <- medfit::SerialMediationData
+        S7::method(ci, SerialMediationData_class) <- ci_serial_mediation_data
+      },
+      error = function(e) {
+        # Make registration failure visible (but non-fatal): the functions remain
+        # available as regular exported functions, but a broken S7 registration
+        # should be diagnosable rather than silently swallowed.
+        packageStartupMessage(
+          "RMediation: failed to register medfit S7 ci methods: ",
+          conditionMessage(e)
+        )
+      }
+    )
   }
 }

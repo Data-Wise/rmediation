@@ -25,7 +25,7 @@ S7::method(ci, S7::class_numeric) <- function(mu, Sigma, quant, alpha = 0.05, ty
   checkmate::assert_formula(quant)
   checkmate::assert_number(alpha, lower = 0, upper = 1)
   type <- match.arg(type, c("MC", "asymp", "all"))
-  
+
   # We pass all arguments explicitly to .ci_core
   .ci_core(mu = mu, Sigma = Sigma, quant = quant, alpha = alpha, type = type, ...)
 }
@@ -37,7 +37,7 @@ S7::method(ci, S7::class_any) <- function(mu, level = 0.95, type = "dop", n.mc =
   checkmate::assert_number(level, lower = 0, upper = 1)
   type <- match.arg(type, c("dop", "MC", "asymp", "all", "prodclin"))
   checkmate::assert_count(n.mc, positive = TRUE)
-  
+
   if (!inherits(object, "lavaan")) {
     # If we want to support other classes later (like MxModel), add checks here.
     # For now, if it's not lavaan, we throw an error (or let S7 dispatch fail if we didn't define this).
@@ -47,7 +47,7 @@ S7::method(ci, S7::class_any) <- function(mu, level = 0.95, type = "dop", n.mc =
 
   # Lavaan logic
   args <- list(...)
-  
+
   # Check if 'quant' is provided in ...
   if ("quant" %in% names(args)) {
     # Legacy behavior: user provided a specific formula
@@ -63,38 +63,38 @@ S7::method(ci, S7::class_any) <- function(mu, level = 0.95, type = "dop", n.mc =
   # New behavior: Auto-detect defined parameters
   est <- lavaan::parameterEstimates(object)
   defined <- est[est$op == ":=", ]
-  
+
   if (nrow(defined) == 0) {
     warning("No defined parameters (:=) found in lavaan object.")
     return(NULL)
   }
-  
+
   results <- list()
-  
+
   # Determine alpha for new behavior
   if ("alpha" %in% names(args)) {
     alpha <- args[["alpha"]]
   } else {
     alpha <- 1 - level
   }
-  
+
   for (i in 1:nrow(defined)) {
     label <- defined$lhs[i]
     rhs <- defined$rhs[i]
-    
+
     vars <- parse_product_string(rhs)
-    
+
     if (!is.null(vars) && length(vars) >= 2) {
       # Product of coefficients
       coefs <- lavaan::coef(object)
       vcov_mat <- lavaan::vcov(object)
-      
+
       if (all(vars %in% names(coefs))) {
         mu_vals <- coefs[vars]
         Sigma_vals <- vcov_mat[vars, vars]
-        
+
         pn <- ProductNormal(mu = as.numeric(mu_vals), Sigma = as.matrix(Sigma_vals))
-        
+
         # Calculate CI using ProductNormal method
         # Note: ci(ProductNormal) returns vector.
         # We pass level/alpha correctly. ProductNormal ci uses level.
@@ -107,7 +107,7 @@ S7::method(ci, S7::class_any) <- function(mu, level = 0.95, type = "dop", n.mc =
         # Fallback to general MC via .ci_core
         f_str <- paste("~", rhs)
         quant <- as.formula(f_str)
-        
+
         res <- .ci_core(mu = object, quant = quant, alpha = alpha, type = "MC", n.mc = n.mc, plot = FALSE)
         results[[label]] <- res
       }
@@ -119,7 +119,7 @@ S7::method(ci, S7::class_any) <- function(mu, level = 0.95, type = "dop", n.mc =
       results[[label]] <- res
     }
   }
-  
+
   return(results)
 }
 

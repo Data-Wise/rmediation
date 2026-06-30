@@ -13,8 +13,10 @@ test_that("S7 core .compute_ci_dop() matches legacy medciMeeker()", {
   legacy <- medciMeeker(mu.x, mu.y, se.x, se.y, rho, alpha)
 
   # S7 core result
-  Sigma <- matrix(c(se.x^2, rho * se.x * se.y,
-                    rho * se.x * se.y, se.y^2), nrow = 2)
+  Sigma <- matrix(c(
+    se.x^2, rho * se.x * se.y,
+    rho * se.x * se.y, se.y^2
+  ), nrow = 2)
   pn <- ProductNormal(mu = c(mu.x, mu.y), Sigma = Sigma)
   s7 <- .compute_ci_dop(pn, alpha)
 
@@ -36,7 +38,7 @@ test_that("S7 core .compute_ci_mc() matches legacy medciMC()", {
   se.y <- 1
   rho <- 0
   alpha <- 0.05
-  n.mc <- 1e5  # Larger for better convergence
+  n.mc <- 1e5 # Larger for better convergence
 
   # Legacy result
   set.seed(12345)
@@ -44,8 +46,10 @@ test_that("S7 core .compute_ci_mc() matches legacy medciMC()", {
 
   # S7 core result
   set.seed(12345)
-  Sigma <- matrix(c(se.x^2, rho * se.x * se.y,
-                    rho * se.x * se.y, se.y^2), nrow = 2)
+  Sigma <- matrix(c(
+    se.x^2, rho * se.x * se.y,
+    rho * se.x * se.y, se.y^2
+  ), nrow = 2)
   pn <- ProductNormal(mu = c(mu.x, mu.y), Sigma = Sigma)
   s7 <- .compute_ci_mc(pn, alpha, n.mc)
 
@@ -74,8 +78,10 @@ test_that("S7 core .compute_ci_asymp() matches legacy medciAsymp()", {
   legacy <- medciAsymp(mu.x, mu.y, se.x, se.y, rho, alpha)
 
   # S7 core result
-  Sigma <- matrix(c(se.x^2, rho * se.x * se.y,
-                    rho * se.x * se.y, se.y^2), nrow = 2)
+  Sigma <- matrix(c(
+    se.x^2, rho * se.x * se.y,
+    rho * se.x * se.y, se.y^2
+  ), nrow = 2)
   pn <- ProductNormal(mu = c(mu.x, mu.y), Sigma = Sigma)
   s7 <- .compute_ci_asymp(pn, alpha)
 
@@ -150,7 +156,7 @@ test_that("medci_prototype() wrapper matches legacy medci() with type='mc'", {
   se.y <- 1
   rho <- 0
   alpha <- 0.05
-  n.mc <- 1e5  # Larger for better convergence
+  n.mc <- 1e5 # Larger for better convergence
 
   # Legacy
   set.seed(123)
@@ -217,8 +223,9 @@ test_that("medci_prototype() with type='all' matches legacy structure", {
 
   # Compare DOP results
   expect_equal(prototype$`Distribution of Product`[[1]],
-               legacy$`Distribution of Product`[[1]],
-               tolerance = 1e-10)
+    legacy$`Distribution of Product`[[1]],
+    tolerance = 1e-10
+  )
 })
 
 test_that("S7 ProductNormal supports N-variable products with MC", {

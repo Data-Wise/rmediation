@@ -66,8 +66,10 @@ S7::method(dist_quantile, ProductNormal3) <- function(object, p, tol = 1e-4, ...
 
   vapply(p, function(pp) {
     center <- mean_v + sign(pp - 0.5) * z * sd_delta
-    .prod3_quantile(pp, mean = mu, cov = Sigma,
-                    lower = center - delta_width, upper = center + delta_width, tol = tol)
+    .prod3_quantile(pp,
+      mean = mu, cov = Sigma,
+      lower = center - delta_width, upper = center + delta_width, tol = tol
+    )
   }, FUN.VALUE = numeric(1))
 }
 

@@ -98,8 +98,10 @@ medci_prototype <- function(
       yci <- 0
 
       # Use S7 core for CI calculation
-      Sigma <- matrix(c(se.x^2, rho * se.x * se.y,
-                        rho * se.x * se.y, se.y^2), nrow = 2)
+      Sigma <- matrix(c(
+        se.x^2, rho * se.x * se.y,
+        rho * se.x * se.y, se.y^2
+      ), nrow = 2)
       pn <- ProductNormal(mu = c(mu.x, mu.y), Sigma = Sigma)
       s7_result <- ci(pn, level = 1 - alpha, type = "dop")
       MedCI <- list(s7_result$CI)

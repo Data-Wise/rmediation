@@ -125,8 +125,8 @@ test_that("medci computes correct SE with rho=0", {
   # Craig (1936) formula with rho=0
   expected_se <- sqrt(
     se.y^2 * mu.x^2 +
-    se.x^2 * mu.y^2 +
-    se.x^2 * se.y^2
+      se.x^2 * mu.y^2 +
+      se.x^2 * se.y^2
   )
 
   expect_equal(result$SE, expected_se, tolerance = 1e-10)

@@ -9,12 +9,16 @@ skip_if_not_installed("medfit")
 
 make_md <- function(cov_ab = 0) {
   vcov_mat <- matrix(
-    c(0.01,  cov_ab, 0,
-      cov_ab, 0.02,  0,
-      0,      0,     0.015),
+    c(
+      0.01, cov_ab, 0,
+      cov_ab, 0.02, 0,
+      0, 0, 0.015
+    ),
     nrow = 3, ncol = 3,
-    dimnames = list(c("a", "b", "c_prime"),
-                    c("a", "b", "c_prime"))
+    dimnames = list(
+      c("a", "b", "c_prime"),
+      c("a", "b", "c_prime")
+    )
   )
   medfit::MediationData(
     a_path = 0.5, b_path = 0.4, c_prime = 0.1,
@@ -31,12 +35,16 @@ make_serial <- function(off_diag = 0) {
   # 2 mediators -> d_path length 1. Paths order: a, d1, b.
   od <- off_diag
   vcov_mat <- matrix(
-    c(0.01, od,   od,
-      od,   0.02, od,
-      od,   od,   0.015),
+    c(
+      0.01, od, od,
+      od, 0.02, od,
+      od, od, 0.015
+    ),
     nrow = 3, ncol = 3,
-    dimnames = list(c("a", "d1", "b"),
-                    c("a", "d1", "b"))
+    dimnames = list(
+      c("a", "d1", "b"),
+      c("a", "d1", "b")
+    )
   )
   medfit::SerialMediationData(
     a_path = 0.5, d_path = 0.3, b_path = 0.4, c_prime = 0.1,
@@ -73,7 +81,8 @@ test_that("ci() dop and MC agree with each other and with medci", {
 
   # dop and MC agree within ~2% on each CI bound
   expect_equal(as.numeric(res_dop$CI), as.numeric(res_mc$CI),
-               tolerance = 0.02)
+    tolerance = 0.02
+  )
 
   # both agree with a direct medci() call carrying the same correlation.
   # medci(type = "dop") returns a list whose first element is the CI vector
@@ -81,10 +90,13 @@ test_that("ci() dop and MC agree with each other and with medci", {
   se_a <- sqrt(0.01)
   se_b <- sqrt(0.02)
   rho <- cov_ab / (se_a * se_b)
-  ref <- RMediation::medci(mu.x = 0.5, mu.y = 0.4, se.x = se_a, se.y = se_b,
-                           rho = rho, alpha = 0.05, type = "dop")
+  ref <- RMediation::medci(
+    mu.x = 0.5, mu.y = 0.4, se.x = se_a, se.y = se_b,
+    rho = rho, alpha = 0.05, type = "dop"
+  )
   expect_equal(as.numeric(res_dop$CI), as.numeric(ref[[1]]),
-               tolerance = 1e-6)
+    tolerance = 1e-6
+  )
 })
 
 # ---- 3. serial uses the FULL covariance, not a diagonal approximation -------
@@ -95,9 +107,11 @@ test_that("serial ci uses full covariance matching a reference simulation", {
   all_paths <- c(0.5, 0.3, 0.4)
 
   Sigma_full <- matrix(
-    c(0.01, off_diag, off_diag,
+    c(
+      0.01, off_diag, off_diag,
       off_diag, 0.02, off_diag,
-      off_diag, off_diag, 0.015),
+      off_diag, off_diag, 0.015
+    ),
     nrow = 3, ncol = 3
   )
   Sigma_diag <- diag(diag(Sigma_full))
@@ -151,14 +165,16 @@ test_that("ci_serial_mediation_data preserves the original return shape", {
 
 test_that("unresolvable labels raise an informative error (no silent independence)", {
   vcov_mat <- matrix(
-    c(0.01, 0.003, 0,
+    c(
+      0.01, 0.003, 0,
       0.003, 0.02, 0,
-      0, 0, 0.015),
+      0, 0, 0.015
+    ),
     nrow = 3, ncol = 3
-  )  # no dimnames
+  ) # no dimnames
   md <- medfit::MediationData(
     a_path = 0.5, b_path = 0.4, c_prime = 0.1,
-    estimates = c(0.5, 0.4, 0.1),  # no names
+    estimates = c(0.5, 0.4, 0.1), # no names
     vcov = vcov_mat,
     sigma_m = NULL, sigma_y = NULL,
     treatment = "X", mediator = "M", outcome = "Y",
@@ -181,7 +197,8 @@ test_that("unresolvable labels raise an informative error (no silent independenc
 test_that("missing path labels raise the specific 'Could not resolve' error", {
   # Names exist but do not include the requested a/b labels.
   vcov_mat <- matrix(
-    c(0.01, 0, 0, 0.02), nrow = 2,
+    c(0.01, 0, 0, 0.02),
+    nrow = 2,
     dimnames = list(c("x", "y"), c("x", "y"))
   )
   md <- medfit::MediationData(
@@ -219,12 +236,16 @@ test_that(".extract_path_vcov uses NAME-based slicing (block-diagonal, lm case)"
   # positional 1:2 slice would pick up the nuisance row/col; name resolution
   # must extract exactly the a/b sub-block.
   vcov_mat <- matrix(
-    c(0.04, 0.00, 0.00,
+    c(
+      0.04, 0.00, 0.00,
       0.00, 0.50, 0.00,
-      0.00, 0.00, 0.09),
+      0.00, 0.00, 0.09
+    ),
     nrow = 3, ncol = 3, byrow = TRUE,
-    dimnames = list(c("a", "nuisance", "b"),
-                    c("a", "nuisance", "b"))
+    dimnames = list(
+      c("a", "nuisance", "b"),
+      c("a", "nuisance", "b")
+    )
   )
   md <- medfit::MediationData(
     a_path = 0.4, b_path = 0.6, c_prime = 0.1,
@@ -285,7 +306,7 @@ test_that(".extract_path_vcov matches the named sub-matrix when a/b are interspe
 # ---- 8. serial d-label contract is the literal d1..dk ----------------------
 
 test_that(".serial_d_labels returns the literal d1..dk name contract", {
-  smd <- make_serial(off_diag = 0)  # d_path length 1 -> "d1"
+  smd <- make_serial(off_diag = 0) # d_path length 1 -> "d1"
   expect_equal(RMediation:::.serial_d_labels(smd), "d1")
 })
 
@@ -365,9 +386,12 @@ test_that("serial ci handles a 3-mediator chain (d1, d2) with full covariance", 
   # Result must reflect the full (non-diagonal) Sigma: compare to a same-seed
   # diagonal-only draw and require it to differ.
   set.seed(99)
-  diag_draws <- MASS::mvrnorm(n = 5e4, mu = c(0.5, 0.3, 0.35, 0.4),
-                              Sigma = diag(diag(vcov_mat)))
+  diag_draws <- MASS::mvrnorm(
+    n = 5e4, mu = c(0.5, 0.3, 0.35, 0.4),
+    Sigma = diag(diag(vcov_mat))
+  )
   diag_ci <- unname(stats::quantile(apply(diag_draws, 1, prod),
-                                    probs = c(0.025, 0.975)))
+    probs = c(0.025, 0.975)
+  ))
   expect_false(isTRUE(all.equal(unname(res$CI), diag_ci, tolerance = 1e-6)))
 })
