@@ -11,7 +11,8 @@ ProductNormal3(mu = integer(0), Sigma = integer(0), method = character(0))
 
 \item{Sigma}{3x3 covariance matrix.}
 
-\item{method}{Integration method, either \code{"hcubature"} or \code{"cuhre"}.}
+\item{method}{Integration method. Currently only \code{"hcubature"} is
+supported.}
 }
 \description{
 Represents the distribution of the product of three normal random variables.

@@ -16,3 +16,23 @@ S7::method(print, ProductNormal3) <- function(x, ...) {
 S7::method(show, ProductNormal3) <- function(object) {
   print(object)
 }
+
+#' @export
+S7::method(cdf, ProductNormal3) <- function(object, q, lower.tail = TRUE, tol = 1e-6, ...) {
+  checkmate::assert_numeric(q, finite = TRUE)
+  checkmate::assert_logical(lower.tail)
+  checkmate::assert_number(tol, lower = 0)
+
+  p <- vapply(q, function(qq) {
+    p_prod3(qq,
+      mean = object@mu, cov = object@Sigma,
+      method = object@method, tol = tol
+    )
+  }, FUN.VALUE = numeric(1))
+
+  if (!lower.tail) {
+    p <- 1 - p
+  }
+
+  p
+}

@@ -54,7 +54,8 @@ S7::S4_register(ProductNormal)
 #'
 #' @param mu Numeric vector of means of length 3.
 #' @param Sigma 3x3 covariance matrix.
-#' @param method Integration method, either `"hcubature"` or `"cuhre"`.
+#' @param method Integration method. Currently only `"hcubature"` is
+#'   supported.
 #' @export
 ProductNormal3 <- S7::new_class("ProductNormal3",
   properties = list(
@@ -79,8 +80,8 @@ ProductNormal3 <- S7::new_class("ProductNormal3",
     if (any(eigen_vals < -1e-8)) {
       stop("Sigma must be positive semi-definite")
     }
-    if (length(self@method) != 1 || !(self@method %in% c("hcubature", "cuhre"))) {
-      stop("method must be either 'hcubature' or 'cuhre'")
+    if (length(self@method) != 1 || !(self@method %in% "hcubature")) {
+      stop("method must be 'hcubature'")
     }
     NULL
   }
