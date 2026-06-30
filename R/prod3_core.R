@@ -1,5 +1,5 @@
 #' @importFrom cubature hcubature
-#' @importFrom stats cov2cor dnorm pnorm
+#' @importFrom stats dnorm pnorm
 NULL
 
 #' Bivariate normal density for (X, Y) in standardised correlation scale
@@ -78,6 +78,17 @@ NULL
 #' @examples
 #' Sigma <- diag(3)
 #' p_prod3(q = 0, mean = c(0, 0, 0), cov = Sigma)
+#' @noRd
+.p_prod3_degenerate <- function(q, fixed_val, other_idx, mean, sds, cov) {
+  pprodnormal(q / fixed_val,
+    mu.x = mean[other_idx[1L]], mu.y = mean[other_idx[2L]],
+    se.x = sds[other_idx[1L]], se.y = sds[other_idx[2L]],
+    rho = cov[other_idx[1L], other_idx[2L]] /
+      max(sds[other_idx[1L]] * sds[other_idx[2L]], .Machine$double.eps),
+    lower.tail = fixed_val > 0
+  )
+}
+
 p_prod3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
   checkmate::assert_number(q, finite = TRUE)
   checkmate::assert_numeric(mean, finite = TRUE, len = 3)
@@ -91,49 +102,23 @@ p_prod3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
   # Symmetrise covariance
   cov <- (cov + t(cov)) / 2
 
-  # Symmetry shortcut for zero-mean distributions
-  if (all(abs(mean) < .Machine$double.eps^0.5) && q == 0) {
-    return(0.5)
-  }
-
   sds <- sqrt(pmax(diag(cov), 0))
 
   # Degenerate cases: reduce to the two-variable product-normal problem ----
   if (sds[1L] < .Machine$double.eps) {
     x1 <- mean[1L]
-    if (abs(x1) < .Machine$double.eps) {
-      return(as.numeric(q >= 0))
-    }
-    return(pprodnormal(q / x1,
-      mu.x = mean[2L], mu.y = mean[3L],
-      se.x = sds[2L], se.y = sds[3L],
-      rho = cov[2L, 3L] / max(sds[2L] * sds[3L], .Machine$double.eps),
-      lower.tail = x1 > 0
-    ))
+    if (abs(x1) < .Machine$double.eps) return(if (q == 0) 0.5 else as.numeric(q > 0))
+    return(.p_prod3_degenerate(q, x1, c(2L, 3L), mean, sds, cov))
   }
   if (sds[2L] < .Machine$double.eps) {
     x2 <- mean[2L]
-    if (abs(x2) < .Machine$double.eps) {
-      return(as.numeric(q >= 0))
-    }
-    return(pprodnormal(q / x2,
-      mu.x = mean[1L], mu.y = mean[3L],
-      se.x = sds[1L], se.y = sds[3L],
-      rho = cov[1L, 3L] / max(sds[1L] * sds[3L], .Machine$double.eps),
-      lower.tail = x2 > 0
-    ))
+    if (abs(x2) < .Machine$double.eps) return(as.numeric(q >= 0))
+    return(.p_prod3_degenerate(q, x2, c(1L, 3L), mean, sds, cov))
   }
   if (sds[3L] < .Machine$double.eps) {
     x3 <- mean[3L]
-    if (abs(x3) < .Machine$double.eps) {
-      return(as.numeric(q >= 0))
-    }
-    return(pprodnormal(q / x3,
-      mu.x = mean[1L], mu.y = mean[2L],
-      se.x = sds[1L], se.y = sds[2L],
-      rho = cov[1L, 2L] / max(sds[1L] * sds[2L], .Machine$double.eps),
-      lower.tail = x3 > 0
-    ))
+    if (abs(x3) < .Machine$double.eps) return(as.numeric(q >= 0))
+    return(.p_prod3_degenerate(q, x3, c(1L, 2L), mean, sds, cov))
   }
 
   # Full positive-definiteness check. The single zero-variance degenerate cases
@@ -149,6 +134,11 @@ p_prod3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
       "); perfect correlation between two components (|rho| = 1) or an ",
       "indefinite matrix is not supported by the dimension-reduction method."
     )
+  }
+
+  # Symmetry shortcut for zero-mean distributions (guarded by PD check above)
+  if (all(abs(mean) < .Machine$double.eps^0.5) && q == 0) {
+    return(0.5)
   }
 
   # Standardise to correlation scale

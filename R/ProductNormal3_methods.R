@@ -45,6 +45,32 @@ S7::method(cdf, ProductNormal3) <- function(object, q, lower.tail = TRUE, tol = 
   res$root
 }
 
+#' @export
+S7::method(dist_quantile, ProductNormal3) <- function(object, p, tol = 1e-4, ...) {
+  checkmate::assert_numeric(p, lower = 0, upper = 1, finite = TRUE)
+  checkmate::assert_number(tol, lower = 0)
+
+  mu <- object@mu
+  Sigma <- object@Sigma
+  mean_v <- prod(mu)
+  grad <- c(mu[2L] * mu[3L], mu[1L] * mu[3L], mu[1L] * mu[2L])
+  var_delta <- as.numeric(t(grad) %*% Sigma %*% grad)
+  sd_delta <- sqrt(max(var_delta, 0))
+  sds <- sqrt(pmax(diag(Sigma), 0))
+  if (sd_delta <= .Machine$double.eps) {
+    non_zero_sds <- sds[sds > .Machine$double.eps]
+    sd_delta <- if (length(non_zero_sds) > 0) prod(non_zero_sds) else 1
+  }
+  z <- stats::qnorm(0.975)
+  delta_width <- 8 * sd_delta
+
+  vapply(p, function(pp) {
+    center <- mean_v + sign(pp - 0.5) * z * sd_delta
+    .prod3_quantile(pp, mean = mu, cov = Sigma,
+      lower = center - delta_width, upper = center + delta_width, tol = tol)
+  }, FUN.VALUE = numeric(1))
+}
+
 #' @noRd
 .confint_productnormal3 <- function(object, level = 0.95, tol = 1e-4) {
   checkmate::assert_number(level, lower = 0, upper = 1)

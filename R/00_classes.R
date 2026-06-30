@@ -85,9 +85,6 @@ ProductNormal3 <- S7::new_class("ProductNormal3",
     if (nrow(self@Sigma) != 3 || ncol(self@Sigma) != 3) {
       stop("Sigma must be a 3x3 matrix")
     }
-    if (nrow(self@Sigma) != length(self@mu)) {
-      stop("Dimensions of Sigma must match length of mu")
-    }
     eigen_vals <- eigen(self@Sigma, symmetric = TRUE, only.values = TRUE)$values
     if (any(eigen_vals < -1e-8)) {
       stop("Sigma must be positive semi-definite")
