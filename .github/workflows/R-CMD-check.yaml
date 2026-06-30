@@ -30,7 +30,7 @@ jobs:
           # guards + skip_if_not_installed() tests, so the package still checks
           # cleanly without them; the full Suggests set (incl. OpenMx/medfit)
           # is exercised by the pre-submission r-hub/win-builder pass instead.
-          - {os: ubuntu-latest,   r: 'devel',   pkg-deps: '"hard"',                     extra: 'any::rcmdcheck, any::testthat, any::lavaan, any::knitr'}
+          - {os: ubuntu-latest,   r: 'devel',   pkg-deps: '"hard"',                     extra: 'any::rcmdcheck, any::testthat, any::lavaan, any::knitr, any::rmarkdown'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
