@@ -1,17 +1,17 @@
 status: in_progress
 priority: high
-progress: 98
+progress: 99
 version: 1.6.0
-next: prod3 hardened (issue #20) + --as-cran 0E/0W/0N; PR #19 (→dev) ready to merge, then v1.6.0 release.
+next: v1.6.0 release — bump version, update CRAN comments, PR dev→main, tag.
 
 # rmediation
 
 ## Status: Active
-## Progress: 95
-## Focus: ProductNormal3 feature — exact CDF for a1*a2*b sequential indirect effects (v1.6.0). Implementation complete; coverage and check verified. Ready to commit and PR.
+## Progress: 99
+## Focus: v1.6.0 release — ProductNormal3 merged to dev (PR #19, 2026-06-30); ready for release pipeline.
 
 ## Active worktrees
-- `feature-product-normal3` (current worktree): implementing ProductNormal3 S7 class + `p_prod3()` exact CDF + methods + tests + docs.
+(none)
 
 ## Recent (2026-06-29 — prod3 hardening, issue #20, commit f7226f1)
 - Two independent reviews (algorithm-correctness + rforge) confirmed the core is
