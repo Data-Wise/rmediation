@@ -11,6 +11,10 @@ cdf(object, ...)
 
 \item{...}{Additional arguments passed to methods.}
 }
+\value{
+A numeric vector of cumulative probabilities for the supplied
+quantiles, as returned by the dispatched method.
+}
 \description{
 Generic function for computing cumulative distribution function.
 }

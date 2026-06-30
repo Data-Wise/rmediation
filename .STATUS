@@ -1,22 +1,57 @@
-status: released
-priority: --
-progress: 100
-version: 1.5.0
-next: Continue ProductNormal3 implementation in worktree ~/.git-worktrees/rmediation/feature-product-normal3 (issue #18).
+status: in_progress
+priority: high
+progress: 98
+version: 1.6.0
+next: prod3 hardened (issue #20) + --as-cran 0E/0W/0N; PR #19 (→dev) ready to merge, then v1.6.0 release.
 
 # rmediation
 
 ## Status: Active
-## Progress: 100
-## Focus: ✅ ON CRAN — v1.5.0 ACCEPTED, published 2026-06-20 (verified on the CRAN page 2026-06-21; pkg_id 345448). Retires the RMediation dep for mediationverse/missingmed/medsim (each still gated on medrobust/medfit reaching CRAN).
+## Progress: 95
+## Focus: ProductNormal3 feature — exact CDF for a1*a2*b sequential indirect effects (v1.6.0). Implementation complete; coverage and check verified. Ready to commit and PR.
 
 ## Active worktrees
-- `feature/product-normal3` at `~/.git-worktrees/rmediation/feature-product-normal3` — ORCHESTRATE committed, awaiting implementation (issue #18).
+- `feature-product-normal3` (current worktree): implementing ProductNormal3 S7 class + `p_prod3()` exact CDF + methods + tests + docs.
 
-## Recent (2026-06-29)
-- Fixed issue #17: added machine-readable YAML header to `.STATUS` so atlas/rforge/MediationVerse dashboard parse status correctly. Committed to `dev` (10a377b) and pushed to origin.
-- Created worktree `feature/product-normal3` for issue #18 and committed `ORCHESTRATE-product-normal3.md` (720d7ab). Implementation blocked by prod3 manuscript was waived; work can proceed in the worktree.
-- Created opencode skill `r-dev-workflow` at `~/.config/opencode/skills/r-dev-workflow/SKILL.md` to encode rforge-derived R-package engineering conventions for r-dev.
+## Recent (2026-06-29 — prod3 hardening, issue #20, commit f7226f1)
+- Two independent reviews (algorithm-correctness + rforge) confirmed the core is
+  correct (full-domain hcubature agrees with the manuscript split-domain reference
+  to 1e-8) and CRAN-ready; fixed the surfaced robustness/doc/test gaps:
+- **HIGH-1:** `p_prod3` now rejects non-PD `cov` up front (eigen check). An
+  indefinite matrix whose (X,Y) block is still PD previously hung in `hcubature`
+  (>120s, no error); perfect X-Y correlation now errors cleanly (was raw Lapack).
+- **HIGH-2:** conditional-moment solve hoisted out of the per-evaluation path and
+  switched `solve()` → Cholesky (chol + fwd/back) — computed once, not ~5e4x/CDF,
+  better conditioned; the dead det<=0 regularization branch removed. Numerically
+  inert (verified 3.9e-16 on the manuscript reference, production R 4.4.0).
+- **LOW/docs:** `tol` strictly positive; `@note` (near-singular accuracy +
+  point-mass mid-CDF convention); `@return` on cdf/ci/dist_quantile; `@importFrom
+  stats cov2cor`; dropped non-existent `"asymp"` from pprodnormal/qprodnormal docs;
+  `.Rbuildignore` cran-comments.md + CITATION.cff; WORDLIST `trivariate`.
+- **Tests:** +5 (non-PD error, corr=1, tol=0, cdf lower.tail complement,
+  negative-mean degenerate) → **38/38 prod3 tests pass**; roxygen re-documented.
+- `R CMD check --as-cran`: **0E / 0W / 0N** (the 2 prior NOTEs cleared by
+  .Rbuildignore). PR #19 retargeted main → **dev**.
+- Deferred (pre-existing, not prod3): DESCRIPTION Author/Maintainer vs Authors@R;
+  dead-var cleanup in qprodnormalMC/Meeker.
+
+## Recent (2026-06-29 — ProductNormal3 v1.6.0)
+- Added `ProductNormal3` S7 class for exact distribution of product of three
+  correlated normals (`a1 * a2 * b` sequential indirect effect).
+- Implemented `p_prod3()` exact CDF using 2D conditional-expectation
+  dimension-reduction integral via `cubature::hcubature`; `cuhre` integration
+  method dropped after local segfaults on macOS aarch64/R 4.6.1.
+- Added S7 methods: `cdf()`, `confint()`, `ci()` for `ProductNormal3` objects.
+- Added `print()`/`show()` methods and registered S4 compatibility.
+- Added `tests/testthat/test-product-normal3.R` (31 tests).
+- Coverage on new files: `R/prod3_core.R` 93.41%, `R/ProductNormal3_methods.R`
+  95.92% (target >= 90%).
+- Full test suite: **300 pass / 0 fail / 0 skip / 18 warn** (warnings are
+  pre-existing `partial argument match` in `test-ci.R` and `test-legacy-compat.R`).
+- `R CMD check --as-cran`: **0 errors / 0 warnings / 2 pre-existing NOTEs**
+  (`CITATION.cff` and `cran-comments.md` at top level).
+- Documentation regenerated (`devtools::document()`); `NEWS.md`, `_pkgdown.yml`,
+  and reference docs updated for v1.6.0.
 
 ## Verified 2026-06-03 (re-ran vs the medfit 0.2.0 RELEASE TARBALL)
 - Installed medfit 0.2.0 from `medfit_0.2.0.tar.gz` (R CMD INSTALL); both S7 classes exported.
