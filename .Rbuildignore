@@ -16,6 +16,7 @@
 ^QWEN\.md$
 ^ORCHESTRATE-.*\.md$
 ^DEBUG-REPORT-.*\.md$
+^\.rforge\.yaml$
 ^\.git$
 ^\.github$
 ^\.gitignore$
