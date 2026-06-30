@@ -87,6 +87,11 @@ NULL
 #'   For a fully degenerate point mass (all variances zero) with zero means,
 #'   `q == 0` returns `0.5` by the mid-distribution convention rather than `0`
 #'   or `1`.
+#' @seealso [pprodnormal()] and [qprodnormal()] for the two-variable product-
+#'   normal CDF/quantile; [ProductNormal3] for the corresponding S7 class.
+#' @section Note:
+#' `p_prod3()` is a superseded alias for `pprodnormal3()`, kept for backward
+#' compatibility; use `pprodnormal3()` in new code.
 #' @export
 #' @examples
 #' Sigma <- diag(3)

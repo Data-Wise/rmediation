@@ -89,7 +89,7 @@ For models with multiple sequential mediators (X → M₁ → M₂ → Y), use t
 
 ```r
 # Four-path indirect effect: b1 * b2 * b3 * b4
-ci(mu = c(b1 = 1.0, b2 = 0.7, b3 = 0.6, b4 = 0.45),
+ci(c(b1 = 1.0, b2 = 0.7, b3 = 0.6, b4 = 0.45),
    Sigma = c(0.05, 0, 0, 0,    # Covariance matrix (lower triangle)
              0.05, 0, 0,
              0.03, 0,

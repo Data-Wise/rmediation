@@ -45,7 +45,17 @@ For a fully degenerate point mass (all variances zero) with zero means,
 \code{q == 0} returns \code{0.5} by the mid-distribution convention rather than \code{0}
 or \code{1}.
 }
+\section{Note}{
+
+\code{p_prod3()} is a superseded alias for \code{pprodnormal3()}, kept for backward
+compatibility; use \code{pprodnormal3()} in new code.
+}
+
 \examples{
 Sigma <- diag(3)
 pprodnormal3(q = 0, mean = c(0, 0, 0), cov = Sigma)
+}
+\seealso{
+\code{\link[=pprodnormal]{pprodnormal()}} and \code{\link[=qprodnormal]{qprodnormal()}} for the two-variable product-
+normal CDF/quantile; \link{ProductNormal3} for the corresponding S7 class.
 }

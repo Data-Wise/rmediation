@@ -18,6 +18,11 @@
   from the package documentation index (`@noRd`); they remain available
   internally but are not part of the public API.
 
+  | Old | New |
+  |-----|-----|
+  | `p_prod3(q, mean, cov, ...)` | `pprodnormal3(q, mean, cov, ...)` |
+  | `ci(mu = ..., Sigma = ..., quant = ...)` | `ci(..., Sigma = ..., quant = ...)` (positional) |
+
 ## Documentation and lint
 
 * Added `@examples` to all exported functions/generics that previously
