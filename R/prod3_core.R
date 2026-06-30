@@ -49,6 +49,17 @@ NULL
   g * .prod3_bivariate_density(x, y, m, Rxy_inv, det_Rxy)
 }
 
+#' @noRd
+.p_prod3_degenerate <- function(q, fixed_val, other_idx, mean, sds, cov) {
+  pprodnormal(q / fixed_val,
+    mu.x = mean[other_idx[1L]], mu.y = mean[other_idx[2L]],
+    se.x = sds[other_idx[1L]], se.y = sds[other_idx[2L]],
+    rho = cov[other_idx[1L], other_idx[2L]] /
+      max(sds[other_idx[1L]] * sds[other_idx[2L]], .Machine$double.eps),
+    lower.tail = fixed_val > 0
+  )
+}
+
 #' Cumulative Distribution Function for the Product of Three Normal Variables
 #'
 #' Computes `P(X1 * X2 * X3 <= q)` where `(X1, X2, X3)` follows a trivariate
@@ -78,17 +89,6 @@ NULL
 #' @examples
 #' Sigma <- diag(3)
 #' p_prod3(q = 0, mean = c(0, 0, 0), cov = Sigma)
-#' @noRd
-.p_prod3_degenerate <- function(q, fixed_val, other_idx, mean, sds, cov) {
-  pprodnormal(q / fixed_val,
-    mu.x = mean[other_idx[1L]], mu.y = mean[other_idx[2L]],
-    se.x = sds[other_idx[1L]], se.y = sds[other_idx[2L]],
-    rho = cov[other_idx[1L], other_idx[2L]] /
-      max(sds[other_idx[1L]] * sds[other_idx[2L]], .Machine$double.eps),
-    lower.tail = fixed_val > 0
-  )
-}
-
 p_prod3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
   checkmate::assert_number(q, finite = TRUE)
   checkmate::assert_numeric(mean, finite = TRUE, len = 3)
