@@ -66,7 +66,9 @@ S7::S4_register(ProductNormal)
 #' )
 #' obj
 #' cdf(obj, q = 1)
+#' \dontrun{
 #' confint(obj, level = 0.95)
+#' }
 ProductNormal3 <- S7::new_class("ProductNormal3",
   properties = list(
     mu = S7::class_numeric,

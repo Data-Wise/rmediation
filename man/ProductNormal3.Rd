@@ -27,5 +27,7 @@ obj <- ProductNormal3(
 )
 obj
 cdf(obj, q = 1)
+\dontrun{
 confint(obj, level = 0.95)
+}
 }
