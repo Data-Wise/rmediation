@@ -62,7 +62,8 @@ S7::method(cdf, ProductNormal3) <- function(object, q, lower.tail = TRUE, tol = 
   sds <- sqrt(pmax(diag(Sigma), 0))
 
   if (sd_delta <= .Machine$double.eps) {
-    sd_delta <- prod(sds)
+    non_zero_sds <- sds[sds > .Machine$double.eps]
+    sd_delta <- if (length(non_zero_sds) > 0) prod(non_zero_sds) else 1
   }
 
   z <- stats::qnorm(1 - alpha / 2)

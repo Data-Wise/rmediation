@@ -62,10 +62,52 @@ test_that("p_prod3 handles degenerate covariance matrices", {
   )
   expect_equal(p_prod3(0.1, mu, Sigma), expected)
 
+  # X2 is degenerate.
+  Sigma2 <- diag(c(1, 0, 1))
+  mu2 <- c(0.5, 0.3, 0.2)
+  expected2 <- pprodnormal(
+    0.1 / 0.3,
+    mu.x = 0.5, mu.y = 0.2, se.x = 1, se.y = 1, rho = 0,
+    lower.tail = TRUE
+  )
+  expect_equal(p_prod3(0.1, mu2, Sigma2), expected2)
+
+  # X3 is degenerate.
+  Sigma3 <- diag(c(1, 1, 0))
+  mu3 <- c(0.5, 0.3, 0.2)
+  expected3 <- pprodnormal(
+    0.1 / 0.2,
+    mu.x = 0.5, mu.y = 0.3, se.x = 1, se.y = 1, rho = 0,
+    lower.tail = TRUE
+  )
+  expect_equal(p_prod3(0.1, mu3, Sigma3), expected3)
+
   # All three variables degenerate at zero -> product is identically zero.
   expect_equal(p_prod3(0, c(0, 0, 0), diag(c(0, 0, 0))), 0.5)
   expect_equal(p_prod3(1, c(0, 0, 0), diag(c(0, 0, 0))), 1)
   expect_equal(p_prod3(-1, c(0, 0, 0), diag(c(0, 0, 0))), 0)
+})
+
+test_that("p_prod3 handles near-singular covariance", {
+  Sigma <- matrix(
+    c(1, 0.99, 0.99, 0.99, 1, 0.99, 0.99, 0.99, 1),
+    nrow = 3, byrow = TRUE
+  )
+  mu <- c(0.5, 0.3, 0.2)
+  expect_no_error(p_prod3(0.5, mu, Sigma, tol = 1e-4))
+  expect_gte(p_prod3(0.5, mu, Sigma, tol = 1e-4), 0)
+  expect_lte(p_prod3(0.5, mu, Sigma, tol = 1e-4), 1)
+})
+
+test_that("confint handles zero delta-method standard deviation", {
+  # Covariance where the gradient-based delta SD is zero but the product
+  # distribution is not degenerate.
+  Sigma <- diag(c(1, 1, 0))
+  mu <- c(0, 0, 0.5)
+  obj <- ProductNormal3(mu = mu, Sigma = Sigma, method = "hcubature")
+  ci_res <- confint(obj, level = 0.95, tol = 1e-4)
+  expect_named(ci_res, c("lower", "upper"))
+  expect_lt(ci_res["lower"], ci_res["upper"])
 })
 
 test_that("confint and ci methods return valid intervals", {
