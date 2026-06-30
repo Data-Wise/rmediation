@@ -1,3 +1,9 @@
+status: released
+priority: --
+progress: 100
+version: 1.5.0
+next: ✅ ON CRAN (v1.5.0 accepted 2026-06-20, pkg_id 345448). Retires the RMediation dep for downstream.
+
 # rmediation
 
 ## Status: Active
