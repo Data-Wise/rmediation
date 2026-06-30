@@ -23,6 +23,8 @@
 ^.+\.Rproj$
 ^.*\s\(\d+\).*$
 ^RMediation\.Rcheck$
+^cran-comments\.md$
+^CITATION\.cff$
 ^RMediation_2\.0\.0\.tar\.gz$
 
 ## Development files

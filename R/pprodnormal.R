@@ -13,7 +13,7 @@
 #' @param lower.tail logical; if \code{TRUE} (default), the probability is
 #'   \eqn{P(XY \le q)}; otherwise, \eqn{P(XY > q)}
 #' @param type method used to compute confidence interval. It takes on the
-#'   values \code{"dop"} (default), \code{"MC"}, \code{"asymp"} or \code{"all"}
+#'   values \code{"dop"} (default), \code{"MC"}, or \code{"all"}
 #' @param n.mc Monte Carlo sample size when \code{type="MC"} (default: 1e5).
 #'   Larger values provide more precision but take longer to compute.
 #' @details    This function returns the percentile (probability) and the

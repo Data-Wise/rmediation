@@ -11,12 +11,16 @@ p_prod3(q, mean, cov, method = "hcubature", tol = 1e-06)
 
 \item{mean}{Numeric vector of means of length 3.}
 
-\item{cov}{3x3 covariance matrix.}
+\item{cov}{3x3 covariance matrix. Must be positive-definite, except that a
+single zero-variance component is permitted (the problem then reduces to
+the two-variable product-normal case). Perfect correlation between two
+components (\verb{|rho| = 1}) or an indefinite matrix is rejected.}
 
 \item{method}{Integration method. Currently only \code{"hcubature"} is
 supported.}
 
-\item{tol}{Numeric tolerance passed to the integration routine.}
+\item{tol}{Numeric tolerance passed to the integration routine; must be
+strictly positive.}
 }
 \value{
 Probability \code{P(X1 * X2 * X3 <= q)} as a numeric scalar in \verb{[0, 1]}.
@@ -24,8 +28,16 @@ Probability \code{P(X1 * X2 * X3 <= q)} as a numeric scalar in \verb{[0, 1]}.
 \description{
 Computes \code{P(X1 * X2 * X3 <= q)} where \verb{(X1, X2, X3)} follows a trivariate
 normal distribution with mean vector \code{mean} and covariance matrix \code{cov}.
-The implementation uses the conditional-expectation dimension-reduction
-double integral described in Tofighi (2026).
+\code{Z} is marginalised analytically through the conditional Gaussian structure
+\verb{Z | (X, Y)}, and the remaining two-dimensional integral is evaluated with
+adaptive cubature (dimension reduction; see Tofighi, 2026).
+}
+\note{
+Numerical accuracy can degrade as the standardised \verb{(X, Y)}
+correlation approaches \code{+-1} (the bivariate block becomes ill-conditioned).
+For a fully degenerate point mass (all variances zero) with zero means,
+\code{q == 0} returns \code{0.5} by the mid-distribution convention rather than \code{0}
+or \code{1}.
 }
 \examples{
 Sigma <- diag(3)

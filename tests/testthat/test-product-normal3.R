@@ -167,3 +167,38 @@ test_that("ProductNormal3 works end-to-end from a lavaan serial model", {
   expect_named(ci_res, c("lower", "upper"))
   expect_lt(ci_res["lower"], ci_res["upper"])
 })
+
+test_that("p_prod3 rejects non-positive-definite covariance instead of hanging", {
+  # Indefinite cov whose (X, Y) block is still PD (eigenvalues 1.9, 1.9, -0.8):
+  # previously this entered a non-convergent integral and hung. Must error.
+  bad <- matrix(c(1, .9, .9, .9, 1, -.9, .9, -.9, 1), 3)
+  expect_error(p_prod3(0.5, c(0, 0, 0), bad), "positive-definite")
+  # Perfect correlation between X and Y (singular (X, Y) block): previously
+  # surfaced a raw Lapack error from inside the integrand. Must error cleanly.
+  corr1 <- matrix(c(1, 1, .3, 1, 1, .3, .3, .3, 1), 3)
+  expect_error(p_prod3(0.5, c(0, 0, 0), corr1), "positive-definite")
+})
+
+test_that("p_prod3 rejects non-positive tolerance", {
+  expect_error(
+    p_prod3(0.1, c(0.5, 0.3, 0.2), diag(3), tol = 0),
+    "strictly positive"
+  )
+})
+
+test_that("cdf lower.tail = FALSE is the complement of lower.tail = TRUE", {
+  obj <- ProductNormal3(mu = c(0.4, 0.3, 0.2), Sigma = diag(3),
+                        method = "hcubature")
+  expect_equal(cdf(obj, 0.1, lower.tail = FALSE), 1 - cdf(obj, 0.1))
+})
+
+test_that("p_prod3 handles a negative-mean degenerate component", {
+  # sds[1] = 0 with mean[1] < 0 reduces to the two-variable product with
+  # lower.tail = FALSE; result must be a valid, monotone probability.
+  mu <- c(-0.5, 0.3, 0.2)
+  Sigma <- diag(c(0, 1, 1))
+  p <- p_prod3(0.1, mu, Sigma)
+  expect_gte(p, 0)
+  expect_lte(p, 1)
+  expect_lte(p_prod3(-1, mu, Sigma), p_prod3(1, mu, Sigma))
+})

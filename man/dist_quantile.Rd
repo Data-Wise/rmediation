@@ -11,6 +11,10 @@ dist_quantile(object, ...)
 
 \item{...}{Additional arguments passed to methods.}
 }
+\value{
+A numeric vector of quantiles for the supplied probabilities, as
+returned by the dispatched method.
+}
 \description{
 Compute quantiles for distribution objects. This function computes quantiles
 for product normal distributions, not data quantiles (use \code{stats::quantile}

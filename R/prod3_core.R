@@ -1,26 +1,11 @@
 #' @importFrom cubature hcubature
-#' @importFrom stats dnorm pnorm
+#' @importFrom stats cov2cor dnorm pnorm
 NULL
-
-#' Conditional mean and standard deviation of Z | X = x, Y = y
-#'
-#' Assumes the variables have already been standardised to correlation scale.
-#'
-#' @noRd
-.prod3_conditional_z <- function(x, y, m, R) {
-  Rxy <- R[1:2, 1:2]
-  Rxy_inv <- solve(Rxy)
-  beta <- R[3, 1:2] %*% Rxy_inv
-  cond_mean <- m[3] + beta[1] * (x - m[1]) + beta[2] * (y - m[2])
-  cond_var <- 1 - as.numeric(beta %*% R[1:2, 3])
-  cond_var <- max(cond_var, .Machine$double.eps)
-  list(mean = as.numeric(cond_mean), sd = sqrt(cond_var))
-}
 
 #' Bivariate normal density for (X, Y) in standardised correlation scale
 #'
 #' @noRd
-.prod3_bivariate_density <- function(x, y, m, R, Rxy_inv, det_Rxy) {
+.prod3_bivariate_density <- function(x, y, m, Rxy_inv, det_Rxy) {
   z <- c(x - m[1], y - m[2])
   exp(-0.5 * as.numeric(t(z) %*% Rxy_inv %*% z)) /
     (2 * pi * sqrt(max(det_Rxy, .Machine$double.eps)))
@@ -29,10 +14,12 @@ NULL
 #' Integrand for the product-of-three-normals CDF
 #'
 #' Computes `P(X*Y*Z <= q | X=x, Y=y) * f(x,y)` using the dimension-reduction
-#' formula from the prod3 algorithm.
+#' formula from the prod3 algorithm.  The conditional-moment coefficients
+#' (`beta`, `cond_sd`) are precomputed once by [p_prod3()] and passed in, so no
+#' linear solve is performed per integrand evaluation.
 #'
 #' @noRd
-.prod3_integrand_2d <- function(arg, q_std, m, R, Rxy_inv, det_Rxy) {
+.prod3_integrand_2d <- function(arg, q_std, m, beta, cond_sd, Rxy_inv, det_Rxy) {
   x <- arg[1L]
   y <- arg[2L]
 
@@ -47,11 +34,11 @@ NULL
     } else {
       g <- 0.5
     }
-    return(g * .prod3_bivariate_density(x, y, m, R, Rxy_inv, det_Rxy))
+    return(g * .prod3_bivariate_density(x, y, m, Rxy_inv, det_Rxy))
   }
 
-  cond <- .prod3_conditional_z(x, y, m, R)
-  z <- (q_std / (x * y) - cond$mean) / cond$sd
+  cond_mean <- m[3L] + beta[1L] * (x - m[1L]) + beta[2L] * (y - m[2L])
+  z <- (q_std / (x * y) - cond_mean) / cond_sd
 
   if (x * y > 0) {
     g <- stats::pnorm(z)
@@ -59,24 +46,34 @@ NULL
     g <- 1 - stats::pnorm(z)
   }
 
-  g * .prod3_bivariate_density(x, y, m, R, Rxy_inv, det_Rxy)
+  g * .prod3_bivariate_density(x, y, m, Rxy_inv, det_Rxy)
 }
 
 #' Cumulative Distribution Function for the Product of Three Normal Variables
 #'
 #' Computes `P(X1 * X2 * X3 <= q)` where `(X1, X2, X3)` follows a trivariate
 #' normal distribution with mean vector `mean` and covariance matrix `cov`.
-#' The implementation uses the conditional-expectation dimension-reduction
-#' double integral described in Tofighi (2026).
+#' `Z` is marginalised analytically through the conditional Gaussian structure
+#' `Z | (X, Y)`, and the remaining two-dimensional integral is evaluated with
+#' adaptive cubature (dimension reduction; see Tofighi, 2026).
 #'
 #' @param q Numeric scalar quantile.
 #' @param mean Numeric vector of means of length 3.
-#' @param cov 3x3 covariance matrix.
+#' @param cov 3x3 covariance matrix. Must be positive-definite, except that a
+#'   single zero-variance component is permitted (the problem then reduces to
+#'   the two-variable product-normal case). Perfect correlation between two
+#'   components (`|rho| = 1`) or an indefinite matrix is rejected.
 #' @param method Integration method. Currently only `"hcubature"` is
 #'   supported.
-#' @param tol Numeric tolerance passed to the integration routine.
+#' @param tol Numeric tolerance passed to the integration routine; must be
+#'   strictly positive.
 #'
 #' @return Probability `P(X1 * X2 * X3 <= q)` as a numeric scalar in `[0, 1]`.
+#' @note Numerical accuracy can degrade as the standardised `(X, Y)`
+#'   correlation approaches `+-1` (the bivariate block becomes ill-conditioned).
+#'   For a fully degenerate point mass (all variances zero) with zero means,
+#'   `q == 0` returns `0.5` by the mid-distribution convention rather than `0`
+#'   or `1`.
 #' @export
 #' @examples
 #' Sigma <- diag(3)
@@ -86,7 +83,10 @@ p_prod3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
   checkmate::assert_numeric(mean, finite = TRUE, len = 3)
   checkmate::assert_matrix(cov, mode = "numeric", nrows = 3, ncols = 3)
   method <- match.arg(method, "hcubature")
-  checkmate::assert_number(tol, lower = 0)
+  checkmate::assert_number(tol, finite = TRUE)
+  if (tol <= 0) {
+    stop("'tol' must be strictly positive.")
+  }
 
   # Symmetrise covariance
   cov <- (cov + t(cov)) / 2
@@ -136,28 +136,44 @@ p_prod3 <- function(q, mean, cov, method = "hcubature", tol = 1e-6) {
     ))
   }
 
+  # Full positive-definiteness check. The single zero-variance degenerate cases
+  # above are handled separately; here all variances are > 0, so a non-PD `cov`
+  # (indefinite, or perfect pairwise correlation) is malformed -- it would
+  # otherwise produce a negative Var(Z | X, Y) and a non-convergent integral.
+  # Reject cleanly rather than hang or surface a raw Lapack error.
+  eigs <- eigen(cov, symmetric = TRUE, only.values = TRUE)$values
+  if (min(eigs) <= sqrt(.Machine$double.eps) * max(eigs)) {
+    stop(
+      "'cov' must be positive-definite (smallest eigenvalue = ",
+      format(min(eigs), digits = 4),
+      "); perfect correlation between two components (|rho| = 1) or an ",
+      "indefinite matrix is not supported by the dimension-reduction method."
+    )
+  }
+
   # Standardise to correlation scale
   R <- cov / outer(sds, sds)
   R <- (R + t(R)) / 2
   m <- mean / sds
   q_std <- q / prod(sds)
 
-  # Precompute bivariate (X, Y) quantities
+  # Precompute the bivariate (X, Y) quantities ONCE (not per integrand call).
+  # Solve R_xy * beta = Cov(XY, Z) by Cholesky (chol + forward/back
+  # substitution) instead of forming an explicit inverse: for the SPD block
+  # this is better conditioned, kappa(U) = sqrt(kappa(R_xy)). R_xy is
+  # positive-definite by the check above.
   Rxy <- R[1:2, 1:2]
-  Rxy_inv <- solve(Rxy)
-  det_Rxy <- det(Rxy)
-
-  # Guard against numerical non-positive-definiteness
-  if (det_Rxy <= 0) {
-    warning("Standardised (X, Y) covariance is numerically singular; regularising.")
-    Rxy <- Rxy + diag(1e-8, 2)
-    Rxy_inv <- solve(Rxy)
-    det_Rxy <- det(Rxy)
-  }
+  U <- chol(Rxy) # upper-triangular, U^T U = R_xy
+  beta <- as.numeric(backsolve(U, forwardsolve(t(U), R[1:2, 3])))
+  cond_sd <- sqrt(max(1 - sum(beta * R[1:2, 3]), .Machine$double.eps))
+  Rxy_inv <- chol2inv(U)
+  det_Rxy <- prod(diag(U))^2
 
   integrand <- function(arg) {
-    .prod3_integrand_2d(arg, q_std = q_std, m = m, R = R,
-                        Rxy_inv = Rxy_inv, det_Rxy = det_Rxy)
+    .prod3_integrand_2d(arg,
+      q_std = q_std, m = m, beta = beta, cond_sd = cond_sd,
+      Rxy_inv = Rxy_inv, det_Rxy = det_Rxy
+    )
   }
 
   res <- cubature::hcubature(

@@ -108,6 +108,8 @@ S7::S4_register(ProductNormal3)
 #'
 #' @param object A distribution object.
 #' @param ... Additional arguments passed to methods.
+#' @return A numeric vector of cumulative probabilities for the supplied
+#'   quantiles, as returned by the dispatched method.
 #' @export
 cdf <- S7::new_generic("cdf", "object")
 
@@ -119,6 +121,8 @@ cdf <- S7::new_generic("cdf", "object")
 #'
 #' @param object A distribution object (e.g., ProductNormal).
 #' @param ... Additional arguments passed to methods.
+#' @return A numeric vector of quantiles for the supplied probabilities, as
+#'   returned by the dispatched method.
 #' @export
 dist_quantile <- S7::new_generic("dist_quantile", "object")
 
@@ -128,6 +132,8 @@ dist_quantile <- S7::new_generic("dist_quantile", "object")
 #'
 #' @param mu A distribution object or numeric vector of means.
 #' @param ... Additional arguments passed to methods.
+#' @return A confidence interval (numeric vector of lower/upper bounds, or a
+#'   list) as returned by the dispatched method.
 #' @export
 ci <- S7::new_generic("ci", "mu")
 

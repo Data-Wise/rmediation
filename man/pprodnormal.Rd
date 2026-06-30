@@ -34,7 +34,7 @@ The default value is 0.}
 \eqn{P(XY \le q)}; otherwise, \eqn{P(XY > q)}}
 
 \item{type}{method used to compute confidence interval. It takes on the
-values \code{"dop"} (default), \code{"MC"}, \code{"asymp"} or \code{"all"}}
+values \code{"dop"} (default), \code{"MC"}, or \code{"all"}}
 
 \item{n.mc}{Monte Carlo sample size when \code{type="MC"} (default: 1e5).
 Larger values provide more precision but take longer to compute.}
