@@ -1,16 +1,52 @@
 status: in_progress
 priority: high
 progress: 100
-version: 1.6.0
-next: Submit to CRAN via devtools::submit_cran() — cadence gate 2026-07-02 (≥2 weeks since v1.5.0)
+version: 1.6.1
+next: Re-run win-builder + r-hub for 1.6.1 (results in cran-comments.md are stale, from 1.6.0), then submit via devtools::submit_cran() — cadence gate 2026-07-02 (≥2 weeks since v1.5.0)
 
 # rmediation
 
 ## Status: Active
 ## Progress: 100
-## Focus: v1.6.0 shipped to main + docs updated; CRAN submission pending cadence gate (2026-07-02).
+## Focus: v1.6.1 on dev (naming cleanup + goodpractice/docs fixes), pushed but not yet released to main. CRAN submission pending win-builder/r-hub re-run + cadence gate (2026-07-02).
 
-## Session 2026-06-30 (release + docs)
+## Session 2026-06-30 (goodpractice + naming cleanup, v1.6.1, on dev)
+- Part 1 (goodpractice advisories): added @examples to all exported functions/
+  generics that lacked them (ProductNormal, cdf, dist_quantile, ci, MBCOResult,
+  tidy, ProductNormal2, medci_prototype) — addresses `rd_has_examples`.
+- Part 2 (naming convention renames, "all including public API" per user):
+  - `p_prod3()` renamed to `pprodnormal3()` (matches pprodnormal/qprodnormal
+    family); `p_prod3()` kept as a silent forwarding alias + "superseded" note.
+  - `ci()` S7 generic dispatch arg renamed `mu` -> `object` (consistency with
+    cdf()/dist_quantile()); updated all method signatures incl. medfit
+    MediationData/SerialMediationData methods in ci_medfit.R.
+  - `mbco_semi` -> `.mbco_semi`, `parse_product_string` -> `.parse_product_string`.
+  - Hid undocumented internals (`validate_ProductNormal`, `is_valid_for_computation`,
+    `ProductNormal_from_lavaan`) via `@noRd`.
+  - Version bumped 1.6.0 -> 1.6.1; NEWS.md migration-note table added.
+- Follow-up fixes surfaced by `/rforge:r:site` + `/craft:do` staleness pass:
+  - `_pkgdown.yml`: dropped now-hidden topics, p_prod3 -> pprodnormal3 (was
+    breaking `pkgdown::check_pkgdown()`).
+  - README.md: 2 separate `ci(mu = ...)` named-arg examples fixed to positional
+    (both broke after the ci() arg rename — caught by vignette rebuild + manual grep).
+  - cran-comments.md: updated for 1.6.1 (was still describing 1.6.0/p_prod3);
+    win-builder/r-hub results explicitly flagged as stale/pending re-run.
+  - Untracked `docs/` from git (already .gitignore/.Rbuildignore-excluded by
+    design — CI builds+deploys the real site to gh-pages on push to main; the
+    committed copy was dead weight and had drifted stale post-rename).
+  - Deleted DEBUG-REPORT-rhub-2026-06-19.md (resolved, stale) and
+    vignettes/_CONVERSION_NOTES.md (described an Rmd->qmd conversion that
+    never landed).
+  - Added `.rforge.yaml` site.allowlist for CLAUDE.md/GEMINI.md/vignettes
+    config (pkgdown has no config knob to exclude these from its root-.md
+    auto-render) — `sitelint` now clean (was 6 advisory findings).
+- Verified throughout: devtools::test() 307/307 pass; rcmdcheck --as-cran
+  0E/0W/0N; pkgdown::check_pkgdown() clean. 3 commits pushed to dev
+  (52d27aa, 790c680, 407cf0c, 3e6727b).
+- **Not yet done:** win-builder/r-hub re-run for 1.6.1 (next action above);
+  dev -> main release PR; CRAN submission.
+
+## Session 2026-06-30 (release + docs, v1.6.0)
 - win-builder R-release result recorded OK — all 3 win-builder flavors passed
 - PR #21 merged to main (v1.6.0 release)
 - Tag v1.6.0 created + GitHub release published
@@ -92,7 +128,10 @@ Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
 ## CRAN
 - Published on CRAN: 1.5.0 (2026-06-18)
 - GitHub release (main): 1.6.0 (2026-06-29)
-- CRAN submission pending: cadence gate 2026-07-02 (≥2 weeks since v1.5.0)
+- 1.6.1 on dev (not yet released to main): goodpractice + naming cleanup,
+  pushed 2026-06-30
+- CRAN submission pending: win-builder/r-hub re-run for 1.6.1 + cadence gate
+  2026-07-02 (≥2 weeks since v1.5.0)
 
 ## Recent (2026-05-31)
 - Merged PR #4 (develop): name-based path -> covariance extraction for medfit
