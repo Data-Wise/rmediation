@@ -8,6 +8,7 @@
 ^\.Rprofile$
 ^(\.\.)?\.Rcheck$
 ^\.claude$
+^\.remember$
 ^CLAUDE\.md$
 ^STATUS\.md$
 ^\.STATUS$
