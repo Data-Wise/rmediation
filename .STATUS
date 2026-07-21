@@ -3,7 +3,7 @@ priority: high
 progress: 100
 kind: package
 version: 1.6.1
-next: Re-run win-builder + r-hub for 1.6.1 (results in cran-comments.md are stale, from 1.6.0), then submit via devtools::submit_cran() — cadence gate 2026-07-02 (≥2 weeks since v1.5.0)
+next: v1.6.1 released to `main` (PR #25, merged 2026-07-21, 11/11 CI checks green). Along the way, found and fixed a real NAMESPACE-corrupting bug: roxygen2 8.0.0 generated invalid `export("cdf,double-method")`-style entries for 3 base-type S7 method dispatches (`ci(class_numeric)`, `ci(class_any)`, `cdf(class_numeric)`), which broke package installation entirely (`undefined exports` error) — win-builder/r-hub would have failed on it. Fixed via `@noRd` on those methods (commit 7a2814c), re-verified `cran-prep` still ready. Win-builder (3/3: R-devel r90283, R-release 4.6.1, R-oldrelease 4.5.3) and r-hub (3/3: linux, macos, windows) both clean against the fixed source. cran-comments.md refreshed with confirmed results. Only remaining step: `devtools::submit_cran()` from `main` (maintainer-manual: interactive TTY + email click).
 
 # rmediation
 
