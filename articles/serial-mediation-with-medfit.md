@@ -65,7 +65,7 @@ res$Estimate
 #> [1] 0.2085793
 res$CI
 #>     lower     upper 
-#> 0.1694421 0.2513357
+#> 0.1696887 0.2510399
 ```
 
 The point estimate sits near the true `0.21`, and the 95% Monte Carlo

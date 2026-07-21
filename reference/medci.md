@@ -225,11 +225,6 @@ mediation analysis confidence intervals. *Behavior Research Methods*,
 [`ci`](https://data-wise.github.io/rmediation/reference/ci.md)
 [`RMediation-package`](https://data-wise.github.io/rmediation/reference/RMediation-package.md)
 
-[`qprodnormal`](https://data-wise.github.io/rmediation/reference/qprodnormal.md)
-[`pprodnormal`](https://data-wise.github.io/rmediation/reference/pprodnormal.md)
-[`ci`](https://data-wise.github.io/rmediation/reference/ci.md)
-[`RMediation-package`](https://data-wise.github.io/rmediation/reference/RMediation-package.md)
-
 ## Author
 
 Davood Tofighi <dtofighi@gmail.com>
