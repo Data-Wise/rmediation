@@ -186,9 +186,6 @@ confidence intervals. \emph{Behavior Research Methods}, \bold{43},
 \seealso{
 \code{\link{qprodnormal}} \code{\link{pprodnormal}} \code{\link{ci}}
 \code{\link{RMediation-package}}
-
-\code{\link{qprodnormal}} \code{\link{pprodnormal}} \code{\link{ci}}
-\code{\link{RMediation-package}}
 }
 \author{
 Davood Tofighi \email{dtofighi@gmail.com}
