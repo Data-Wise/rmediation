@@ -15,7 +15,7 @@ NULL
 #' @return A named list with elements \code{CI}, \code{Estimate}, \code{SE},
 #'   and (for Monte Carlo) \code{MC.Error}. When \code{type = "all"}, a list
 #'   with elements \code{MC} and \code{Asymptotic}.
-#' @export
+#' @noRd
 S7::method(ci, S7::class_numeric) <- function(object, Sigma, quant, alpha = 0.05, type = "MC", ...) {
   # Dispatch to legacy .ci_core
   mu <- object
@@ -34,7 +34,7 @@ S7::method(ci, S7::class_numeric) <- function(object, Sigma, quant, alpha = 0.05
 
 #' @return A named list of CI results (one per defined parameter in the lavaan
 #'   object), each with elements \code{CI}, \code{Estimate}, and \code{SE}.
-#' @export
+#' @noRd
 S7::method(ci, S7::class_any) <- function(object, level = 0.95, type = "dop", n.mc = 1e5, ...) {
   checkmate::assert_number(level, lower = 0, upper = 1)
   type <- match.arg(type, c("dop", "MC", "asymp", "all", "prodclin"))
@@ -129,7 +129,7 @@ S7::method(ci, S7::class_any) <- function(object, level = 0.95, type = "dop", n.
 # Data quantiles should use stats::quantile directly
 
 #' @return A numeric vector of empirical CDF values at \code{q}.
-#' @export
+#' @noRd
 S7::method(cdf, S7::class_numeric) <- function(object, q, ...) {
   # Empirical CDF for numeric vectors
   stats::ecdf(object)(q)
