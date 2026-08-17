@@ -1,15 +1,39 @@
-status: released
+status: in_progress
 priority: high
 progress: 100
 kind: package
-version: 1.6.1
-next: v1.6.1 **ACCEPTED + PUBLISHED ON CRAN**, confirmed live 2026-07-23 at https://cran.r-project.org/web/packages/RMediation/index.html (publication date 2026-07-21). Passed CRAN's automated pretest 2026-07-21 23:32 UTC (`[CRAN-pretest-publish]` — clean, "on its way to CRAN") after submission (SHA fb370dd, confirmed via maintainer email link at 23:22 UTC) — for a routine update (not a `[CRAN-pretest-newbies]` new-package submission), that pretest-publish email IS the terminal notification; no separate acceptance email follows. No further action needed. Prior to submission: released to `main` (PR #25, merged 2026-07-21, 11/11 CI checks green); found and fixed a real NAMESPACE-corrupting bug where roxygen2 8.0.0 generated invalid `export("cdf,double-method")`-style entries for 3 base-type S7 method dispatches (`ci(class_numeric)`, `ci(class_any)`, `cdf(class_numeric)`), which broke package installation entirely (`undefined exports` error) — win-builder/r-hub would have failed on it. Fixed via `@noRd` on those methods (commit 7a2814c). Win-builder (3/3: R-devel r90283, R-release 4.6.1, R-oldrelease 4.5.3) and r-hub (3/3: linux, macos, windows) both clean against the fixed source.
+version: 1.7.0
+next: v1.7.0 in review — PR #28 (`feature/prod3-illconditioned` -> `dev`) fixes issue #27, where `pprodnormal3()` returned silently wrong probabilities on ill-conditioned covariance (24% error at rho=0.999, 92% relative in the lower tail; every q, not just the q=0.5 the issue reported). Default integrator is now `method="gauss"` (partitioned Gauss-Legendre, self-consistency node escalation); `"hcubature"` retained for cross-checking only. Two spike findings changed the fix the issue proposed: axis partitioning alone leaves 7.3% error, and the truncation bound must be derived rather than tuned (a tuned bound reproduces the exact converges-to-a-stable-wrong-value signature of the original bug). Also found and recorded a second silent legacy failure: hcubature returns exactly 0 at standardized means beyond ~8. Gates: 339 tests pass (0 fail/warn/skip), `R CMD check --as-cran` 0/0/0, NAMESPACE byte-identical. Awaiting CI on PR #28. After merge: GitHub release ships the fix immediately via install_github(); CRAN cadence window opens 2026-08-21 (v1.6.1 published 2026-07-21). Issue #26 (mediation-apps Shiny links) done on dev (a5b0178) — both issues stay open on GitHub until dev->main.
 
 # rmediation
 
-## Status: Released
+## Status: Active
 ## Progress: 100
-## Focus: v1.6.1 published on CRAN 2026-07-21 (confirmed live 2026-07-23). No open release work. Next substantive item: issue #27 (pprodnormal3 ill-conditioned covariance).
+## Focus: v1.7.0 — issue #27 fixed in PR #28, awaiting CI. v1.6.1 remains the published CRAN version (2026-07-21).
+
+## Session 2026-08-16 (issue #27 prod3 integrator + #26 Shiny links, v1.7.0)
+- Issue #26 (docs, on `dev`, commit a5b0178): README "Try It Online" section +
+  pkgdown `home:` link to https://data-wise.github.io/mediation-apps/ (both 200).
+- Issue #27 (code, `feature/prod3-illconditioned`, PR #28): reproduced the bug
+  against installed 1.6.1 (24.29% error at rho=0.999, matching the report to 4dp),
+  then validated the proposed remedy before implementing it — which changed it:
+  - Axis partitioning ALONE is insufficient (1.96e-01 -> 5.87e-02, still 7.3% off).
+    Gauss-Legendre is the fix; partitioning is its prerequisite. Unpartitioned
+    Gauss returns 2.11 — not a probability.
+  - Bug is wider than reported: every q, worst 92% relative at q=-2. confint()/
+    ci()/dist_quantile() inherit it because they invert this CDF.
+  - References pinned to GL self-consistency (1e-14 across n=512/1024/2048), not
+    Monte Carlo — MC at 1e7 has 3SE=3.7e-04, too noisy, and two seeds disagreed
+    by more than the errors being measured.
+  - Truncation bound derived from a tail-mass argument, not tuned: at bound=4
+    successive rules agree to 1.7e-14 while being 3.2e-05 wrong — the same
+    failure signature as the bug being fixed.
+  - Second silent legacy failure found: hcubature returns exactly 0 at
+    standardized means beyond ~8 (true value ~0.46). Unrelated to conditioning.
+- Root cause of why it shipped: test-product-normal3.R:91 was named "handles
+  near-singular covariance", ran rho=0.99, and asserted only expect_no_error()
+  plus 0<=p<=1. That case was already wrong by 1.8e-03.
+- Also closed issue #17 (machine `status:` header — already present).
 
 ## Session 2026-06-30 (goodpractice + naming cleanup, v1.6.1, on dev)
 - Part 1 (goodpractice advisories): added @examples to all exported functions/
@@ -67,7 +91,7 @@ next: v1.6.1 **ACCEPTED + PUBLISHED ON CRAN**, confirmed live 2026-07-23 at http
   - Dev cycle: 307 pass / 0 warn / 0 fail; R CMD check --as-cran 0E/0W/0N
 
 ## Active worktrees
-(none)
+- `~/.git-worktrees/rmediation/feature-prod3-illconditioned` — branch `feature/prod3-illconditioned`, PR #28 (issue #27, prod3 integrator rewrite). Remove after merge.
 
 ## Recent (2026-06-29 — prod3 hardening, issue #20, commit f7226f1)
 - Two independent reviews (algorithm-correctness + rforge) confirmed the core is
