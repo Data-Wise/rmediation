@@ -59,10 +59,10 @@ Checked locally with `R CMD check --as-cran` (0/0/0).
 * Local: macOS, R 4.6.1 — `R CMD check --as-cran` — 0 errors | 0 warnings | 0 notes
 * GitHub Actions: ubuntu-latest (R-release and R-devel), macos-latest,
   windows-latest — all passing
-* win-builder — PENDING, to be dispatched against this exact source before
-  submission
-* r-hub v2 — PENDING, to be dispatched against this exact source before
-  submission
+* r-hub v2 (GitHub Actions, dispatched 2026-08-17 against `dev` at 661b5b4):
+  linux, windows, macos-arm64 (all R-devel) — all three passed
+* win-builder (all 3 flavors dispatched 2026-08-17 against the same source) —
+  RESULTS PENDING; fill in before submitting
 
 ## Notes for the CRAN team
 

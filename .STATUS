@@ -3,13 +3,13 @@ priority: high
 progress: 100
 kind: package
 version: 1.7.0
-next: v1.7.0 released on GitHub (tag `v1.7.0` on `dev`, marked pre-release) — fixes issue #27, where `pprodnormal3()` returned silently wrong probabilities on ill-conditioned covariance (24% error at rho=0.999, 92% relative in the lower tail, at every q — not just the q=0.5 the issue reported). Default integrator is now `method="gauss"` (partitioned Gauss-Legendre, self-consistency node escalation); `"hcubature"` retained for cross-checking only. Installable now: `remotes::install_github("Data-Wise/RMediation", ref = "dev")`. PRs #28 (fix) and #29 (diagnostics contract + US-English) both merged to `dev`; worktrees removed, local branches deleted. **Remote branches `feature/prod3-illconditioned` and `fix/diagnostics-contract` still exist** — deletion was blocked by branch-guard pending confirmation. Gates on merged dev: 345 tests pass (0 fail/warn/skip), `R CMD check --as-cran` 0/0/0. **NEXT ACTION: CRAN submission — window opens 2026-08-21** (v1.6.1 published 2026-07-21; one-month cadence). That needs a `dev`->`main` release PR first; `main` is still at 1.6.1, which is what CRAN serves. Issue #26 (mediation-apps Shiny links) also done on dev — #26 and #27 stay open on GitHub until dev->main.
+next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do NOT submit or merge dev->main without explicit go-ahead.** v1.7.0 is published on GitHub as a PRE-RELEASE only (tag `v1.7.0` on `dev`); `main` deliberately remains at 1.6.1, which is what CRAN serves. Users can get the fix via `remotes::install_github("Data-Wise/RMediation", ref = "dev")`. v1.7.0 fixes issue #27: `pprodnormal3()` returned silently wrong probabilities on ill-conditioned covariance (24% error at rho=0.999, 92% relative in the lower tail, at every q). Default integrator is now `method="gauss"`; `"hcubature"` retained for cross-checking. **The open decision, if the hold is reconsidered: making "gauss" the default changes returned values for every user — that is the one choice that becomes irreversible once on CRAN.** Gates all green: 345 tests pass (0 fail/warn/skip), `R CMD check --as-cran` 0/0/0, r-hub 3/3 pass (linux/windows/macos-arm64, 2026-08-17), win-builder 3 flavors dispatched but RESULTS NOT YET RECEIVED. `cran-comments.md` is rewritten for 1.7.0 with r-hub filled in and win-builder still marked PENDING. Issues #26 and #27 stay open on GitHub until dev->main. Live pkgdown site is at 1.7.0 (deployed from the tag before that trigger was removed) while CRAN is 1.6.1 — deliberate, see SPEC-29.
 
 # rmediation
 
 ## Status: Active
 ## Progress: 100
-## Focus: v1.7.0 released on GitHub (pre-release, tagged on dev). CRAN submission blocked until 2026-08-21 cadence window; main + CRAN remain at 1.6.1.
+## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
 
 ## Session 2026-08-16 (issue #27 prod3 integrator + #26 Shiny links, v1.7.0)
 - Issue #26 (docs, on `dev`, commit a5b0178): README "Try It Online" section +
