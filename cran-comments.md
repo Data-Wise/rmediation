@@ -61,8 +61,11 @@ Checked locally with `R CMD check --as-cran` (0/0/0).
   windows-latest — all passing
 * r-hub v2 (GitHub Actions, dispatched 2026-08-17 against `dev` at 661b5b4):
   linux, windows, macos-arm64 (all R-devel) — all three passed
-* win-builder (all 3 flavors dispatched 2026-08-17 against the same source) —
-  RESULTS PENDING; fill in before submitting
+* win-builder R-devel (dispatched 2026-08-17 against the same source):
+  `Status: OK` under R Under development (unstable) (2026-08-15 r90413 ucrt) —
+  no NOTEs, no WARNINGs
+* win-builder R-release and R-oldrelease (dispatched 2026-08-17) — RESULTS
+  PENDING; fill in before submitting
 
 ## Notes for the CRAN team
 
