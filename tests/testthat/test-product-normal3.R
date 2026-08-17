@@ -262,6 +262,29 @@ test_that("diagnostics are opt-in so the return stays a bare numeric", {
   expect_equal(as.numeric(noisy), as.numeric(plain))
 })
 
+test_that("the error diagnostic follows its documented per-method contract", {
+  mu <- c(0.2, 0.1, 0.0)
+  Sigma <- matrix(c(1, .9, .5, .9, 1, .5, .5, .5, 1), 3, 3)
+
+  # gauss: a real successive-rule gap, below the requested tol.
+  g <- pprodnormal3(0.5, mu, Sigma, diagnostics = TRUE)
+  expect_false(is.na(attr(g, "error")))
+  expect_lt(attr(g, "error"), 1e-6)
+
+  # hcubature: that integrator's own estimate, passed through rather than
+  # suppressed. Documented as present-but-untrustworthy, so assert it is a
+  # number and NOT NA. The docs previously promised NA here, which the code
+  # never did -- caught in review of PR #28, and this test pins the resolution.
+  h <- pprodnormal3(0.5, mu, Sigma, method = "hcubature", diagnostics = TRUE)
+  expect_false(is.na(attr(h, "error")))
+  expect_true(is.numeric(attr(h, "error")))
+
+  # fixed nodes: no successive-rule gap exists, so NA.
+  f <- pprodnormal3(0.5, mu, Sigma, nodes = 256, diagnostics = TRUE)
+  expect_true(is.na(attr(f, "error")))
+  expect_equal(attr(f, "nodes"), 256L)
+})
+
 test_that("a fixed node count can be forced and is validated", {
   mu <- c(0.2, 0.1, 0.0)
   Sigma <- matrix(c(1, .999, .5, .999, 1, .5, .5, .5, 1), 3, 3)

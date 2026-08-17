@@ -42,14 +42,25 @@ per dimension instead of escalating adaptively. Ignored when
 \code{method = "hcubature"}. Mainly useful for reproducing a specific rule or
 for cross-checking a result at two node counts.}
 
-\item{diagnostics}{Logical. If \code{TRUE}, the returned value carries an
-\code{"error"} attribute (the gap between the last two quadrature rules, a
-genuine convergence estimate) and a \code{"nodes"} attribute. Defaults to
-\code{FALSE} so the return value stays a bare numeric for existing callers.
-\code{"error"} is \code{NA} when \code{nodes} is supplied or when
-\code{method = "hcubature"}: a single fixed rule produces no successive-rule
-gap to measure. To check convergence at a fixed rule, evaluate at \code{nodes}
-and \code{2 * nodes} and compare.}
+\item{diagnostics}{Logical. If \code{TRUE}, the returned value carries \code{"error"}
+and \code{"nodes"} attributes. Defaults to \code{FALSE} so the return value stays a
+bare numeric for existing callers.
+
+What \code{"error"} means depends on \code{method}, and the two are \strong{not
+comparable}:
+\itemize{
+\item \code{method = "gauss"}: the gap between the last two quadrature rules, a
+genuine convergence estimate for discretisation error. It does not see
+truncation error, which is instead bounded by construction.
+\item \code{method = "hcubature"}: that integrator's \emph{own} reported error estimate.
+Treat it with suspicion. It is satisfied at exactly the configurations
+where the result is badly wrong (see Note), which is why it cannot be
+used to detect the failure this method was replaced over.
+}
+
+\code{"error"} is \code{NA} when \code{nodes} is supplied: a single fixed rule produces no
+successive-rule gap to measure. To check convergence at a fixed rule,
+evaluate at \code{nodes} and \code{2 * nodes} and compare.}
 
 \item{...}{Additional arguments (unused; present for the \code{p_prod3}
 deprecated alias).}

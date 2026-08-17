@@ -265,14 +265,23 @@ NULL
 #'   per dimension instead of escalating adaptively. Ignored when
 #'   `method = "hcubature"`. Mainly useful for reproducing a specific rule or
 #'   for cross-checking a result at two node counts.
-#' @param diagnostics Logical. If `TRUE`, the returned value carries an
-#'   `"error"` attribute (the gap between the last two quadrature rules, a
-#'   genuine convergence estimate) and a `"nodes"` attribute. Defaults to
-#'   `FALSE` so the return value stays a bare numeric for existing callers.
-#'   `"error"` is `NA` when `nodes` is supplied or when
-#'   `method = "hcubature"`: a single fixed rule produces no successive-rule
-#'   gap to measure. To check convergence at a fixed rule, evaluate at `nodes`
-#'   and `2 * nodes` and compare.
+#' @param diagnostics Logical. If `TRUE`, the returned value carries `"error"`
+#'   and `"nodes"` attributes. Defaults to `FALSE` so the return value stays a
+#'   bare numeric for existing callers.
+#'
+#'   What `"error"` means depends on `method`, and the two are **not
+#'   comparable**:
+#'   * `method = "gauss"`: the gap between the last two quadrature rules, a
+#'     genuine convergence estimate for discretisation error. It does not see
+#'     truncation error, which is instead bounded by construction.
+#'   * `method = "hcubature"`: that integrator's *own* reported error estimate.
+#'     Treat it with suspicion. It is satisfied at exactly the configurations
+#'     where the result is badly wrong (see Note), which is why it cannot be
+#'     used to detect the failure this method was replaced over.
+#'
+#'   `"error"` is `NA` when `nodes` is supplied: a single fixed rule produces no
+#'   successive-rule gap to measure. To check convergence at a fixed rule,
+#'   evaluate at `nodes` and `2 * nodes` and compare.
 #' @param ... Additional arguments (unused; present for the `p_prod3`
 #'   deprecated alias).
 #'
