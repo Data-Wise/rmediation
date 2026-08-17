@@ -2,7 +2,7 @@ Package: RMediation
 Type: Package
 Title: Mediation Analysis Confidence Intervals
 Version: 1.7.0
-Date: 2026-06-30
+Date: 2026-08-16
 Author: Davood Tofighi [aut, cre] (ORCID: <https://orcid.org/0000-0001-8523-7776>)
 Maintainer: Davood Tofighi <dtofighi@gmail.com>
 Authors@R: person("Davood", "Tofighi",
