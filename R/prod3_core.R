@@ -49,7 +49,7 @@ NULL
   g * .prod3_bivariate_density(x, y, m, Rxy_inv, det_Rxy)
 }
 
-#' Vectorised form of [.prod3_integrand_2d()] for fixed-grid quadrature
+#' Vectorized form of [.prod3_integrand_2d()] for fixed-grid quadrature
 #'
 #' Identical mathematics, evaluated on whole node vectors at once so the
 #' tensor-product rule does not pay R's per-call overhead 65,000+ times.
@@ -121,7 +121,7 @@ NULL
 #' `bound` comes from [.prod3_bound()] rather than being a tuned constant --
 #' see there for why that distinction matters.
 #'
-#' The split point stays at 0 even when the standardised mean is further than
+#' The split point stays at 0 even when the standardized mean is further than
 #' `bound` from it (`|m| > bound`), and this is deliberate. In that case
 #' `cell()` receives reversed limits, so its weights are negative and it
 #' contributes `-integral(0, m - bound)`; added to the second cell's
@@ -129,7 +129,7 @@ NULL
 #' `integral(m - bound, m + bound)` -- exactly the truncation box
 #' [.prod3_bound()] guarantees. Every node still lies on one side of the axis,
 #' so the single-signed property the method depends on is preserved rather than
-#' broken. Verified against Monte Carlo out to a standardised mean of 20,
+#' broken. Verified against Monte Carlo out to a standardized mean of 20,
 #' including in combination with rho = 0.999; see the regression test.
 #'
 #' Do not "fix" this by clamping the split point into the box: that would
@@ -164,7 +164,7 @@ NULL
 #' Truncation bound with a provable tail-mass guarantee
 #'
 #' The integrand is a conditional probability (bounded by 1) times a bivariate
-#' normal density, so truncating each standardised margin at `m +- bound`
+#' normal density, so truncating each standardized margin at `m +- bound`
 #' discards at most `4 * pnorm(-bound)` of the integral. The bound is chosen so
 #' that ceiling sits an order of magnitude below `tol`.
 #'
@@ -187,7 +187,7 @@ NULL
 #' Adaptive Gauss-Legendre driven by self-consistency
 #'
 #' Doubles the node count until successive rules agree to `tol`. The gap
-#' `|I(n) - I(2n)|` is a genuine error estimate for *discretisation* error --
+#' `|I(n) - I(2n)|` is a genuine error estimate for *discretization* error --
 #' unlike `hcubature()`'s reported error, which is satisfied at the very
 #' configurations where the answer is worst. Truncation error is handled
 #' separately and by construction in [.prod3_bound()], because this check
@@ -265,14 +265,23 @@ NULL
 #'   per dimension instead of escalating adaptively. Ignored when
 #'   `method = "hcubature"`. Mainly useful for reproducing a specific rule or
 #'   for cross-checking a result at two node counts.
-#' @param diagnostics Logical. If `TRUE`, the returned value carries an
-#'   `"error"` attribute (the gap between the last two quadrature rules, a
-#'   genuine convergence estimate) and a `"nodes"` attribute. Defaults to
-#'   `FALSE` so the return value stays a bare numeric for existing callers.
-#'   `"error"` is `NA` when `nodes` is supplied or when
-#'   `method = "hcubature"`: a single fixed rule produces no successive-rule
-#'   gap to measure. To check convergence at a fixed rule, evaluate at `nodes`
-#'   and `2 * nodes` and compare.
+#' @param diagnostics Logical. If `TRUE`, the returned value carries `"error"`
+#'   and `"nodes"` attributes. Defaults to `FALSE` so the return value stays a
+#'   bare numeric for existing callers.
+#'
+#'   What `"error"` means depends on `method`, and the two are **not
+#'   comparable**:
+#'   * `method = "gauss"`: the gap between the last two quadrature rules, a
+#'     genuine convergence estimate for discretization error. It does not see
+#'     truncation error, which is instead bounded by construction. It is `NA`
+#'     when `nodes` is supplied, because a single fixed rule produces no
+#'     successive-rule gap to measure; to check convergence at a fixed rule,
+#'     evaluate at `nodes` and `2 * nodes` and compare.
+#'   * `method = "hcubature"`: that integrator's *own* reported error estimate,
+#'     always present and never `NA` (`nodes` is ignored on this path). Treat it
+#'     with suspicion. It is satisfied at exactly the configurations where the
+#'     result is badly wrong (see Note), which is why it cannot be used to
+#'     detect the failure this method was replaced over.
 #' @param ... Additional arguments (unused; present for the `p_prod3`
 #'   deprecated alias).
 #'
@@ -314,7 +323,7 @@ pprodnormal3 <- function(q, mean, cov, method = c("gauss", "hcubature"),
     stop("'tol' must be strictly positive.")
   }
 
-  # Symmetrise covariance
+  # Symmetrize covariance
   cov <- (cov + t(cov)) / 2
 
   sds <- sqrt(pmax(diag(cov), 0))
@@ -362,7 +371,7 @@ pprodnormal3 <- function(q, mean, cov, method = c("gauss", "hcubature"),
     return(0.5)
   }
 
-  # Standardise to correlation scale
+  # Standardize to correlation scale
   R <- cov / outer(sds, sds)
   R <- (R + t(R)) / 2
   m <- mean / sds

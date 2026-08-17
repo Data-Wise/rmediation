@@ -41,7 +41,7 @@ root-finding, all of them inherited the error.
   previously had no default and rejected everything except `"hcubature"`.
 
 * The new default also fixes a second, previously unreported failure of the old
-  integrator: at large standardised means (`mean / sd` beyond roughly 8) it
+  integrator: at large standardized means (`mean / sd` beyond roughly 8) it
   returned exactly `0` where the true probability is around `0.46`. That failure
   was independent of conditioning and equally silent.
 

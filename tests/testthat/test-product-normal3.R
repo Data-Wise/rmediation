@@ -143,7 +143,7 @@ test_that("node count escalates when the covariance demands it", {
   expect_equal(as.numeric(hard), 0.80662217, tolerance = 1e-6)
 })
 
-test_that("the vectorised integrand matches the scalar one exactly", {
+test_that("the vectorized integrand matches the scalar one exactly", {
   # The Gauss path uses .prod3_integrand_vec() and the hcubature path uses
   # .prod3_integrand_2d(). If they drift, the two methods silently stop
   # computing the same quantity.
@@ -173,7 +173,7 @@ test_that("the vectorised integrand matches the scalar one exactly", {
   expect_lt(max(abs(scalar - vec)), 1e-12)
 })
 
-test_that("accuracy holds when the standardised mean exceeds the bound", {
+test_that("accuracy holds when the standardized mean exceeds the bound", {
   # When |m| > bound the first cell gets reversed limits, so it contributes a
   # negative-weight integral that telescopes with the second cell to the
   # intended truncation box. This reads like a defect and is not one; the test
@@ -244,7 +244,7 @@ test_that("the legacy hcubature path is still reachable", {
   legacy <- pprodnormal3(0.5, mu, Sigma, method = "hcubature")
 
   expect_true(is.numeric(legacy) && length(legacy) == 1)
-  # Documents, rather than endorses, the pre-1.7.0 behaviour: this is the
+  # Documents, rather than endorses, the pre-1.7.0 behavior: this is the
   # value the old default returned, and it is wrong by ~0.196.
   expect_equal(legacy, 0.6109671, tolerance = 1e-5)
 })
@@ -260,6 +260,29 @@ test_that("diagnostics are opt-in so the return stays a bare numeric", {
   expect_true(is.numeric(attr(noisy, "error")))
   expect_true(is.numeric(attr(noisy, "nodes")))
   expect_equal(as.numeric(noisy), as.numeric(plain))
+})
+
+test_that("the error diagnostic follows its documented per-method contract", {
+  mu <- c(0.2, 0.1, 0.0)
+  Sigma <- matrix(c(1, .9, .5, .9, 1, .5, .5, .5, 1), 3, 3)
+
+  # gauss: a real successive-rule gap, below the requested tol.
+  g <- pprodnormal3(0.5, mu, Sigma, diagnostics = TRUE)
+  expect_false(is.na(attr(g, "error")))
+  expect_lt(attr(g, "error"), 1e-6)
+
+  # hcubature: that integrator's own estimate, passed through rather than
+  # suppressed. Documented as present-but-untrustworthy, so assert it is a
+  # number and NOT NA. The docs previously promised NA here, which the code
+  # never did -- caught in review of PR #28, and this test pins the resolution.
+  h <- pprodnormal3(0.5, mu, Sigma, method = "hcubature", diagnostics = TRUE)
+  expect_false(is.na(attr(h, "error")))
+  expect_true(is.numeric(attr(h, "error")))
+
+  # fixed nodes: no successive-rule gap exists, so NA.
+  f <- pprodnormal3(0.5, mu, Sigma, nodes = 256, diagnostics = TRUE)
+  expect_true(is.na(attr(f, "error")))
+  expect_equal(attr(f, "nodes"), 256L)
 })
 
 test_that("a fixed node count can be forced and is validated", {
