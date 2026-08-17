@@ -10,7 +10,15 @@ Tofighi, 2026).
 ## Usage
 
 ``` r
-pprodnormal3(q, mean, cov, method = "hcubature", tol = 1e-06)
+pprodnormal3(
+  q,
+  mean,
+  cov,
+  method = c("gauss", "hcubature"),
+  tol = 1e-06,
+  nodes = NULL,
+  diagnostics = FALSE
+)
 
 p_prod3(...)
 ```
@@ -34,12 +42,36 @@ p_prod3(...)
 
 - method:
 
-  Integration method. Currently only `"hcubature"` is supported.
+  Integration method. `"gauss"` (default) is tensor-product
+  Gauss-Legendre quadrature on a domain partitioned at the coordinate
+  axes, with the node count escalated until successive rules agree to
+  `tol`. `"hcubature"` is the adaptive method used before version 1.7.0;
+  it is retained for cross-checking and backward comparison, but is
+  **not recommended** when the `(X, Y)` block is ill-conditioned (see
+  Note).
 
 - tol:
 
   Numeric tolerance passed to the integration routine; must be strictly
   positive.
+
+- nodes:
+
+  Optional integer: force a fixed number of Gauss-Legendre nodes per
+  dimension instead of escalating adaptively. Ignored when
+  `method = "hcubature"`. Mainly useful for reproducing a specific rule
+  or for cross-checking a result at two node counts.
+
+- diagnostics:
+
+  Logical. If `TRUE`, the returned value carries an `"error"` attribute
+  (the gap between the last two quadrature rules, a genuine convergence
+  estimate) and a `"nodes"` attribute. Defaults to `FALSE` so the return
+  value stays a bare numeric for existing callers. `"error"` is `NA`
+  when `nodes` is supplied or when `method = "hcubature"`: a single
+  fixed rule produces no successive-rule gap to measure. To check
+  convergence at a fixed rule, evaluate at `nodes` and `2 * nodes` and
+  compare.
 
 - ...:
 
@@ -52,11 +84,19 @@ Probability `P(X1 * X2 * X3 <= q)` as a numeric scalar in `[0, 1]`.
 
 ## Note
 
-Numerical accuracy can degrade as the standardized `(X, Y)` correlation
-approaches `+-1` (the bivariate block becomes ill-conditioned). For a
-fully degenerate point mass (all variances zero) with zero means,
+For a fully degenerate point mass (all variances zero) with zero means,
 `q == 0` returns `0.5` by the mid-distribution convention rather than
 `0` or `1`.
+
+Before version 1.7.0 the default integrator was `"hcubature"`, which
+returns materially wrong values on ill-conditioned covariance matrices –
+at `rho = 0.999` the error reaches 24% at `q = 0.5` and 92% in relative
+terms in the lower tail, silently and with no diagnostic. The default is
+now `"gauss"`, which agrees with `"hcubature"` to roughly `1e-6` on
+well-conditioned input and remains accurate where `"hcubature"` fails.
+Results from the two methods therefore differ slightly on benign input
+and substantially on ill-conditioned input; the latter is the
+correction.
 
 ## Note
 

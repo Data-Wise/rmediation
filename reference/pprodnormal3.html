@@ -15,7 +15,7 @@ adaptive cubature (dimension reduction; see Tofighi, 2026)."><meta property="og:
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,7 @@ adaptive cubature (dimension reduction; see Tofighi, 2026)."><meta property="og:
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Cumulative Distribution Function for the Product of Three Normal Variables</h1>
-      <small class="dont-index">Source: <a href="https://github.com/data-wise/rmediation/blob/main/R/prod3_core.R" class="external-link"><code>R/prod3_core.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/data-wise/rmediation/blob/v1.7.0/R/prod3_core.R" class="external-link"><code>R/prod3_core.R</code></a></small>
       <div class="d-none name"><code>pprodnormal3.Rd</code></div>
     </div>
 
@@ -66,7 +66,15 @@ adaptive cubature (dimension reduction; see Tofighi, 2026).</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pprodnormal3</span><span class="op">(</span><span class="va">q</span>, <span class="va">mean</span>, <span class="va">cov</span>, method <span class="op">=</span> <span class="st">"hcubature"</span>, tol <span class="op">=</span> <span class="fl">1e-06</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pprodnormal3</span><span class="op">(</span></span>
+<span>  <span class="va">q</span>,</span>
+<span>  <span class="va">mean</span>,</span>
+<span>  <span class="va">cov</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gauss"</span>, <span class="st">"hcubature"</span><span class="op">)</span>,</span>
+<span>  tol <span class="op">=</span> <span class="fl">1e-06</span>,</span>
+<span>  nodes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  diagnostics <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">p_prod3</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -91,13 +99,35 @@ components (<code>|rho| = 1</code>) or an indefinite matrix is rejected.</p></dd
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>Integration method. Currently only <code>"hcubature"</code> is
-supported.</p></dd>
+<dd><p>Integration method. <code>"gauss"</code> (default) is tensor-product
+Gauss-Legendre quadrature on a domain partitioned at the coordinate axes,
+with the node count escalated until successive rules agree to <code>tol</code>.
+<code>"hcubature"</code> is the adaptive method used before version 1.7.0; it is
+retained for cross-checking and backward comparison, but is <strong>not
+recommended</strong> when the <code>(X, Y)</code> block is ill-conditioned (see Note).</p></dd>
 
 
 <dt id="arg-tol">tol<a class="anchor" aria-label="anchor" href="#arg-tol"></a></dt>
 <dd><p>Numeric tolerance passed to the integration routine; must be
 strictly positive.</p></dd>
+
+
+<dt id="arg-nodes">nodes<a class="anchor" aria-label="anchor" href="#arg-nodes"></a></dt>
+<dd><p>Optional integer: force a fixed number of Gauss-Legendre nodes
+per dimension instead of escalating adaptively. Ignored when
+<code>method = "hcubature"</code>. Mainly useful for reproducing a specific rule or
+for cross-checking a result at two node counts.</p></dd>
+
+
+<dt id="arg-diagnostics">diagnostics<a class="anchor" aria-label="anchor" href="#arg-diagnostics"></a></dt>
+<dd><p>Logical. If <code>TRUE</code>, the returned value carries an
+<code>"error"</code> attribute (the gap between the last two quadrature rules, a
+genuine convergence estimate) and a <code>"nodes"</code> attribute. Defaults to
+<code>FALSE</code> so the return value stays a bare numeric for existing callers.
+<code>"error"</code> is <code>NA</code> when <code>nodes</code> is supplied or when
+<code>method = "hcubature"</code>: a single fixed rule produces no successive-rule
+gap to measure. To check convergence at a fixed rule, evaluate at <code>nodes</code>
+and <code>2 * nodes</code> and compare.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -111,11 +141,17 @@ deprecated alias).</p></dd>
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>Numerical accuracy can degrade as the standardized <code>(X, Y)</code>
-correlation approaches <code>+-1</code> (the bivariate block becomes ill-conditioned).
-For a fully degenerate point mass (all variances zero) with zero means,
+    <p>For a fully degenerate point mass (all variances zero) with zero means,
 <code>q == 0</code> returns <code>0.5</code> by the mid-distribution convention rather than <code>0</code>
 or <code>1</code>.</p>
+<p>Before version 1.7.0 the default integrator was <code>"hcubature"</code>, which
+returns materially wrong values on ill-conditioned covariance matrices –
+at <code>rho = 0.999</code> the error reaches 24% at <code>q = 0.5</code> and 92% in relative
+terms in the lower tail, silently and with no diagnostic. The default is
+now <code>"gauss"</code>, which agrees with <code>"hcubature"</code> to roughly <code>1e-6</code> on
+well-conditioned input and remains accurate where <code>"hcubature"</code> fails.
+Results from the two methods therefore differ slightly on benign input and
+substantially on ill-conditioned input; the latter is the correction.</p>
     </div>
     <div class="section level2">
     <h2 id="note-1">Note<a class="anchor" aria-label="anchor" href="#note-1"></a></h2>

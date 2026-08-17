@@ -15,6 +15,22 @@ The package supports:
 - **Parallel mediators** with complex indirect effects
 - **Any product of normal random variables** for custom applications
 
+## Try It Online (No Install)
+
+The core confidence-interval methods run in the browser through the
+[mediation-apps](https://data-wise.github.io/mediation-apps/) Shiny
+front end—no R installation required:
+
+- **[Distribution-of-Product CI
+  calculator](https://data-wise.github.io/mediation-apps/medci/)** — a
+  live front end for
+  [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md)
+- **Monte Carlo / Asymptotic-Delta CI calculator** — built on
+  `ci(type = "mc")` and `ci(type = "asymp")`
+
+Useful for quick checks, teaching, and for collaborators who do not use
+R.
+
 ## Why RMediation?
 
 Traditional methods (e.g., Sobel test) assume the indirect effect *ab*

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="logo.png" class="logo" alt=""><h1>CLAUDE.md for RMediation Package</h1>
-      <small class="dont-index">Source: <a href="https://github.com/data-wise/rmediation/blob/main/CLAUDE.md" class="external-link"><code>CLAUDE.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/data-wise/rmediation/blob/v1.7.0/CLAUDE.md" class="external-link"><code>CLAUDE.md</code></a></small>
     </div>
 
 <div id="claudemd-for-rmediation-package" class="section level1">
@@ -146,7 +146,13 @@
 <ul><li>
 <code><a href="reference/pprodnormal.html">pprodnormal()</a></code> / <code><a href="reference/qprodnormal.html">qprodnormal()</a></code>: CDF and quantile for product of two normals</li>
 <li>
+<code><a href="reference/pprodnormal3.html">pprodnormal3()</a></code>: CDF for the product of <strong>three</strong> normals (serial indirect effects <code>a1 * a2 * b</code>); <code><a href="reference/pprodnormal3.html">p_prod3()</a></code> is a superseded alias</li>
+<li>
 <code><a href="reference/pMC.html">pMC()</a></code> / <code><a href="reference/qMC.html">qMC()</a></code>: Monte Carlo-based for arbitrary functions</li>
+</ul><p><strong><code><a href="reference/pprodnormal3.html">pprodnormal3()</a></code> integrator (v1.7.0+):</strong> the default is <code>method = "gauss"</code> — tensor-product Gauss-Legendre on a domain partitioned at the coordinate axes, with node count escalated until successive rules agree to <code>tol</code>. Do <strong>not</strong> switch the default back to <code>"hcubature"</code>: it returns silently wrong values on ill-conditioned covariance (24% error at rho = 0.999, up to 92% relative in the lower tail) and exactly <code>0</code> at large standardized means. It is retained only for cross-checking. See <code>SPEC-27-prod3-integrator.md</code> and issue #27.</p>
+<p>Two invariants in <code>R/prod3_core.R</code> that look like bugs and are not — both carry explanatory comments and regression tests, so read those before “fixing” either:</p>
+<ul><li>The truncation bound is <strong>derived</strong> from a tail-mass argument (<code>.prod3_bound()</code>), never tuned. Truncation error is a bias, and bias is invisible to the self-consistency check.</li>
+<li>The domain splits at 0 even when <code>|m| &gt; bound</code>, which gives one cell reversed limits and negative weights. The two cells telescope to the intended box.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="key-dependencies">Key Dependencies<a class="anchor" aria-label="anchor" href="#key-dependencies"></a></h3>

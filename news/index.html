@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.6.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,11 +44,26 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/data-wise/rmediation/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/data-wise/rmediation/blob/v1.7.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.6.1" id="rmediation-161-2026-06-30">RMediation 1.6.1 (2026-06-30)<a class="anchor" aria-label="anchor" href="#rmediation-161-2026-06-30"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.7.0" id="rmediation-170-2026-08-16">RMediation 1.7.0 (2026-08-16)<a class="anchor" aria-label="anchor" href="#rmediation-170-2026-08-16"></a></h2>
+<div class="section level3">
+<h3 id="correctness-fix-pprodnormal3-on-ill-conditioned-covariance-1-7-0">Correctness fix: <code>pprodnormal3()</code> on ill-conditioned covariance (<a href="https://github.com/data-wise/rmediation/issues/27" class="external-link">#27</a>)<a class="anchor" aria-label="anchor" href="#correctness-fix-pprodnormal3-on-ill-conditioned-covariance-1-7-0"></a></h3>
+<p><code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code> (and its alias <code><a href="../reference/pprodnormal3.html">p_prod3()</a></code>) returned materially wrong probabilities when the <code>(X, Y)</code> covariance block was ill-conditioned, silently and with no diagnostic. At <code>rho = 0.999</code> the error reached 24% at <code>q = 0.5</code>, and 92% in relative terms in the lower tail. Tightening <code>tol</code> did not help – the old integrator converged to a stable but incorrect value. Because <code><a href="../reference/cdf.html">cdf()</a></code>, <code><a href="../reference/dist_quantile.html">dist_quantile()</a></code>, <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code> and <code><a href="../reference/ci.html">ci()</a></code> invert this CDF by root-finding, all of them inherited the error.</p>
+<ul><li><p><strong>The default integration method is now <code>"gauss"</code></strong> – tensor-product Gauss-Legendre quadrature on a domain partitioned at the coordinate axes, with the node count escalated automatically until successive rules agree to <code>tol</code>. Partitioning is what makes a fixed-grid rule valid here: the integrand has a kink along both axes, and an unpartitioned grid can return values outside <code>[0, 1]</code>.</p></li>
+<li><p><strong>This changes results.</strong> On well-conditioned input the new default agrees with the old one to about <code>1e-6</code>. On ill-conditioned input it differs substantially – that difference is the correction. The new method is also faster (roughly 8-20x at the covariances tested).</p></li>
+<li><p><code>method = "hcubature"</code> selects the previous integrator, retained for cross-checking and backward comparison. It is not recommended when the <code>(X, Y)</code> block is ill-conditioned.</p></li>
+<li><p>New <code>nodes</code> argument forces a fixed number of Gauss-Legendre nodes per dimension instead of escalating adaptively.</p></li>
+<li><p>New <code>diagnostics</code> argument. When <code>TRUE</code>, the returned value carries <code>"error"</code> (the gap between the last two quadrature rules – a real convergence estimate) and <code>"nodes"</code> attributes. It defaults to <code>FALSE</code> so the return value stays a bare numeric for existing callers.</p></li>
+<li><p><code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code> now warns when quadrature reaches the node cap without meeting <code>tol</code>, instead of returning a wrong answer silently.</p></li>
+<li><p><code>ProductNormal3</code> gains <code>"gauss"</code> as its default <code>method</code>; the property previously had no default and rejected everything except <code>"hcubature"</code>.</p></li>
+<li><p>The new default also fixes a second, previously unreported failure of the old integrator: at large standardised means (<code>mean / sd</code> beyond roughly 8) it returned exactly <code>0</code> where the true probability is around <code>0.46</code>. That failure was independent of conditioning and equally silent.</p></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.6.1" id="rmediation-161-2026-06-30">RMediation 1.6.1 (2026-06-30)<a class="anchor" aria-label="anchor" href="#rmediation-161-2026-06-30"></a></h2><p class="text-muted">CRAN release: 2026-07-21</p>
 <div class="section level3">
 <h3 id="naming-convention-cleanup-1-6-1">Naming convention cleanup<a class="anchor" aria-label="anchor" href="#naming-convention-cleanup-1-6-1"></a></h3>
 <ul><li><p><code><a href="../reference/pprodnormal3.html">p_prod3()</a></code> is renamed to <code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code> to match the existing <code><a href="../reference/pprodnormal.html">pprodnormal()</a></code>/<code><a href="../reference/qprodnormal.html">qprodnormal()</a></code> family. <code><a href="../reference/pprodnormal3.html">p_prod3()</a></code> remains available as a silent (non-warning) alias and will gain a formal deprecation warning in a future release.</p></li>

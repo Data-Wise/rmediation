@@ -7,7 +7,7 @@ variables. Intended for sequential indirect effects of the form
 ## Usage
 
 ``` r
-ProductNormal3(mu = integer(0), Sigma = integer(0), method = character(0))
+ProductNormal3(mu = integer(0), Sigma = integer(0), method = "gauss")
 ```
 
 ## Arguments
@@ -22,15 +22,18 @@ ProductNormal3(mu = integer(0), Sigma = integer(0), method = character(0))
 
 - method:
 
-  Integration method. Currently only `"hcubature"` is supported.
+  Integration method passed to
+  [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md):
+  `"gauss"` (default) or `"hcubature"`. See the Note in
+  [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)
+  for why `"gauss"` became the default in version 1.7.0.
 
 ## Examples
 
 ``` r
 obj <- ProductNormal3(
   mu = c(0.5, 0.3, 0.2),
-  Sigma = diag(3),
-  method = "hcubature"
+  Sigma = diag(3)
 )
 obj
 #> ProductNormal3 Distribution
@@ -41,7 +44,7 @@ obj
 #> [1,]    1    0    0
 #> [2,]    0    1    0
 #> [3,]    0    0    1
-#> Integration method: hcubature 
+#> Integration method: gauss 
 cdf(obj, q = 1)
 #> [1] 0.9057254
 if (FALSE) { # \dontrun{
