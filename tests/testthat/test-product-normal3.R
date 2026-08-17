@@ -173,6 +173,47 @@ test_that("the vectorised integrand matches the scalar one exactly", {
   expect_lt(max(abs(scalar - vec)), 1e-12)
 })
 
+test_that("accuracy holds when the standardised mean exceeds the bound", {
+  # When |m| > bound the first cell gets reversed limits, so it contributes a
+  # negative-weight integral that telescopes with the second cell to the
+  # intended truncation box. This reads like a defect and is not one; the test
+  # exists so it does not get "fixed" into a real one.
+  #
+  # References are Monte Carlo at 4e6 draws (3 SE ~ 7.5e-04). Precision here is
+  # deliberately modest: the point is that accuracy does not collapse, and MC
+  # is the only independent check available for these configurations.
+  benign <- matrix(c(1, .5, .3, .5, 1, .2, .3, .2, 1), 3, 3)
+  stiff <- matrix(c(1, .999, .5, .999, 1, .5, .5, .5, 1), 3, 3)
+
+  expect_equal(pprodnormal3(0.5, c(10, 0.3, 0.2), benign), 0.4855733,
+    tolerance = 1e-3
+  )
+  expect_equal(pprodnormal3(0.5, c(20, 0.3, 0.2), benign), 0.4583408,
+    tolerance = 1e-3
+  )
+  expect_equal(pprodnormal3(0.5, c(-15, 0.3, 0.2), benign), 0.6248695,
+    tolerance = 1e-3
+  )
+  # Both stressors at once: mean far outside the bound AND ill-conditioned.
+  expect_equal(pprodnormal3(0.5, c(15, 0.1, 0.0), stiff), 0.3867492,
+    tolerance = 1e-3
+  )
+})
+
+test_that("the legacy hcubature path collapses on large means", {
+  # Not a regression -- documents a second silent failure in the pre-1.7.0
+  # integrator, distinct from the ill-conditioning bug in #27. It returns
+  # exactly 0 where the true probability is ~0.46. Recorded so the default
+  # change is not mistaken for a mere accuracy refinement.
+  benign <- matrix(c(1, .5, .3, .5, 1, .2, .3, .2, 1), 3, 3)
+  expect_equal(
+    pprodnormal3(0.5, c(20, 0.3, 0.2), benign, method = "hcubature"), 0
+  )
+  expect_equal(pprodnormal3(0.5, c(20, 0.3, 0.2), benign), 0.4583408,
+    tolerance = 1e-3
+  )
+})
+
 test_that("the truncation bound is derived from tol, never tuned below 6", {
   # Truncation error is a bias, and bias is invisible to the self-consistency
   # check: at bound = 4 successive rules agree to 1.7e-14 while the answer is

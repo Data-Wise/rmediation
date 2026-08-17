@@ -121,6 +121,20 @@ NULL
 #' `bound` comes from [.prod3_bound()] rather than being a tuned constant --
 #' see there for why that distinction matters.
 #'
+#' The split point stays at 0 even when the standardised mean is further than
+#' `bound` from it (`|m| > bound`), and this is deliberate. In that case
+#' `cell()` receives reversed limits, so its weights are negative and it
+#' contributes `-integral(0, m - bound)`; added to the second cell's
+#' `+integral(0, m + bound)` the total telescopes to
+#' `integral(m - bound, m + bound)` -- exactly the truncation box
+#' [.prod3_bound()] guarantees. Every node still lies on one side of the axis,
+#' so the single-signed property the method depends on is preserved rather than
+#' broken. Verified against Monte Carlo out to a standardised mean of 20,
+#' including in combination with rho = 0.999; see the regression test.
+#'
+#' Do not "fix" this by clamping the split point into the box: that would
+#' change which region is integrated.
+#'
 #' @noRd
 .prod3_gauss_cells <- function(n, pars, bound) {
   gl <- .prod3_gauss_legendre(n)
@@ -255,6 +269,10 @@ NULL
 #'   `"error"` attribute (the gap between the last two quadrature rules, a
 #'   genuine convergence estimate) and a `"nodes"` attribute. Defaults to
 #'   `FALSE` so the return value stays a bare numeric for existing callers.
+#'   `"error"` is `NA` when `nodes` is supplied or when
+#'   `method = "hcubature"`: a single fixed rule produces no successive-rule
+#'   gap to measure. To check convergence at a fixed rule, evaluate at `nodes`
+#'   and `2 * nodes` and compare.
 #' @param ... Additional arguments (unused; present for the `p_prod3`
 #'   deprecated alias).
 #'

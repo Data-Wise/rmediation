@@ -40,6 +40,11 @@ root-finding, all of them inherited the error.
 * `ProductNormal3` gains `"gauss"` as its default `method`; the property
   previously had no default and rejected everything except `"hcubature"`.
 
+* The new default also fixes a second, previously unreported failure of the old
+  integrator: at large standardised means (`mean / sd` beyond roughly 8) it
+  returned exactly `0` where the true probability is around `0.46`. That failure
+  was independent of conditioning and equally silent.
+
 # RMediation 1.6.1 (2026-06-30)
 
 ## Naming convention cleanup

@@ -45,7 +45,11 @@ for cross-checking a result at two node counts.}
 \item{diagnostics}{Logical. If \code{TRUE}, the returned value carries an
 \code{"error"} attribute (the gap between the last two quadrature rules, a
 genuine convergence estimate) and a \code{"nodes"} attribute. Defaults to
-\code{FALSE} so the return value stays a bare numeric for existing callers.}
+\code{FALSE} so the return value stays a bare numeric for existing callers.
+\code{"error"} is \code{NA} when \code{nodes} is supplied or when
+\code{method = "hcubature"}: a single fixed rule produces no successive-rule
+gap to measure. To check convergence at a fixed rule, evaluate at \code{nodes}
+and \code{2 * nodes} and compare.}
 
 \item{...}{Additional arguments (unused; present for the \code{p_prod3}
 deprecated alias).}
