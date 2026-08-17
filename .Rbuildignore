@@ -16,7 +16,9 @@
 ^GEMINI\.md$
 ^QWEN\.md$
 ^ORCHESTRATE-.*\.md$
+^SPEC-.*\.md$
 ^DEBUG-REPORT-.*\.md$
+^\.token-optimizer$
 ^\.rforge\.yaml$
 ^\.git$
 ^\.github$
