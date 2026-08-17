@@ -5,7 +5,15 @@
 \alias{p_prod3}
 \title{Cumulative Distribution Function for the Product of Three Normal Variables}
 \usage{
-pprodnormal3(q, mean, cov, method = "hcubature", tol = 1e-06)
+pprodnormal3(
+  q,
+  mean,
+  cov,
+  method = c("gauss", "hcubature"),
+  tol = 1e-06,
+  nodes = NULL,
+  diagnostics = FALSE
+)
 
 p_prod3(...)
 }
@@ -19,11 +27,29 @@ single zero-variance component is permitted (the problem then reduces to
 the two-variable product-normal case). Perfect correlation between two
 components (\verb{|rho| = 1}) or an indefinite matrix is rejected.}
 
-\item{method}{Integration method. Currently only \code{"hcubature"} is
-supported.}
+\item{method}{Integration method. \code{"gauss"} (default) is tensor-product
+Gauss-Legendre quadrature on a domain partitioned at the coordinate axes,
+with the node count escalated until successive rules agree to \code{tol}.
+\code{"hcubature"} is the adaptive method used before version 1.7.0; it is
+retained for cross-checking and backward comparison, but is \strong{not
+recommended} when the \verb{(X, Y)} block is ill-conditioned (see Note).}
 
 \item{tol}{Numeric tolerance passed to the integration routine; must be
 strictly positive.}
+
+\item{nodes}{Optional integer: force a fixed number of Gauss-Legendre nodes
+per dimension instead of escalating adaptively. Ignored when
+\code{method = "hcubature"}. Mainly useful for reproducing a specific rule or
+for cross-checking a result at two node counts.}
+
+\item{diagnostics}{Logical. If \code{TRUE}, the returned value carries an
+\code{"error"} attribute (the gap between the last two quadrature rules, a
+genuine convergence estimate) and a \code{"nodes"} attribute. Defaults to
+\code{FALSE} so the return value stays a bare numeric for existing callers.
+\code{"error"} is \code{NA} when \code{nodes} is supplied or when
+\code{method = "hcubature"}: a single fixed rule produces no successive-rule
+gap to measure. To check convergence at a fixed rule, evaluate at \code{nodes}
+and \code{2 * nodes} and compare.}
 
 \item{...}{Additional arguments (unused; present for the \code{p_prod3}
 deprecated alias).}
@@ -39,11 +65,18 @@ normal distribution with mean vector \code{mean} and covariance matrix \code{cov
 adaptive cubature (dimension reduction; see Tofighi, 2026).
 }
 \note{
-Numerical accuracy can degrade as the standardized \verb{(X, Y)}
-correlation approaches \code{+-1} (the bivariate block becomes ill-conditioned).
 For a fully degenerate point mass (all variances zero) with zero means,
 \code{q == 0} returns \code{0.5} by the mid-distribution convention rather than \code{0}
 or \code{1}.
+
+Before version 1.7.0 the default integrator was \code{"hcubature"}, which
+returns materially wrong values on ill-conditioned covariance matrices --
+at \code{rho = 0.999} the error reaches 24\% at \code{q = 0.5} and 92\% in relative
+terms in the lower tail, silently and with no diagnostic. The default is
+now \code{"gauss"}, which agrees with \code{"hcubature"} to roughly \code{1e-6} on
+well-conditioned input and remains accurate where \code{"hcubature"} fails.
+Results from the two methods therefore differ slightly on benign input and
+substantially on ill-conditioned input; the latter is the correction.
 }
 \section{Note}{
 

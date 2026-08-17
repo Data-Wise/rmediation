@@ -57,14 +57,14 @@ S7::S4_register(ProductNormal)
 #'
 #' @param mu Numeric vector of means of length 3: `c(a1_hat, a2_hat, b_hat)`.
 #' @param Sigma 3x3 asymptotic covariance matrix of `(a1, a2, b)`.
-#' @param method Integration method. Currently only `"hcubature"` is
-#'   supported.
+#' @param method Integration method passed to [pprodnormal3()]: `"gauss"`
+#'   (default) or `"hcubature"`. See the Note in [pprodnormal3()] for why
+#'   `"gauss"` became the default in version 1.7.0.
 #' @export
 #' @examples
 #' obj <- ProductNormal3(
 #'   mu = c(0.5, 0.3, 0.2),
-#'   Sigma = diag(3),
-#'   method = "hcubature"
+#'   Sigma = diag(3)
 #' )
 #' obj
 #' cdf(obj, q = 1)
@@ -75,7 +75,7 @@ ProductNormal3 <- S7::new_class("ProductNormal3",
   properties = list(
     mu = S7::class_numeric,
     Sigma = S7::class_numeric,
-    method = S7::class_character
+    method = S7::new_property(S7::class_character, default = "gauss")
   ),
   validator = function(self) {
     if (length(self@mu) != 3) {
@@ -91,8 +91,9 @@ ProductNormal3 <- S7::new_class("ProductNormal3",
     if (any(eigen_vals < -1e-8)) {
       stop("Sigma must be positive semi-definite")
     }
-    if (length(self@method) != 1 || !(self@method %in% "hcubature")) {
-      stop("method must be 'hcubature'")
+    if (length(self@method) != 1 ||
+      !(self@method %in% c("gauss", "hcubature"))) {
+      stop("method must be 'gauss' or 'hcubature'")
     }
     NULL
   }

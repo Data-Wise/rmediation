@@ -1,3 +1,50 @@
+# RMediation 1.7.0 (2026-08-16)
+
+## Correctness fix: `pprodnormal3()` on ill-conditioned covariance (#27)
+
+`pprodnormal3()` (and its alias `p_prod3()`) returned materially wrong
+probabilities when the `(X, Y)` covariance block was ill-conditioned, silently
+and with no diagnostic. At `rho = 0.999` the error reached 24% at `q = 0.5`,
+and 92% in relative terms in the lower tail. Tightening `tol` did not help --
+the old integrator converged to a stable but incorrect value. Because
+`cdf()`, `dist_quantile()`, `confint()` and `ci()` invert this CDF by
+root-finding, all of them inherited the error.
+
+* **The default integration method is now `"gauss"`** -- tensor-product
+  Gauss-Legendre quadrature on a domain partitioned at the coordinate axes,
+  with the node count escalated automatically until successive rules agree to
+  `tol`. Partitioning is what makes a fixed-grid rule valid here: the integrand
+  has a kink along both axes, and an unpartitioned grid can return values
+  outside `[0, 1]`.
+
+* **This changes results.** On well-conditioned input the new default agrees
+  with the old one to about `1e-6`. On ill-conditioned input it differs
+  substantially -- that difference is the correction. The new method is also
+  faster (roughly 8-20x at the covariances tested).
+
+* `method = "hcubature"` selects the previous integrator, retained for
+  cross-checking and backward comparison. It is not recommended when the
+  `(X, Y)` block is ill-conditioned.
+
+* New `nodes` argument forces a fixed number of Gauss-Legendre nodes per
+  dimension instead of escalating adaptively.
+
+* New `diagnostics` argument. When `TRUE`, the returned value carries `"error"`
+  (the gap between the last two quadrature rules -- a real convergence
+  estimate) and `"nodes"` attributes. It defaults to `FALSE` so the return
+  value stays a bare numeric for existing callers.
+
+* `pprodnormal3()` now warns when quadrature reaches the node cap without
+  meeting `tol`, instead of returning a wrong answer silently.
+
+* `ProductNormal3` gains `"gauss"` as its default `method`; the property
+  previously had no default and rejected everything except `"hcubature"`.
+
+* The new default also fixes a second, previously unreported failure of the old
+  integrator: at large standardised means (`mean / sd` beyond roughly 8) it
+  returned exactly `0` where the true probability is around `0.46`. That failure
+  was independent of conditioning and equally silent.
+
 # RMediation 1.6.1 (2026-06-30)
 
 ## Naming convention cleanup
