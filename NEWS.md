@@ -37,8 +37,19 @@ root-finding, all of them inherited the error.
 * `pprodnormal3()` now warns when quadrature reaches the node cap without
   meeting `tol`, instead of returning a wrong answer silently.
 
-* `ProductNormal3` gains `"gauss"` as its default `method`; the property
-  previously had no default and rejected everything except `"hcubature"`.
+* **Fixed: the documented `ProductNormal3()` constructor call raised an error.**
+  The `method` property had no default, and the validator rejected the resulting
+  empty value, so the form shown in the README and the getting-started
+  vignette --
+
+  ```r
+  ProductNormal3(mu = mu, Sigma = Sigma)
+  #> Error: method must be 'hcubature'
+  ```
+
+  -- failed for anyone who copied it. `method` now defaults to `"gauss"`, and
+  the call works as documented. Passing `method` explicitly was, and remains, a
+  valid alternative.
 
 * The new default also fixes a second, previously unreported failure of the old
   integrator: at large standardized means (`mean / sd` beyond roughly 8) it
