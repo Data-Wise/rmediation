@@ -143,7 +143,7 @@ test_that("node count escalates when the covariance demands it", {
   expect_equal(as.numeric(hard), 0.80662217, tolerance = 1e-6)
 })
 
-test_that("the vectorised integrand matches the scalar one exactly", {
+test_that("the vectorized integrand matches the scalar one exactly", {
   # The Gauss path uses .prod3_integrand_vec() and the hcubature path uses
   # .prod3_integrand_2d(). If they drift, the two methods silently stop
   # computing the same quantity.
@@ -173,7 +173,7 @@ test_that("the vectorised integrand matches the scalar one exactly", {
   expect_lt(max(abs(scalar - vec)), 1e-12)
 })
 
-test_that("accuracy holds when the standardised mean exceeds the bound", {
+test_that("accuracy holds when the standardized mean exceeds the bound", {
   # When |m| > bound the first cell gets reversed limits, so it contributes a
   # negative-weight integral that telescopes with the second cell to the
   # intended truncation box. This reads like a defect and is not one; the test
@@ -244,7 +244,7 @@ test_that("the legacy hcubature path is still reachable", {
   legacy <- pprodnormal3(0.5, mu, Sigma, method = "hcubature")
 
   expect_true(is.numeric(legacy) && length(legacy) == 1)
-  # Documents, rather than endorses, the pre-1.7.0 behaviour: this is the
+  # Documents, rather than endorses, the pre-1.7.0 behavior: this is the
   # value the old default returned, and it is wrong by ~0.196.
   expect_equal(legacy, 0.6109671, tolerance = 1e-5)
 })

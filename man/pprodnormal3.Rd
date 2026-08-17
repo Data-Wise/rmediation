@@ -50,17 +50,17 @@ What \code{"error"} means depends on \code{method}, and the two are \strong{not
 comparable}:
 \itemize{
 \item \code{method = "gauss"}: the gap between the last two quadrature rules, a
-genuine convergence estimate for discretisation error. It does not see
-truncation error, which is instead bounded by construction.
-\item \code{method = "hcubature"}: that integrator's \emph{own} reported error estimate.
-Treat it with suspicion. It is satisfied at exactly the configurations
-where the result is badly wrong (see Note), which is why it cannot be
-used to detect the failure this method was replaced over.
-}
-
-\code{"error"} is \code{NA} when \code{nodes} is supplied: a single fixed rule produces no
-successive-rule gap to measure. To check convergence at a fixed rule,
-evaluate at \code{nodes} and \code{2 * nodes} and compare.}
+genuine convergence estimate for discretization error. It does not see
+truncation error, which is instead bounded by construction. It is \code{NA}
+when \code{nodes} is supplied, because a single fixed rule produces no
+successive-rule gap to measure; to check convergence at a fixed rule,
+evaluate at \code{nodes} and \code{2 * nodes} and compare.
+\item \code{method = "hcubature"}: that integrator's \emph{own} reported error estimate,
+always present and never \code{NA} (\code{nodes} is ignored on this path). Treat it
+with suspicion. It is satisfied at exactly the configurations where the
+result is badly wrong (see Note), which is why it cannot be used to
+detect the failure this method was replaced over.
+}}
 
 \item{...}{Additional arguments (unused; present for the \code{p_prod3}
 deprecated alias).}
