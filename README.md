@@ -177,6 +177,11 @@ ci(pn3, level = 0.95)
 pprodnormal3(q = 0, mean = mu, cov = Sigma)  # P(a1*a2*b <= 0)
 ```
 
+> **Requires RMediation >= 1.7.0.** Earlier versions return wrong values when the
+> `a1`/`a2` covariance is ill-conditioned — silently, and without a diagnostic.
+> Strongly correlated path estimates are ordinary in mediation models, so this
+> affects realistic input.
+
 ### Using the S7 ProductNormal Class
 
 For programmatic use, create `ProductNormal` objects directly:

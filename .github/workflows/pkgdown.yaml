@@ -5,8 +5,13 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
-  release:
-    types: [published]
+  # Deliberately NOT triggered by `release: types: [published]`. For a correct
+  # release -- merge dev -> main, then tag main -- the push-to-main trigger above
+  # already deploys, so a release trigger is redundant in every correct case and
+  # active only in the incorrect one: a tag on any other ref republishing the
+  # public site. That happened on 2026-08-17, when the v1.7.0 pre-release tag on
+  # `dev` overwrote the site while main and CRAN were still 1.6.1. See SPEC-29.
+  # Use workflow_dispatch below to deploy from a specific ref on purpose.
   workflow_dispatch:
 
 name: pkgdown
