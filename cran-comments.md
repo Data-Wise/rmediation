@@ -61,14 +61,19 @@ Checked locally with `R CMD check --as-cran` (0/0/0).
   windows-latest — all passing
 * r-hub v2 (GitHub Actions, dispatched 2026-08-17 against `dev` at 661b5b4):
   linux, windows, macos-arm64 (all R-devel) — all three passed
-* win-builder R-devel (dispatched 2026-08-17 against the same source):
-  `Status: OK` under R Under development (unstable) (2026-08-15 r90413 ucrt) —
-  no NOTEs, no WARNINGs
-* win-builder R-release and R-oldrelease (dispatched 2026-08-17) — RESULTS
-  PENDING; fill in before submitting
+* win-builder (dispatched 2026-08-17 against the same source) — all three
+  returned `Status: OK`, no NOTEs, no WARNINGs:
+  * R-devel — R Under development (unstable) (2026-08-15 r90413 ucrt)
+  * R-release — R version 4.6.1 (2026-06-24 ucrt)
+  * R-oldrelease — R version 4.5.3 (2026-03-11 ucrt)
 
 ## Notes for the CRAN team
 
+* Earlier win-builder runs the same day reported one NOTE from the URL check:
+  `https://github.com/data-wise/rmediation/issues` returned HTTP 503 (Service
+  Unavailable). This was a transient GitHub outage — the URL is valid and later
+  runs on both R-release and R-oldrelease returned `Status: OK`. Flagged here in
+  case the same transient re-appears in CRAN's incoming check.
 * `medfit (>= 0.2.0)` in `Suggests` is available on CRAN (v0.2.1). It is used
   only in optional integration helpers guarded by `requireNamespace()`.
 * Version 1.6.1 was published on 2026-07-21. This submission is deliberately

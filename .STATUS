@@ -3,13 +3,24 @@ priority: high
 progress: 100
 kind: package
 version: 1.7.0
-next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do NOT submit or merge dev->main without explicit go-ahead.** v1.7.0 is published on GitHub as a PRE-RELEASE only (tag `v1.7.0` on `dev`); `main` deliberately remains at 1.6.1, which is what CRAN serves. Users can get the fix via `remotes::install_github("Data-Wise/RMediation", ref = "dev")`. v1.7.0 fixes issue #27: `pprodnormal3()` returned silently wrong probabilities on ill-conditioned covariance (24% error at rho=0.999, 92% relative in the lower tail, at every q). Default integrator is now `method="gauss"`; `"hcubature"` retained for cross-checking. **The open decision, if the hold is reconsidered: making "gauss" the default changes returned values for every user — that is the one choice that becomes irreversible once on CRAN.** Gates all green: 345 tests pass (0 fail/warn/skip), `R CMD check --as-cran` 0/0/0, r-hub 3/3 pass (linux/windows/macos-arm64, 2026-08-17), win-builder R-devel (r90413) Status: OK; R-release and R-oldrelease dispatched 2026-08-17 but NOT YET RECEIVED — re-check dtofighi@gmail.com for mail from ligges@statistik.tu-dortmund.de, or re-dispatch (the win-builder log URLs expire after ~72h). `cran-comments.md` is rewritten for 1.7.0 with r-hub filled in and win-builder still marked PENDING. Issues #26 and #27 stay open on GitHub until dev->main. Live pkgdown site is at 1.7.0 (deployed from the tag before that trigger was removed) while CRAN is 1.6.1 — deliberate, see SPEC-29.
+next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do NOT submit or merge dev->main without explicit go-ahead.** v1.7.0 is published on GitHub as a PRE-RELEASE only (tag `v1.7.0` on `dev`); `main` deliberately remains at 1.6.1, which is what CRAN serves. Users can get the fix via `remotes::install_github("Data-Wise/RMediation", ref = "dev")`. v1.7.0 fixes issue #27: `pprodnormal3()` returned silently wrong probabilities on ill-conditioned covariance (24% error at rho=0.999, 92% relative in the lower tail, at every q). Default integrator is now `method="gauss"`; `"hcubature"` retained for cross-checking. **The open decision, if the hold is reconsidered: making "gauss" the default changes returned values for every user — that is the one choice that becomes irreversible once on CRAN.** Gates all green: 345 tests pass (0 fail/warn/skip), `R CMD check --as-cran` 0/0/0, r-hub 3/3 pass (linux/windows/macos-arm64, 2026-08-17), win-builder 3/3 Status: OK — R-devel (r90413), R-release (4.6.1), R-oldrelease (4.5.3), all received 2026-08-17 and confirmed in Gmail 2026-08-21. `cran-comments.md` is complete for 1.7.0: r-hub and all three win-builder results filled in, nothing left PENDING. **Every technical gate is green and the 2026-08-21 cadence window has opened — the only thing outstanding is the hold itself and the `method="gauss"` default decision.** Issues #26 and #27 stay open on GitHub until dev->main. Live pkgdown site is at 1.7.0 (deployed from the tag before that trigger was removed) while CRAN is 1.6.1 — deliberate, see SPEC-29.
 
 # rmediation
 
 ## Status: Active
 ## Progress: 100
 ## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
+
+## Session 2026-08-21 (win-builder results reconciled)
+- All three win-builder results had in fact arrived on 2026-08-17; `.STATUS` and
+  `cran-comments.md` had both gone stale claiming R-release/R-oldrelease were
+  still pending. Confirmed via Gmail: R-devel r90413 OK, R-release 4.6.1 OK,
+  R-oldrelease 4.5.3 OK. Logs were still live past the advertised ~72h.
+- Two mid-day 2026-08-17 runs returned `1 NOTE`: the URL check hit HTTP 503 on
+  https://github.com/data-wise/rmediation/issues — a transient GitHub outage,
+  not a package defect. Later runs on both R versions cleared it. Recorded in
+  cran-comments.md in case CRAN's incoming check hits the same transient.
+- No code changed. CRAN hold still in force; `main` still 1.6.1.
 
 ## Session 2026-08-16 (issue #27 prod3 integrator + #26 Shiny links, v1.7.0)
 - Issue #26 (docs, on `dev`, commit a5b0178): README "Try It Online" section +
