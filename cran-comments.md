@@ -61,6 +61,9 @@ Checked locally with `R CMD check --as-cran` (0/0/0).
   windows-latest — all passing
 * r-hub v2 (GitHub Actions, dispatched 2026-08-17 against `dev` at 661b5b4):
   linux, windows, macos-arm64 (all R-devel) — all three passed
+* r-hub v2 re-run 2026-08-22 against the final `dev` tree (e557536, which
+  includes every post-dispatch change listed under Notes below): linux,
+  windows, macos-arm64 (all R-devel) — all three `Status: OK`, no NOTEs
 * win-builder (dispatched 2026-08-17 against the same source) — all three
   returned `Status: OK`, no NOTEs, no WARNINGs:
   * R-devel — R Under development (unstable) (2026-08-15 r90413 ucrt)
@@ -82,15 +85,14 @@ Checked locally with `R CMD check --as-cran` (0/0/0).
   depends on it. Usage is entirely inside `testthat` tests guarded by
   `skip_if_not_installed()`; no `R/` source file references it. This change
   and ~250 new lines of test coverage (55.45% -> 71.70%) landed after the
-  r-hub/win-builder dispatch above and were not independently re-submitted to
-  either service — they were verified instead via `R CMD check --as-cran`
-  (0 errors, 0 warnings) and the full GitHub Actions matrix (macOS, Windows,
-  ubuntu-release, ubuntu-devel, all green) on 2026-08-22. One further
-  post-dispatch change to `R/` source, also 2026-08-22: the text of the
-  warning `pprodnormal3()` emits when Gauss-Legendre quadrature reaches its
-  node cap was reworded to report the residual gap instead of asserting a
-  cause (issue #31). No computation changed; the GitHub Actions matrix is
-  green on that commit.
+  2026-08-17 r-hub/win-builder dispatch. One further post-dispatch change to
+  `R/` source, also 2026-08-22: the text of the warning `pprodnormal3()` emits
+  when Gauss-Legendre quadrature reaches its node cap was reworded to report
+  the residual gap instead of asserting a cause (issue #31). No computation
+  changed. All of these were verified via `R CMD check --as-cran` (0 errors,
+  0 warnings), the full GitHub Actions matrix (macOS, Windows, ubuntu-release,
+  ubuntu-devel, all green), and the 2026-08-22 r-hub re-run listed above
+  (3/3 `Status: OK`). They were not re-submitted to win-builder.
 * Version 1.6.1 was published on 2026-07-21. This submission is deliberately
   held until on or after 2026-08-21 to respect the requested update cadence for
   established packages. It is submitted sooner than a routine update would be
