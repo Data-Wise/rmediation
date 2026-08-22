@@ -3,7 +3,17 @@
 # exercises mbco_parametric()/.mbco_semi() with real fitted MxModel objects
 # rather than the empty placeholder models used in test-s7-mbco.R /
 # test-mbco-legacy.R, which only ever reach the dispatch/validation layer.
-.mbco_fit_h0_h1 <- function(n = 200, seed = 123) {
+#
+# "Number of Threads" is forced to 1: OpenMx's internal parametric bootstrap
+# (mxCompare(..., boot = TRUE) -> mxGenerateData()) failed with "Cannot
+# bootstrap null model" on CI's multi-core Linux/Windows/macOS runners while
+# passing locally, where OpenMx defaults to 1 thread. Multi-threaded fitting
+# changes floating-point summation order in the optimizer backend, which is a
+# known source of platform-dependent numerical divergence; pinning to 1
+# thread removes that variable so the fixture behaves identically everywhere.
+OpenMx::mxOption(NULL, "Number of Threads", 1)
+
+.mbco_fit_h0_h1 <- function(n = 500, seed = 123) {
   set.seed(seed)
   x <- rnorm(n)
   y <- 0.5 * x + rnorm(n)
