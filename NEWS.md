@@ -43,7 +43,9 @@ root-finding, all of them inherited the error.
 * New `diagnostics` argument. When `TRUE`, the returned value carries `"error"`
   (the gap between the last two quadrature rules -- a real convergence
   estimate) and `"nodes"` attributes. It defaults to `FALSE` so the return
-  value stays a bare numeric for existing callers.
+  value stays a bare numeric for existing callers. The meaning of `"error"`
+  differs by `method` and is `NA` when `nodes` is supplied; see
+  `?pprodnormal3` for the per-method contract.
 
 * `pprodnormal3()` now warns when quadrature reaches the node cap without
   meeting `tol`, instead of returning a wrong answer silently. The warning
