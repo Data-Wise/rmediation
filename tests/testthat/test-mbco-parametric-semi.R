@@ -1,41 +1,38 @@
-# Nested-model fixture shared by both tests below: a 2-variable RAM path
+# Nested-model fixture shared by all three tests below: a 2-variable RAM path
 # model (x -> y) fit under H1 (path free) and H0 (path fixed at 0). This
 # exercises mbco_parametric()/.mbco_semi() with real fitted MxModel objects
 # rather than the empty placeholder models used in test-s7-mbco.R /
 # test-mbco-legacy.R, which only ever reach the dispatch/validation layer.
 #
-# "Number of Threads" is forced to 1: OpenMx's internal parametric bootstrap
-# (mxCompare(..., boot = TRUE) -> mxGenerateData()) failed with "Cannot
-# bootstrap null model" on CI's multi-core Linux/Windows/macOS runners while
-# passing locally, where OpenMx defaults to 1 thread. Multi-threaded fitting
-# changes floating-point summation order in the optimizer backend, which is a
-# known source of platform-dependent numerical divergence; pinning to 1
-# thread removes that variable so the fixture behaves identically everywhere.
-OpenMx::mxOption(NULL, "Number of Threads", 1)
+# H0 and H1 are each built from scratch via mxModel(), never derived from an
+# already-run model. Deriving H0 as mxModel(h1_fit, name = "H0", ...) mutates
+# a model that carries run state -- OpenMx flags this ("MxModel 'H1' was
+# modified since it was run") -- and that stale state made
+# mxCompare(..., boot = TRUE)'s internal mxGenerateData() call fail with
+# "Cannot bootstrap null model" on CI's Linux/Windows/macOS runners:
+# assertModelRunAndFresh() rejects a model whose structure changed after it
+# was run. Building every model independently, always from raw mxModel(),
+# avoids that stale run-state entirely.
+.mbco_build_model <- function(name, path_free, data) {
+  OpenMx::mxModel(
+    name,
+    type = "RAM",
+    manifestVars = c("x", "y"),
+    OpenMx::mxPath(from = "x", to = "y", arrows = 1, free = path_free, values = 0.3),
+    OpenMx::mxPath(from = c("x", "y"), arrows = 2, free = TRUE, values = 1),
+    OpenMx::mxPath(from = "one", to = c("x", "y"), free = TRUE, values = 0),
+    OpenMx::mxData(data, type = "raw")
+  )
+}
 
-.mbco_fit_h0_h1 <- function(n = 500, seed = 123) {
+.mbco_fit_h0_h1 <- function(n = 200, seed = 123) {
   set.seed(seed)
   x <- rnorm(n)
   y <- 0.5 * x + rnorm(n)
   dat <- data.frame(x = x, y = y)
 
-  h1 <- OpenMx::mxModel(
-    "H1",
-    type = "RAM",
-    manifestVars = c("x", "y"),
-    OpenMx::mxPath(from = "x", to = "y", arrows = 1, free = TRUE, values = 0.3),
-    OpenMx::mxPath(from = c("x", "y"), arrows = 2, free = TRUE, values = 1),
-    OpenMx::mxPath(from = "one", to = c("x", "y"), free = TRUE, values = 0),
-    OpenMx::mxData(dat, type = "raw")
-  )
-  h1_fit <- OpenMx::mxRun(h1, silent = TRUE, suppressWarnings = TRUE)
-
-  h0 <- OpenMx::mxModel(
-    h1_fit,
-    name = "H0",
-    OpenMx::mxPath(from = "x", to = "y", arrows = 1, free = FALSE, values = 0)
-  )
-  h0_fit <- OpenMx::mxRun(h0, silent = TRUE, suppressWarnings = TRUE)
+  h1_fit <- OpenMx::mxRun(.mbco_build_model("H1", TRUE, dat), silent = TRUE, suppressWarnings = TRUE)
+  h0_fit <- OpenMx::mxRun(.mbco_build_model("H0", FALSE, dat), silent = TRUE, suppressWarnings = TRUE)
 
   list(h0 = h0_fit, h1 = h1_fit)
 }
@@ -85,9 +82,13 @@ test_that(".mbco_semi returns a valid chi-square test structure", {
 test_that(".mbco_semi rejects a factor/character manifest variable", {
   skip_if_not_installed("OpenMx")
 
+  # .mbco_semi() never calls mxCompare(..., boot = TRUE) -- its own
+  # bootstrap loop is hand-rolled below the factor/character check -- so
+  # unlike the mbco_parametric() fixture above, mutating an already-run
+  # model to swap in bad_data (without re-running) is safe here: mxCompare()
+  # only needs cached fit statistics from the original run, and the factor
+  # check reads h1$data$observed, which reflects the swapped-in data.
   models <- .mbco_fit_h0_h1()
-  # Inject a factor column that .mbco_semi will pick up via h1$manifestVars
-  # once we swap in data containing a non-numeric manifest variable.
   bad_data <- data.frame(
     x = factor(rep(c("a", "b"), length.out = 200)),
     y = rnorm(200)
