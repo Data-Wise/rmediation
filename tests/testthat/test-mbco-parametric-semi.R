@@ -43,6 +43,10 @@
 
 test_that("mbco_parametric returns a valid chi-square test structure", {
   skip_if_not_installed("OpenMx")
+  # mxCompare(..., boot = TRUE) simulates from the null model via
+  # OpenMx::mxGenerateData(), which needs mvtnorm -- an OpenMx Suggests, not
+  # a hard dependency pulled in whenever OpenMx itself installs.
+  skip_if_not_installed("mvtnorm")
 
   models <- .mbco_fit_h0_h1()
   res <- mbco_parametric(
