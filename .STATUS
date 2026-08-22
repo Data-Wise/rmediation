@@ -48,6 +48,31 @@ next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do 
   hold from 2026-08-17 is untouched by this session; nothing here requires or
   justifies lifting it.
 
+## Session 2026-08-22 (cross-repo cross-check: manuscript's own hcubature/gauss investigation)
+- The companion "product of three" manuscript (same author, private repo) has its own reference
+  implementation of this same integrator and ran a far more rigorous investigation of the
+  hcubature failure mode than `SPEC-27-prod3-integrator.md` did — Wolfram-arbitrated, 1000
+  random correlation matrices, Fisher-exact condition-number association test, blast-radius
+  audit — predating SPEC-27 (2026-08-01/02 vs SPEC-27's 2026-08-16) and not consulted while
+  writing it. A session working from the manuscript side drafted, then superseded, a plan to
+  flip the manuscript's own default to match RMediation before checking this.
+- Cross-referenced into `SPEC-27-prod3-integrator.md` (§"Cross-check against the companion
+  manuscript"): two refinements, neither overturning the v1.7.0 design decision itself. (1) κ is
+  associated with the defect but not a magnitude predictor across matrices generally — this
+  spec's own single-ρ-family table (strictly increasing error, κ=4→24139) doesn't generalize;
+  the manuscript's sweep found a confirmed-defective matrix at κ=9106 with *smaller* error
+  (6.28e-5) than this spec's κ=2411 row (0.196). (2) **`gauss` is not universally safe even on
+  well-conditioned input** — a fixed-node GL rule was itself wrong (1.24e-5) at a well-conditioned
+  point (κ=4.9) where `hcubature` was accurate. Open question, not yet checked: whether
+  RMediation's auto-escalating 256↔512 self-consistency gate (the actual shipped mechanism, not
+  a fixed node count) would catch that specific failure. Worth a dedicated follow-up before
+  treating the escalation gate as a universal safety net — **relevant to the still-open CRAN
+  hold above**, since it bears on the `method="gauss"` default's own safety margin, not just on
+  the manuscript's choice. **Tracked as issue #31** (opened 2026-08-22, author approved).
+- No code changed this session; `R/prod3_core.R` and the CRAN hold are both untouched. This is a
+  documentation cross-reference only. Manuscript-side detail: `docs/REPORT-phase1-prevalence-2026-08-02.md`,
+  `docs/REPORT-phase4-blast-radius-2026-08-02.md` Stage D (manuscript repo, private).
+
 ## Session 2026-08-21 (win-builder results reconciled)
 - All three win-builder results had in fact arrived on 2026-08-17; `.STATUS` and
   `cran-comments.md` had both gone stale claiming R-release/R-oldrelease were

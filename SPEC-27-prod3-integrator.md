@@ -107,6 +107,38 @@ there — and that the 256↔512 gap *detects* it. That gap is a genuine error
 estimate, which is exactly what `hcubature()`'s `$error` failed to provide in
 this failure mode.
 
+### Cross-check against the companion manuscript (2026-08-22)
+
+The companion "product of three" manuscript (same author, private repo) ran a
+far larger and independently arbitrated investigation of this exact failure
+mode on 2026-08-01/02 (Wolfram-arbitrated, 1000 random correlation matrices,
+condition-number association testing via Fisher exact test, a blast-radius
+audit against its own published results) — predating this spec and not
+consulted while writing it. Two points from that work refine, but do not
+overturn, the design above:
+
+- **κ is associated with the defect, not a magnitude predictor**, and this
+  table's single-ρ-family progression (κ=4→239→2411→24139, strictly
+  increasing error) does not generalize: the manuscript's sweep found a
+  confirmed-defective matrix at κ=9106 with *smaller* error (6.28e-5) than
+  this table's κ=2411 row (0.196). Treat the table above as evidence for
+  *this specific matrix family*, not a general κ-vs-error law.
+- **`gauss` is not universally safe even on well-conditioned input.** At a
+  well-conditioned point (κ=4.9) sampled during the manuscript's own
+  validation, a *fixed*-node GL rule (n=256, no escalation) was itself wrong
+  by 1.24e-5 while `hcubature` was accurate to 2.2e-7 — the opposite failure
+  direction from everything else in this spec. **Open question, not yet
+  checked here:** whether RMediation's auto-escalating self-consistency
+  check (the 256↔512 gap this section relies on) would catch that specific
+  failure, or whether it is a blind spot shared by both engines at some
+  well-conditioned points. Worth a dedicated follow-up before treating
+  `gauss`'s self-consistency check as a universal safety net. Tracked as
+  issue #31.
+
+Manuscript-side detail: `docs/REPORT-phase1-prevalence-2026-08-02.md`,
+`docs/REPORT-phase4-blast-radius-2026-08-02.md` Stage D (both in the
+manuscript repo).
+
 ---
 
 ## Design decisions
