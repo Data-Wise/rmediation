@@ -63,12 +63,14 @@ next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do 
   the manuscript's sweep found a confirmed-defective matrix at κ=9106 with *smaller* error
   (6.28e-5) than this spec's κ=2411 row (0.196). (2) **`gauss` is not universally safe even on
   well-conditioned input** — a fixed-node GL rule was itself wrong (1.24e-5) at a well-conditioned
-  point (κ=4.9) where `hcubature` was accurate. Open question, not yet checked: whether
-  RMediation's auto-escalating 256↔512 self-consistency gate (the actual shipped mechanism, not
-  a fixed node count) would catch that specific failure. Worth a dedicated follow-up before
-  treating the escalation gate as a universal safety net — **relevant to the still-open CRAN
-  hold above**, since it bears on the `method="gauss"` default's own safety margin, not just on
-  the manuscript's choice. **Tracked as issue #31** (opened 2026-08-22, author approved).
+  point (κ=4.9) where `hcubature` was accurate. **Issue #31 — RESOLVED 2026-08-22 14:57 MDT,
+  closed:** the shipped escalation gate catches that exact draw (256↔512 gap 9.1e-6 > tol →
+  continues to 1024 → 3.9e-8 from hcubature at 1e-10), and over all 120 manuscript Stage-C draws
+  the default's max error is 3.9e-8 (0 draws > 1e-6) vs 8.8e-6 (1 draw) for fixed GL-256; 0 cap
+  warnings. Bears on the CRAN hold: the `method="gauss"` default's safety margin held on the
+  manuscript's own sample. Side fix `1240c8e`: the node-cap warning no longer asserts
+  ill-conditioning (a κ=4.9 matrix hits the cap at tol=1e-8 simply because 2048 nodes cannot
+  deliver it) and now reports the last-two-rules gap instead. Details in SPEC-27 and the issue.
 - **Downstream dependency on the CRAN hold (author decision D0a, 2026-08-22 14:01 MDT):** the
   manuscript's cross-reference sentence (approved wording in the manuscript repo's
   `docs/specs/SPEC-rmediation-default-crossref-2026-08-22.md`, destined for its §5.4) is

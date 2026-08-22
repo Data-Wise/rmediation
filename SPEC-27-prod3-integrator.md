@@ -127,13 +127,15 @@ overturn, the design above:
   well-conditioned point (κ=4.9) sampled during the manuscript's own
   validation, a *fixed*-node GL rule (n=256, no escalation) was itself wrong
   by 1.24e-5 while `hcubature` was accurate to 2.2e-7 — the opposite failure
-  direction from everything else in this spec. **Open question, not yet
-  checked here:** whether RMediation's auto-escalating self-consistency
-  check (the 256↔512 gap this section relies on) would catch that specific
-  failure, or whether it is a blind spot shared by both engines at some
-  well-conditioned points. Worth a dedicated follow-up before treating
-  `gauss`'s self-consistency check as a universal safety net. Tracked as
-  issue #31.
+  direction from everything else in this spec. **Resolved (issue #31, closed
+  2026-08-22):** the auto-escalating check does catch it. On that draw the
+  package's 256↔512 gap is 9.1e-6 > tol, the loop continues to 1024 nodes and
+  lands 3.9e-8 from hcubature at tol=1e-10. Over all 120 of the manuscript's
+  Stage-C draws (κ 1.1–15.9, same arbiter) the default's max error is 3.9e-8
+  with 0 draws above 1e-6, versus 8.8e-6 and 1 draw for fixed GL-256; 114
+  draws stop at 256, 5 at 512, 1 at 1024, no cap warnings. The reported
+  `error` attribute is conservative above ~1e-8 and noise below it. Evidence
+  and per-draw tables are in the issue thread.
 
 Manuscript-side detail: `docs/REPORT-phase1-prevalence-2026-08-02.md`,
 `docs/REPORT-phase4-blast-radius-2026-08-02.md` Stage D (both in the
