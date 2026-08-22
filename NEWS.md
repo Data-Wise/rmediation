@@ -26,6 +26,17 @@ root-finding, all of them inherited the error.
   cross-checking and backward comparison. It is not recommended when the
   `(X, Y)` block is ill-conditioned.
 
+* The error figures above were measured at `q = 0.5` with
+  `mean = c(0.2, 0.1, 0)` on one family of covariance matrices: unit
+  variances, correlation `0.5` between `Z` and each of `X` and `Y`, and `rho`
+  between `X` and `Y` in `{0.5, 0.99, 0.999, 0.9999}`. The reference value
+  was a 1024-node Gauss-Legendre rule that agreed with the 512-node rule to
+  `3e-7` or better and lay within 3 standard errors of a `1e7`-draw Monte
+  Carlo check. The magnitudes describe that family: the error is not a
+  monotone function of the condition number across arbitrary covariance
+  matrices, and a well-conditioned matrix can show a smaller error than an
+  ill-conditioned one.
+
 * New `nodes` argument forces a fixed number of Gauss-Legendre nodes per
   dimension instead of escalating adaptively.
 

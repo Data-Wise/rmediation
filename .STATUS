@@ -69,6 +69,24 @@ next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do 
   treating the escalation gate as a universal safety net — **relevant to the still-open CRAN
   hold above**, since it bears on the `method="gauss"` default's own safety margin, not just on
   the manuscript's choice. **Tracked as issue #31** (opened 2026-08-22, author approved).
+- **Downstream dependency on the CRAN hold (author decision D0a, 2026-08-22 14:01 MDT):** the
+  manuscript's cross-reference sentence (approved wording in the manuscript repo's
+  `docs/specs/SPEC-rmediation-default-crossref-2026-08-22.md`, destined for its §5.4) is
+  **deliberately not inserted** until this package's `method="gauss"` default is either shipped to
+  CRAN or reverted. Whichever way the hold resolves, tell the manuscript side: ship → paste the
+  approved text; revert → close that spec with no insertion.
+- **D3a applied — `NEWS.md` 1.7.0 entry gained one bullet** stating the measurement conditions
+  behind the "24% / 92%" figures (q = 0.5, μ = (0.2, 0.1, 0), unit variances, ρ_XZ = ρ_YZ = 0.5,
+  ρ_XY ∈ {0.5, 0.99, 0.999, 0.9999}, reference = GL-1024 agreeing with GL-512 to ≤3e-7 and within
+  3 SE of 1e7-draw MC) and that the error is not monotone in the condition number across
+  arbitrary matrices. ⚠️ The first draft of this bullet said "μ = 0, Z independent" — wrong; SPEC-27
+  never states its Σ/μ, so it was re-derived by reproducing SPEC-27's own table values
+  (gauss 0.806715023 vs 0.80671500; hcubature 0.610967066 vs 0.6109671) from the regression
+  test's `mk()`/`mu` in `tests/testthat/test-product-normal3.R:50-51`. Purpose: a referee
+  reading the package changelog beside the manuscript's 9.2e-4 (q = 0, 1000 random matrices,
+  exact anchor) can reconcile the two without either document importing the other's evidence.
+  Docs-only; the tag `v1.7.0` predates this bullet, so the GitHub pre-release notes do not carry
+  it — the CRAN tarball built from `dev` will.
 - No code changed this session; `R/prod3_core.R` and the CRAN hold are both untouched. This is a
   documentation cross-reference only. Manuscript-side detail: `docs/REPORT-phase1-prevalence-2026-08-02.md`,
   `docs/REPORT-phase4-blast-radius-2026-08-02.md` Stage D (manuscript repo, private).
