@@ -46,7 +46,11 @@ root-finding, all of them inherited the error.
   value stays a bare numeric for existing callers.
 
 * `pprodnormal3()` now warns when quadrature reaches the node cap without
-  meeting `tol`, instead of returning a wrong answer silently.
+  meeting `tol`, instead of returning a wrong answer silently. The warning
+  reports the gap between the last two rules, which bounds the remaining
+  discretization error, and does not assert a cause: a well-conditioned
+  covariance reaches the cap too when `tol` is tighter than 2048 nodes can
+  deliver (issue #31).
 
 * **Fixed: the documented `ProductNormal3()` constructor call raised an error.**
   The `method` property had no default, and the validator rejected the resulting

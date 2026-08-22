@@ -215,10 +215,11 @@ NULL
     if (err < tol || n >= max_nodes) {
       if (err >= tol) {
         warning(
-          "Gauss-Legendre quadrature did not reach tol = ", format(tol),
-          " at the node cap (", max_nodes, "); successive rules still differ ",
-          "by ", format(err, digits = 3), ". The covariance is severely ",
-          "ill-conditioned. Treat the result as approximate.",
+          "Gauss-Legendre quadrature reached the node cap (", max_nodes,
+          ") before meeting tol = ", format(tol), "; the last two rules ",
+          "differ by ", format(err, digits = 3), ". The result is accurate ",
+          "to about that gap. Either 'tol' is tighter than ", max_nodes,
+          " nodes can deliver, or the covariance is severely ill-conditioned.",
           call. = FALSE
         )
       }
