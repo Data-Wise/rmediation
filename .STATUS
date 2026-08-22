@@ -3,13 +3,50 @@ priority: high
 progress: 100
 kind: package
 version: 1.7.0
-next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do NOT submit or merge dev->main without explicit go-ahead.** v1.7.0 is published on GitHub as a PRE-RELEASE only (tag `v1.7.0` on `dev`); `main` deliberately remains at 1.6.1, which is what CRAN serves. Users can get the fix via `remotes::install_github("Data-Wise/RMediation", ref = "dev")`. v1.7.0 fixes issue #27: `pprodnormal3()` returned silently wrong probabilities on ill-conditioned covariance (24% error at rho=0.999, 92% relative in the lower tail, at every q). Default integrator is now `method="gauss"`; `"hcubature"` retained for cross-checking. **The open decision, if the hold is reconsidered: making "gauss" the default changes returned values for every user — that is the one choice that becomes irreversible once on CRAN.** Gates all green: 345 tests pass (0 fail/warn/skip), `R CMD check --as-cran` 0/0/0, r-hub 3/3 pass (linux/windows/macos-arm64, 2026-08-17), win-builder 3/3 Status: OK — R-devel (r90413), R-release (4.6.1), R-oldrelease (4.5.3), all received 2026-08-17 and confirmed in Gmail 2026-08-21. `cran-comments.md` is complete for 1.7.0: r-hub and all three win-builder results filled in, nothing left PENDING. **Every technical gate is green and the 2026-08-21 cadence window has opened — the only thing outstanding is the hold itself and the `method="gauss"` default decision.** Issues #26 and #27 stay open on GitHub until dev->main. Live pkgdown site is at 1.7.0 (deployed from the tag before that trigger was removed) while CRAN is 1.6.1 — deliberate, see SPEC-29.
+next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do NOT submit or merge dev->main without explicit go-ahead.** v1.7.0 is published on GitHub as a PRE-RELEASE only (tag `v1.7.0` on `dev`); `main` deliberately remains at 1.6.1, which is what CRAN serves. Users can get the fix via `remotes::install_github("Data-Wise/RMediation", ref = "dev")`. v1.7.0 fixes issue #27: `pprodnormal3()` returned silently wrong probabilities on ill-conditioned covariance (24% error at rho=0.999, 92% relative in the lower tail, at every q). Default integrator is now `method="gauss"`; `"hcubature"` retained for cross-checking. **The open decision, if the hold is reconsidered: making "gauss" the default changes returned values for every user — that is the one choice that becomes irreversible once on CRAN.** Gates all green: 424 tests pass (0 fail/warn/skip; 345 -> 424 after PR #30's coverage work), `R CMD check --as-cran` 0 errors/0 warnings (1 local-only NOTE, HTML-Tidy version, not CRAN-relevant), test coverage 71.70% (up from 55.45%), r-hub 3/3 pass (linux/windows/macos-arm64, 2026-08-17), win-builder 3/3 Status: OK — R-devel (r90413), R-release (4.6.1), R-oldrelease (4.5.3), all received 2026-08-17 and confirmed in Gmail 2026-08-21. `cran-comments.md` is complete for 1.7.0: r-hub and all three win-builder results filled in, nothing left PENDING; a 2026-08-22 addendum documents the post-dispatch `mvtnorm` Suggests addition and coverage work (test-only, not independently re-dispatched to r-hub/win-builder). **Every technical gate is green and the 2026-08-21 cadence window has opened — the only thing outstanding is the hold itself and the `method="gauss"` default decision.** Issues #26 and #27 stay open on GitHub until dev->main. Live pkgdown site is at 1.7.0 (deployed from the tag before that trigger was removed) while CRAN is 1.6.1 — deliberate, see SPEC-29.
 
 # rmediation
 
 ## Status: Active
 ## Progress: 100
 ## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
+
+## Session 2026-08-22 (PR #30 merged: coverage gap + mbco CI fix)
+- Used rforge impact analysis to scope test-coverage work by real ecosystem
+  usage: only `missingmed` depends on RMediation (via `mbco()` and `tidy()`
+  directly), so zero-coverage files were prioritized by that, not by file size.
+- Added 8 new test files (mbco_parametric/.mbco_semi, tidy() dispatch, pMC/qMC,
+  utils_validation, utils_stats). Coverage: 55.45% -> 71.70%. Tests: 345 -> 424,
+  0 fail.
+- PR #30 CI went red (5/5 checks) on `mbco_parametric`'s bootstrap test:
+  `Error: Cannot bootstrap null model 'H0'` on macOS/Windows/ubuntu-release +
+  the coverage job. Root cause (found by reading further up the CI log than
+  the try-error's generic message surfaces): `mxCompare(..., boot = TRUE)`
+  calls `OpenMx::mxGenerateData()`, which needs `mvtnorm` — an OpenMx
+  `Suggests`, not a hard dependency, so CI's dependency installer (which
+  resolves RMediation's own DESCRIPTION) never pulled it in. It worked
+  locally only because `mvtnorm` was already present as a transitive
+  dependency of something else installed. Fix: added `mvtnorm` to
+  RMediation's own `Suggests` + `skip_if_not_installed("mvtnorm")` on the
+  affected test.
+  - A first fix attempt (pin `OpenMx` to 1 thread, grow fixture `n` to 500)
+    was wrong on both counts: it didn't touch the actual bug, and its
+    unguarded top-level `OpenMx::mxOption()` call broke `ubuntu-latest
+    (devel)` (which doesn't have OpenMx installed) — a regression on a
+    previously-passing platform. Reverted.
+  - Separately (a genuine improvement, kept even though it wasn't the actual
+    CI cause): `H0`/`H1` are now built from scratch instead of one being
+    derived by mutating the other's already-run `MxModel` object, which
+    removes OpenMx's "modified since it was run" warning.
+- All 6 checks green (5 R-CMD-check platforms + test-coverage + codecov),
+  424/424 tests, `R CMD check --as-cran` 0/0/0 in the worktree. Squash-merged
+  to `dev` (commit 9874187). Worktree + feature branch cleaned up.
+- Re-verified on `dev` post-merge: `R CMD check --as-cran` 0 errors/0 warnings
+  (1 local-only NOTE — HTML Tidy version, not CRAN-relevant), 424/424 tests,
+  coverage 71.70% confirmed via `covr::package_coverage()`.
+- No `R/` source files changed — test-only + one new `Suggests` entry. CRAN
+  hold from 2026-08-17 is untouched by this session; nothing here requires or
+  justifies lifting it.
 
 ## Session 2026-08-21 (win-builder results reconciled)
 - All three win-builder results had in fact arrived on 2026-08-17; `.STATUS` and

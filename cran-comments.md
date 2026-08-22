@@ -76,6 +76,16 @@ Checked locally with `R CMD check --as-cran` (0/0/0).
   case the same transient re-appears in CRAN's incoming check.
 * `medfit (>= 0.2.0)` in `Suggests` is available on CRAN (v0.2.1). It is used
   only in optional integration helpers guarded by `requireNamespace()`.
+* After the r-hub/win-builder runs above, `mvtnorm` was added to `Suggests`
+  (available on CRAN) to cover a previously-untested path: `OpenMx`'s internal
+  parametric bootstrap (`mxCompare(..., boot = TRUE)`, used by `mbco()`)
+  depends on it. Usage is entirely inside `testthat` tests guarded by
+  `skip_if_not_installed()`; no `R/` source file references it. This change
+  and ~250 new lines of test coverage (55.45% -> 71.70%) landed after the
+  r-hub/win-builder dispatch above and were not independently re-submitted to
+  either service — they were verified instead via `R CMD check --as-cran`
+  (0 errors, 0 warnings) and the full GitHub Actions matrix (macOS, Windows,
+  ubuntu-release, ubuntu-devel, all green) on 2026-08-22.
 * Version 1.6.1 was published on 2026-07-21. This submission is deliberately
   held until on or after 2026-08-21 to respect the requested update cadence for
   established packages. It is submitted sooner than a routine update would be
