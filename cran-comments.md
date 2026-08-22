@@ -85,7 +85,12 @@ Checked locally with `R CMD check --as-cran` (0/0/0).
   r-hub/win-builder dispatch above and were not independently re-submitted to
   either service — they were verified instead via `R CMD check --as-cran`
   (0 errors, 0 warnings) and the full GitHub Actions matrix (macOS, Windows,
-  ubuntu-release, ubuntu-devel, all green) on 2026-08-22.
+  ubuntu-release, ubuntu-devel, all green) on 2026-08-22. One further
+  post-dispatch change to `R/` source, also 2026-08-22: the text of the
+  warning `pprodnormal3()` emits when Gauss-Legendre quadrature reaches its
+  node cap was reworded to report the residual gap instead of asserting a
+  cause (issue #31). No computation changed; the GitHub Actions matrix is
+  green on that commit.
 * Version 1.6.1 was published on 2026-07-21. This submission is deliberately
   held until on or after 2026-08-21 to respect the requested update cadence for
   established packages. It is submitted sooner than a routine update would be

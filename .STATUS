@@ -89,8 +89,10 @@ next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do 
   exact anchor) can reconcile the two without either document importing the other's evidence.
   Docs-only; the tag `v1.7.0` predates this bullet, so the GitHub pre-release notes do not carry
   it — the CRAN tarball built from `dev` will.
-- No code changed this session; `R/prod3_core.R` and the CRAN hold are both untouched. This is a
-  documentation cross-reference only. Manuscript-side detail: `docs/REPORT-phase1-prevalence-2026-08-02.md`,
+- Code change this session (later, 14:51 MDT): `1240c8e` reworded the node-cap warning in
+  `R/prod3_core.R` (string only, no numeric path touched; see the #31 bullet above). CI green on
+  `1240c8e` and `4e5a8e7` (R-CMD-check + test-coverage); `cran-comments.md` post-dispatch addendum
+  extended to list it. The CRAN hold itself is untouched. Manuscript-side detail: `docs/REPORT-phase1-prevalence-2026-08-02.md`,
   `docs/REPORT-phase4-blast-radius-2026-08-02.md` Stage D (manuscript repo, private).
 
 ## Session 2026-08-21 (win-builder results reconciled)
