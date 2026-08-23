@@ -42,6 +42,19 @@ jobs:
           extra-packages: any::pkgdown, local::.
           needs: website
 
+      - name: Hide agent-instruction docs from pkgdown
+        run: |
+          # pkgdown renders every root-level *.md into a site page (HTML, plus
+          # an llms.txt-era markdown twin, a sitemap.xml entry, and a
+          # full-text search.json entry — see pkgdown:::package_mds(), which
+          # hardcodes README/LICENSE/NEWS/cran-comments as the only skipped
+          # root .md files). CLAUDE.md and GEMINI.md must stay at the repo
+          # root for Claude Code / Gemini discovery, so they can't be moved
+          # like the SPEC-*.md planning docs (now under planning/). This
+          # checkout is a disposable CI copy, so just remove them here
+          # before the build ever sees them; the tracked files are untouched.
+          rm -f CLAUDE.md GEMINI.md
+
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)
         shell: Rscript {0}
