@@ -9,8 +9,10 @@
   not been exercised on fitted RAM models (rmediation#35).
 - The `?mbco` example had shifted path labels (`endVar` started with `"x"`, so
   the labels `a1`, `a2`, `cp` landed on the wrong paths) and passed a tibble to
-  `mxData()`. Both are fixed, and the example now notes that a nonlinear
-  `ind1 == 0` null can converge to the wrong branch (rmediation#35).
+  `mxData()`. Both are fixed. The example now tests `a1 * b1 = 0` with one
+  linear null per path (`a1 == 0`, `b1 == 0`) and reports the smaller statistic
+  (0.0831), because a single nonlinear `ind1 == 0` null can converge to the
+  wrong branch (221.05) (rmediation#35).
 
 ## Documentation
 
