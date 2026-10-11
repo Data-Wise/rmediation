@@ -16,8 +16,11 @@
 
 ## Documentation
 
-- `?mbco` example: build `h0` from the unfitted model. A constraint refit from
-  the fitted model's estimates can stop at an infeasible point (diffLL 0).
+- `?mbco` now has a Details section on testing a product null (`a*b = 0`): fit
+  one linear null per path and report the smaller statistic, because a single
+  nonlinear null can converge to the wrong branch. It also says to build `h0`
+  from the unfitted model, since a constraint refit from the fitted model's
+  estimates can stop at an infeasible point (diffLL 0) (rmediation#35).
 
 ## Tests
 

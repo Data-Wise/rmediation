@@ -176,6 +176,18 @@ S7::S4_register(MBCOResult)
 #'
 #' This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a function of indirect effects.
 #'
+#' @details
+#' **Testing a product null (\eqn{a b = 0}).** The null \eqn{ab = 0} holds when
+#' \eqn{a = 0} or \eqn{b = 0}. A single nonlinear constraint such as
+#' `ind == 0` can converge to either branch, and the optimizer may return the
+#' branch with the larger statistic, which gives a wrong test. To test a product
+#' of two paths, fit one linear null per path (`a == 0` and `b == 0`), run
+#' `mbco()` on each, and report the smaller statistic with 1 degree of freedom
+#' (see the example).
+#'
+#' Build each `h0` from the unfitted model. A constraint refit from the fitted
+#' model's estimates can stop at an infeasible point and return a statistic of 0.
+#'
 #' @param h0 An \code{OpenMx} model estimated under a null hypothesis, which is a more constrained model
 #' @param h1 An \code{OpenMx} model estimated under an alternative hypothesis, which is a less constrained model. This is usually a model hypothesized by a researcher.
 #' @param ... Additional arguments.
