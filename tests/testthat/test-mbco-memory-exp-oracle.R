@@ -89,3 +89,10 @@ test_that("mbco() accepts fitted RAM models and returns the oracle statistics (a
   expect_lt(abs(res_b1@statistic - oracle_b1), oracle_tol)
   expect_identical(res_b1@df, 1)
 })
+
+test_that("mbco() rejects non-MxModel inputs with a named error", {
+  skip_if_not_installed("OpenMx")
+  model <- OpenMx::mxModel("any")
+  expect_error(mbco(list(), model), "h0 must be an MxModel")
+  expect_error(mbco(model, list()), "h1 must be an MxModel")
+})
