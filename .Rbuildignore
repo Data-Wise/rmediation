@@ -10,6 +10,7 @@
 ^\.claude$
 ^\.remember$
 ^CLAUDE\.md$
+^AGENTS\.md$
 ^STATUS\.md$
 ^\.STATUS$
 ^\.STATUS\.backup$
