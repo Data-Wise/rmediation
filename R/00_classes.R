@@ -176,6 +176,18 @@ S7::S4_register(MBCOResult)
 #'
 #' This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a function of indirect effects.
 #'
+#' @details
+#' **Testing a product null (\eqn{a b = 0}).** The null \eqn{ab = 0} holds when
+#' \eqn{a = 0} or \eqn{b = 0}. A single nonlinear constraint such as
+#' `ind == 0` can converge to either branch, and the optimizer may return the
+#' branch with the larger statistic, which gives a wrong test. To test a product
+#' of two paths, fit one linear null per path (`a == 0` and `b == 0`), run
+#' `mbco()` on each, and report the smaller statistic with 1 degree of freedom
+#' (see the example).
+#'
+#' Build each `h0` from the unfitted model. A constraint refit from the fitted
+#' model's estimates can stop at an infeasible point and return a statistic of 0.
+#'
 #' @param h0 An \code{OpenMx} model estimated under a null hypothesis, which is a more constrained model
 #' @param h1 An \code{OpenMx} model estimated under an alternative hypothesis, which is a less constrained model. This is usually a model hypothesized by a researcher.
 #' @param ... Additional arguments.
@@ -186,8 +198,9 @@ S7::S4_register(MBCOResult)
 #' @examples
 #' \dontrun{
 #' data(memory_exp)
+#' memory_exp <- as.data.frame(memory_exp) # mxData() does not accept tibbles
 #' memory_exp$x <- as.numeric(memory_exp$x) - 1 # manually creating dummy codes
-#' endVar <- c("x", "repetition", "imagery", "recall")
+#' endVar <- c("repetition", "imagery", "recall") # endogenous variables (not "x")
 #' manifests <- c("x", "repetition", "imagery", "recall")
 #' full_model <- OpenMx::mxModel(
 #'   "memory_example",
@@ -225,7 +238,7 @@ S7::S4_register(MBCOResult)
 #'   ),
 #'   OpenMx::mxPath(
 #'     from = "one",
-#'     to = endVar,
+#'     to = manifests,
 #'     arrows = 1,
 #'     free = TRUE,
 #'     values = .1
@@ -236,14 +249,29 @@ S7::S4_register(MBCOResult)
 #'   OpenMx::mxCI("ind2", type = "both"),
 #'   OpenMx::mxData(observed = memory_exp, type = "raw")
 #' )
-#' ## Reduced  Model for indirect effect: a1*b1
-#' null_model1 <- OpenMx::mxModel(
+#' ## H0: a1*b1 = 0 holds if a1 = 0 or b1 = 0. Fit one linear null per path and
+#' ## report the smaller statistic (what medfit::mbco_sem() automates). A single
+#' ## nonlinear null ind1 == 0 can converge to the wrong branch (rmediation#35).
+#' ## Build each h0 from the unfitted model: a constraint refit from the fitted
+#' ## model's estimates can stop at an infeasible point.
+#' null_a1 <- OpenMx::mxModel(
 #'   model = full_model,
-#'   name = "Null Model 1",
-#'   OpenMx::mxConstraint(ind1 == 0, name = "ind1_eq0_constr")
+#'   name = "Null a1 = 0",
+#'   OpenMx::mxConstraint(a1 == 0, name = "a1_eq0_constr")
+#' )
+#' null_b1 <- OpenMx::mxModel(
+#'   model = full_model,
+#'   name = "Null b1 = 0",
+#'   OpenMx::mxConstraint(b1 == 0, name = "b1_eq0_constr")
 #' )
 #' full_model <- OpenMx::mxTryHard(full_model, checkHess = FALSE, silent = TRUE)
-#' null_model1 <- OpenMx::mxTryHard(null_model1, checkHess = FALSE, silent = TRUE)
-#' mbco(null_model1, full_model)
+#' null_a1 <- OpenMx::mxTryHard(null_a1, checkHess = FALSE, silent = TRUE)
+#' null_b1 <- OpenMx::mxTryHard(null_b1, checkHess = FALSE, silent = TRUE)
+#' res_a1 <- mbco(null_a1, full_model)
+#' res_b1 <- mbco(null_b1, full_model)
+#' res_a1
+#' res_b1
+#' ## Test of H0: a1*b1 = 0 (df = 1): the smaller of the two statistics
+#' min(res_a1@statistic, res_b1@statistic)
 #' }
 mbco <- S7::new_generic("mbco", c("h0", "h1"))

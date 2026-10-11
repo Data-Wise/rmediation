@@ -1,3 +1,33 @@
+# RMediation 1.7.1 (development version)
+
+## Bug fixes
+
+- `mbco()` no longer rejects fitted OpenMx RAM models with "h0 must be an
+  MxModel". The check compared `class(h0)` to `"MxModel"`, which fails for
+  subclasses such as `MxRAMModel`; it now uses `methods::is()`. Verified for
+  `type = "asymp"` only; the bootstrap types (`"parametric"`, `"semi"`) have
+  not been exercised on fitted RAM models (rmediation#35).
+- The `?mbco` example had shifted path labels (`endVar` started with `"x"`, so
+  the labels `a1`, `a2`, `cp` landed on the wrong paths) and passed a tibble to
+  `mxData()`. Both are fixed. The example now tests `a1 * b1 = 0` with one
+  linear null per path (`a1 == 0`, `b1 == 0`) and reports the smaller statistic
+  (0.0831), because a single nonlinear `ind1 == 0` null can converge to the
+  wrong branch (221.05) (rmediation#35).
+
+## Documentation
+
+- `?mbco` now has a Details section on testing a product null (`a*b = 0`): fit
+  one linear null per path and report the smaller statistic, because a single
+  nonlinear null can converge to the wrong branch. It also says to build `h0`
+  from the unfitted model, since a constraint refit from the fitted model's
+  estimates can stop at an infeasible point (diffLL 0) (rmediation#35).
+
+## Tests
+
+- Added a known-answer OpenMx fixture on `memory_exp` (linear nulls
+  `a1 == 0`: 221.045546 and `b1 == 0`: 0.083100) and an end-to-end `mbco()`
+  test against it.
+
 # RMediation 1.7.0 (2026-08-16)
 
 ## Correctness fix: `pprodnormal3()` on ill-conditioned covariance (#27)
