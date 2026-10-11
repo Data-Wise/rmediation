@@ -3,13 +3,40 @@ priority: high
 progress: 100
 kind: package
 version: 1.7.0
-next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do NOT submit or merge dev->main without explicit go-ahead.** v1.7.0 is published on GitHub as a PRE-RELEASE only (tag `v1.7.0` on `dev`); `main` deliberately remains at 1.6.1, which is what CRAN serves. Users can get the fix via `remotes::install_github("Data-Wise/RMediation", ref = "dev")`. v1.7.0 fixes issue #27: `pprodnormal3()` returned silently wrong probabilities on ill-conditioned covariance (24% error at rho=0.999, 92% relative in the lower tail, at every q). Default integrator is now `method="gauss"`; `"hcubature"` retained for cross-checking. **The open decision, if the hold is reconsidered: making "gauss" the default changes returned values for every user — that is the one choice that becomes irreversible once on CRAN.** Gates all green: 424 tests pass (0 fail/warn/skip; 345 -> 424 after PR #30's coverage work), `R CMD check --as-cran` 0 errors/0 warnings (1 local-only NOTE, HTML-Tidy version, not CRAN-relevant), test coverage 71.70% (up from 55.45%), r-hub 3/3 pass (linux/windows/macos-arm64, 2026-08-17) **and re-run 3/3 `Status: OK` on the final tree `e557536` (2026-08-22 16:14 MDT, run 32601694146)**, win-builder 3/3 Status: OK — R-devel (r90413), R-release (4.6.1), R-oldrelease (4.5.3), all received 2026-08-17 and confirmed in Gmail 2026-08-21. `cran-comments.md` is complete for 1.7.0: r-hub and all three win-builder results filled in, nothing left PENDING; a 2026-08-22 addendum documents the post-dispatch `mvtnorm` Suggests addition, coverage work, and the #31 warning-text change — all covered by the 2026-08-22 r-hub re-run; only win-builder was not re-dispatched. **Every technical gate is green and the 2026-08-21 cadence window has opened — the only thing outstanding is the hold itself and the `method="gauss"` default decision.** Issues #26 and #27 stay open on GitHub until dev->main. Live pkgdown site is at 1.7.0 (deployed from the tag before that trigger was removed) while CRAN is 1.6.1 — deliberate, see SPEC-29.
+next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do NOT submit or merge dev->main without explicit go-ahead.** v1.7.0 is published on GitHub as a PRE-RELEASE only (tag `v1.7.0` on `dev`); `main` deliberately remains at 1.6.1, which is what CRAN serves. Users can get the fix via `remotes::install_github("Data-Wise/RMediation", ref = "dev")`. v1.7.0 fixes issue #27: `pprodnormal3()` returned silently wrong probabilities on ill-conditioned covariance (24% error at rho=0.999, 92% relative in the lower tail, at every q). Default integrator is now `method="gauss"`; `"hcubature"` retained for cross-checking. **The open decision, if the hold is reconsidered: making "gauss" the default changes returned values for every user — that is the one choice that becomes irreversible once on CRAN.** Gates all green: 424 tests pass (0 fail/warn/skip; 345 -> 424 after PR #30's coverage work), `R CMD check --as-cran` 0 errors/0 warnings (1 local-only NOTE, HTML-Tidy version, not CRAN-relevant), test coverage 71.70% (up from 55.45%), r-hub 3/3 pass (linux/windows/macos-arm64, 2026-08-17) **and re-run 3/3 `Status: OK` on the final tree `e557536` (2026-08-22 16:14 MDT, run 32601694146)**, win-builder 3/3 Status: OK — R-devel (r90413), R-release (4.6.1), R-oldrelease (4.5.3), all received 2026-08-17 and confirmed in Gmail 2026-08-21. `cran-comments.md` is complete for 1.7.0: r-hub and all three win-builder results filled in, nothing left PENDING; a 2026-08-22 addendum documents the post-dispatch `mvtnorm` Suggests addition, coverage work, and the #31 warning-text change — all covered by the 2026-08-22 r-hub re-run; only win-builder was not re-dispatched. **Every technical gate is green and the 2026-08-21 cadence window has opened — the only thing outstanding is the hold itself and the `method="gauss"` default decision.** Issues #26 and #27 stay open on GitHub until dev->main. Live pkgdown site is at 1.7.0 (deployed from the tag before that trigger was removed) while CRAN is 1.6.1 — deliberate, see SPEC-29. **Post-hold note (2026-10-11):** dev also carries PR #36 (`mbco()` fitted-RAM-model fix, corrected `?mbco` example, OpenMx known-answer tests); NEWS has a `1.7.1 (development version)` heading while DESCRIPTION is still 1.7.0 (the `v1.7.0` tag predates later dev commits; bump to 1.7.1 at ship is undecided).
 
 # rmediation
 
 ## Status: Active
 ## Progress: 100
 ## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
+
+## Session 2026-10-11 (PR #36 merged: mbco() RAM-model fix + OpenMx oracle)
+- **medfit route is BLOCKED, not started.** A `mbco()` method on a pair of medfit
+  `SEMFit`s needs medfit's `anova()` for `SEMFit` and its nonlinear-constraint
+  branch split (W3) merged in medfit dev first (medfit grill G10). Handoff:
+  `medfit/planning/specs/HANDOFF-rmediation-mbco-on-mbco_sem-2026-10-11.md`
+  (read-only from here). Nothing added to DESCRIPTION; the OpenMx path is
+  unchanged apart from the class check below.
+- **Unblocked part done:** known-answer fixture on `memory_exp`
+  (`tests/testthat/helper-memory-exp-ram.R`, `test-mbco-memory-exp-oracle.R`):
+  `mxCompare` diffLL 221.045546 (`a1 == 0`), 0.083100 (`b1 == 0`), minimum
+  0.083100, df 1, tol 1e-6. Control: the `?mbco` example as written gives
+  0.060332 (shifted labels). medfit compares its own result against these.
+- **Bug found and fixed (PR #36, squash `771577a`):** `mbco()` rejected every
+  fitted OpenMx RAM model ("h0 must be an MxModel") because the check compared
+  `class(h0)` to `"MxModel"`; it now uses `methods::is()`. The `?mbco` example
+  had shifted labels (`endVar` began with `"x"`) and passed a tibble to
+  `mxData()`; both fixed, and it now tests `a*b = 0` as the smaller of two
+  linear nulls. Verified for `type = "asymp"` only; `"parametric"` and `"semi"`
+  have not been run on fitted RAM models. Suite: 452 expectations, 0 failed.
+- **#35 stays open:** a single nonlinear null can converge to the wrong branch
+  (`a1 = 0`, 221.05 vs the correct 0.0831). Documented in `?mbco` Details; the
+  real fix is the medfit route above.
+- **CI:** RMediation PR runs are 1-3 min and have no `skip_on_cran()` calls, so
+  the NOT_CRAN tiering used in medrobust (#57 merged, #58 open) is not needed here.
+- **Not applied:** `devtools::document()` with roxygen 8.1.0 reformats NAMESPACE
+  and bumps DESCRIPTION's roxygen version; kept out of #36 as a separate cleanup.
 
 ## Session 2026-08-22 (PR #30 merged: coverage gap + mbco CI fix)
 - Used rforge impact analysis to scope test-coverage work by real ecosystem
