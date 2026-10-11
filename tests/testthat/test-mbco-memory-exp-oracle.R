@@ -74,3 +74,18 @@ test_that("control: the ?mbco example as written (shifted labels) does not match
   # The shifted-label answer is not the correct one, so a passing oracle test proves the labels are right.
   expect_gt(abs(rd_diff_ll - oracle_b1), 1e-3)
 })
+
+test_that("mbco() accepts fitted RAM models and returns the oracle statistics (asymp)", {
+  skip_if_not_installed("OpenMx")
+  o <- .memory_exp_oracle()
+
+  res_a1 <- mbco(o$null_a1, o$full, type = "asymp")
+  expect_s3_class(res_a1, "RMediation::MBCOResult")
+  expect_lt(abs(res_a1@statistic - oracle_a1), oracle_tol)
+  expect_identical(res_a1@df, 1)
+  expect_identical(res_a1@type, "asymp")
+
+  res_b1 <- mbco(o$null_b1, o$full, type = "asymp")
+  expect_lt(abs(res_b1@statistic - oracle_b1), oracle_tol)
+  expect_identical(res_b1@df, 1)
+})

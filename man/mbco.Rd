@@ -22,8 +22,9 @@ This function computes asymptotic MBCO chi-squared test for a smooth function of
 \examples{
 \dontrun{
 data(memory_exp)
+memory_exp <- as.data.frame(memory_exp) # mxData() does not accept tibbles
 memory_exp$x <- as.numeric(memory_exp$x) - 1 # manually creating dummy codes
-endVar <- c("x", "repetition", "imagery", "recall")
+endVar <- c("repetition", "imagery", "recall") # endogenous variables (not "x")
 manifests <- c("x", "repetition", "imagery", "recall")
 full_model <- OpenMx::mxModel(
   "memory_example",
@@ -61,7 +62,7 @@ full_model <- OpenMx::mxModel(
   ),
   OpenMx::mxPath(
     from = "one",
-    to = endVar,
+    to = manifests,
     arrows = 1,
     free = TRUE,
     values = .1
@@ -73,6 +74,8 @@ full_model <- OpenMx::mxModel(
   OpenMx::mxData(observed = memory_exp, type = "raw")
 )
 ## Reduced  Model for indirect effect: a1*b1
+## (build h0 from the unfitted model: a constraint refit from the fitted
+## model's estimates can stop at an infeasible point)
 null_model1 <- OpenMx::mxModel(
   model = full_model,
   name = "Null Model 1",
@@ -80,6 +83,8 @@ null_model1 <- OpenMx::mxModel(
 )
 full_model <- OpenMx::mxTryHard(full_model, checkHess = FALSE, silent = TRUE)
 null_model1 <- OpenMx::mxTryHard(null_model1, checkHess = FALSE, silent = TRUE)
+## Caution: the nonlinear null ind1 == 0 can converge to the a1 = 0 branch
+## (diffLL 221.05 here); the smaller branch, b1 = 0, gives 0.0831 (rmediation#35).
 mbco(null_model1, full_model)
 }
 }
