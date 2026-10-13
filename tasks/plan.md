@@ -4,11 +4,11 @@ Date: 2026-10-12. Baseline: dev `4bda219`; medfit 0.8.0 in a scratch library, Op
 
 ## Recommendation and scope
 
-First close result-bearing MBCO and CI gaps; then exercise graphics and legacy compatibility. Target at least 80% overall line coverage, at least 90% in changed numerical/dispatch modules, and every reachable critical refusal and result-selection branch. Treat these as implementation acceptance targets, not current achievements. Do not exclude legacy files or delete code to improve the denominator. CRAN, dev-to-main and integrator holds remain.
+First close result-bearing MBCO and CI gaps; then exercise graphics and legacy compatibility. Target at least 95% overall line coverage, at least 95% in changed numerical/dispatch modules, and every reachable critical refusal and result-selection branch. Treat these as implementation acceptance targets, not current achievements. Do not exclude legacy files or delete code to improve the denominator. CRAN, dev-to-main and integrator holds remain.
 
 ## Measured baseline
 
-Fresh covr run: 73.00613% line coverage, 1,793 instrumented lines, 484 uncovered. With the denominator unchanged, 126 additional covered lines reach 80%; implementation changes require recomputation. `coverage-baseline.csv` records the complete per-file tally.
+Fresh covr run: 73.00613% line coverage, 1,793 instrumented lines, 484 uncovered. With the denominator unchanged, 395 additional covered lines reach 95% (at most 89 lines remain uncovered); implementation changes require recomputation. `coverage-baseline.csv` records the complete per-file tally.
 
 | Module | Line coverage | Priority |
 |---|---:|---|
@@ -58,7 +58,7 @@ Verification: focused deterministic tests; expensive stress grids remain separat
 
 ### Checkpoint B
 
-Full suite and coverage report; verify all critical mapped cases have assertions that fail planted defects. If 80% remains unmet, report the remaining uncovered lines before choosing the next slice.
+Full suite and coverage report; verify all critical mapped cases have assertions that fail planted defects. If the 90% intermediate milestone remains unmet, report the remaining uncovered lines before choosing the next slice.
 
 ### 5. Graphics and legacy compatibility (two small slices)
 
@@ -66,10 +66,16 @@ Files: focused CI graphics tests; separate legacy/prototype test files.
 Acceptance: exercise plot/plotCI and all-method overlays on temporary devices; assert numeric outputs are unchanged, device cleanup occurs, and zero-SE paths behave as documented. Inspect one rendered representative plot; plot existence alone is insufficient. Audit exports/call sites of backup/prototype functions before testing their reachable contracts. Do not delete or exclude them without a separate decision.
 Dependencies: 3; legacy slice also uses 1. Verification: focused tests, one inspected render and coverage gain attributable to reachable behavior.
 
+### 5c. Remaining uncovered-line closure (bounded slices)
+
+Files: remaining S7 validators, display/extraction methods, CI internals, registration hooks and numerical fallback branches identified by the refreshed report.
+Acceptance: classify every remaining uncovered line as reachable contract, dependency/version branch, instrumentation limitation or genuinely unreachable code. Add meaningful tests for reachable behavior in small feature PRs. Merge coverage from compatible instrumented dependency scenarios where useful; fresh-process smoke gates alone do not increase measured coverage. Resolve registration instrumentation gaps with measured evidence rather than assuming startup tests count. Preserve the denominator and do not add exclusions to reach the target. Dead-code removal or unsupported API decisions require separate review.
+Dependencies: 2-5b. Verification: coverage milestones 80%, 90%, then >=95%, with remaining-line inventories at each checkpoint. The final uncovered budget is at most 89 lines only while the baseline denominator stays 1,793; recompute after code changes. Every reachable critical refusal/result-selection branch must be tested even if the overall percentage already passes. If 95% cannot be reached honestly, report the specific blockers and measured ceiling rather than silently reducing the target.
+
 ### 6. Final gates and integration (small)
 
-Acceptance: >=80% overall, >=90% changed numerical/dispatch modules, no unexplained critical uncovered branch, no denominator exclusions; report unavailable/unreachable cases explicitly. If targets are missed, revise scope transparently rather than declaring success. All tests pass with known existing warnings separated; lint changed R, spelling and URLs for changed docs; strict full CRAN check and dependency-flavor limitation reported. Update NEWS/status/plan with evidence.
-Verification: full suite with medfit0.8; absent/old/new installed gates; platform CI and Codecov green; review and merge feature PRs to dev. No package version bump, CRAN submission or dev-to-main integration. Dependencies: 2-5.
+Acceptance: >=95% overall, >=95% changed numerical/dispatch modules, no unexplained critical uncovered branch, no denominator exclusions; report unavailable/unreachable cases explicitly. If targets are missed, revise scope transparently rather than declaring success. All tests pass with known existing warnings separated; lint changed R, spelling and URLs for changed docs; strict full CRAN check and dependency-flavor limitation reported. Update NEWS/status/plan with evidence.
+Verification: full suite with medfit0.8; absent/old/new installed gates; platform CI and Codecov green; review and merge feature PRs to dev. No package version bump, CRAN submission or dev-to-main integration. Dependencies: 2-5c.
 
 ## Execution policy
 

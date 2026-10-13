@@ -8,6 +8,7 @@
 - [ ] Checkpoint B: mutation evidence and remaining uncovered-line review.
 - [ ] 5a. Graphics branches and inspected representative plot.
 - [ ] 5b. Reachable legacy/prototype compatibility contracts.
-- [ ] 6. Final >=80% coverage gates, docs and reviewed dev integration.
+- [ ] 5c. Remaining uncovered-line closure; 80%, 90%, then 95% milestones.
+- [ ] 6. Final >=95% coverage gates, docs and reviewed dev integration.
 
 Acceptance criteria, dependencies and verification are in plan.md. Release holds remain.

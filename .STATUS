@@ -13,7 +13,7 @@ next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do 
 
 ## Session 2026-10-12 (coverage and edge-case plan)
 - Plan and checklist: `tasks/plan.md`, `tasks/todo.md`; measured baseline in `tasks/coverage-baseline.csv`. Planning files are Rbuildignored.
-- Fresh line coverage on dev `4bda219`: 73.00613%, 1,793 instrumented lines, 484 uncovered, with scratch medfit 0.8.0 and OpenMx. At unchanged denominator, 126 additional covered lines reach 80%.
+- Fresh line coverage on dev `4bda219`: 73.00613%, 1,793 instrumented lines, 484 uncovered, with scratch medfit 0.8.0 and OpenMx. Target raised by the user to >=95% overall and >=95% changed numerical/dispatch modules; at unchanged denominator, 395 additional covered lines are needed (at most 89 uncovered).
 - Priority: MBCO public dispatch/failures, CI numerical/validation cases, distribution boundaries, then graphics and reachable legacy contracts. Independent oracles and planted defects are required; no coverage exclusions or release-hold changes.
 - Next: implement the coverage inventory and bounded MBCO edge-case slice through a feature PR. No implementation performed in this planning step.
 
