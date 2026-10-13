@@ -68,5 +68,5 @@ Reversing the default after CRAN would move numbers a second time.
   before it can act as a trigger.
 - **Definition of mature (user, 2026-10-13):** SEM features not experimental, and `fixed.x` and mean
   structure completed. Read-only status the same day: medfit native SEM and `SEMFit` still experimental;
-  mean structure planned for medfit 0.9.0-0.11.0, not started; no `fixed.x` item found in medfit's
-  NEWS/.STATUS. Branch 4's trigger (medfit 0.8.0 on CRAN) is now necessary but not sufficient.
+  mean structure planned for medfit 0.9.0-0.11.0, not started; `fixed.x` is in medfit's planning specs
+  (native-SEM Q3; mean-structure item 4: exogenous means freed vs lavaan's default `fixed.x = TRUE`), not in NEWS. Branch 4's trigger (medfit 0.8.0 on CRAN) is now necessary but not sufficient.
