@@ -1,7 +1,9 @@
 ## Submission summary
 
-This is an update of **RMediation** (version 1.7.0), an existing CRAN package.
-It is primarily a **correctness fix**.
+This is an update of **RMediation** (version 1.7.1), an existing CRAN package
+(CRAN currently serves 1.6.1). It is primarily a **correctness fix**. Version
+1.7.0 was published only as a GitHub pre-release and was never submitted to
+CRAN; this submission carries its changes plus the later fixes listed below.
 
 `pprodnormal3()` — the CDF of the product of three normal random variables,
 used for sequential indirect effects `a1 * a2 * b` — returned materially wrong
@@ -44,31 +46,31 @@ Key changes in this release:
   README and the getting-started vignette — raised an error. It now defaults to
   `"gauss"`.
 
+- Later fixes in `mbco()` and `ci()` (see NEWS): `mbco()` no longer rejects
+  fitted OpenMx RAM models; invalid or reversed model pairs and invalid
+  bootstrap statistics are now rejected with explicit errors instead of
+  producing a result with df <= 0; formula-CI `MCError` now uses
+  `SE / sqrt(n.mc)`; `ci(type = "all", H0 = TRUE)` forwards the null
+  distribution; and the `?mbco` example was corrected.
+
 No user-visible function signatures were removed and no arguments were renamed.
 The new arguments are optional and appear after existing ones, so positional
 calls are unaffected.
 
 ## R CMD check results
 
-`0 errors | 0 warnings | 0 notes`
-
-Checked locally with `R CMD check --as-cran` (0/0/0).
+Local, 1.7.1 release tree (`release/1.7.1`, 2026-10-12):
+`R CMD check --as-cran --run-donttest` -- 0 errors | 0 warnings | 0 notes
+(`Status: OK`). Full test suite: 593 expectations, 0 failures.
 
 ## Test environments
 
-* Local: macOS, R 4.6.1 — `R CMD check --as-cran` — 0 errors | 0 warnings | 0 notes
-* GitHub Actions: ubuntu-latest (R-release and R-devel), macos-latest,
-  windows-latest — all passing
-* r-hub v2 (GitHub Actions, dispatched 2026-08-17 against `dev` at 661b5b4):
-  linux, windows, macos-arm64 (all R-devel) — all three passed
-* r-hub v2 re-run 2026-08-22 against the final `dev` tree (e557536, which
-  includes every post-dispatch change listed under Notes below): linux,
-  windows, macos-arm64 (all R-devel) — all three `Status: OK`, no NOTEs
-* win-builder (dispatched 2026-08-17 against the same source) — all three
-  returned `Status: OK`, no NOTEs, no WARNINGs:
-  * R-devel — R Under development (unstable) (2026-08-15 r90413 ucrt)
-  * R-release — R version 4.6.1 (2026-06-24 ucrt)
-  * R-oldrelease — R version 4.5.3 (2026-03-11 ucrt)
+* Local: macOS, R 4.6.1 -- see above.
+* GitHub Actions, r-hub v2 and win-builder runs for the 1.7.1 tree:
+  **PENDING -- fill in before submission.** Results from the earlier 1.7.0
+  tree (r-hub 3/3 `Status: OK`, win-builder R-devel/R-release/R-oldrelease all
+  `Status: OK`) do not cover the 1.7.1 changes and are not reported as
+  evidence for this submission.
 
 ## Notes for the CRAN team
 
@@ -77,27 +79,13 @@ Checked locally with `R CMD check --as-cran` (0/0/0).
   Unavailable). This was a transient GitHub outage — the URL is valid and later
   runs on both R-release and R-oldrelease returned `Status: OK`. Flagged here in
   case the same transient re-appears in CRAN's incoming check.
-* `medfit (>= 0.2.0)` in `Suggests` is available on CRAN (v0.2.1). It is used
+* `medfit (>= 0.2.0)` in `Suggests` is available on CRAN (currently 0.3.2). It is used
   only in optional integration helpers guarded by `requireNamespace()`.
-* After the r-hub/win-builder runs above, `mvtnorm` was added to `Suggests`
-  (available on CRAN) to cover a previously-untested path: `OpenMx`'s internal
-  parametric bootstrap (`mxCompare(..., boot = TRUE)`, used by `mbco()`)
-  depends on it. Usage is entirely inside `testthat` tests guarded by
-  `skip_if_not_installed()`; no `R/` source file references it. This change
-  and ~250 new lines of test coverage (55.45% -> 71.70%) landed after the
-  2026-08-17 r-hub/win-builder dispatch. One further post-dispatch change to
-  `R/` source, also 2026-08-22: the text of the warning `pprodnormal3()` emits
-  when Gauss-Legendre quadrature reaches its node cap was reworded to report
-  the residual gap instead of asserting a cause (issue #31). No computation
-  changed. All of these were verified via `R CMD check --as-cran` (0 errors,
-  0 warnings), the full GitHub Actions matrix (macOS, Windows, ubuntu-release,
-  ubuntu-devel, all green), and the 2026-08-22 r-hub re-run listed above
-  (3/3 `Status: OK`). They were not re-submitted to win-builder.
-* Version 1.6.1 was published on 2026-07-21. This submission is deliberately
-  held until on or after 2026-08-21 to respect the requested update cadence for
-  established packages. It is submitted sooner than a routine update would be
-  only because the change is a correctness fix; the fix has been available to
-  affected users from a tagged GitHub release in the interim.
+* `mvtnorm` is in `Suggests` (available on CRAN); it is used only inside
+  `testthat` tests guarded by `skip_if_not_installed()` because `OpenMx`'s
+  internal parametric bootstrap depends on it. No `R/` source file references it.
+* Version 1.6.1 was published on 2026-07-21; this submission is made after the
+  requested update cadence window, and is a correctness fix.
 
 ## Reverse dependencies
 
