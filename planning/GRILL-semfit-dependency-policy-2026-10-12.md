@@ -74,3 +74,6 @@ Reversing the default after CRAN would move numbers a second time.
   rest** (user choice, recommended). Reasons: second-submission ban risk; CRAN 1.6.1 harm limited to
   ill-conditioned covariance; mitigations live (v1.7.0 GitHub pre-release, pkgdown warning note, README
   `Requires RMediation >= 1.7.0`). `release/1.7.1` stays a ready-but-unsubmitted candidate.
+- **2026-10-13 confirmed by user:** the `fixed.x` in the maturity definition is medfit's exogenous-moments
+  item (native-SEM Q3, mean-structure item 4). The definition is complete: SEM features non-experimental,
+  `fixed.x` and mean structure completed.
