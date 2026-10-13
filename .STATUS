@@ -11,6 +11,11 @@ next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do 
 ## Progress: 100
 ## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
 
+## Session 2026-10-12 (coverage inventory and public MBCO tests)
+- Feature `feature/coverage-mbco`: reproducible report and CI inventory upload; public dispatch/controls, optimizer fallback, result mapping and real fitted-RAM bootstrap smoke tests. Runtime and dependency code unchanged.
+- Line coverage 73.00613% -> 74.45622%; OpenMx dispatcher 48% -> 100%. Wrong-df and optimizer-fallback mutants are rejected. No exclusions added; 95% remains the overall target.
+- Task 1 implemented; task 2 remains open for actual nonconvergence/singular-resampling and RNG/global-option policy. Next gate: feature PR review/CI, followed by that remaining worker-contract slice. Release holds remain.
+
 ## Session 2026-10-12 (coverage and edge-case plan)
 - Plan and checklist: `tasks/plan.md`, `tasks/todo.md`; measured baseline in `tasks/coverage-baseline.csv`. Planning files are Rbuildignored.
 - Fresh line coverage on dev `4bda219`: 73.00613%, 1,793 instrumented lines, 484 uncovered, with scratch medfit 0.8.0 and OpenMx. Target raised by the user to >=95% overall and >=95% changed numerical/dispatch modules; at unchanged denominator, 395 additional covered lines are needed (at most 89 uncovered).
@@ -396,3 +401,5 @@ Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
 - mediationverse PR #5 (dev → main, medfit CRAN badge): merged ✓
 - pkgdown rebuilt on both RMediation and mediationverse — sites live ✓
 - All worktrees and stale local branches removed ✓
+
+Validation: full suite 562 passed / 0 failed / 2 existing OpenMx warnings / 1 intentional version skip; changed-file lint and spelling passed.

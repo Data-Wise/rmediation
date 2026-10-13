@@ -1,7 +1,10 @@
 # RMediation coverage tasks
 
-- [ ] 1. Reproducible coverage inventory and uncovered-line artifact.
+- [x] 1. Reproducible coverage inventory and uncovered-line artifact.
 - [ ] 2. MBCO public dispatch, refusal, bootstrap failure and side-effect cases.
+  - [x] Public controls, routing, optimizer fallback, mapping and fitted RAM smoke tests.
+  - [x] Worker-error propagation and mapping/fallback mutation assertions.
+  - [ ] Actual nonconverged fits, singular resampling and RNG/global-option policy.
 - [ ] Checkpoint A: full suite, coverage delta and review findings.
 - [ ] 3. CI numerical, validation and covariance-mapping edge cases.
 - [ ] 4. Product distribution numerical boundaries with independent oracles.

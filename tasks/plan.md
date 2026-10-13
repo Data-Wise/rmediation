@@ -1,6 +1,6 @@
 # RMediation coverage and edge-case plan
 
-Date: 2026-10-12. Baseline: dev `4bda219`; medfit 0.8.0 in a scratch library, OpenMx available. Planning only: no tests or runtime code changed.
+Date: 2026-10-12. Baseline: dev `4bda219`; medfit 0.8.0 in a scratch library, OpenMx available. Implementation started on feature/coverage-mbco; runtime code remains unchanged.
 
 ## Recommendation and scope
 
@@ -80,3 +80,14 @@ Verification: full suite with medfit0.8; absent/old/new installed gates; platfor
 ## Execution policy
 
 Implement one bounded slice per feature branch/PR; reuse existing numerical fixtures. Keep MC work deterministic and use uncertainty-based tolerances. Treat revealed correctness defects as fixes requiring their own regression evidence. Test small sample bootstrap failure policy without large stochastic CI simulations. Next authorized implementation slice: task 1 followed by task 2; this plan itself does not perform implementation.
+
+
+## First slice evidence (2026-10-12)
+
+`scripts/report-coverage.R` writes line/expression summaries, uncovered functions/lines, saved covr object, commit/dirty-tree state and dependency versions. CI uploads this inventory without lowering Codecov or changing the optional-version matrix. Saved-object reports explicitly distinguish report-process metadata from original measurement provenance.
+
+Public MBCO routing tests cover invalid controls, alpha endpoints, absent OpenMx guidance, both bootstrap dispatches, NPSOL availability/fallback, exact result fields, worker-error propagation and real fitted RAM bootstrap smoke checks. Local copies with wrong df or fallback optimizer fail their corresponding assertions; production code is untouched.
+
+Measured line coverage: 73.00613% -> 74.45622%; `R/mbco.R`: 24/50 -> 50/50 lines. This is a bounded first slice, not completion of task 2 or the 95% goal. Actual nonconvergence/singular-resampling behavior and RNG/global-option policy remain next; 100% dispatcher line coverage does not prove these worker contracts.
+
+Validation: full suite 562 passed / 0 failed / 2 existing OpenMx warnings / 1 intentional version skip; changed-file lint and spelling passed.
