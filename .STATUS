@@ -3,13 +3,37 @@ priority: high
 progress: 100
 kind: package
 version: 1.7.0
-next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do NOT submit or merge dev->main without explicit go-ahead.** v1.7.0 is published on GitHub as a PRE-RELEASE only (tag `v1.7.0` on `dev`); `main` deliberately remains at 1.6.1, which is what CRAN serves. Users can get the fix via `remotes::install_github("Data-Wise/RMediation", ref = "dev")`. v1.7.0 fixes issue #27: `pprodnormal3()` returned silently wrong probabilities on ill-conditioned covariance (24% error at rho=0.999, 92% relative in the lower tail, at every q). Default integrator is now `method="gauss"`; `"hcubature"` retained for cross-checking. **The open decision, if the hold is reconsidered: making "gauss" the default changes returned values for every user — that is the one choice that becomes irreversible once on CRAN.** Gates all green: 424 tests pass (0 fail/warn/skip; 345 -> 424 after PR #30's coverage work), `R CMD check --as-cran` 0 errors/0 warnings (1 local-only NOTE, HTML-Tidy version, not CRAN-relevant), test coverage 71.70% (up from 55.45%), r-hub 3/3 pass (linux/windows/macos-arm64, 2026-08-17) **and re-run 3/3 `Status: OK` on the final tree `e557536` (2026-08-22 16:14 MDT, run 32601694146)**, win-builder 3/3 Status: OK — R-devel (r90413), R-release (4.6.1), R-oldrelease (4.5.3), all received 2026-08-17 and confirmed in Gmail 2026-08-21. `cran-comments.md` is complete for 1.7.0: r-hub and all three win-builder results filled in, nothing left PENDING; a 2026-08-22 addendum documents the post-dispatch `mvtnorm` Suggests addition, coverage work, and the #31 warning-text change — all covered by the 2026-08-22 r-hub re-run; only win-builder was not re-dispatched. **Every technical gate is green and the 2026-08-21 cadence window has opened — the only thing outstanding is the hold itself and the `method="gauss"` default decision.** Issues #26 and #27 stay open on GitHub until dev->main. Live pkgdown site is at 1.7.0 (deployed from the tag before that trigger was removed) while CRAN is 1.6.1 — deliberate, see SPEC-29. **Current development follow-up (2026-10-12):** medfit 0.8.0 clears the SEMFit anova/W3 prerequisites; the additive plan is reviewed in `planning/PLAN-semfit-mbco-2026-10-12.md`, but implementation awaits authorization. Release holds are unchanged. **Post-hold note (2026-10-11):** dev also carries PR #36 (`mbco()` fitted-RAM-model fix, corrected `?mbco` example, OpenMx known-answer tests); NEWS has a `1.7.1 (development version)` heading while DESCRIPTION is still 1.7.0 (the `v1.7.0` tag predates later dev commits; bump to 1.7.1 at ship is undecided).
+next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do NOT submit or merge dev->main without explicit go-ahead.** v1.7.0 is published on GitHub as a PRE-RELEASE only (tag `v1.7.0` on `dev`); `main` deliberately remains at 1.6.1, which is what CRAN serves. Users can get the fix via `remotes::install_github("Data-Wise/RMediation", ref = "dev")`. v1.7.0 fixes issue #27: `pprodnormal3()` returned silently wrong probabilities on ill-conditioned covariance (24% error at rho=0.999, 92% relative in the lower tail, at every q). Default integrator is now `method="gauss"`; `"hcubature"` retained for cross-checking. **The open decision, if the hold is reconsidered: making "gauss" the default changes returned values for every user — that is the one choice that becomes irreversible once on CRAN.** Gates all green: 424 tests pass (0 fail/warn/skip; 345 -> 424 after PR #30's coverage work), `R CMD check --as-cran` 0 errors/0 warnings (1 local-only NOTE, HTML-Tidy version, not CRAN-relevant), test coverage 71.70% (up from 55.45%), r-hub 3/3 pass (linux/windows/macos-arm64, 2026-08-17) **and re-run 3/3 `Status: OK` on the final tree `e557536` (2026-08-22 16:14 MDT, run 32601694146)**, win-builder 3/3 Status: OK — R-devel (r90413), R-release (4.6.1), R-oldrelease (4.5.3), all received 2026-08-17 and confirmed in Gmail 2026-08-21. `cran-comments.md` is complete for 1.7.0: r-hub and all three win-builder results filled in, nothing left PENDING; a 2026-08-22 addendum documents the post-dispatch `mvtnorm` Suggests addition, coverage work, and the #31 warning-text change — all covered by the 2026-08-22 r-hub re-run; only win-builder was not re-dispatched. **Every technical gate is green and the 2026-08-21 cadence window has opened — the only thing outstanding is the hold itself and the `method="gauss"` default decision.** Issues #26 and #27 stay open on GitHub until dev->main. Live pkgdown site is at 1.7.0 (deployed from the tag before that trigger was removed) while CRAN is 1.6.1 — deliberate, see SPEC-29. **Current development follow-up (2026-10-12):** medfit 0.8.0 clears the SEMFit anova/W3 prerequisites; the additive plan is reviewed in `planning/PLAN-semfit-mbco-2026-10-12.md`, and implementation is now authorized and locally verified on `feature/semfit-mbco`; feature PR review/CI are the next gate. Release holds are unchanged. **Post-hold note (2026-10-11):** dev also carries PR #36 (`mbco()` fitted-RAM-model fix, corrected `?mbco` example, OpenMx known-answer tests); NEWS has a `1.7.1 (development version)` heading while DESCRIPTION is still 1.7.0 (the `v1.7.0` tag predates later dev commits; bump to 1.7.1 at ship is undecided).
 
 # rmediation
 
 ## Status: Active
 ## Progress: 100
 ## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
+
+## Session 2026-10-12 (authorized additive SEMFit-pair implementation)
+- Status/plan PR #40 merged into dev as `d755a44`; subsequent "Do next" authorized
+  the reviewed implementation. Feature branch: `feature/semfit-mbco`.
+- Added optional `(SEMFit, SEMFit)` asymptotic `mbco()` through `stats::anova()`;
+  actual df difference, no refit or OpenMx requirement. Reversed/mixed pairs,
+  bootstrap types, unused fitting controls and invalid boundary p-values error.
+  Existing OpenMx code, DESCRIPTION dependencies and package version are unchanged.
+- Full suite with scratch medfit 0.8.0: 511 passed / 0 failed / 2 existing OpenMx
+  warnings / 1 intentional old-version skip. New adapter/mutation tests: 61 passed.
+  Eight installed-package gates passed: absent, 0.3.2, 0.7.0, 0.8.0 medfit,
+  both namespace load orders, no OpenMx. Global medfit remains 0.7.0.
+- Strict full check: 0 errors / 0 warnings / 1 NOTE (unchanged August Date).
+  Dependency-only/Suggests-only check with vignette rebuild fails because it
+  excludes existing rmarkdown Suggests. Its code/examples flavor passes with
+  vignettes disabled (0 errors / 0 warnings / 1 NOTE: omitted index + old Date);
+  the full check rebuilt vignettes. This limitation is retained, not called green.
+- New-file lint 0 findings; 20 URLs passed; spelling terms reviewed. Updated
+  mbco help executed and visually inspected: statistic 0.0831, df 1, p 0.7731.
+- Added explicit absent/CRAN/0.7.0/0.8.0 CI compatibility gates without OpenMx.
+  Implementation detail and evidence: `planning/PLAN-semfit-mbco-2026-10-12.md`.
+- Next: feature PR review and CI, then authorized dev integration only. CRAN,
+  dev-to-main and default-integrator holds remain unchanged. The historical
+  authorization statements below describe the earlier documentation-only step.
 
 ## Session 2026-10-12 (medfit prerequisites cleared; additive plan reviewed)
 - medfit 0.8.0 is released on GitHub/r-universe at tag `v0.8.0`, SHA

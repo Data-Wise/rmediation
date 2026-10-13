@@ -1,7 +1,8 @@
 # Reviewed plan: additive SEMFit-pair MBCO
 
 Date: 2026-10-12 (America/Denver). RMediation base: `origin/dev` at `679bfc0`.
-Status: reviewed proposal; implementation not authorized or started.
+Status: implementation authorized by the next "Do next" instruction on 2026-10-12;
+locally implemented and verified on `feature/semfit-mbco`; PR review pending.
 
 ## Scope and evidence
 
@@ -49,7 +50,7 @@ relevant. medfit 0.8.0 at tag `v0.8.0` (`37171ec`) supplies the prerequisites.
    the Suggests minimum in this documentation PR; dependency/release policy
    requires a separate decision before shipping the new route.
 
-## Proposed API policy for implementation approval
+## Authorized API policy
 
 - Keep the public h0/h1 meaning: h0 is restricted, h1 is full; two SEMFits only.
   Mixed OpenMx/SEMFit pairs must error clearly.
@@ -87,21 +88,53 @@ since it was run.` in `test-mbco-parametric-semi.R`, the existing test
 changed. The documentation diff passes `git diff --check`; strict package check
 was not rerun for these status/plan-only edits.
 
-## Bounded implementation sequence (requires authorization)
+## Bounded implementation sequence
 
-- [ ] Establish optional-version/load-order dispatch tests; preserve current ci
+- [x] Establish optional-version/load-order dispatch tests; preserve current ci
       and OpenMx dispatch, including mixed-class error behavior.
-- [ ] Implement the asymptotic pair adapter and argument policy; compare both
+- [x] Implement the asymptotic pair adapter and argument policy; compare both
       individual nulls to the existing OpenMx oracle (221.045546, 0.083100,
       absolute tolerance 1e-6) and the product null to their minimum.
-- [ ] Test reversed pairs, df other than 1, unsupported types/arguments, weighted
+- [x] Test reversed pairs, df other than 1, unsupported types/arguments, weighted
       fits, incompatible rows/models, boundary refusal and warning propagation.
-- [ ] Demonstrate planted defects fail: larger-branch selection, shifted labels,
+- [x] Demonstrate planted defects fail: larger-branch selection, shifted labels,
       wrong df, missing boundary refusal and unsafe old-version dispatch.
       Reuse existing OpenMx controls rather than rebuilding competing fixtures.
-- [ ] Update Rd/NEWS and optional-dependency CI coverage: default CRAN medfit
+- [x] Update Rd/NEWS and optional-dependency CI coverage: default CRAN medfit
       cannot exercise the new method, so add an explicit >= 0.8.0 test job or
       equivalent release gate. Run the full suite, strict check and meaningful
       no-medfit/old-medfit gates; report skips and pass counts.
 - [ ] Review and integrate via a feature PR to dev. No CRAN submission or
       dev-to-main release until separately authorized and dependency holds clear.
+
+## Implementation evidence (2026-10-12)
+
+- `R/mbco_semfit.R` registers the pair and mixed-class routes from the existing
+  optional medfit registrar. `requireNamespace()` loads medfit before method
+  registration in either namespace load order. Versions that export SEMFit but
+  are older than 0.8.0 get a version error; medfit 0.3.2 still registers CI methods.
+- Full suite with scratch medfit 0.8.0: 511 passed, 0 failed, 2 existing OpenMx
+  warnings, 1 intentional old-version test skip. New adapter/mutation tests:
+  61 passed; wrong branch, shifted labels, hardcoded df, missing boundary refusal
+  and unsafe version dispatch all fail their corresponding assertions.
+- Eight installed-package gates passed, with medfit absent, 0.3.2, 0.7.0 and
+  0.8.0, each in both namespace load orders and without OpenMx. Installed global
+  medfit remains 0.7.0. No DESCRIPTION dependency or package-version change.
+- Strict full check (`--as-cran --run-donttest`, incoming and incoming-remote
+  enabled): 0 errors, 0 warnings, 1 NOTE for the unchanged August Date field.
+  The dependency-only/Suggests-only flavor with vignette rebuild enabled fails
+  because it removes rmarkdown (an existing Suggests used by the unchanged
+  vignettes). Code/examples flavor with `--ignore-vignettes` and
+  `--no-build-vignettes`: 0 errors, 0 warnings, 1 NOTE covering the omitted
+  vignette index and old Date. Full check rebuilt vignettes successfully.
+- New-file lint: 0 findings. All 20 URLs passed. Spelling terms reviewed and
+  legitimate package/method terms added to `inst/WORDLIST`.
+- `pkgdown::build_reference(topics = "mbco", lazy = FALSE)` executed the guarded
+  example. The scratch help page was inspected in the in-app browser: SEMFit
+  details and example output are readable, statistic 0.0831, df 1, p 0.7731.
+- `.github/workflows/semfit-mbco.yaml` adds absent, CRAN, tagged 0.7.0 and tagged
+  0.8.0 jobs, each without OpenMx. Both installed namespace orders and adapter
+  tests are gates. Existing OpenMx CI stays intact. The setup-r-dependencies
+  extra-package interface follows the official r-lib actions documentation.
+- Release and CRAN holds remain. Next: review the feature PR and all CI results
+  before integrating into dev; a development integration does not authorize release.

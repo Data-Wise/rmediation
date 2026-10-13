@@ -66,7 +66,7 @@ remotes::install_github("Data-Wise/rmediation", ref = "dev")
 
 The development version is also published at the
 [Data-Wise r-universe](https://data-wise.r-universe.dev/RMediation) as a
-pre-built binary (no compiler needed):
+prebuilt binary (no compiler needed):
 
 ```r
 install.packages(
@@ -207,17 +207,29 @@ summary(pn)
 
 ### Hypothesis Testing with MBCO
 
-For formal hypothesis testing of indirect effects using bootstrap:
+`mbco(h0, h1)` compares a fitted restricted model (`h0`) with its full
+model (`h1`). OpenMx models support asymptotic and bootstrap tests; see `?mbco`
+for clean-start product-null construction and bootstrap arguments.
+
+Two medfit `SEMFit` objects support asymptotic comparisons with **medfit >=
+0.8.0** (GitHub/r-universe), without OpenMx:
 
 ```r
-# Requires OpenMx model
-library(OpenMx)
-
-# ... define your OpenMx mediation model ...
-
-# Run MBCO test (H0: indirect effect = 0)
-mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
+d <- as.data.frame(RMediation::memory_exp)
+d$x <- as.numeric(d$x) - 1
+syntax <- paste("repetition ~ a1*x", "imagery ~ a2*x",
+                "recall ~ cp*x + b1*repetition + b2*imagery", sep = "\n")
+full <- medfit::fit_sem(syntax, d)
+null <- medfit::fit_sem(paste(syntax, "a1*b1 == 0", sep = "\n"), d)
+RMediation::mbco(null, full) # statistic 0.0831, df 1, p = 0.7731
 ```
+
+medfit fits each product-zero branch from clean starts and selects the smallest
+discrepancy. RMediation compares the fitted pair without refitting, retains
+medfit's compatibility checks, and refuses ordinary chi-square p-values for
+active tested bounds. Bootstrap types and OpenMx fitting controls are not
+supported for SEMFit pairs. The analyst remains responsible for substantive
+nesting and a valid reference distribution for other nonlinear restrictions.
 
 ## Key Functions
 
@@ -225,7 +237,7 @@ mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
 |----------|---------|
 | `medci()` | CI for product of two normal variables |
 | `ci()` | CI for any function of parameters (formulas, lavaan, ProductNormal, ProductNormal3) |
-| `mbco()` | Bootstrap hypothesis tests via MBCO |
+| `mbco()` | Asymptotic and OpenMx bootstrap MBCO hypothesis tests |
 | `pprodnormal()` | CDF of product of two normals |
 | `qprodnormal()` | Quantiles of product of two normals |
 | `pprodnormal3()` | Exact CDF of product of three normals (`a1*a2*b`) |
