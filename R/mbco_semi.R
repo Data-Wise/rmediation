@@ -8,7 +8,7 @@
                        checkSE = "No",
                        optim = "NPSOL",
                        precision = 1e-9) {
-  res <- OpenMx::mxCompare(h1, h0)
+  res <- .mbco_compare(h0, h1)
   mbco_chisq <- res$diffLL[2] # Asymptotic chi-square
   mbco_df <- res$df[2] - res$df[1] # df
   saved_options <- getOption("mxOptions")

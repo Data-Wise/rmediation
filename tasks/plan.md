@@ -112,3 +112,25 @@ version skip. Fresh overall line coverage: 74.82133% (expression: 76.53936%);
 are legacy names, explicit returns and existing long/commented lines.
 Task 2 remains open for null-equals-full/reversed OpenMx pairs and installed
 load orders. Release holds and integration defaults remain unchanged.
+
+## Observed comparison and load-order checkpoint (2026-10-12)
+
+Real fitted equal/reversed OpenMx pairs exposed invalid inference: the semi
+route returned df 0/-1 with p=0, and the asymptotic route returned invalid
+results. All three workers now share an observed-comparison gate requiring
+positive df and a finite nonnegative statistic before bootstrap sampling.
+This is a necessary condition, not proof of substantive nesting. Real refusal
+tests verify unchanged RNG/options and zero bootstrap comparison calls.
+Parametric post-bootstrap validation remains independently tested.
+
+Full suite: 634 passed, 0 failed, 2 existing warnings, 1 intentional version
+skip. Fresh line coverage: 75.02726%; expression: 76.70279%. Weakening the
+zero-df guard produced 1 failed assertion and 1 test error; restored pair tests
+passed 35 assertions. Both installed OpenMx orders passed, plus eight controlled
+medfit load-order gates (absent/CRAN/0.7/0.8, without OpenMx). The OpenMx gate
+is now in the release-R CI jobs. New files lint clean and spelling passed.
+Strict dependency/incoming check: 0 errors, 0 warnings, 1 NOTE (old Date and
+missing prebuilt vignette index), with vignettes/manual excluded.
+
+Task 2 implemented; Checkpoint A still requires PR review and green CI. Next:
+CI numerical/covariance edge cases. The 95% target and release holds remain.

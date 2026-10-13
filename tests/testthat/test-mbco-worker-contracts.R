@@ -96,7 +96,9 @@ test_that("parametric invalid results are refused with option cleanup", {
     list(diffLL = c(NA, 1), df = c(1, 2))
   )
   for (result in cases) {
-    local_mocked_bindings(mxCompare = function(...) result, .package = "OpenMx")
+    local_mocked_bindings(mxCompare = function(..., boot = FALSE) {
+      if (boot) result else list(diffLL = c(NA, 1), df = c(1, 2))
+    }, .package = "OpenMx")
     expect_error(
       mbco_parametric(f$null_b1, f$full, optim = "SLSQP"),
       "invalid results"

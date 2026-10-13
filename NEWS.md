@@ -20,6 +20,12 @@
 
 ## Bug fixes
 
+- OpenMx MBCO now rejects equal-df and reversed model pairs, and nonfinite
+  or negative observed statistics, before bootstrap sampling. Previously the
+  semiparametric route could report a significant result with df 0 or -1.
+  The restricted model must be supplied first; substantive nesting is still
+  the analyst's responsibility.
+
 - OpenMx bootstrap workers now restore global options on success and error.
   Semiparametric bootstrap rejects failed refits and nonfinite statistics, with
   explicit errors for singular sample or null covariances. Parametric bootstrap
