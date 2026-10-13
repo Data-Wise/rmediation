@@ -47,3 +47,5 @@ medfit session reply 2026-10-13 (information only; the medfit author has not dec
 
 **Effect on this ledger:** the Consequences bullet asking for early placement (after the G8 fix) is superseded:
 place it after 0.9.0 T3/T5 or as a 0.9.x on top of 0.9.0, to avoid redoing the mean-structure tasks. The five decisions above stand; the author has not yet accepted or changed them.
+
+**Update 2026-10-13 19:26Z (observed):** medfit PR #171 (G8 `anova()` fix) merged to medfit `dev` as `5ebdecf`. `fixed_x` is still not started or placed; no release named for dropping "experimental".
