@@ -13,6 +13,7 @@ next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do 
 
 ## Session 2026-10-12 (release policy grill)
 - Decided (ledger `planning/GRILL-semfit-dependency-policy-2026-10-12.md`): SEMFit route held out of the CRAN release; fix ships decoupled as 1.7.1 from `release/1.7.1` (hand-removal of PR #41 route hunks; plain revert conflicts in 5 files); gauss default hold lifted; public `v1.7.0` tag untouched. medfit 0.8.0 has no CRAN submission planned (medfit `.STATUS`).
+- Built `release/1.7.1` (`25fca7a`, local only, not pushed; worktree `~/.git-worktrees/rmediation/release-1.7.1`): SEMFit route hand-removed, DESCRIPTION/NEWS at 1.7.1. Full suite 593 expectations / 0 failed / 0 skipped / 2 existing OpenMx warnings; strict `R CMD check --as-cran --run-donttest` 0 errors / 0 warnings / 1 NOTE (Date field over a month old - update at submission). Also regenerated stale `man/dot-ci_core.Rd` (dev has the same stale Rd from #45). Still owed before submission: `cran-comments.md` says 1.7.0 and needs a 1.7.1 rewrite plus fresh r-hub/win-builder runs; Date field.
 - Holds unchanged: no CRAN submission or dev->main without explicit go-ahead.
 
 ## Session close 2026-10-12 (coverage campaign)
