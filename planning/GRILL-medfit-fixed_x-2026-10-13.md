@@ -40,3 +40,10 @@ Caveat: one simulated design; installed medfit is 0.7.0, not 0.8.0; timing depen
 - Which medfit release carries it (author's call); whether it counts toward "non-experimental".
 - Benchmark on the real implementation, and with weights and mean structure (0.9.0).
 - Whether to flip the default to `TRUE` later (revisit at 1.0).
+
+## 2026-10-13 medfit session reply (information only)
+
+medfit session reply 2026-10-13 (information only; the medfit author has not decided): (1) placement undecided; early placement is not free because fixed_x touches `.sem_complete`, `.sem_df`, the logLik method and `anova()`, the same code 0.9.0 T2/T3/T5 rewrite (df rule p(p+1)/2 + p, anova across mean-structure status), so building it first would force those tasks to be redone; after 0.9.0 T3/T5 or as a 0.9.x on top of 0.9.0 avoids that. The G8 `anova()` nesting fix is Data-Wise/medfit PR #171 (unmerged, CI running); 'refuse anova() across different fixed sets' would sit on top of its nesting check. (2) semantics not reviewed; two traps match known medfit facts (fixed exogenous moments must be excluded from the df rule; `.sem_complete` pairing drops free exogenous covariances when any `~~` statement touches a variable); explicit-statement error and conditional logLik are open for the author. (3) nothing decided on dropping the 'experimental' label; fixed_x alone would not settle it. Revised expectation: place after 0.9.0 T3/T5 or as 0.9.x, not before; the hold's exit remains driven by medfit's release plan.
+
+**Effect on this ledger:** the Consequences bullet asking for early placement (after the G8 fix) is superseded:
+place it after 0.9.0 T3/T5 or as a 0.9.x on top of 0.9.0, to avoid redoing the mean-structure tasks. The five decisions above stand; the author has not yet accepted or changed them.
