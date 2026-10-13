@@ -95,3 +95,20 @@ Validation: full suite 562 passed / 0 failed / 2 existing OpenMx warnings / 1 in
 ## First slice integration
 
 PR #42 merged into dev as `610676de40ad435088908ca18c127432edaa0103` after all ten checks passed on `ef7e31f`. Review hardened invalid-input tests with a successful fitting mock and zero-call assertion to prevent unfitted-model errors masking removed validators. Final local suite: 563 passed, zero failures, two existing warnings and one version skip. CI inventory generation/upload passed. Task 2 worker contracts remain pending.
+
+## Bootstrap worker checkpoint (2026-10-12)
+
+The next slice fixes demonstrated OpenMx option leaks on success/error and
+rejects failed semiparametric refits or nonfinite replicate statistics. An
+actual degenerate resample triggers the refit refusal; controlled status/error
+cases cover cleanup. Fixed seeds reproduce both bootstrap routes, consuming
+the caller RNG stream without changing RNGkind. Singular sample/null covariance
+errors are explicit; parametric reported results are validated. No replicate
+retry/drop policy or covariance regularization is introduced.
+
+Full suite: 599 passed, 0 failed, 2 existing OpenMx warnings, 1 intentional
+version skip. Fresh overall line coverage: 74.82133% (expression: 76.53936%);
+95% is still pending. New tests lint clean; remaining runtime lint findings
+are legacy names, explicit returns and existing long/commented lines.
+Task 2 remains open for null-equals-full/reversed OpenMx pairs and installed
+load orders. Release holds and integration defaults remain unchanged.
