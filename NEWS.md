@@ -1,3 +1,132 @@
+# RMediation 1.7.1
+
+## Testing
+
+- Expanded public OpenMx MBCO argument, bootstrap-routing and optimizer-fallback
+  tests, including result-field mutation checks and fitted RAM smoke tests.
+  Coverage CI now retains line/expression summaries and uncovered-line artifacts.
+
+## Bug fixes
+
+- For numeric/lavaan formula CIs, `MCError` now uses `SE / sqrt(n.mc)`,
+  the sampling standard error of the simulated mean. The previous `SE / n.mc`
+  understated simulation uncertainty. This is not an endpoint error estimate.
+- `ci(type = "all", H0 = TRUE)` now forwards `H0`, `mu0` and `Sigma0` to
+  its Monte Carlo component, preserving the alternative/null result pair
+  rather than silently ignoring the requested null distribution.
+
+- OpenMx MBCO now rejects equal-df and reversed model pairs, and nonfinite
+  or negative observed statistics, before bootstrap sampling. Previously the
+  semiparametric route could report a significant result with df 0 or -1.
+  The restricted model must be supplied first; substantive nesting is still
+  the analyst's responsibility.
+
+- OpenMx bootstrap workers now restore global options on success and error.
+  Semiparametric bootstrap rejects failed refits and nonfinite statistics, with
+  explicit errors for singular sample or null covariances. Parametric bootstrap
+  rejects invalid reported statistics, degrees of freedom and p-values.
+
+- `mbco()` no longer rejects fitted OpenMx RAM models with "h0 must be an
+  MxModel". The check compared `class(h0)` to `"MxModel"`, which fails for
+  subclasses such as `MxRAMModel`; it now uses `methods::is()`. Verified for
+  `type = "asymp"` only; the bootstrap types (`"parametric"`, `"semi"`) have
+  not been exercised on fitted RAM models (rmediation#35).
+- The `?mbco` example had shifted path labels (`endVar` started with `"x"`, so
+  the labels `a1`, `a2`, `cp` landed on the wrong paths) and passed a tibble to
+  `mxData()`. Both are fixed. The example now tests `a1 * b1 = 0` with one
+  linear null per path (`a1 == 0`, `b1 == 0`) and reports the smaller statistic
+  (0.0831), because a single nonlinear `ind1 == 0` null can converge to the
+  wrong branch (221.05) (rmediation#35).
+
+## Documentation
+
+- `?mbco` now has a Details section on testing a product null (`a*b = 0`): fit
+  one linear null per path and report the smaller statistic, because a single
+  nonlinear null can converge to the wrong branch. It also says to build `h0`
+  from the unfitted model, since a constraint refit from the fitted model's
+  estimates can stop at an infeasible point (diffLL 0) (rmediation#35).
+
+## Tests
+
+- Added a known-answer OpenMx fixture on `memory_exp` (linear nulls
+  `a1 == 0`: 221.045546 and `b1 == 0`: 0.083100) and an end-to-end `mbco()`
+  test against it.
+
+# RMediation 1.7.0 (2026-08-16)
+
+## Correctness fix: `pprodnormal3()` on ill-conditioned covariance (#27)
+
+`pprodnormal3()` (and its alias `p_prod3()`) returned materially wrong
+probabilities when the `(X, Y)` covariance block was ill-conditioned, silently
+and with no diagnostic. At `rho = 0.999` the error reached 24% at `q = 0.5`,
+and 92% in relative terms in the lower tail. Tightening `tol` did not help --
+the old integrator converged to a stable but incorrect value. Because
+`cdf()`, `dist_quantile()`, `confint()` and `ci()` invert this CDF by
+root-finding, all of them inherited the error.
+
+* **The default integration method is now `"gauss"`** -- tensor-product
+  Gauss-Legendre quadrature on a domain partitioned at the coordinate axes,
+  with the node count escalated automatically until successive rules agree to
+  `tol`. Partitioning is what makes a fixed-grid rule valid here: the integrand
+  has a kink along both axes, and an unpartitioned grid can return values
+  outside `[0, 1]`.
+
+* **This changes results.** On well-conditioned input the new default agrees
+  with the old one to about `1e-6`. On ill-conditioned input it differs
+  substantially -- that difference is the correction. The new method is also
+  faster (roughly 8-20x at the covariances tested).
+
+* `method = "hcubature"` selects the previous integrator, retained for
+  cross-checking and backward comparison. It is not recommended when the
+  `(X, Y)` block is ill-conditioned.
+
+* The error figures above were measured at `q = 0.5` with
+  `mean = c(0.2, 0.1, 0)` on one family of covariance matrices: unit
+  variances, correlation `0.5` between `Z` and each of `X` and `Y`, and `rho`
+  between `X` and `Y` in `{0.5, 0.99, 0.999, 0.9999}`. The reference value
+  was a 1024-node Gauss-Legendre rule that agreed with the 512-node rule to
+  `3e-7` or better and lay within 3 standard errors of a `1e7`-draw Monte
+  Carlo check. The magnitudes describe that family: the error is not a
+  monotone function of the condition number across arbitrary covariance
+  matrices, and a well-conditioned matrix can show a smaller error than an
+  ill-conditioned one.
+
+* New `nodes` argument forces a fixed number of Gauss-Legendre nodes per
+  dimension instead of escalating adaptively.
+
+* New `diagnostics` argument. When `TRUE`, the returned value carries `"error"`
+  (the gap between the last two quadrature rules -- a real convergence
+  estimate) and `"nodes"` attributes. It defaults to `FALSE` so the return
+  value stays a bare numeric for existing callers. The meaning of `"error"`
+  differs by `method` and is `NA` when `nodes` is supplied; see
+  `?pprodnormal3` for the per-method contract.
+
+* `pprodnormal3()` now warns when quadrature reaches the node cap without
+  meeting `tol`, instead of returning a wrong answer silently. The warning
+  reports the gap between the last two rules, which bounds the remaining
+  discretization error, and does not assert a cause: a well-conditioned
+  covariance reaches the cap too when `tol` is tighter than 2048 nodes can
+  deliver (issue #31).
+
+* **Fixed: the documented `ProductNormal3()` constructor call raised an error.**
+  The `method` property had no default, and the validator rejected the resulting
+  empty value, so the form shown in the README and the getting-started
+  vignette --
+
+  ```r
+  ProductNormal3(mu = mu, Sigma = Sigma)
+  #> Error: method must be 'hcubature'
+  ```
+
+  -- failed for anyone who copied it. `method` now defaults to `"gauss"`, and
+  the call works as documented. Passing `method` explicitly was, and remains, a
+  valid alternative.
+
+* The new default also fixes a second, previously unreported failure of the old
+  integrator: at large standardized means (`mean / sd` beyond roughly 8) it
+  returned exactly `0` where the true probability is around `0.46`. That failure
+  was independent of conditioning and equally silent.
+
 # RMediation 1.6.1 (2026-06-30)
 
 ## Naming convention cleanup

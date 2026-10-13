@@ -59,3 +59,12 @@ jobs:
           upload-snapshots: true
           args: 'c("--no-manual", "--ignore-vignettes")'
           build_args: 'c("--no-manual")'
+
+      - name: Verify installed OpenMx namespace load orders
+        if: matrix.config.r == 'release'
+        shell: bash
+        run: |
+          gate_lib=$(mktemp -d)
+          R CMD INSTALL --library="$gate_lib" .
+          Rscript scripts/check-openmx-load.R "$gate_lib" RMediation
+          Rscript scripts/check-openmx-load.R "$gate_lib" OpenMx

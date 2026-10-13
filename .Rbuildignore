@@ -10,13 +10,16 @@
 ^\.claude$
 ^\.remember$
 ^CLAUDE\.md$
+^AGENTS\.md$
 ^STATUS\.md$
 ^\.STATUS$
 ^\.STATUS\.backup$
 ^GEMINI\.md$
 ^QWEN\.md$
 ^ORCHESTRATE-.*\.md$
+^SPEC-.*\.md$
 ^DEBUG-REPORT-.*\.md$
+^\.token-optimizer$
 ^\.rforge\.yaml$
 ^\.git$
 ^\.github$
@@ -48,3 +51,7 @@
 ^doc$
 ^Meta$
 ^data-raw$
+^CRAN-SUBMISSION$
+^scripts$
+
+^tasks$

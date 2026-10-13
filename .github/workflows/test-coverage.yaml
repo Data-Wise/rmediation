@@ -38,7 +38,16 @@ jobs:
             install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
           )
           covr::to_cobertura(cov)
+          saveRDS(cov, "coverage.rds")
         shell: Rscript {0}
+
+      - name: Coverage inventory
+        run: Rscript scripts/report-coverage.R coverage-report coverage.rds
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-inventory
+          path: coverage-report
 
       - uses: codecov/codecov-action@v4
         with:

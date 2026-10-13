@@ -57,14 +57,14 @@ S7::S4_register(ProductNormal)
 #'
 #' @param mu Numeric vector of means of length 3: `c(a1_hat, a2_hat, b_hat)`.
 #' @param Sigma 3x3 asymptotic covariance matrix of `(a1, a2, b)`.
-#' @param method Integration method. Currently only `"hcubature"` is
-#'   supported.
+#' @param method Integration method passed to [pprodnormal3()]: `"gauss"`
+#'   (default) or `"hcubature"`. See the Note in [pprodnormal3()] for why
+#'   `"gauss"` became the default in version 1.7.0.
 #' @export
 #' @examples
 #' obj <- ProductNormal3(
 #'   mu = c(0.5, 0.3, 0.2),
-#'   Sigma = diag(3),
-#'   method = "hcubature"
+#'   Sigma = diag(3)
 #' )
 #' obj
 #' cdf(obj, q = 1)
@@ -75,7 +75,7 @@ ProductNormal3 <- S7::new_class("ProductNormal3",
   properties = list(
     mu = S7::class_numeric,
     Sigma = S7::class_numeric,
-    method = S7::class_character
+    method = S7::new_property(S7::class_character, default = "gauss")
   ),
   validator = function(self) {
     if (length(self@mu) != 3) {
@@ -91,8 +91,9 @@ ProductNormal3 <- S7::new_class("ProductNormal3",
     if (any(eigen_vals < -1e-8)) {
       stop("Sigma must be positive semi-definite")
     }
-    if (length(self@method) != 1 || !(self@method %in% "hcubature")) {
-      stop("method must be 'hcubature'")
+    if (length(self@method) != 1 ||
+      !(self@method %in% c("gauss", "hcubature"))) {
+      stop("method must be 'gauss' or 'hcubature'")
     }
     NULL
   }
@@ -140,6 +141,14 @@ dist_quantile <- S7::new_generic("dist_quantile", "object")
 #' @return A confidence interval (numeric vector of lower/upper bounds, or a
 #'   list) as returned by the dispatched method.
 #' @export
+#' @details
+#' For numeric vectors or lavaan fits with a formula quantity, the Monte Carlo
+#' component reports MCError as the sampling standard error of the simulated mean
+#' (SE / sqrt(n.mc)); this is not the error of the interval endpoints. With
+#' H0 = TRUE, the Monte Carlo result contains the alternative and null results.
+#' The type = "all" route preserves H0, mu0 and Sigma0 for its MC component;
+#' the asymptotic component remains the interval at the supplied estimates.
+#'
 #' @examples
 #' pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
 #' ci(pn)
@@ -175,6 +184,18 @@ S7::S4_register(MBCOResult)
 #'
 #' This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a function of indirect effects.
 #'
+#' @details
+#' **Testing a product null (\eqn{a b = 0}).** The null \eqn{ab = 0} holds when
+#' \eqn{a = 0} or \eqn{b = 0}. A single nonlinear constraint such as
+#' `ind == 0` can converge to either branch, and the optimizer may return the
+#' branch with the larger statistic, which gives a wrong test. To test a product
+#' of two paths, fit one linear null per path (`a == 0` and `b == 0`), run
+#' `mbco()` on each, and report the smaller statistic with 1 degree of freedom
+#' (see the example).
+#'
+#' Build each `h0` from the unfitted model. A constraint refit from the fitted
+#' model's estimates can stop at an infeasible point and return a statistic of 0.
+#'
 #' @param h0 An \code{OpenMx} model estimated under a null hypothesis, which is a more constrained model
 #' @param h1 An \code{OpenMx} model estimated under an alternative hypothesis, which is a less constrained model. This is usually a model hypothesized by a researcher.
 #' @param ... Additional arguments.
@@ -185,8 +206,9 @@ S7::S4_register(MBCOResult)
 #' @examples
 #' \dontrun{
 #' data(memory_exp)
+#' memory_exp <- as.data.frame(memory_exp) # mxData() does not accept tibbles
 #' memory_exp$x <- as.numeric(memory_exp$x) - 1 # manually creating dummy codes
-#' endVar <- c("x", "repetition", "imagery", "recall")
+#' endVar <- c("repetition", "imagery", "recall") # endogenous variables (not "x")
 #' manifests <- c("x", "repetition", "imagery", "recall")
 #' full_model <- OpenMx::mxModel(
 #'   "memory_example",
@@ -224,7 +246,7 @@ S7::S4_register(MBCOResult)
 #'   ),
 #'   OpenMx::mxPath(
 #'     from = "one",
-#'     to = endVar,
+#'     to = manifests,
 #'     arrows = 1,
 #'     free = TRUE,
 #'     values = .1
@@ -235,14 +257,29 @@ S7::S4_register(MBCOResult)
 #'   OpenMx::mxCI("ind2", type = "both"),
 #'   OpenMx::mxData(observed = memory_exp, type = "raw")
 #' )
-#' ## Reduced  Model for indirect effect: a1*b1
-#' null_model1 <- OpenMx::mxModel(
+#' ## H0: a1*b1 = 0 holds if a1 = 0 or b1 = 0. Fit one linear null per path and
+#' ## report the smaller statistic (what medfit::mbco_sem() automates). A single
+#' ## nonlinear null ind1 == 0 can converge to the wrong branch (rmediation#35).
+#' ## Build each h0 from the unfitted model: a constraint refit from the fitted
+#' ## model's estimates can stop at an infeasible point.
+#' null_a1 <- OpenMx::mxModel(
 #'   model = full_model,
-#'   name = "Null Model 1",
-#'   OpenMx::mxConstraint(ind1 == 0, name = "ind1_eq0_constr")
+#'   name = "Null a1 = 0",
+#'   OpenMx::mxConstraint(a1 == 0, name = "a1_eq0_constr")
+#' )
+#' null_b1 <- OpenMx::mxModel(
+#'   model = full_model,
+#'   name = "Null b1 = 0",
+#'   OpenMx::mxConstraint(b1 == 0, name = "b1_eq0_constr")
 #' )
 #' full_model <- OpenMx::mxTryHard(full_model, checkHess = FALSE, silent = TRUE)
-#' null_model1 <- OpenMx::mxTryHard(null_model1, checkHess = FALSE, silent = TRUE)
-#' mbco(null_model1, full_model)
+#' null_a1 <- OpenMx::mxTryHard(null_a1, checkHess = FALSE, silent = TRUE)
+#' null_b1 <- OpenMx::mxTryHard(null_b1, checkHess = FALSE, silent = TRUE)
+#' res_a1 <- mbco(null_a1, full_model)
+#' res_b1 <- mbco(null_b1, full_model)
+#' res_a1
+#' res_b1
+#' ## Test of H0: a1*b1 = 0 (df = 1): the smaller of the two statistics
+#' min(res_a1@statistic, res_b1@statistic)
 #' }
 mbco <- S7::new_generic("mbco", c("h0", "h1"))

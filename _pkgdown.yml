@@ -25,6 +25,8 @@ home:
   sidebar:
     structure: [links, license, citation, authors, dev]
   links:
+  - text: "Try It Online (Shiny apps)"
+    href: https://data-wise.github.io/mediation-apps/
   - text: "Source Code"
     href: https://github.com/data-wise/rmediation
   - text: "Report Issues"

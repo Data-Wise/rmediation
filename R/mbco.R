@@ -21,8 +21,8 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
   }
 
   # Input validation (check class without requiring OpenMx at load time)
-  if (!"MxModel" %in% class(h0)) stop("h0 must be an MxModel")
-  if (!"MxModel" %in% class(h1)) stop("h1 must be an MxModel")
+  if (!methods::is(h0, "MxModel")) stop("h0 must be an MxModel")
+  if (!methods::is(h1, "MxModel")) stop("h1 must be an MxModel")
 
   checkmate::assert_count(R, positive = TRUE)
   type <- match.arg(type, c("asymp", "parametric", "semi"))

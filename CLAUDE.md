@@ -72,7 +72,26 @@ devtools::test()
 ### Distribution Functions
 
 - `pprodnormal()` / `qprodnormal()`: CDF and quantile for product of two normals
+- `pprodnormal3()`: CDF for the product of **three** normals (serial indirect
+  effects `a1 * a2 * b`); `p_prod3()` is a superseded alias
 - `pMC()` / `qMC()`: Monte Carlo-based for arbitrary functions
+
+**`pprodnormal3()` integrator (v1.7.0+):** the default is `method = "gauss"` —
+tensor-product Gauss-Legendre on a domain partitioned at the coordinate axes,
+with node count escalated until successive rules agree to `tol`. Do **not**
+switch the default back to `"hcubature"`: it returns silently wrong values on
+ill-conditioned covariance (24% error at rho = 0.999, up to 92% relative in the
+lower tail) and exactly `0` at large standardized means. It is retained only for
+cross-checking. See `SPEC-27-prod3-integrator.md` and issue #27.
+
+Two invariants in `R/prod3_core.R` that look like bugs and are not — both carry
+explanatory comments and regression tests, so read those before "fixing" either:
+
+- The truncation bound is **derived** from a tail-mass argument
+  (`.prod3_bound()`), never tuned. Truncation error is a bias, and bias is
+  invisible to the self-consistency check.
+- The domain splits at 0 even when `|m| > bound`, which gives one cell reversed
+  limits and negative weights. The two cells telescope to the intended box.
 
 ### Key Dependencies
 

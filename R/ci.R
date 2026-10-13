@@ -42,7 +42,7 @@
 #'   specify \code{plot="TRUE"}. The default value is \code{FALSE}.
 #' @param n.mc Monte Carlo sample size (default: 1e5). Larger values provide
 #'   more precision but take longer to compute. For most applications, 1e5
-#'   provides adequate precision (MC error < 0.05% of SE).
+#'   reduces the sampling error of the simulated mean to about 0.32% of SE.
 #' @param H0 False. If \code{TRUE}, it will estimate the sampling distribution
 #'   of \eqn{H_0: f(\mathbf{b}) = 0}. See the arguments \code{mu0} and \code{Sigma0}.
 #' @param mu0 a \link{vector} of means (e.g., coefficient estimates) for the
@@ -59,7 +59,7 @@
 #'   confidence limits (at significance level \eqn{\alpha}),}
 #'   \item{Estimate}{a point estimate of the quantity of interest,}
 #'   \item{SE}{standard error of the quantity of interest,} \item{MC Error}{When
-#'   \code{type="MC"}, error of the Monte Carlo estimate.} When
+#'   \code{type="MC"}, sampling standard error of the simulated mean, SE / sqrt(n.mc).} When
 #'   \code{type="all"}, \code{ci} returns a \link{list} of two objects, each of
 #'   which a \link{list} that contains the results produced by each method as
 #'   described above.
@@ -232,7 +232,11 @@
       alpha = alpha,
       plot = plot,
       plotCI = plotCI,
-      n.mc = n.mc
+      n.mc = n.mc,
+      H0 = H0,
+      mu0 = mu0,
+      Sigma0 = Sigma0,
+      ...
     )
     res2 <- confintAsymp(
       mu = mu,

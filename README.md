@@ -21,6 +21,17 @@ The package supports:
 - **Parallel mediators** with complex indirect effects
 - **Any product of normal random variables** for custom applications
 
+## Try It Online (No Install)
+
+The core confidence-interval methods run in the browser through the
+[mediation-apps](https://data-wise.github.io/mediation-apps/) Shiny front end—no R
+installation required:
+
+- **[Distribution-of-Product CI calculator](https://data-wise.github.io/mediation-apps/medci/)** — a live front end for `medci()`
+- **Monte Carlo / Asymptotic-Delta CI calculator** — built on `ci(type = "mc")` and `ci(type = "asymp")`
+
+Useful for quick checks, teaching, and for collaborators who do not use R.
+
 ## Why RMediation?
 
 Traditional methods (e.g., Sobel test) assume the indirect effect *ab* follows a normal distribution. This assumption is often violated because the product of two normal variables is *not* normally distributed—especially when effect sizes are small or sample sizes are modest.
@@ -165,6 +176,11 @@ ci(pn3, level = 0.95)
 # Direct CDF query
 pprodnormal3(q = 0, mean = mu, cov = Sigma)  # P(a1*a2*b <= 0)
 ```
+
+> **Requires RMediation >= 1.7.0.** Earlier versions return wrong values when the
+> `a1`/`a2` covariance is ill-conditioned — silently, and without a diagnostic.
+> Strongly correlated path estimates are ordinary in mediation models, so this
+> affects realistic input.
 
 ### Using the S7 ProductNormal Class
 
