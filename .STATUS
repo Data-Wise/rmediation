@@ -11,6 +11,11 @@ next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do 
 ## Progress: 100
 ## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
 
+## Session 2026-10-12 (bootstrap worker PR reviewed and merged)
+- PR #43 squash-merged into dev as `466e9dd80b2046abf7151b5634ce59b70dd76a88`; reviewed head `0089c9a`. All ten PR checks passed, including four R-CMD-check platforms, four optional-medfit compatibility jobs, coverage and Codecov.
+- Local review found no blocking issues. Inverting the convergence acceptance guard caused 1 failed assertion and 2 test errors; restored source passed all 36 worker-contract assertions. Prior full suite: 599 passed, 0 failed, 2 existing warnings, 1 intentional version skip.
+- Next: null-equals-full/reversed OpenMx pairs and installed load orders, then Checkpoint A and CI numerical/covariance edge cases. Coverage 74.82133%; 95% remains pending. CRAN, dev-to-main and integrator holds remain unchanged.
+
 ## Session 2026-10-12 (bootstrap worker contracts)
 - Feature `feature/mbco-worker-contracts`: restore OpenMx global options on success/error, reject failed semiparametric refits and nonfinite statistics, explicit covariance errors and parametric result validity checks. Real degenerate-resample refit failure and both seeded bootstrap routes are exercised.
 - Full suite: 599 passed / 0 failed / 2 existing OpenMx warnings / 1 intentional version skip. Fresh line coverage 74.82133%, expression 76.53936%; 95% still pending. New test file lint clean; runtime legacy lint remains.
