@@ -164,8 +164,8 @@ error), and does not need OpenMx. The OpenMx paths are unchanged.
 verified 1.7.1 candidate sits on branch `release/1.7.1` (draft PR #46, route
 removed, not merged); never start `devtools::submit_cran()` without an explicit
 instruction. The hold lifts only when the SEM features are no longer
-experimental and `fixed.x` and mean structure are completed in medfit (medfit
-0.9.0-0.11.0 plan). Then Suggests rises to `medfit >= 0.8.0`. Decisions and
+experimental and `fixed.x` (a proposed `fixed_x` argument with per-variable
+selection) and mean structure are completed in medfit (0.9.0-0.11.0 plan). Then Suggests rises to `medfit >= 0.8.0`. Decisions and
 reasons: `planning/GRILL-semfit-dependency-policy-2026-10-12.md` (gitignored but
 force-tracked), `.STATUS`.
 
