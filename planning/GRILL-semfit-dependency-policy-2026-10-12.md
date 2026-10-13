@@ -66,3 +66,7 @@ Reversing the default after CRAN would move numbers a second time.
 - **2026-10-13 user hold:** CRAN submission waits until both RMediation and medfit are mature. This subsumes
   the earlier 'no submission without go-ahead' gate; "mature" is undefined, so it needs a definition
   before it can act as a trigger.
+- **Definition of mature (user, 2026-10-13):** SEM features not experimental, and `fixed.x` and mean
+  structure completed. Read-only status the same day: medfit native SEM and `SEMFit` still experimental;
+  mean structure planned for medfit 0.9.0-0.11.0, not started; no `fixed.x` item found in medfit's
+  NEWS/.STATUS. Branch 4's trigger (medfit 0.8.0 on CRAN) is now necessary but not sufficient.
