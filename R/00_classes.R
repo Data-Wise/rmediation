@@ -177,7 +177,28 @@ S7::S4_register(MBCOResult)
 #' This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a function of indirect effects.
 #'
 #' @details
-#' **Testing a product null (\eqn{a b = 0}).** The null \eqn{ab = 0} holds when
+#' **Two medfit SEMFits (medfit >= 0.8.0).** Supply the already-fitted
+#' restricted model as `h0` and the full model as `h1`. Only `type = "asymp"`
+#' is supported; `alpha` is validated as for OpenMx. The adapter compares the
+#' fits through `stats::anova(h1, h0)` and uses the degrees-of-freedom difference.
+#' It never refits. Bootstrap types, mixed model classes, OpenMx-only fitting
+#' controls (`R`, `checkHess`, `checkSE`, `optim`, `precision`) and unused dots
+#' are rejected. This route does not require OpenMx.
+#'
+#' medfit checks convergence, identical data and observed variables, unweighted
+#' fits, and parameter-table nesting. The analyst must establish substantive
+#' nesting and a valid chi-square reference distribution; arbitrary nonlinear
+#' restrictions do not necessarily have one. An active tested bound or inequality
+#' at the null causes an error here because the ordinary chi-square p-value is
+#' invalid. Other medfit warnings propagate.
+#'
+#' For a product-zero null, `medfit::fit_sem()` with `a*b == 0` fits one branch
+#' per factor from clean starts and selects the smallest discrepancy. Pass that
+#' fitted null and the full fit to `mbco()`. medfit is optional: this route needs
+#' 0.8.0 or later (GitHub/r-universe); existing `ci()` integration needs only
+#' 0.2.0. No change to the CRAN dependency minimum is implied.
+#'
+#' **Testing an OpenMx product null (\eqn{a b = 0}).** The null \eqn{ab = 0} holds when
 #' \eqn{a = 0} or \eqn{b = 0}. A single nonlinear constraint such as
 #' `ind == 0` can converge to either branch, and the optimizer may return the
 #' branch with the larger statistic, which gives a wrong test. To test a product
@@ -188,14 +209,24 @@ S7::S4_register(MBCOResult)
 #' Build each `h0` from the unfitted model. A constraint refit from the fitted
 #' model's estimates can stop at an infeasible point and return a statistic of 0.
 #'
-#' @param h0 An \code{OpenMx} model estimated under a null hypothesis, which is a more constrained model
-#' @param h1 An \code{OpenMx} model estimated under an alternative hypothesis, which is a less constrained model. This is usually a model hypothesized by a researcher.
+#' @param h0 A fitted restricted \code{OpenMx} model or medfit \code{SEMFit} under the null hypothesis.
+#' @param h1 A fitted full model of the same class as \code{h0}, under the alternative hypothesis.
 #' @param ... Additional arguments.
 #' @return An object of class \code{MBCOResult} containing \item{statistic}{asymptotic chi-squared test statistic value} \item{df}{chi-squared df} \item{p_value}{chi-squared p-value computed based on the method specified by the argument \code{type}} \item{type}{The type of test performed}
 #' @author Davood Tofighi \email{dtofighi@@gmail.com}
 #' @importFrom checkmate assert_class assert_count assert_number assert_choice
 #' @export
 #' @examples
+#' if (requireNamespace("medfit", quietly = TRUE) &&
+#'     utils::packageVersion("medfit") >= "0.8.0") {
+#'   d <- as.data.frame(memory_exp)
+#'   d$x <- as.numeric(d$x) - 1
+#'   syntax <- paste("repetition ~ a1*x", "imagery ~ a2*x",
+#'                   "recall ~ cp*x + b1*repetition + b2*imagery", sep = "\n")
+#'   full <- medfit::fit_sem(syntax, d)
+#'   null <- medfit::fit_sem(paste(syntax, "a1*b1 == 0", sep = "\n"), d)
+#'   mbco(null, full) # statistic 0.0831, df 1
+#' }
 #' \dontrun{
 #' data(memory_exp)
 #' memory_exp <- as.data.frame(memory_exp) # mxData() does not accept tibbles

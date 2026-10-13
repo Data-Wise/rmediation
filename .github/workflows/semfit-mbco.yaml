@@ -1,0 +1,50 @@
+name: SEMFit MBCO compatibility
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+permissions: read-all
+jobs:
+  semfit:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {label: absent, mode: none, package: 'any::testthat'}
+          - {label: CRAN, mode: old, package: 'any::medfit'}
+          - {label: '0.7.0', mode: old, package: 'github::Data-Wise/medfit@v0.7.0'}
+          - {label: '0.8.0', mode: new, package: 'github::Data-Wise/medfit@v0.8.0'}
+    name: medfit ${{ matrix.label }} without OpenMx
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      _R_CHECK_FORCE_SUGGESTS_: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          dependencies: '"hard"'
+          extra-packages: |
+            any::testthat
+            any::pkgload
+            ${{ matrix.package }}
+      - name: Prepare controlled library and install RMediation
+        shell: bash
+        run: |
+          gate_lib=$(mktemp -d)
+          echo "SEMFIT_GATE_LIB=$gate_lib" >> "$GITHUB_ENV"
+          Rscript scripts/prepare-semfit-library.R "$gate_lib" "${{ matrix.mode }}"
+          R CMD INSTALL --library="$gate_lib" .
+      - name: Verify both namespace load orders
+        run: |
+          Rscript scripts/check-semfit-load.R "$SEMFIT_GATE_LIB" "${{ matrix.mode }}" RMediation
+          Rscript scripts/check-semfit-load.R "$SEMFIT_GATE_LIB" "${{ matrix.mode }}" medfit
+      - name: Run adapter tests in controlled library
+        shell: Rscript {0}
+        run: |
+          .libPaths(Sys.getenv("SEMFIT_GATE_LIB"), include.site = FALSE)
+          testthat::test_local(filter = "mbco-semfit", stop_on_failure = TRUE)

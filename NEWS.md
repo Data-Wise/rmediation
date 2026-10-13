@@ -1,5 +1,17 @@
 # RMediation 1.7.1 (development version)
 
+## New features
+
+- `mbco(h0, h1, type = "asymp")` accepts two fitted medfit `SEMFit` objects
+  with medfit >= 0.8.0. It returns `MBCOResult` using `stats::anova()` without
+  refitting or requiring OpenMx. The restricted fit must come first; df is the
+  actual difference. Active tested bounds refuse an invalid chi-square p-value.
+  Bootstrap types, mixed classes and unused fitting controls error. Existing
+  OpenMx paths and CI integration with medfit >= 0.2.0 are preserved.
+- medfit remains optional in Suggests >= 0.2.0. The SEMFit route needs the
+  GitHub/r-universe medfit release; CRAN medfit 0.3.2 cannot exercise it. This
+  development change does not lift the CRAN submission or development-to-main hold.
+
 ## Bug fixes
 
 - `mbco()` no longer rejects fitted OpenMx RAM models with "h0 must be an
