@@ -77,3 +77,9 @@ Reversing the default after CRAN would move numbers a second time.
 - **2026-10-13 confirmed by user:** the `fixed.x` in the maturity definition is medfit's exogenous-moments
   item (native-SEM Q3, mean-structure item 4). The definition is complete: SEM features non-experimental,
   `fixed.x` and mean structure completed.
+- **2026-10-13 medfit session reply (information only):** no CRAN end condition or date (0.5.0-0.8.0
+  GitHub/r-universe only; 0.8.0 grill: CRAN submission not in release). Nothing defines 'SEM no longer
+  experimental'; 0.11.0 (latent means) is the earliest candidate, undecided. `fixed.x` is a documented
+  difference (exogenous means freed vs lavaan default `fixed.x = TRUE`), not a standalone item and no
+  `fixed.x` argument is planned. `anova(h1, h0)` on SEMFit intended unchanged through 0.9.0-0.11.0 (plan
+  under review). Open for the user: what 'completed' means for fixed.x, and which release ends 'experimental'.
