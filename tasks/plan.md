@@ -159,6 +159,6 @@ Line coverage 75.40805%; expression 76.93498%. ci.R: 78.51240% -> 82.4%;
 confintMC.R: 42.10526% -> 44.21053%; confintAsymp.R remains 29.50820% (plot
 branches remain). New tests lint clean and spelling passed. Strict dependency
 and incoming check: 0 errors / 0 warnings / 1 NOTE (old Date/prebuilt vignette
-index); vignettes/manual excluded. PR review/CI pending. Task 3 remains open
+index); vignettes/manual excluded. PR #45 reviewed and squash-merged into dev as `60be189919a5dd1966982e6a2ec504a848147d12` (reviewed head `a1ccce4`); all ten checks passed, with no blocking review findings. Task 3 remains open
 for covariance mapping/validation, confidence/MC size guards and extraction
 errors; no denominator exclusions or release-hold changes.
