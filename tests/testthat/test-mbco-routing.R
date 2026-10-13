@@ -1,6 +1,11 @@
 test_that("public OpenMx dispatch validates controls before fitting", {
   skip_if_not_installed("OpenMx")
   h <- .memory_exp_ram()
+  fits <- 0L
+  local_mocked_bindings(mbco_asymp = function(...) {
+    fits <<- fits + 1L
+    list(chisq = 0, df = 1, p = 1)
+  })
   bad <- list(
     R = list(0, -1, 1.5, NA_real_, Inf),
     alpha = list(-.1, 1.1, NA_real_, Inf),
@@ -17,6 +22,7 @@ test_that("public OpenMx dispatch validates controls before fitting", {
   }
   expect_error(mbco(list(), h), "h0 must be an MxModel")
   expect_error(mbco(h, list()), "h1 must be an MxModel")
+  expect_identical(fits, 0L)
 })
 
 test_that("public bootstrap routes preserve controls and result fields", {
