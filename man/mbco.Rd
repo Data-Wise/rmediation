@@ -41,6 +41,13 @@ fitted null and the full fit to \code{mbco()}. medfit is optional: this route ne
 0.8.0 or later (GitHub/r-universe); existing \code{ci()} integration needs only
 0.2.0. No change to the CRAN dependency minimum is implied.
 
+OpenMx bootstrap methods restore global options on success and error.
+Set a seed before calling for reproducibility; bootstrap sampling consumes the
+current RNG stream. The semiparametric method requires positive-definite sample
+and null covariances and stops at the first failed refit or nonfinite replicate
+statistic. It does not retry or discard failed replicates. Parametric results
+require a finite nonnegative statistic, positive df, and a p-value in [0, 1].
+
 \strong{Testing an OpenMx product null (\eqn{a b = 0}).} The null \eqn{ab = 0} holds when
 \eqn{a = 0} or \eqn{b = 0}. A single nonlinear constraint such as
 \code{ind == 0} can converge to either branch, and the optimizer may return the

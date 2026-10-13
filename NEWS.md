@@ -20,6 +20,11 @@
 
 ## Bug fixes
 
+- OpenMx bootstrap workers now restore global options on success and error.
+  Semiparametric bootstrap rejects failed refits and nonfinite statistics, with
+  explicit errors for singular sample or null covariances. Parametric bootstrap
+  rejects invalid reported statistics, degrees of freedom and p-values.
+
 - `mbco()` no longer rejects fitted OpenMx RAM models with "h0 must be an
   MxModel". The check compared `class(h0)` to `"MxModel"`, which fails for
   subclasses such as `MxRAMModel`; it now uses `methods::is()`. Verified for

@@ -11,6 +11,12 @@ next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do 
 ## Progress: 100
 ## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
 
+## Session 2026-10-12 (bootstrap worker contracts)
+- Feature `feature/mbco-worker-contracts`: restore OpenMx global options on success/error, reject failed semiparametric refits and nonfinite statistics, explicit covariance errors and parametric result validity checks. Real degenerate-resample refit failure and both seeded bootstrap routes are exercised.
+- Full suite: 599 passed / 0 failed / 2 existing OpenMx warnings / 1 intentional version skip. Fresh line coverage 74.82133%, expression 76.53936%; 95% still pending. New test file lint clean; runtime legacy lint remains.
+- Strict dependency `--as-cran --run-donttest` check with incoming remote checks: 0 errors / 0 warnings / 1 NOTE (old Date and no prebuilt vignette index). Vignettes/manual excluded; this is not full release validation. Spelling allowlist adds nonfinite; no new URLs.
+- Narrow diff reviewed locally; PR/CI and merge pending. Task 2 still needs null-equals-full/reversed OpenMx pairs and installed load orders. Release/integrator holds unchanged.
+
 ## Session 2026-10-12 (coverage slice reviewed and merged)
 - PR #42 merged into dev as `610676de40ad435088908ca18c127432edaa0103`; reviewed head `ef7e31f`. All ten PR checks passed, including Codecov and inventory upload.
 - Review fixed a false-positive validation-test risk: an unfitted model could error after validation removal. Tests now mock a successful worker and assert no fitting occurs for invalid inputs.
