@@ -2,7 +2,7 @@
 
 **Issue:** [#26](https://github.com/Data-Wise/rmediation/issues/26)
 **Branch:** `dev` (docs-only)
-**Status:** implemented, uncommitted
+**Status:** implemented and shipped in v1.7.0 (GitHub pre-release; issue stays open until dev→main). Updated 2026-10-12.
 **Created:** 2026-08-16
 
 ---

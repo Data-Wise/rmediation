@@ -1,6 +1,6 @@
 # SPEC-29 — Site/CRAN version-gap remediation
 
-**Status:** GRILLED — scope settled, ready to execute
+**Status:** EXECUTED — README requirement note and pkgdown release-trigger removal are in place. The "CRAN submission 2026-08-21" premise is superseded: submission is on hold, so the live site (1.7.0) vs `main`/CRAN (1.6.1) gap persists deliberately. Updated 2026-10-12.
 **Created:** 2026-08-17
 **Related:** SPEC-27 (prod3 integrator), issue #26, `.github/workflows/pkgdown.yaml`
 

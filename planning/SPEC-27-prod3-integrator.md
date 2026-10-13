@@ -1,8 +1,8 @@
 # SPEC-27 — `pprodnormal3()` integrator rewrite (partition + Gauss–Legendre)
 
 **Issue:** [#27](https://github.com/Data-Wise/rmediation/issues/27)
-**Branch:** `feature/prod3-illconditioned`
-**Status:** design settled, implementation in progress
+**Branch:** `feature/prod3-illconditioned` (merged to `dev`; tag `v1.7.0` on `dev`)
+**Status:** implemented in v1.7.0 (`method="gauss"` default; 424 tests, r-hub 3/3, win-builder 3/3). Open: the default change is irreversible once on CRAN, and CRAN submission is on hold (2026-08-17). Updated 2026-10-12.
 **Created:** 2026-08-16
 
 ---
