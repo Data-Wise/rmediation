@@ -11,6 +11,11 @@ next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do 
 ## Progress: 100
 ## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
 
+## Session 2026-10-12 (CI numerical contracts)
+- Feature `feature/ci-edge-cases`: hand-gradient and exact MC moment oracles, exact-zero/tiny-gradient tests, rank-deficient PSD linear quantity, explicit H0 matrix/vector null dispatch. Fixed two demonstrated defects: formula CI MCError now SE/sqrt(n.mc), and type=all preserves H0/mu0/Sigma0 in its MC component.
+- Full suite 652 passed / 0 failed / 2 existing warnings / 1 intentional skip. Covariance-drop and gradient-cutoff mutants rejected (5 and 1 failures). Fresh line coverage 75.40805%; expression 76.93498%. ci.R 82.4%, confintMC.R 44.21053%; graphics coverage remains open.
+- New tests lint clean; spelling passed. Strict dependency/incoming check 0 errors / 0 warnings / 1 NOTE (old Date/prebuilt vignette index), vignettes/manual excluded. PR review/CI pending. Task 3 remains open for mapping, covariance/control validation and extraction errors. 95% target, release/dev-to-main and integrator holds unchanged.
+
 ## Session 2026-10-12 (pair guard reviewed and merged; Checkpoint A)
 - PR #44 reviewed and squash-merged into dev as `26e86032bb688eaade66e30084c62e2e8363d79e`; reviewed head `4b03b00`. All ten PR checks passed, including installed OpenMx namespace orders on macOS, Windows and Linux. No blocking review findings; pair assertions reconfirmed 35 passed / 0 failed.
 - Task 2 and Checkpoint A complete: full suite 634 passed / 0 failed / 2 existing warnings / 1 intentional skip; zero-df mutant rejected. Fresh line coverage 75.02726%; expression 76.70279%. The 95% target remains open.

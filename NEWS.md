@@ -20,6 +20,13 @@
 
 ## Bug fixes
 
+- For numeric/lavaan formula CIs, `MCError` now uses `SE / sqrt(n.mc)`,
+  the sampling standard error of the simulated mean. The previous `SE / n.mc`
+  understated simulation uncertainty. This is not an endpoint error estimate.
+- `ci(type = "all", H0 = TRUE)` now forwards `H0`, `mu0` and `Sigma0` to
+  its Monte Carlo component, preserving the alternative/null result pair
+  rather than silently ignoring the requested null distribution.
+
 - OpenMx MBCO now rejects equal-df and reversed model pairs, and nonfinite
   or negative observed statistics, before bootstrap sampling. Previously the
   semiparametric route could report a significant result with df 0 or -1.
