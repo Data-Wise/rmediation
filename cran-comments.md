@@ -73,9 +73,11 @@ Local, 1.7.1 release tree (`release/1.7.1`, 2026-10-12):
   `051fcbc`; the later tip `bc97590` differs only by one added test file):
   linux (R-devel) `Status: OK`, windows (R-devel) `Status: OK`, macos-arm64
   (R-devel) job succeeded.
-* win-builder (R-devel, R-release, R-oldrelease): uploaded 2026-10-13 for the
-  1.7.1 tree; **results PENDING -- fill in before submission.** Results from the
-  earlier 1.7.0 tree do not cover the 1.7.1 changes and are not reported here.
+* win-builder (dispatched 2026-10-13 against the 1.7.1 release tree, head
+  `bc97590`) -- all three returned `Status: OK`:
+  * R-devel -- R Under development (unstable) (2026-10-10 r90659 ucrt)
+  * R-release -- R version 4.6.1 (2026-06-24 ucrt)
+  * R-oldrelease -- R version 4.5.3 (2026-03-11 ucrt)
 
 ## Notes for the CRAN team
 
