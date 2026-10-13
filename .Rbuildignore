@@ -53,3 +53,5 @@
 ^data-raw$
 ^CRAN-SUBMISSION$
 ^scripts$
+
+^tasks$

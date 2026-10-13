@@ -1,0 +1,76 @@
+# RMediation coverage and edge-case plan
+
+Date: 2026-10-12. Baseline: dev `4bda219`; medfit 0.8.0 in a scratch library, OpenMx available. Planning only: no tests or runtime code changed.
+
+## Recommendation and scope
+
+First close result-bearing MBCO and CI gaps; then exercise graphics and legacy compatibility. Target at least 80% overall line coverage, at least 90% in changed numerical/dispatch modules, and every reachable critical refusal and result-selection branch. Treat these as implementation acceptance targets, not current achievements. Do not exclude legacy files or delete code to improve the denominator. CRAN, dev-to-main and integrator holds remain.
+
+## Measured baseline
+
+Fresh covr run: 73.00613% line coverage, 1,793 instrumented lines, 484 uncovered. With the denominator unchanged, 126 additional covered lines reach 80%; implementation changes require recomputation. `coverage-baseline.csv` records the complete per-file tally.
+
+| Module | Line coverage | Priority |
+|---|---:|---|
+| R/mbco.R | 48.00% | Public dispatch and bootstrap routing |
+| R/mbco_semfit.R | 85.71% | Version/registration and boundary refusal |
+| R/confintAsymp.R | 29.51% | Delta-method edge cases and graphics |
+| R/confintMC.R | 42.11% | MC inference and graphics |
+| R/ci_medfit.R | 76.62% | Covariance mapping and optional registration |
+| R/prod3_core.R | 92.18% | Numerical failure/tail paths |
+| R/medci_legacy_backup.R | 29.06% | Reachability and compatibility audit |
+| R/medci_prototype.R | 29.46% | Reachability and compatibility audit |
+
+Line coverage differs from expression coverage. Bootstrap workers already show 100% line coverage; this does not establish convergence handling, RNG isolation or valid bootstrap inference. Startup registration may run before instrumentation; supplement the metric with installed-process evidence.
+
+## Ordered implementation slices
+
+### 1. Reproducible coverage inventory (small)
+
+Files: a focused coverage reporting script, CI coverage workflow, tasks baseline.
+Acceptance: report uncovered lines/functions with R/package versions and optional dependencies; distinguish line and expression metrics; preserve the medfit v0.8.0 coverage pin and absent/CRAN/0.7/0.8 compatibility jobs. Save before/after artifacts with commit SHA. Do not lower the Codecov gate.
+Verification: reproduce this baseline within explained environment differences; verify absent dependencies are genuinely absent in subprocess gates. Dependencies: none.
+
+### 2. MBCO public dispatch and failure cases (medium)
+
+Files: test-s7-mbco.R, test-mbco-parametric-semi.R, test-mbco-semfit.R and existing helpers; runtime files only if a test exposes a defect.
+Acceptance: invalid R (zero, negative, fractional, NA), alpha endpoints/nonfinite values, precision and optimizer controls; fitted RAM subclass acceptance; missing OpenMx; mixed classes and unsupported SEMFit controls. Exercise public bootstrap routes, optimizer fallback without NPSOL, and result-field mapping using narrow mocks plus a real smoke fit. Add null-equals-full/reversed pairs, nonconverged or failed bootstrap fits, singular resampling covariance and RNG/global-option behavior. Establish intended failure/cleanup policy before fixing newly discovered behavior; do not freeze silently wrong results into tests.
+Oracles: existing clean-start a1/b1/product-null fixtures and independent chi-square tail computation. Retain both branch values and minimum selection. Plant mapping/fallback/refusal defects that relevant assertions reject. Dependencies: 1.
+Verification: focused MBCO tests and both installed load orders; no unguarded OpenMx dependency.
+
+### Checkpoint A
+
+Review MBCO findings and behavior changes; run full suite and coverage delta. Any numerical fix gets a NEWS note and a narrow reviewed feature PR. No release work.
+
+### 3. CI numerical/validation cases (medium)
+
+Files: test-ci.R, test-ci-medfit-covariance.R, test-serial-medfit-integration.R, test-utils-validation.R.
+Acceptance: correlated analytic delta-method oracle for two/three paths; exact zero gradient distinguished from near-zero gradients; reordered named covariance entries and missing aliases; incompatible dimensions, asymmetric/non-PSD covariance, NA/Inf, invalid confidence/MC sizes. Probe rank-deficient PSD covariance separately from indefinite covariance and define its supported behavior. Cover formula H0/type combinations and optional extraction errors without duplicating existing basic cases.
+Oracles: hand gradient times covariance times gradient, existing lm/lavaan extraction fixtures, fixed-seed MC with tolerance justified by MC uncertainty. Mutants: dropped covariance term, positional alias mapping, zero-gradient cutoff. Dependencies: 1.
+Verification: focused CI tests, full suite, per-file coverage delta.
+
+### 4. Product distribution numerical boundaries (medium)
+
+Files: test-product-distributions.R, test-product-normal3.R; selected numerical modules if defects arise.
+Acceptance: probability endpoints, both tails and log probabilities only where supported, monotonicity, sign/permutation/scaling identities, extreme means, near-perfect positive/negative correlation, singular versus near-singular covariance and integration-limit failures. Inventory existing cases first: do not repeat the current inverse/monotonicity and ill-conditioned regression tests. Quantile/CDF round trips are consistency checks, not independent numerical proof.
+Oracles: analytic limiting cases and independent high-accuracy integration; MC cross-checks use uncertainty bounds. Mutants: removed axis partition, fixed truncation, wrong tail or covariance term. Dependencies: 1.
+Verification: focused deterministic tests; expensive stress grids remain separate from default CI.
+
+### Checkpoint B
+
+Full suite and coverage report; verify all critical mapped cases have assertions that fail planted defects. If 80% remains unmet, report the remaining uncovered lines before choosing the next slice.
+
+### 5. Graphics and legacy compatibility (two small slices)
+
+Files: focused CI graphics tests; separate legacy/prototype test files.
+Acceptance: exercise plot/plotCI and all-method overlays on temporary devices; assert numeric outputs are unchanged, device cleanup occurs, and zero-SE paths behave as documented. Inspect one rendered representative plot; plot existence alone is insufficient. Audit exports/call sites of backup/prototype functions before testing their reachable contracts. Do not delete or exclude them without a separate decision.
+Dependencies: 3; legacy slice also uses 1. Verification: focused tests, one inspected render and coverage gain attributable to reachable behavior.
+
+### 6. Final gates and integration (small)
+
+Acceptance: >=80% overall, >=90% changed numerical/dispatch modules, no unexplained critical uncovered branch, no denominator exclusions; report unavailable/unreachable cases explicitly. If targets are missed, revise scope transparently rather than declaring success. All tests pass with known existing warnings separated; lint changed R, spelling and URLs for changed docs; strict full CRAN check and dependency-flavor limitation reported. Update NEWS/status/plan with evidence.
+Verification: full suite with medfit0.8; absent/old/new installed gates; platform CI and Codecov green; review and merge feature PRs to dev. No package version bump, CRAN submission or dev-to-main integration. Dependencies: 2-5.
+
+## Execution policy
+
+Implement one bounded slice per feature branch/PR; reuse existing numerical fixtures. Keep MC work deterministic and use uncertainty-based tolerances. Treat revealed correctness defects as fixes requiring their own regression evidence. Test small sample bootstrap failure policy without large stochastic CI simulations. Next authorized implementation slice: task 1 followed by task 2; this plan itself does not perform implementation.
