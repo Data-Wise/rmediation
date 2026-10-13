@@ -2,7 +2,7 @@
 
 Date: 2026-10-12 (America/Denver). RMediation base: `origin/dev` at `679bfc0`.
 Status: implementation authorized by the next "Do next" instruction on 2026-10-12;
-locally implemented and verified on `feature/semfit-mbco`; PR review pending.
+implemented, reviewed and merged through PR #41 into dev as `d29685f`.
 
 ## Scope and evidence
 
@@ -104,7 +104,7 @@ was not rerun for these status/plan-only edits.
       cannot exercise the new method, so add an explicit >= 0.8.0 test job or
       equivalent release gate. Run the full suite, strict check and meaningful
       no-medfit/old-medfit gates; report skips and pass counts.
-- [ ] Review and integrate via a feature PR to dev. No CRAN submission or
+- [x] Review and integrate via a feature PR to dev. No CRAN submission or
       dev-to-main release until separately authorized and dependency holds clear.
 
 ## Implementation evidence (2026-10-12)
@@ -138,3 +138,7 @@ was not rerun for these status/plan-only edits.
   extra-package interface follows the official r-lib actions documentation.
 - Release and CRAN holds remain. Next: review the feature PR and all CI results
   before integrating into dev; a development integration does not authorize release.
+
+## Integration evidence
+
+PR #41 merged into dev as `d29685fe8840ac4d28877a1c1519b9e4a966227e` after review and all ten checks passed on `2eca828`. Coverage pins medfit v0.8.0 so the new adapter is measured; CRAN medfit skipped these tests and initially yielded zero patch coverage. All release holds remain.
