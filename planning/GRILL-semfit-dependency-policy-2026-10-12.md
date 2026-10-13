@@ -63,3 +63,6 @@ Reversing the default after CRAN would move numbers a second time.
   GitHub/r-universe only. Combined with Branch 3 (no fallback date), the RMediation release now
   has no end date. Revisit Branch 3 or ask the medfit maintainer hold's owner for a plan.
 - Whether to revisit Branch 3 if the wait runs long (re-ask when PR #36 or the v1.7.0 fix is needed on CRAN).
+- **2026-10-13 user hold:** CRAN submission waits until both RMediation and medfit are mature. This subsumes
+  the earlier 'no submission without go-ahead' gate; "mature" is undefined, so it needs a definition
+  before it can act as a trigger.
