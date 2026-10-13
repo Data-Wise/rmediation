@@ -1,5 +1,11 @@
 # RMediation 1.7.1 (development version)
 
+## Testing
+
+- Expanded public OpenMx MBCO argument, bootstrap-routing and optimizer-fallback
+  tests, including result-field mutation checks and fitted RAM smoke tests.
+  Coverage CI now retains line/expression summaries and uncovered-line artifacts.
+
 ## New features
 
 - `mbco(h0, h1, type = "asymp")` accepts two fitted medfit `SEMFit` objects
