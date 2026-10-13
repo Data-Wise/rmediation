@@ -6,6 +6,7 @@ mbco_parametric <- function(h0 = NULL,
                             checkSE = "No",
                             optim = "NPSOL",
                             precision = 1e-9) {
+  .mbco_compare(h0, h1)
   saved_options <- getOption("mxOptions")
   on.exit(options(mxOptions = saved_options), add = TRUE)
   OpenMx::mxOption(NULL, "Calculate Hessian", checkHess)

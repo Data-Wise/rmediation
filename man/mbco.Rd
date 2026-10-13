@@ -41,6 +41,11 @@ fitted null and the full fit to \code{mbco()}. medfit is optional: this route ne
 0.8.0 or later (GitHub/r-universe); existing \code{ci()} integration needs only
 0.2.0. No change to the CRAN dependency minimum is implied.
 
+OpenMx comparisons require a finite nonnegative observed statistic and a
+positive degrees-of-freedom difference: supply the restricted model as h0
+and the full model as h1. Equal-df and reversed pairs error before bootstrap
+sampling. These checks do not establish substantive model nesting.
+
 OpenMx bootstrap methods restore global options on success and error.
 Set a seed before calling for reproducibility; bootstrap sampling consumes the
 current RNG stream. The semiparametric method requires positive-definite sample

@@ -11,6 +11,11 @@ next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do 
 ## Progress: 100
 ## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
 
+## Session 2026-10-12 (observed OpenMx pair guard)
+- Feature `feature/mbco-pair-guards`: equal/reversed real fitted pairs exposed df 0/-1 and invalid inference. Shared observed-comparison gate now requires positive df and finite nonnegative statistic before bootstrap; necessary checks do not establish nesting.
+- Full suite 634 passed / 0 failed / 2 existing warnings / 1 intentional version skip. Line coverage 75.02726%, expression 76.70279%. Zero-df guard mutant rejected; restored pair tests passed 35 assertions. Both installed OpenMx orders and eight controlled medfit load-order gates passed; release-R CI now includes the OpenMx gate.
+- New-file lint and spelling clean. Strict dependency/incoming check 0 errors / 0 warnings / 1 NOTE (old Date/prebuilt vignette index), vignettes/manual excluded. Task 2 implemented; Checkpoint A PR review/CI pending. Next CI numerical/covariance cases. 95% target and release/integrator holds unchanged.
+
 ## Session 2026-10-12 (bootstrap worker PR reviewed and merged)
 - PR #43 squash-merged into dev as `466e9dd80b2046abf7151b5634ce59b70dd76a88`; reviewed head `0089c9a`. All ten PR checks passed, including four R-CMD-check platforms, four optional-medfit compatibility jobs, coverage and Codecov.
 - Local review found no blocking issues. Inverting the convergence acceptance guard caused 1 failed assertion and 2 test errors; restored source passed all 36 worker-contract assertions. Prior full suite: 599 passed, 0 failed, 2 existing warnings, 1 intentional version skip.
