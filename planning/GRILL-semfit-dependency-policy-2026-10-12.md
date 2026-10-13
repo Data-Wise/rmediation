@@ -70,3 +70,7 @@ Reversing the default after CRAN would move numbers a second time.
   structure completed. Read-only status the same day: medfit native SEM and `SEMFit` still experimental;
   mean structure planned for medfit 0.9.0-0.11.0, not started; `fixed.x` is in medfit's planning specs
   (native-SEM Q3; mean-structure item 4: exogenous means freed vs lavaan's default `fixed.x = TRUE`), not in NEWS. Branch 4's trigger (medfit 0.8.0 on CRAN) is now necessary but not sufficient.
+- **2026-10-13 Branch 3 revisited again:** ship the integrator fix alone? **No - keep holding it with the
+  rest** (user choice, recommended). Reasons: second-submission ban risk; CRAN 1.6.1 harm limited to
+  ill-conditioned covariance; mitigations live (v1.7.0 GitHub pre-release, pkgdown warning note, README
+  `Requires RMediation >= 1.7.0`). `release/1.7.1` stays a ready-but-unsubmitted candidate.
