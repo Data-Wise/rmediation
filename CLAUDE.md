@@ -67,7 +67,7 @@ devtools::test()
 |----------|---------|---------|
 | `medci()` | Product a*b CIs | Two-variable indirect effects |
 | `ci()` | General nonlinear function CIs | Complex mediation models, formulas |
-| `mbco()` | Bootstrap chi-squared tests | Hypothesis testing H₀: indirect = 0 |
+| `mbco()` | Chi-squared tests: OpenMx (bootstrap or asymptotic) or two medfit `SEMFit` fits (asymptotic only) | Hypothesis testing H₀: indirect = 0 |
 
 ### Distribution Functions
 
@@ -153,6 +153,22 @@ at `>= 0.2.0` and intentionally kept there — all usage in `R/ci_medfit.R` is
 guarded by `requireNamespace()`, satisfying the Suggests contract. Do NOT promote
 to Imports.
 
+### SEMFit MBCO route and release status (2026-10-13)
+
+`mbco(h0, h1, type = "asymp")` accepts two fitted medfit `SEMFit` objects
+(`R/mbco_semfit.R`, added in PR #41). It calls `stats::anova(h1, h0)`, never
+refits, requires medfit >= 0.8.0 (version-gated; older medfit gets a clear
+error), and does not need OpenMx. The OpenMx paths are unchanged.
+
+**Nothing is submitted to CRAN, by user decision.** CRAN serves 1.6.1. A
+verified 1.7.1 candidate sits on branch `release/1.7.1` (draft PR #46, route
+removed, not merged); never start `devtools::submit_cran()` without an explicit
+instruction. The hold lifts only when the SEM features are no longer
+experimental and `fixed.x` and mean structure are completed in medfit (medfit
+0.9.0-0.11.0 plan). Then Suggests rises to `medfit >= 0.8.0`. Decisions and
+reasons: `planning/GRILL-semfit-dependency-policy-2026-10-12.md` (gitignored but
+force-tracked), `.STATUS`.
+
 ---
 
 ## Key References
@@ -165,4 +181,4 @@ to Imports.
 
 ---
 
-**Last Updated**: 2026-06-29
+**Last Updated**: 2026-10-13
