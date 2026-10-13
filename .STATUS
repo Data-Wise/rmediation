@@ -11,6 +11,12 @@ next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do 
 ## Progress: 100
 ## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
 
+## Session 2026-10-12 (coverage slice reviewed and merged)
+- PR #42 merged into dev as `610676de40ad435088908ca18c127432edaa0103`; reviewed head `ef7e31f`. All ten PR checks passed, including Codecov and inventory upload.
+- Review fixed a false-positive validation-test risk: an unfitted model could error after validation removal. Tests now mock a successful worker and assert no fitting occurs for invalid inputs.
+- Final local suite: 563 passed / 0 failed / 2 existing OpenMx warnings / 1 intentional version skip; focused routing tests 52 passed, lint clean.
+- Next: actual bootstrap failure, singular-resampling and RNG/global-option contracts from task 2. Overall 95% target and release holds remain.
+
 ## Session 2026-10-12 (coverage inventory and public MBCO tests)
 - Feature `feature/coverage-mbco`: reproducible report and CI inventory upload; public dispatch/controls, optimizer fallback, result mapping and real fitted-RAM bootstrap smoke tests. Runtime and dependency code unchanged.
 - Line coverage 73.00613% -> 74.45622%; OpenMx dispatcher 48% -> 100%. Wrong-df and optimizer-fallback mutants are rejected. No exclusions added; 95% remains the overall target.

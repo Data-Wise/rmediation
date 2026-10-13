@@ -91,3 +91,7 @@ Public MBCO routing tests cover invalid controls, alpha endpoints, absent OpenMx
 Measured line coverage: 73.00613% -> 74.45622%; `R/mbco.R`: 24/50 -> 50/50 lines. This is a bounded first slice, not completion of task 2 or the 95% goal. Actual nonconvergence/singular-resampling behavior and RNG/global-option policy remain next; 100% dispatcher line coverage does not prove these worker contracts.
 
 Validation: full suite 562 passed / 0 failed / 2 existing OpenMx warnings / 1 intentional version skip; changed-file lint and spelling passed.
+
+## First slice integration
+
+PR #42 merged into dev as `610676de40ad435088908ca18c127432edaa0103` after all ten checks passed on `ef7e31f`. Review hardened invalid-input tests with a successful fitting mock and zero-call assertion to prevent unfitted-model errors masking removed validators. Final local suite: 563 passed, zero failures, two existing warnings and one version skip. CI inventory generation/upload passed. Task 2 worker contracts remain pending.
