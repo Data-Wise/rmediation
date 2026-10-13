@@ -66,11 +66,16 @@ Local, 1.7.1 release tree (`release/1.7.1`, 2026-10-12):
 ## Test environments
 
 * Local: macOS, R 4.6.1 -- see above.
-* GitHub Actions, r-hub v2 and win-builder runs for the 1.7.1 tree:
-  **PENDING -- fill in before submission.** Results from the earlier 1.7.0
-  tree (r-hub 3/3 `Status: OK`, win-builder R-devel/R-release/R-oldrelease all
-  `Status: OK`) do not cover the 1.7.1 changes and are not reported as
-  evidence for this submission.
+* GitHub Actions on the 1.7.1 release branch (PR into `main`, head `bc97590`):
+  R-CMD-check (ubuntu-latest release and devel, macos-latest, windows-latest),
+  pkgdown and test-coverage all passing.
+* r-hub v2 (GitHub Actions, dispatched 2026-10-13 against `release/1.7.1` at
+  `051fcbc`; the later tip `bc97590` differs only by one added test file):
+  linux (R-devel) `Status: OK`, windows (R-devel) `Status: OK`, macos-arm64
+  (R-devel) job succeeded.
+* win-builder (R-devel, R-release, R-oldrelease): uploaded 2026-10-13 for the
+  1.7.1 tree; **results PENDING -- fill in before submission.** Results from the
+  earlier 1.7.0 tree do not cover the 1.7.1 changes and are not reported here.
 
 ## Notes for the CRAN team
 
