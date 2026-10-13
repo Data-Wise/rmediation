@@ -139,3 +139,26 @@ Checkpoint A closed: PR #44 reviewed and squash-merged into dev as
 `26e86032bb688eaade66e30084c62e2e8363d79e`; all ten checks passed, including
 installed OpenMx gates on macOS, Windows and Linux. No blocking review findings.
 The reviewed head passed 35 pair assertions again. Next is task 3; no release.
+
+## CI numerical slice (2026-10-12)
+
+Hand gradients for correlated two/three-path products match the delta SE and
+intervals. Exact zero and tiny nonzero gradients are distinguished; a linear
+quantity works with rank-deficient PSD covariance in delta and MC routes.
+Fixed-seed MC means are checked against exact joint-normal product moments and
+the linear normal law using six-SEM bounds.
+
+Three red assertions exposed two defects: formula-CI MCError used SE/n.mc
+instead of SE/sqrt(n.mc), and type=all dropped H0/mu0/Sigma0. Both are corrected;
+MCError describes the simulated mean, not interval endpoint error. Explicit
+null matrix and lower-triangle covariance routes now agree with direct MC.
+Dropped-covariance and small-gradient-cutoff mutants fail 5 and 1 assertions.
+
+Full suite: 652 passed / 0 failed / 2 existing warnings / 1 intentional skip.
+Line coverage 75.40805%; expression 76.93498%. ci.R: 78.51240% -> 82.4%;
+confintMC.R: 42.10526% -> 44.21053%; confintAsymp.R remains 29.50820% (plot
+branches remain). New tests lint clean and spelling passed. Strict dependency
+and incoming check: 0 errors / 0 warnings / 1 NOTE (old Date/prebuilt vignette
+index); vignettes/manual excluded. PR review/CI pending. Task 3 remains open
+for covariance mapping/validation, confidence/MC size guards and extraction
+errors; no denominator exclusions or release-hold changes.

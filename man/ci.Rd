@@ -18,6 +18,14 @@ list) as returned by the dispatched method.
 \description{
 Generic function for computing confidence intervals.
 }
+\details{
+For numeric vectors or lavaan fits with a formula quantity, the Monte Carlo
+component reports MCError as the sampling standard error of the simulated mean
+(SE / sqrt(n.mc)); this is not the error of the interval endpoints. With
+H0 = TRUE, the Monte Carlo result contains the alternative and null results.
+The type = "all" route preserves H0, mu0 and Sigma0 for its MC component;
+the asymptotic component remains the interval at the supplied estimates.
+}
 \examples{
 pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
 ci(pn)

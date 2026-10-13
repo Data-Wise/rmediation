@@ -8,7 +8,7 @@ confintMC <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "MC", plot =
   names(CI) <- c(paste((alpha / 2 * 100), "%"), paste((1 - alpha / 2) * 100, "%"))
   quantMean <- mean(quant.vec)
   quantSE <- sd(quant.vec)
-  quantError <- quantSE / n.mc
+  quantError <- quantSE / sqrt(n.mc)
   pMinH1 <- mean(quant.vec > 0)
   pMinH1 <- 2 * (min(pMinH1, 1 - pMinH1))
   # This is to determine min and max of MC Samples--Do Not Delete this

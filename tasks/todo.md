@@ -8,6 +8,8 @@
   - [x] Null-equals-full/reversed OpenMx pair behavior and installed load orders.
 - [x] Checkpoint A: full suite, coverage, mutation review and ten green PR checks.
 - [ ] 3. CI numerical, validation and covariance-mapping edge cases.
+  - [x] Correlated delta/MC oracles, zero/tiny gradients, PSD linear case and explicit H0/all dispatch.
+  - [ ] Covariance mapping/validation, confidence/MC size guards and optional extraction errors.
 - [ ] 4. Product distribution numerical boundaries with independent oracles.
 - [ ] Checkpoint B: mutation evidence and remaining uncovered-line review.
 - [ ] 5a. Graphics branches and inspected representative plot.
