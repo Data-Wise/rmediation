@@ -11,6 +11,12 @@ next: **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do 
 ## Progress: 100
 ## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
 
+## Session 2026-10-12 (coverage and edge-case plan)
+- Plan and checklist: `tasks/plan.md`, `tasks/todo.md`; measured baseline in `tasks/coverage-baseline.csv`. Planning files are Rbuildignored.
+- Fresh line coverage on dev `4bda219`: 73.00613%, 1,793 instrumented lines, 484 uncovered, with scratch medfit 0.8.0 and OpenMx. At unchanged denominator, 126 additional covered lines reach 80%.
+- Priority: MBCO public dispatch/failures, CI numerical/validation cases, distribution boundaries, then graphics and reachable legacy contracts. Independent oracles and planted defects are required; no coverage exclusions or release-hold changes.
+- Next: implement the coverage inventory and bounded MBCO edge-case slice through a feature PR. No implementation performed in this planning step.
+
 ## Session 2026-10-12 (SEMFit PR reviewed and merged)
 - PR #41 merged into dev as `d29685fe8840ac4d28877a1c1519b9e4a966227e`; reviewed head `2eca828`. No actionable review findings.
 - All ten PR checks passed: four platform checks, four optional-version gates, coverage and Codecov patch. The first Codecov run measured zero patch coverage because CRAN medfit skipped SEMFit tests; coverage now pins tagged medfit 0.8.0. Local overall coverage: 73.01%.
