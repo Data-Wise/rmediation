@@ -49,3 +49,5 @@ medfit session reply 2026-10-13 (information only; the medfit author has not dec
 place it after 0.9.0 T3/T5 or as a 0.9.x on top of 0.9.0, to avoid redoing the mean-structure tasks. The five decisions above stand; the author has not yet accepted or changed them.
 
 **Update 2026-10-13 19:26Z (observed):** medfit PR #171 (G8 `anova()` fix) merged to medfit `dev` as `5ebdecf`. `fixed_x` is still not started or placed; no release named for dropping "experimental".
+
+**medfit author answer (relayed 2026-10-13 13:37 MDT, non-binding):** target release for dropping "experimental" is 0.11.0 (latent means); criteria not defined; not a CRAN commitment (medfit GitHub-only until decided separately). `fixed_x` placement and whether it counts toward the label: undecided; proposal not accepted.
