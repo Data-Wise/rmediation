@@ -83,3 +83,9 @@ Reversing the default after CRAN would move numbers a second time.
   difference (exogenous means freed vs lavaan default `fixed.x = TRUE`), not a standalone item and no
   `fixed.x` argument is planned. `anova(h1, h0)` on SEMFit intended unchanged through 0.9.0-0.11.0 (plan
   under review). Open for the user: what 'completed' means for fixed.x, and which release ends 'experimental'.
+- **2026-10-13 fixed.x exploration:** independent check (lavaan; installed medfit 0.7.0; one simulated
+  complete-data normal-ML dataset, n = 400): lavaan `fixed.x` TRUE vs FALSE give identical structural
+  estimates and SEs; medfit native matches `fixed.x = FALSE` (10 free params, same ab and SE). Verdict:
+  done as medfit defines it for covariance-only models; no `fixed.x` argument; mean-structure handling,
+  missing data and robust SEs untested. User to decide whether 'done' means the documented difference or
+  a real argument.

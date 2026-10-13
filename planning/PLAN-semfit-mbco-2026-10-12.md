@@ -142,3 +142,10 @@ was not rerun for these status/plan-only edits.
 ## Integration evidence
 
 PR #41 merged into dev as `d29685fe8840ac4d28877a1c1519b9e4a966227e` after review and all ten checks passed on `2eca828`. Coverage pins medfit v0.8.0 so the new adapter is measured; CRAN medfit skipped these tests and initially yielded zero patch coverage. All release holds remain.
+
+## Release policy outcome (2026-10-13)
+
+The SEMFit route is held out of the CRAN tarball and all CRAN submission is held by the user until the SEM
+features are non-experimental and fixed.x and mean structure are completed in medfit. Decisions, hold
+definition and medfit status: `GRILL-semfit-dependency-policy-2026-10-12.md` and `.STATUS`. The verified
+releasable candidate is `release/1.7.1` (draft PR #46), unsubmitted.
