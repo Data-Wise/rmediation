@@ -134,3 +134,8 @@ missing prebuilt vignette index), with vignettes/manual excluded.
 
 Task 2 implemented; Checkpoint A still requires PR review and green CI. Next:
 CI numerical/covariance edge cases. The 95% target and release holds remain.
+
+Checkpoint A closed: PR #44 reviewed and squash-merged into dev as
+`26e86032bb688eaade66e30084c62e2e8363d79e`; all ten checks passed, including
+installed OpenMx gates on macOS, Windows and Linux. No blocking review findings.
+The reviewed head passed 35 pair assertions again. Next is task 3; no release.

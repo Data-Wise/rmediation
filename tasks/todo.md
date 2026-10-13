@@ -6,7 +6,7 @@
   - [x] Worker-error propagation and mapping/fallback mutation assertions.
   - [x] Actual nonconverged refit, singular resampling and RNG/global-option policy.
   - [x] Null-equals-full/reversed OpenMx pair behavior and installed load orders.
-- [ ] Checkpoint A: local full suite/coverage/mutation verified; PR review/CI pending.
+- [x] Checkpoint A: full suite, coverage, mutation review and ten green PR checks.
 - [ ] 3. CI numerical, validation and covariance-mapping edge cases.
 - [ ] 4. Product distribution numerical boundaries with independent oracles.
 - [ ] Checkpoint B: mutation evidence and remaining uncovered-line review.
