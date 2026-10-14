@@ -29,3 +29,20 @@ Target: `planning/PROPOSAL-mbco-b-e-35-2026-10-14.md`. Seven questions, one at a
 - Where the refit lives (`.mbco_compare()` vs the two bootstrap functions) and how `.mbco_semi()`'s covariance step sees the refit `h0`.
 - Whether `type = "asymp"` should say, in the guard warning, that it will not refit.
 - #35: separate plan; options W1-W5 stay in the PROPOSAL, no decision taken.
+
+## Q7 result (T0 study, 2026-10-14, OpenMx 2.22.11, n = 300, a = .5, b = 0, seeds 1-100, R = 200)
+
+Scratch script, not saved in the repo. User's `h0` fitted at the default tolerance; the bootstrap ran with the global tolerance set to 0.05 or 1e-8.
+
+| Measure | Result |
+|---|---|
+| Observed statistic from the user's `h0` below the exact two-fit LRT by more than 1e-6 | 100 / 100 |
+| Refit of `h0` at 1e-8: within 1e-6 of the exact LRT | **99 / 100** (max gap 1.5e-6, seed 59); max constraint violation after refit 7.5e-9 |
+| `parametric`, tolerance 0.05: runs with an OpenMx warning / errors | 100 / 0 |
+| `parametric`, tolerance 1e-8: runs with a warning / errors | 0 / 0 |
+| `semi`, tolerance 0.05: errors | **100 / 100** |
+| `semi`, tolerance 1e-8: errors | **19 / 100** |
+
+**Criteria: both pass** (non-convergence at 1e-8 below that at 0.05 for both types; refit within 1e-6 in 99 of 100). The plan is not re-scoped.
+
+**Finding the criteria did not anticipate:** `semi` at 1e-8 still stops in 19 of 100 runs (about 0.1% of replicates, since the run stops at the first failed one; a rerun of three failing seeds with another RNG stream passed, so it is replicate-level and stochastic). B+E reduces `semi` failures from 100% to about 19% on this model; it does not remove them. `.mbco_semi()` keeps its documented "stops at the first failed replicate" behavior, so the plan must say so, and a retry policy would be a separate decision.
