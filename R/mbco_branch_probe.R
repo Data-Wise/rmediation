@@ -96,3 +96,34 @@
   attr(out, "skipped") <- skipped
   out
 }
+
+# Run the probe and report: one warning per flagged constraint, a message for constraints skipped
+# by the cap. Advisory: any error inside is swallowed.
+.mbco_report_branch <- function(h0, h1) {
+  found <- tryCatch(.mbco_branch_probe(h0, h1), error = function(e) NULL)
+  if (is.null(found)) {
+    return(invisible(NULL))
+  }
+  for (f in found) {
+    .mbco_signal("RMediation_constraint_branch", sprintf(
+      paste0(
+        "Constraint '%s' of h0 is feasible but not optimal: fixing %s at 0 gives a fit with -2LL ",
+        "lower by %s, so h0 may sit on the wrong branch and the MBCO statistic may be overstated. ",
+        "For a product null such as a*b = 0 use mbco_product_null() (see ?mbco)."
+      ),
+      f$constraint, f$parameter, format(round(f$improvement, 4))
+    ))
+  }
+  for (nm in attr(found, "skipped")) {
+    message(structure(
+      class = c("RMediation_constraint_branch_skipped", "message", "condition"),
+      list(
+        message = sprintf(
+          "Constraint '%s' depends on more than 5 parameters; the wrong-branch check was skipped.\n", nm
+        ),
+        call = NULL
+      )
+    ))
+  }
+  invisible(NULL)
+}
