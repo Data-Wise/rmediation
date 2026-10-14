@@ -72,6 +72,8 @@ statistic still comes from the user's fit. Decide E before coding B.
 Plan step T2 therefore reads: implement A, then C (no B, no E). Tests (T1) additionally cover: the scaled threshold on a large-scale constraint, an inequality
 slack control, the classed warning on `h1`, and the informative error.
 
+**Correction (2026-10-14, implementation):** the grill assumed linear constraints fit exactly. They do not at the default tolerance (linear `b == 0` fitted from the full model's estimates ends at b = 0.015 to 0.041), so the guard also fires on them; no existing test newly warns. See `tasks/plan-34.md`.
+
 ## Open questions to settle before coding
 
 1. **Constraint evaluation (blocks A).** How to evaluate `lhs - rhs` of an arbitrary `MxConstraint` at the solution: `mxEval()` worked for the named algebra `ind` in the prototype; a general `formula` needs its own prototype, including inequality constraints (violation only when on the wrong side).

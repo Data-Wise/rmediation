@@ -59,10 +59,27 @@ require a finite nonnegative statistic, positive df, and a p-value in [0, 1].
 branch with the larger statistic, which gives a wrong test. To test a product
 of two paths, fit one linear null per path (\code{a == 0} and \code{b == 0}), run
 \code{mbco()} on each, and report the smaller statistic with 1 degree of freedom
-(see the example).
+(see the example). The smaller statistic is the exact constrained
+likelihood-ratio statistic for \eqn{ab = 0}. Its chi-square(1) p-value is
+conservative when both paths are 0 (an intersection-union test; standard
+theory, not verified here).
 
 Build each \code{h0} from the unfitted model. A constraint refit from the fitted
 model's estimates can stop at an infeasible point and return a statistic of 0.
+
+\strong{Constraint violation warning (OpenMx).} OpenMx accepts a constrained fit
+whose constraints are violated by up to its \code{"Feasibility tolerance"}
+(default 0.05), which can understate the statistic. Before comparing, \code{mbco()}
+evaluates every equality and inequality constraint of \code{h0} and \code{h1} at the
+fitted solution and signals a warning of class
+\code{RMediation_constraint_violation} when the scaled violation,
+\verb{|lhs - rhs| / max(1, |lhs|, |rhs|)} for equalities and the wrong-side gap
+for inequalities, exceeds 1e-6. The result is still returned and no number
+changes. Refit with \code{mxOption(model, "Feasibility tolerance", 1e-8)}, or use
+the two-fit route above for a product null. A constraint that cannot be
+evaluated is an error naming it; constraints with other operators are
+skipped. The guard does not detect a feasible fit of \code{a*b == 0} on the
+larger-statistic branch (issue #35); only the two-fit route avoids that.
 }
 \examples{
 if (requireNamespace("medfit", quietly = TRUE) &&

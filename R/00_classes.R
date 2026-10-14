@@ -251,10 +251,27 @@ S7::S4_register(MLOmittedConfounder)
 #' branch with the larger statistic, which gives a wrong test. To test a product
 #' of two paths, fit one linear null per path (`a == 0` and `b == 0`), run
 #' `mbco()` on each, and report the smaller statistic with 1 degree of freedom
-#' (see the example).
+#' (see the example). The smaller statistic is the exact constrained
+#' likelihood-ratio statistic for \eqn{ab = 0}. Its chi-square(1) p-value is
+#' conservative when both paths are 0 (an intersection-union test; standard
+#' theory, not verified here).
 #'
 #' Build each `h0` from the unfitted model. A constraint refit from the fitted
 #' model's estimates can stop at an infeasible point and return a statistic of 0.
+#'
+#' **Constraint violation warning (OpenMx).** OpenMx accepts a constrained fit
+#' whose constraints are violated by up to its `"Feasibility tolerance"`
+#' (default 0.05), which can understate the statistic. Before comparing, `mbco()`
+#' evaluates every equality and inequality constraint of `h0` and `h1` at the
+#' fitted solution and signals a warning of class
+#' `RMediation_constraint_violation` when the scaled violation,
+#' `|lhs - rhs| / max(1, |lhs|, |rhs|)` for equalities and the wrong-side gap
+#' for inequalities, exceeds 1e-6. The result is still returned and no number
+#' changes. Refit with `mxOption(model, "Feasibility tolerance", 1e-8)`, or use
+#' the two-fit route above for a product null. A constraint that cannot be
+#' evaluated is an error naming it; constraints with other operators are
+#' skipped. The guard does not detect a feasible fit of `a*b == 0` on the
+#' larger-statistic branch (issue #35); only the two-fit route avoids that.
 #'
 #' @param h0 A fitted restricted \code{OpenMx} model or medfit \code{SEMFit} under the null hypothesis.
 #' @param h1 A fitted full model of the same class as \code{h0}, under the alternative hypothesis.

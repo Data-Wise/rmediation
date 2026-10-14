@@ -23,6 +23,12 @@
 - medfit remains optional in Suggests >= 0.2.0. The SEMFit route needs the
   GitHub/r-universe medfit release; CRAN medfit 0.3.2 cannot exercise it. This
   development change does not lift the CRAN submission or development-to-main hold.
+- OpenMx `mbco()` now warns (class `RMediation_constraint_violation`) when a
+  constraint of `h0` or `h1` is violated at the fitted solution by more than a
+  scaled 1e-6. The OpenMx default feasibility tolerance (0.05) can leave a
+  nonlinear null such as `a*b == 0` off the null set and understate the
+  statistic (issue #34). Results are unchanged; refit with tolerance 1e-8 or use
+  one linear null per path. A constraint that cannot be evaluated now errors.
 
 ## Bug fixes
 
