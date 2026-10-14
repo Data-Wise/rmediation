@@ -24,7 +24,9 @@ p_prod3(...)
 
 \item{cov}{3x3 covariance matrix. Must be positive-definite, except that a
 single zero-variance component is permitted (the problem then reduces to
-the two-variable product-normal case). Perfect correlation between two
+the two-variable product-normal case). Two zero-variance components give
+the exact scaled-normal CDF, and three give a point mass at
+\code{prod(mean)} (CDF 1 at and above it). Perfect correlation between two
 components (\verb{|rho| = 1}) or an indefinite matrix is rejected.}
 
 \item{method}{Integration method. \code{"gauss"} (default) is tensor-product
