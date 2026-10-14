@@ -10,7 +10,9 @@ pprodnormalMeeker <- function(q, mu.x, mu.y, se.x, se.y, rho = 0, lower.tail = T
     return(integ)
   }
   ans <- integrate(gx, lower = -Inf, upper = Inf, z = q)
-  percentile <- ans$value
+  # Quadrature can overshoot 1 by rounding (observed 1 + 1.6e-15), which made the upper tail
+  # negative.
+  percentile <- min(max(ans$value, 0), 1)
   error <- ans$abs.error
   if (!lower.tail) {
     percentile <- 1 - percentile
