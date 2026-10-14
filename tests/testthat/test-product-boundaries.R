@@ -85,9 +85,32 @@ test_that("large standardized means up to 18 agree with Monte Carlo", {
   }
 })
 
-test_that("known defect: DOP collapses at standardized means >= ~20", {
-  skip("pprodnormal(400, 20, 20, 1, 1) returns ~8e-7 where the answer is ~0.507; integrate() over (-Inf, Inf) misses the unit-sd peak at mu.y/se.y. Remove this skip when fixed.")
+test_that("DOP stays correct at large standardized means (issue #60)", {
+  # truth ~ 0.5074 by Monte Carlo (4e6 draws); the old integral returned 7.9e-7
   expect_equal(P(400, 20, 20, 1, 1), 0.5074, tolerance = 5e-3)
+  expect_equal(P(2500, 50, 50, 1, 1), 0.5, tolerance = 2e-2)
+  expect_gt(P(400, 20, 20, 1, 1), 0.4)
+})
+
+test_that("DOP far-tail probabilities match the independent oracle (issue #60)", {
+  # the old code returned 5.8e-6 and 6.0e-6 for these two; the oracle gives 8.87e-6 and 4.35e-6
+  expect_equal(P(-3, 2, 0.3, 0.2, 0.4), .oracle_pprod(-3, 2, 0.3, 0.2, 0.4), tolerance = 1e-4)
+  expect_equal(P(-3, 0, 3, 0.2, 0.4), .oracle_pprod(-3, 0, 3, 0.2, 0.4), tolerance = 1e-4)
+})
+
+test_that("DOP far tail with rho = -0.8 matches Monte Carlo (issue #60)", {
+  set.seed(20261014)
+  n <- 2e7
+  S <- matrix(c(0.2^2, -0.8 * 0.2 * 0.4, -0.8 * 0.2 * 0.4, 0.4^2), 2)
+  d <- MASS::mvrnorm(n, c(0, 3), S)
+  est <- mean(d[, 1] * d[, 2] <= -3)
+  # old value 6e-9; truth ~1.8e-4
+  expect_lt(abs(P(-3, 0, 3, 0.2, 0.4, -0.8) - est), 5 * sqrt(est * (1 - est) / n))
+})
+
+test_that("qprodnormal inverts pprodnormal at large standardized means (issue #60)", {
+  q <- qprodnormal(0.3, 20, 20, 1, 1)
+  expect_equal(P(q, 20, 20, 1, 1), 0.3, tolerance = 1e-4)
 })
 
 test_that("the upper tail is never negative and the CDF never exceeds 1", {

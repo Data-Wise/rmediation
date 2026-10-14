@@ -15,13 +15,8 @@ qprodnormalMeeker <-
       u0 <- mu.a * mu.b + 6 * se.ab
       alpha <- p
     }
-    gx <- function(x, z) {
-      mu.a.on.b <- mu.a + rho * (x - mu.b) # mean of a conditional on b
-      integ <- pnorm(sign(x) * (z / x - mu.a.on.b) / s.a.on.b) * dnorm(x - mu.b)
-      return(integ)
-    }
     fx <- function(z) {
-      return(integrate(gx, lower = -Inf, upper = Inf, z = z)$value - alpha)
+      return(.dop_cdf(z, mu.a, mu.b, rho)$value - alpha)
     }
     # converge <- TRUE
     p.l <- fx(l0)
