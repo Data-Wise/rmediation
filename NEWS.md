@@ -23,12 +23,20 @@
 - medfit remains optional in Suggests >= 0.2.0. The SEMFit route needs the
   GitHub/r-universe medfit release; CRAN medfit 0.3.2 cannot exercise it. This
   development change does not lift the CRAN submission or development-to-main hold.
-- OpenMx `mbco()` now warns (class `RMediation_constraint_violation`) when a
-  constraint of `h0` or `h1` is violated at the fitted solution by more than a
-  scaled 1e-6. The OpenMx default feasibility tolerance (0.05) can leave a
-  nonlinear null such as `a*b == 0` off the null set and understate the
-  statistic (issue #34). Results are unchanged; refit with tolerance 1e-8 or use
-  one linear null per path. A constraint that cannot be evaluated now errors.
+- OpenMx `mbco()` now checks the constraints of `h0` and `h1` at the fitted
+  solution (issue #34). The OpenMx default feasibility tolerance (0.05) can leave
+  a constrained fit off the null set and understate the statistic. **A returned
+  number now changes in that case:** a violated `h0` (scaled violation above
+  1e-6) is refit once at tolerance 1e-8 for all three types, the refit model
+  supplies the observed statistic and the bootstrap, a warning of class
+  `RMediation_h0_refit` reports the change, and the new `refit` slot of
+  `MBCOResult` records it (`NULL` when no refit was needed). Clean fits and
+  constraint-free models are unchanged. If the refit fails, your fit is kept and
+  `RMediation_h0_refit_failed` and `RMediation_constraint_violation` warn. A
+  constraint that cannot be evaluated now errors. `type = "semi"` still stops at
+  the first replicate that fails to converge. A feasible `a*b == 0` fit on the
+  larger-statistic branch is not detected (issue #35); use one linear null per
+  path.
 
 ## Bug fixes
 

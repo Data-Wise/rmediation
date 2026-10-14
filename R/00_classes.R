@@ -165,6 +165,10 @@ ci <- S7::new_generic("ci", "object")
 #' @param df Numeric degrees of freedom.
 #' @param p_value Numeric p-value.
 #' @param type Character string indicating the type of test.
+#' @param refit `NULL` (default) when no refit happened, or a list with
+#'   `tolerance`, `statistic_before` and `statistic_after` (all single finite
+#'   numbers) when [mbco()] refit a violated `h0` at a tighter feasibility
+#'   tolerance. `print()` and `summary()` show a note when it is set.
 #' @export
 #' @examples
 #' res <- MBCOResult(statistic = 4.2, df = 1, p_value = 0.04, type = "asymp")
@@ -282,19 +286,32 @@ S7::S4_register(MLOmittedConfounder)
 #' Build each `h0` from the unfitted model. A constraint refit from the fitted
 #' model's estimates can stop at an infeasible point and return a statistic of 0.
 #'
-#' **Constraint violation warning (OpenMx).** OpenMx accepts a constrained fit
-#' whose constraints are violated by up to its `"Feasibility tolerance"`
-#' (default 0.05), which can understate the statistic. Before comparing, `mbco()`
+#' **Constraint violations and the automatic refit (OpenMx).** OpenMx accepts a
+#' constrained fit whose constraints are violated by up to its
+#' `"Feasibility tolerance"` (default 0.05), which can understate the statistic
+#' (for example 0 where the exact value is 0.4745). Before comparing, `mbco()`
 #' evaluates every equality and inequality constraint of `h0` and `h1` at the
-#' fitted solution and signals a warning of class
-#' `RMediation_constraint_violation` when the scaled violation,
+#' fitted solution. A constraint counts as violated when its scaled violation,
 #' `|lhs - rhs| / max(1, |lhs|, |rhs|)` for equalities and the wrong-side gap
-#' for inequalities, exceeds 1e-6. The result is still returned and no number
-#' changes. Refit with `mxOption(model, "Feasibility tolerance", 1e-8)`, or use
-#' the two-fit route above for a product null. A constraint that cannot be
-#' evaluated is an error naming it; constraints with other operators are
-#' skipped. The guard does not detect a feasible fit of `a*b == 0` on the
-#' larger-statistic branch (issue #35); only the two-fit route avoids that.
+#' for inequalities, exceeds 1e-6. Constraints with other operators are skipped;
+#' a constraint that cannot be evaluated is an error naming it.
+#'
+#' When `h0` is violated, all three `type`s refit it once from its own estimates
+#' with `"Feasibility tolerance"` set to 1e-8, then use the refit model for the
+#' observed statistic and the bootstrap, and warn with class
+#' `RMediation_h0_refit` (statistic before and after). The `refit` slot of the
+#' result records `tolerance`, `statistic_before` and `statistic_after`, and is
+#' `NULL` when no refit was needed. Your own model object is not modified. This
+#' is the one case where the returned statistic differs from `OpenMx::mxCompare()`
+#' on your fits. If the refit fails, does not converge or leaves the constraint
+#' violated, your fit is kept, the warning is `RMediation_h0_refit_failed`, and
+#' the warning `RMediation_constraint_violation` names the violated constraint;
+#' refit yourself with `mxOption(model, "Feasibility tolerance", 1e-8)` or use
+#' the two-fit route above. `h1` is checked and warned about but never refit.
+#' With `type = "semi"` the bootstrap still stops at the first replicate that
+#' fails to converge (6 of 100 runs in a simulation with `R = 200`). The refit
+#' cannot detect a feasible fit of `a*b == 0` on the larger-statistic branch
+#' (issue #35); only the two-fit route avoids that.
 #'
 #' @param h0 A fitted restricted \code{OpenMx} model or medfit \code{SEMFit} under the null hypothesis.
 #' @param h1 A fitted full model of the same class as \code{h0}, under the alternative hypothesis.
