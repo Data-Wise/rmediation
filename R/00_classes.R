@@ -169,6 +169,8 @@ ci <- S7::new_generic("ci", "object")
 #'   `tolerance`, `statistic_before` and `statistic_after` (all single finite
 #'   numbers) when [mbco()] refit a violated `h0` at a tighter feasibility
 #'   tolerance. `print()` and `summary()` show a note when it is set.
+#' @param branch `NULL` (default), or the label of the single-path null that gave
+#'   the reported result when the result comes from [mbco_product_null()].
 #' @export
 #' @examples
 #' res <- MBCOResult(statistic = 4.2, df = 1, p_value = 0.04, type = "asymp")
@@ -182,9 +184,17 @@ MBCOResult <- S7::new_class("MBCOResult",
     refit = S7::new_property(
       NULL | S7::class_list,
       default = quote(NULL)
+    ),
+    branch = S7::new_property(
+      NULL | S7::class_character,
+      default = quote(NULL)
     )
   ),
   validator = function(self) {
+    b <- self@branch
+    if (!is.null(b) && !(length(b) == 1L && !is.na(b) && nzchar(b))) {
+      return("@branch must be NULL or a single non-empty string")
+    }
     r <- self@refit
     if (is.null(r)) {
       return(NULL)
