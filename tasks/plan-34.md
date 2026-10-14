@@ -70,6 +70,10 @@ does not use it and is unaffected. Constraint evaluation is proven by the T0 pro
 - Needs OpenMx; the new tests skip without it, as the existing mbco tests do.
 - The T0 evidence is 12 simulated datasets on one model and one OpenMx version.
 
+## Findings during implementation
+
+- **Linear equalities are affected too (slice 1, 2026-10-14).** A linear `b == 0` fitted from the full model's estimates at the default tolerance ends with `b` = 0.015 to 0.041 (seeds 1-3, OpenMx status 0), so the guard also fires there. The grill's footprint reasoning ("the mbco() tests use linear constraints that fit exactly") was wrong in general; empirically no existing test newly warns (full suite: same 2 pre-existing warnings). This matches finding 4 of issue #35's comment (nulls refit from the full model's estimates can be infeasible).
+
 ## Open items
 
 None blocking. Option B and E are a separate plan; issue #35's remainder rides on the SEMFit route.
