@@ -8,12 +8,12 @@
 
 | ID | Gap | Kind | Resolves by | Blocks |
 |---|---|---|---|---|
-| G1 | Fixture covariances (between and within, order m, y, x) are not in the issue | missing data | you supply them, or approve a download of the public supplement | T1-T12 only |
+| G1 | Fixture covariances (between and within, order m, y, x) are not in the issue | missing data | **closed 2026-10-13**: found in the supplement (below) | T1-T12 only |
 | G2 | The symmetry test holds only on a symmetric `(r_zm, r_zy)` grid | spec wording | edit SPEC-33 and the test description | nothing |
 | G3 | `r_za` semantics: single numeric, list per level, missing level | design decision | **decided** (see Decisions) | T3 |
 | G4 | Within-level random-slope covariance fixed at zero | documentation | add to `?ml_omitted_confounder` and `print()` text | T6 |
 | G5 | Method pattern for `print`, `summary`, `plot`, `as.data.frame` | investigation | **closed 2026-10-13**, see below | nothing |
-| G6 | The issue's paper-derived claims are unverified: T1-T12 targets, equation numbers, the zero-covariance assumption, the symmetry statement | verification | read the paper (a source I have not read) | T1-T12 targets |
+| G6 | The issue's paper-derived claims are unverified: T1-T12 targets, equation numbers, the zero-covariance assumption, the symmetry statement | verification | **partly closed 2026-10-13** (below); the paper is paywalled and unread | equation numbers, p. 98 only |
 | G7 | `ml_admissible()` exported or internal | design decision | **decided: internal** | T1 |
 | G8 | Default `r_zm`/`r_zy` grid vs the documented example grid | design decision | **decided: measure at T6** | T6 |
 
@@ -39,6 +39,22 @@
 | 4 | Edit SPEC-33: symmetry wording (G2), the G4 documentation line, the corrected claims from step 2 | G2, G4, G6 | commit to `dev` | me |
 | 5 | Record the decided G3, G7 and G8 in SPEC-33 | G3, G7, G8 | done in step 4 | me |
 | 6 | Re-state readiness: all gaps closed or decided, then T0 may start on your instruction | all | one-line verdict | me |
+
+## Step 2 result (2026-10-13, supplement only)
+
+Source: `hmbr_a_1105736_sm2316.pdf`, 622,390 bytes, figshare 2252944, CC BY 4.0, sha256 `0a0aa4bd...4f2e`. Downloaded to the
+session scratchpad after your per-file approval; not in the repo yet. The paper itself is paywalled (PubMed 26881959, not in PMC) and I have not read it.
+
+- **Fixture (G1 closed).** The supplement prints the Mplus sample statistics in (m, y, x) order, to 3 decimals:
+  within SW = [[.351,.167,.062],[.167,.474,.096],[.062,.096,.793]]; between SB = [[.649,.475,-.001],[.475,.526,-.024],[-.001,-.024,.207]].
+  The estimates match the issue: a*_B .024, b*_B .784, a*_W .086, b*_W .433. Its own code also uses step 0.01 over -0.5 to 0.5
+  and a zero a-b covariance, which confirms the grid and the zero-covariance assumption. The supplement lists an extra r_ZA of 0.5.
+- **T1-T12 reproduced independently (G6, mostly).** From those 3-decimal matrices, my own sub-block `solve()` derivation (scratch script, not the supplement's
+  code, not saved in the repo) gives every endpoint within 0.0009 of the issue's targets; 10 of 12 are within 0.0005.
+  The two outside are between, r_ZA = .3 (min -0.3729 vs -0.372; max 0.4462 vs 0.447). So the issue's targets and the formulas agree with each other.
+- **New finding: fixture precision.** The supplement's covariances are rounded to 3 decimals, and the r_ZA = .3 between endpoints are sensitive to that.
+  A tolerance of 0.0005 fails there for a correct implementation. Use 0.001 for the rounded-fixture tests (documented), and keep 0.0005 + 1e-9 only if the full-precision matrices become available.
+- **Still unverified:** the paper's equation numbers, the symmetry statement on p. 98, and the printed T1-T12 values themselves (the issue's numbers are consistent with my computation, but I have not seen the paper's table).
 
 ## Decisions (from the grill, 2026-10-13)
 

@@ -30,7 +30,7 @@ Grid size at the default settings is 30,603 rows per level, so cost is not a con
 
 ## Gaps to close before coding
 
-1. **The fixture values are not in the issue.** T1-T12 depend on the paper's between and within covariance
+1. **(Closed 2026-10-13, see PLAN-33.)** The fixture values were not in the issue. T1-T12 depend on the paper's between and within covariance
    estimates of (m, y, x) from the public supplement, and the issue names them without listing them. Without
    them T1-T12 cannot run. Get them from the supplement (needs your permission to download) or from you;
    record the source and the (m, y, x) order in the test file. Everything else can be built and tested on synthetic inputs first.
@@ -88,3 +88,5 @@ Grid size at the default settings is 30,603 rows per level, so cost is not a con
 
 - Source and permission for the supplement's covariance values (blocks T1-T12 only).
 - Decided in the grill (`GRILL-ml-omitted-confounder-plan-2026-10-13.md`): `ml_admissible()` internal in v1; example grid measured at T6; single `r_za` applies to both levels with `print()` naming what was used; T1-T12 targets unconfirmed by the paper are dropped; paper endpoints use tolerance `0.0005 + 1e-9` plus an independent regression-based oracle; supplement may be committed after a redistribution check and per-file download approval.
+
+- Fixture precision (2026-10-13): the supplement prints covariances to 3 decimals; T1-T12 reproduce within 0.0009 (10 of 12 within 0.0005). Use tolerance 0.001 for rounded-fixture tests and document why.
