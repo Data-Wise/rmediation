@@ -289,7 +289,9 @@ test_that("planted defects are caught by the exact oracle", {
   differs <- function(x) !isTRUE(all.equal(x@grid$ab_adj, ref@grid$ab_adj, tolerance = 1e-8))
   # (1) sign error in the adjusted a path
   testthat::local_mocked_bindings(
-    .mloc_adjust = function(a0, b0, k) c(a = a0 + k[["d_mz"]] * k[["d_za"]], b = b0 - k[["d_yz"]] * k[["s_zm"]]),
+    .mloc_adjust = function(a0, b0, k) {
+      cbind(a = a0 + k[, "d_mz"] * k[, "d_za"], b = b0 - k[, "d_yz"] * k[, "s_zm"])
+    },
     .package = "RMediation"
   )
   expect_true(differs(fit_pd()))
@@ -299,19 +301,40 @@ test_that("planted defect: a path built from the wrong regression", {
   skip_if_not_installed("testthat", "3.2.0")
   fit_pd <- function() .mloc_fit("pd", r_za = .3, r_zm = seq(-.5, .5, .25), r_zy = seq(-.5, .5, .25))
   ref <- fit_pd()
+  orig <- RMediation:::.mloc_bias
   testthat::local_mocked_bindings(
-    .mloc_bias = function(V) {
-      k <- c(
-        d_za = V[4L, 1L] / V[1L, 1L], d_mz = unname(solve(V[c(1, 4), c(1, 4)], V[c(1, 4), 2L])[2L]),
-        s_zm = unname(solve(V[c(1, 2), c(1, 2)], V[c(1, 2), 4L])[2L]),
-        d_yz = unname(solve(V[c(1, 2, 4), c(1, 2, 4)], V[c(1, 2, 4), 3L])[3L])
-      )
-      k[c("d_mz", "s_zm")] <- k[c("s_zm", "d_mz")] # a from the wrong regression
+    .mloc_bias = function(S, sd, r) {
+      k <- orig(S, sd, r)
+      k[, c("d_mz", "s_zm")] <- k[, c("s_zm", "d_mz")] # a from the wrong regression
       k
     },
     .package = "RMediation"
   )
   expect_false(isTRUE(all.equal(fit_pd()@grid$ab_adj, ref@grid$ab_adj, tolerance = 1e-8)))
+})
+
+test_that("vectorized coefficients equal a per-point solve() on sub-blocks", {
+  # reference: solve() on sub-blocks of the 4 x 4 covariance of (A, M, Y, Z), Z standardized
+  ref_bias <- function(S, sd, r) {
+    t(vapply(seq_len(nrow(r)), function(i) {
+      V <- rbind(cbind(S, r[i, ] * sd), c(r[i, ] * sd, 1))
+      co <- function(y, x) solve(V[x, x, drop = FALSE], V[x, y])
+      c(
+        d_za = V[4, 1] / V[1, 1], d_mz = co(2, c(1, 4))[2],
+        s_zm = co(4, c(1, 2))[2], d_yz = co(3, c(1, 2, 4))[3]
+      )
+    }, numeric(4)))
+  }
+  set.seed(14)
+  S <- crossprod(matrix(rnorm(9), 3)) + diag(3)
+  sd <- sqrt(diag(S))
+  R <- stats::cov2cor(S)
+  r <- matrix(runif(300, -.4, .4), ncol = 3)
+  r <- r[ml_admissible(r, R) < 1, , drop = FALSE]
+  expect_gt(nrow(r), 20)
+  got <- RMediation:::.mloc_bias(S, sd, r)
+  expect_equal(unname(got), unname(ref_bias(S, sd, r)), tolerance = 1e-10)
+  expect_identical(colnames(got), c("d_za", "d_mz", "s_zm", "d_yz"))
 })
 
 test_that("planted defect: weakened screen is caught by the screened oracle", {
