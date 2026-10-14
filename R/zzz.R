@@ -5,6 +5,7 @@
   S7::S4_register(ProductNormal)
   S7::S4_register(ProductNormal3) # nolint: object_usage_linter.
   S7::S4_register(MBCOResult)
+  S7::S4_register(MLOmittedConfounder)
 
   # Register S7 methods
   S7::methods_register()

@@ -180,6 +180,33 @@ MBCOResult <- S7::new_class("MBCOResult",
 # Register S4 for compatibility with base generics
 S7::S4_register(MBCOResult)
 
+#' Multilevel Omitted-Confounder Sensitivity Result
+#'
+#' Result class returned by [ml_omitted_confounder()]. Use the `print`,
+#' `summary`, `plot` and `as.data.frame` methods rather than constructing it
+#' directly.
+#'
+#' @param grid Data frame of adjusted paths over the sensitivity grid.
+#' @param ranges Data frame of the minimum and maximum adjusted indirect effect.
+#' @param unadjusted Named numeric vector of unadjusted indirect effects.
+#' @param screen Character string, `"pd"` or `"none"`.
+#' @param inputs List of the validated inputs.
+#' @param call The matched call.
+#' @keywords internal
+#' @noRd
+MLOmittedConfounder <- S7::new_class("MLOmittedConfounder",
+  properties = list(
+    grid = S7::class_data.frame,
+    ranges = S7::class_data.frame,
+    unadjusted = S7::class_numeric,
+    screen = S7::class_character,
+    inputs = S7::class_list,
+    call = S7::class_any
+  )
+)
+
+S7::S4_register(MLOmittedConfounder)
+
 #' Model-based Constrained Optimization (MBCO) Chi-squared Test
 #'
 #' This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a function of indirect effects.
