@@ -1,7 +1,7 @@
 # PLAN — issue #34: MBCO nonlinear-constraint nulls and OpenMx's feasibility tolerance
 
 **Issue:** [#34](https://github.com/Data-Wise/rmediation/issues/34) (open; findings posted 2026-10-07)
-**Status:** planned 2026-10-14, grilled the same day (`planning/GRILL-mbco-feasibility-plan-2026-10-14.md`, 5 decisions folded in below); T0 prototypes run 2026-10-14 (results below); worktree `~/.git-worktrees/rmediation/feature-mbco-tolerance` (branch `feature/mbco-tolerance`) created, no code yet.
+**Status:** planned 2026-10-14, grilled the same day (`planning/GRILL-mbco-feasibility-plan-2026-10-14.md`, 5 decisions folded in below) and adversarially reviewed by Codex (2 findings, both addressed: work order reconciled, wrong-branch limit documented); T0 prototypes run 2026-10-14 (results below); worktree `~/.git-worktrees/rmediation/feature-mbco-tolerance` (branch `feature/mbco-tolerance`) created, no code yet.
 **Scope:** OpenMx paths of `mbco()` only (`type = "asymp"`, `"parametric"`, `"semi"`). The SEMFit route is unaffected (it uses `anova()` on medfit fits).
 
 ## What is true now (verified 2026-10-14, OpenMx 2.22.11, scratch script)
@@ -83,16 +83,22 @@ slack control, the classed warning on `h1`, and the informative error.
 
 | Step | Work | Gate |
 |---|---|---|
-| T0 | Prototype constraint evaluation (open question 1) and the bootstrap convergence run (question 2); record numbers in this file | numbers in hand |
-| T1 | Tests first, OpenMx-gated: the issue's reprex (3 seeds) must warn with the default tolerance and not warn after tightening; inequality-slack control; planted defects (guard ignoring constraints; threshold off by 1e4) | tests red for the right reason |
-| T2 | Implement A, then B, then C | tests green |
-| T3 | `devtools::test()` counts, `R CMD check --as-cran` 0/0/note, E2E transcript with the reprex, NEWS | quote outputs in the PR |
+| T0 | Prototype constraint evaluation (open question 1) and the bootstrap convergence run (question 2); record numbers in this file | done 2026-10-14 (see T0 results) |
+| T1 | Tests first, OpenMx-gated: the issue's reprex (3 seeds) must warn with the default tolerance and not warn after tightening; inequality-slack control; scaled-threshold control on a large-scale constraint; warning on `h1`; informative error for an unevaluable constraint; planted defects (guard ignoring constraints; threshold off by 1e4; guard checking only `h0`) | tests red for the right reason |
+| T2 | Implement A (guard), then C (docs). **B and E are not part of this work**; they move to a separately gated follow-up (own plan, own PR) | tests green |
+| T3 | `devtools::test()` counts, `R CMD check --as-cran` 0/0/note, E2E transcript with the reprex (warning fires at the default tolerance, silent at 1e-8), NEWS (guard only; states that no returned number changes) | quote outputs in the PR |
 
 ## Risks
 
-- Behavior change for bootstrap users (B). Mitigation: measure first, state it in NEWS.
+- ~~Behavior change for bootstrap users (B)~~: not in scope after the grill. B and E need their own plan and gate before any returned number changes.
+- **The guard does not detect a feasible fit on the wrong product-null branch** (Codex review 2026-10-14; this is the remaining part of issue #35, not a tolerance failure). Mitigation is wording only: the warning text and `?mbco` say that a feasible fit of a product null (`a*b == 0`) may still sit on the larger-statistic branch, and point to the two-fit route. Not detected in code on purpose: `MxConstraint@linear` is `FALSE` for both a linear `a == 0` and a nonlinear `a*b == 0`, so it cannot separate them, and parsing arbitrary constraint formulas is the brittleness issue #35 already rejected. The real fix for that case is the two-fit route and the SEMFit route (`medfit::mbco_sem()`).
+- An unevaluable constraint now raises an error from `mbco()` (grill decision 5, user override); the message names the constraint.
 - The guard could warn on legitimate near-boundary solutions; threshold and the inequality case need tests.
 - Needs OpenMx; tests are skipped without it, as the existing mbco tests are.
+
+## Related
+
+Issue #35 (wrong-branch product nulls) is a separate failure mode; this plan neither fixes nor claims to fix it. Evidence that the wrong-branch case exists: #35's comment (memory_exp: `a1 = 0` branch 221.05 vs `b1 = 0` branch 0.0831). In an 8-seed run of this plan's reprex (true null b = 0) tight-tolerance feasible fits matched the exact optimum in 8 of 8, so that scenario does not show it.
 
 ## Release
 
