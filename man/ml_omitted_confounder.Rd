@@ -71,7 +71,7 @@ estimated.
 
 \strong{Screen.} A grid point is admissible when the augmented 4 by 4 correlation
 matrix of \code{A}, \code{M}, \code{Y} and \code{Z} is positive definite, equivalently
-\verb{r' R^-1 r < 1} with \verb{r = (r_za, r_zm, r_zy)} and \code{R} the observed
+\verb{r' R^-1 r < 1} with \code{r} = \verb{(r_za, r_zm, r_zy)} and \code{R} the observed
 correlation matrix; this quantity is returned as \code{r2} in the grid. With
 \code{screen = "pd"} (the default) points that are not admissible get \code{NA} for
 the adjusted paths. \strong{The default does not reproduce the published

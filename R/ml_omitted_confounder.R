@@ -32,7 +32,7 @@
 #'
 #' **Screen.** A grid point is admissible when the augmented 4 by 4 correlation
 #' matrix of `A`, `M`, `Y` and `Z` is positive definite, equivalently
-#' `r' R^-1 r < 1` with `r = (r_za, r_zm, r_zy)` and `R` the observed
+#' `r' R^-1 r < 1` with `r` = `(r_za, r_zm, r_zy)` and `R` the observed
 #' correlation matrix; this quantity is returned as `r2` in the grid. With
 #' `screen = "pd"` (the default) points that are not admissible get `NA` for
 #' the adjusted paths. **The default does not reproduce the published
