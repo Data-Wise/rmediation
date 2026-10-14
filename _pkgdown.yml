@@ -94,6 +94,7 @@ reference:
   - ci
   - ci_mediation_data
   - mbco
+  - ml_omitted_confounder
 
 - title: Distribution Functions
   desc: >

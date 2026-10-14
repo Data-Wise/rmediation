@@ -8,6 +8,12 @@
 
 ## New features
 
+- `ml_omitted_confounder()` adds a sensitivity analysis for an omitted
+  confounder of the mediator-outcome relation in two-level (1-1-1) mediation,
+  after Tofighi and Kelley (2016). It returns an `MLOmittedConfounder` object
+  with `print`, `summary`, `plot` and `as.data.frame` methods. The default
+  screen keeps only positive-definite grid points, so it does not reproduce the
+  published tables; use `screen = "none"` for those.
 - `mbco(h0, h1, type = "asymp")` accepts two fitted medfit `SEMFit` objects
   with medfit >= 0.8.0. It returns `MBCOResult` using `stats::anova()` without
   refitting or requiring OpenMx. The restricted fit must come first; df is the
