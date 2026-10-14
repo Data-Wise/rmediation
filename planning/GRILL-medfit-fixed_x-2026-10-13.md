@@ -51,3 +51,5 @@ place it after 0.9.0 T3/T5 or as a 0.9.x on top of 0.9.0, to avoid redoing the m
 **Update 2026-10-13 19:26Z (observed):** medfit PR #171 (G8 `anova()` fix) merged to medfit `dev` as `5ebdecf`. `fixed_x` is still not started or placed; no release named for dropping "experimental".
 
 **medfit author answer (relayed 2026-10-13 13:37 MDT, non-binding):** target release for dropping "experimental" is 0.11.0 (latent means); criteria not defined; not a CRAN commitment (medfit GitHub-only until decided separately). `fixed_x` placement and whether it counts toward the label: undecided; proposal not accepted.
+
+**Update 2026-10-13 23:23 MDT (observed):** the proposal was accepted and built. medfit PR #175 (`1023520`) merged `fixed_x = FALSE | TRUE | names` (default FALSE) into medfit `dev`, bundled into 0.9.0, with a conditional logLik and AIC/BIC across fixed sets refused; PR #174 (`8681083`) merged observed mean structure. Unreleased; hold remaining items: latent means and dropping "experimental" (target 0.11.0, criteria undefined). RMediation route not yet tested against it.
