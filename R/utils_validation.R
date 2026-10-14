@@ -143,9 +143,12 @@ is_valid_for_computation <- function(object) {
       eigen(object@Sigma, symmetric = TRUE, only.values = TRUE)$values
     },
     error = function(e) {
-      return(FALSE)
+      NULL
     }
   )
+  if (is.null(eigen_vals)) {
+    return(FALSE)
+  }
 
   # Need positive semi-definite for stable computation
   if (any(eigen_vals < -1e-8)) {
