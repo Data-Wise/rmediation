@@ -6,6 +6,15 @@
   tests, including result-field mutation checks and fitted RAM smoke tests.
   Coverage CI now retains line/expression summaries and uncovered-line artifacts.
 
+## Bug fixes
+
+- `pprodnormal()` and `qprodnormal()` with `type = "dop"` no longer collapse at
+  large standardized means (`pprodnormal(400, 20, 20, 1, 1)` returned 8e-7
+  instead of about 0.507) and are accurate in far tails (previously wrong by up
+  to 4e-6 absolute). Both now share one integral over the support of the
+  conditioning variable at a tight tolerance. The CDF is also clamped to
+  [0, 1], so `lower.tail = FALSE` can no longer be slightly negative (#60).
+
 ## New features
 
 - `ml_omitted_confounder()` adds a sensitivity analysis for an omitted

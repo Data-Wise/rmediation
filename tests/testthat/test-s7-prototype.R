@@ -20,8 +20,9 @@ test_that("S7 core .compute_ci_dop() matches legacy medciMeeker()", {
   pn <- ProductNormal(mu = c(mu.x, mu.y), Sigma = Sigma)
   s7 <- .compute_ci_dop(pn, alpha)
 
-  # Compare CI
-  expect_equal(s7$CI, legacy[[1]], tolerance = 1e-10)
+  # Compare CI. The legacy copy still integrates over (-Inf, Inf) at integrate()'s default
+  # tolerance (differences ~1e-9, issue #60); 1e-6 is looser than that and far below any use.
+  expect_equal(s7$CI, legacy[[1]], tolerance = 1e-6)
 
   # Compare Estimate
   expect_equal(s7$Estimate, legacy$Estimate, tolerance = 1e-10)
@@ -140,7 +141,7 @@ test_that("medci_prototype() wrapper matches legacy medci() with type='dop'", {
   expect_equal(names(prototype), names(legacy))
 
   # Compare CI
-  expect_equal(prototype[[1]], legacy[[1]], tolerance = 1e-10)
+  expect_equal(prototype[[1]], legacy[[1]], tolerance = 1e-6)
 
   # Compare Estimate
   expect_equal(prototype$Estimate, legacy$Estimate, tolerance = 1e-10)
@@ -224,7 +225,7 @@ test_that("medci_prototype() with type='all' matches legacy structure", {
   # Compare DOP results
   expect_equal(prototype$`Distribution of Product`[[1]],
     legacy$`Distribution of Product`[[1]],
-    tolerance = 1e-10
+    tolerance = 1e-6
   )
 })
 
@@ -269,7 +270,7 @@ test_that("Edge case: high correlation rho=0.9", {
   # Prototype
   prototype <- medci_prototype(mu.x, mu.y, se.x, se.y, rho, alpha, type = "dop")
 
-  expect_equal(prototype[[1]], legacy[[1]], tolerance = 1e-10)
+  expect_equal(prototype[[1]], legacy[[1]], tolerance = 1e-6)
 })
 
 test_that("Edge case: negative correlation rho=-0.7", {
