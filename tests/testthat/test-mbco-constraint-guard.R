@@ -234,3 +234,104 @@ test_that("planted defect: a guard that ignores constraints is caught", {
   )
   expect_failure(expect_warning(mbco(f$h0, f$h1), class = "RMediation_constraint_violation"))
 })
+
+# Slice 4: every type goes through the one call site, and each planted defect is caught.
+.guard_classes <- function(expr) {
+  seen <- character()
+  withCallingHandlers(
+    tryCatch(expr, error = function(e) NULL),
+    warning = function(w) {
+      seen <<- c(seen, class(w)[1L])
+      invokeRestart("muffleWarning")
+    }
+  )
+  seen
+}
+
+test_that("the guard fires through type = 'parametric' and 'semi'", {
+  skip_if_not_installed("OpenMx")
+  f <- .guard_fits(1)
+  for (type in c("parametric", "semi")) {
+    seen <- .guard_classes(mbco(f$h0, f$h1, type = type, R = 3L))
+    expect_true("RMediation_constraint_violation" %in% seen, info = type)
+  }
+  f8 <- .guard_fits(1, tol = 1e-8)
+  for (type in c("parametric", "semi")) {
+    seen <- .guard_classes(mbco(f8$h0, f8$h1, type = type, R = 3L))
+    expect_false("RMediation_constraint_violation" %in% seen, info = type)
+  }
+})
+
+# Oracles: each asserts one behavior the guard must have; a mutant that breaks it fails here.
+.oracle_fires <- function() {
+  f <- .guard_fits(1)
+  expect_warning(mbco(f$h0, f$h1), class = "RMediation_constraint_violation")
+}
+.oracle_boundary <- function() {
+  m <- .guard_unfitted(2e-6, OpenMx::mxConstraint(alg == 0, name = "eq"))
+  expect_warning(RMediation:::.mbco_warn_constraints(m, "h0"),
+    class = "RMediation_constraint_violation"
+  )
+}
+.oracle_scaled <- function() {
+  big <- .guard_unfitted(0.03, OpenMx::mxAlgebra(alg + 1e6, name = "big"),
+    OpenMx::mxConstraint(big == 1e6, name = "large")
+  )
+  expect_no_warning(RMediation:::.mbco_warn_constraints(big, "h0"),
+    class = "RMediation_constraint_violation"
+  )
+}
+.oracle_h1 <- function() {
+  f <- .guard_fits(1)
+  h0b <- OpenMx::omxSetParameters(f$h1, labels = c("a", "b"), free = FALSE, values = 0)
+  h0b <- suppressWarnings(OpenMx::mxRun(h0b, silent = TRUE))
+  expect_warning(mbco(h0b, f$h0), "of h1", class = "RMediation_constraint_violation")
+}
+
+test_that("the oracles pass on the real guard", {
+  skip_if_not_installed("OpenMx")
+  .oracle_fires()
+  .oracle_boundary()
+  .oracle_scaled()
+  .oracle_h1()
+})
+
+test_that("planted defect: threshold 1e4 too loose is caught by the boundary oracle", {
+  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("testthat", "3.2.0")
+  orig <- RMediation:::.mbco_constraint_violation
+  testthat::local_mocked_bindings(
+    .mbco_constraint_violation = function(model) orig(model) / 1e4,
+    .package = "RMediation"
+  )
+  expect_failure(.oracle_boundary())
+})
+
+test_that("planted defect: checking only h0 is caught by the h1 oracle", {
+  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("testthat", "3.2.0")
+  orig <- RMediation:::.mbco_warn_constraints
+  testthat::local_mocked_bindings(
+    .mbco_warn_constraints = function(model, label, threshold = 1e-6) {
+      if (identical(label, "h1")) invisible(numeric(0)) else orig(model, label, threshold)
+    },
+    .package = "RMediation"
+  )
+  expect_failure(.oracle_h1())
+})
+
+test_that("planted defect: an unscaled violation is caught by the scaled oracle", {
+  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("testthat", "3.2.0")
+  testthat::local_mocked_bindings(
+    .mbco_constraint_violation = function(model) {
+      vapply(model@constraints, function(cn) {
+        f <- cn@formula
+        ev <- function(e) eval(bquote(OpenMx::mxEval(.(e), model, compute = FALSE)))
+        abs(ev(f[[2L]]) - ev(f[[3L]]))
+      }, numeric(1))
+    },
+    .package = "RMediation"
+  )
+  expect_failure(.oracle_scaled())
+})

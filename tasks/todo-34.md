@@ -7,8 +7,8 @@ Plan and acceptance criteria: `tasks/plan-34.md`. Worktree: `~/.git-worktrees/rm
 - [x] 2. Scaled threshold, inequality operators, `h1` check. Done 2026-10-14.
 - [x] Checkpoint 1: reprex warns/silent, existing mbco tests unchanged, full-suite counts vs the `dev` baseline.
 - [x] 3. Unevaluable constraint: error naming the constraint; unsupported operators skipped.
-- [ ] 4. All three types through the single call site; planted defects each fail a named test.
-- [ ] Checkpoint 2: mutant evidence quoted.
+- [x] 4. All three types through the single call site; planted defects each fail a named test.
+- [x] Checkpoint 2: mutant evidence quoted.
 - [ ] 5. `?mbco` docs and NEWS (tolerance, two-fit route, exact-statistic/conservative-p wording, wrong-branch limit, new error).
 - [ ] Checkpoint 3: strict check 0/0, E2E transcript, spelling, PR to `dev` (merge on instruction only).
 - [ ] Deferred, separate plan: B (bootstrap tolerance) and E (refit `h0` for the observed statistic).
