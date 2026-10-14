@@ -31,8 +31,10 @@
   supplies the observed statistic and the bootstrap, a warning of class
   `RMediation_h0_refit` reports the change, and the new `refit` slot of
   `MBCOResult` records it (`NULL` when no refit was needed). Clean fits and
-  constraint-free models are unchanged. If the refit fails, your fit is kept and
-  `RMediation_h0_refit_failed` and `RMediation_constraint_violation` warn. A
+  constraint-free models are unchanged. If the refit fails, does not converge or leaves
+  the constraint violated, `mbco()` stops with an error of class
+  `RMediation_h0_refit_failed` naming the constraint, instead of returning a
+  statistic from a known-invalid fit. A
   constraint that cannot be evaluated now errors. `type = "semi"` still stops at
   the first replicate that fails to converge. A feasible `a*b == 0` fit on the
   larger-statistic branch is not detected (issue #35); use one linear null per

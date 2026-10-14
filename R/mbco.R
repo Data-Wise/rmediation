@@ -37,14 +37,11 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
   } # if NPSOL is not available, use SLSQP
 
   # A violated h0 is refit once at a tighter tolerance, so all three types see the same
-  # model; on failure the user's fit is kept and the guard warns (see ?mbco).
+  # model; if it cannot be repaired the call stops (fail closed, see ?mbco).
   refit <- .mbco_refit_h0(h0, h1)
   if (!is.null(refit)) {
     if (is.null(refit$model)) {
-      .mbco_signal("RMediation_h0_refit_failed", sprintf(
-        "An h0 constraint is violated and %s; keeping your fit (see ?mbco).",
-        refit$failure
-      ))
+      .mbco_stop_refit_failed(h0, refit$failure)
     } else {
       h0 <- refit$model
       .mbco_signal("RMediation_h0_refit", sprintf(

@@ -85,11 +85,13 @@ observed statistic and the bootstrap, and warn with class
 result records \code{tolerance}, \code{statistic_before} and \code{statistic_after}, and is
 \code{NULL} when no refit was needed. Your own model object is not modified. This
 is the one case where the returned statistic differs from \code{OpenMx::mxCompare()}
-on your fits. If the refit fails, does not converge or leaves the constraint
-violated, your fit is kept, the warning is \code{RMediation_h0_refit_failed}, and
-the warning \code{RMediation_constraint_violation} names the violated constraint;
-refit yourself with \code{mxOption(model, "Feasibility tolerance", 1e-8)} or use
-the two-fit route above. \code{h1} is checked and warned about but never refit.
+on your fits. If the refit errors, does not converge or leaves the constraint
+violated, \code{mbco()} stops with an error of class \code{RMediation_h0_refit_failed}
+that names the constraint and the reason, before any bootstrap work and for
+every \code{type}: no statistic is returned from a fit known to be invalid. Refit
+yourself with \code{mxOption(model, "Feasibility tolerance", 1e-8)} or use
+\code{\link[=mbco_product_null]{mbco_product_null()}} for a product null. \code{h1} is checked and warned about
+(\code{RMediation_constraint_violation}) but never refit.
 With \code{type = "semi"} the bootstrap still stops at the first replicate that
 fails to converge (6 of 100 runs in a simulation with \code{R = 200}). The refit
 cannot detect a feasible fit of \code{a*b == 0} on the larger-statistic branch

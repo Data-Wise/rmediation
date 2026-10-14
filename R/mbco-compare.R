@@ -80,6 +80,27 @@
   ))
 }
 
+# A violated h0 that cannot be repaired is an error, never a number (grill 2026-10-14).
+.mbco_stop_refit_failed <- function(h0, failure, threshold = 1e-6) {
+  v <- .mbco_constraint_violation(h0)
+  bad <- names(v)[v > threshold]
+  stop(structure(
+    class = c("RMediation_h0_refit_failed", "error", "condition"),
+    list(
+      message = sprintf(
+        paste0(
+          "Constraint %s of h0 is violated at the fitted solution and %s, so the MBCO ",
+          "statistic would be understated. Refit h0 yourself with mxOption(model, ",
+          "\"Feasibility tolerance\", 1e-8), or for a product null such as a*b = 0 use ",
+          "mbco_product_null() (see ?mbco)."
+        ),
+        paste0("'", bad, "'", collapse = ", "), failure
+      ),
+      call = NULL
+    )
+  ))
+}
+
 .mbco_refit_h0 <- function(h0, h1, threshold = 1e-6, tolerance = 1e-8) {
   if (!any(.mbco_constraint_violation(h0) > threshold)) {
     return(NULL)
