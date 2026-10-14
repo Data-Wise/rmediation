@@ -66,7 +66,7 @@
 .mbco_branch_probe <- function(h0, h1, gap = 1e-4, cap = 5L, threshold = 1e-6) {
   out <- list()
   skipped <- character()
-  m2ll <- function(m) OpenMx::mxEval(fitfunction, m)[1]
+  m2ll <- function(m) as.numeric(m$fitfunction$result)[1L]
   base_ll <- m2ll(h0)
   for (constraint in h0@constraints) {
     if (!identical(as.character(constraint@formula[[1L]]), "==")) next

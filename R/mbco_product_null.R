@@ -10,7 +10,8 @@
 #' smaller statistic with 1 degree of freedom.
 #'
 #' A single nonlinear constraint such as `ind == 0` can converge to the branch
-#' with the larger statistic and give a wrong test; see [mbco()]. Fixing a
+#' with the larger statistic and give a wrong test; see [mbco()], which warns
+#' when it detects this. Fixing a
 #' parameter is exact, so this function avoids that and the feasibility
 #' tolerance problem. The p-value is conservative when more than one path is 0
 #' (standard intersection-union theory, not verified here). Each branch fit
