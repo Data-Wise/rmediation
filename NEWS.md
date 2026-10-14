@@ -6,6 +6,12 @@
   tests, including result-field mutation checks and fitted RAM smoke tests.
   Coverage CI now retains line/expression summaries and uncovered-line artifacts.
 
+## Removed
+
+- `medci_prototype()` is removed. It was an exported S7-core prototype of
+  `medci()` (shipped in 1.6.1) that nothing in the package called. Use
+  `medci()`, or `ci()` on a `ProductNormal`, which return the same intervals.
+
 ## Bug fixes
 
 - `pprodnormal3()` (and `cdf()`/`dist_quantile()` on `ProductNormal3`) returned 0
