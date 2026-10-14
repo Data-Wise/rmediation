@@ -280,7 +280,7 @@ S7::S4_register(MLOmittedConfounder)
 #' current RNG stream. The semiparametric method requires positive-definite sample
 #' and null covariances and stops at the first failed refit or nonfinite replicate
 #' statistic. It does not retry or discard failed replicates. Parametric results
-#' require a finite nonnegative statistic, positive df, and a p-value in [0, 1].
+#' require a finite nonnegative statistic, positive df, and a p-value in `[0, 1]`.
 #'
 #' **Testing an OpenMx product null (\eqn{a b = 0}).** The null \eqn{ab = 0} holds when
 #' \eqn{a = 0} or \eqn{b = 0}. A single nonlinear constraint such as
