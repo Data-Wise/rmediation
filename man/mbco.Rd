@@ -56,8 +56,9 @@ require a finite nonnegative statistic, positive df, and a p-value in [0, 1].
 \strong{Testing an OpenMx product null (\eqn{a b = 0}).} The null \eqn{ab = 0} holds when
 \eqn{a = 0} or \eqn{b = 0}. A single nonlinear constraint such as
 \code{ind == 0} can converge to either branch, and the optimizer may return the
-branch with the larger statistic, which gives a wrong test. To test a product
-of two paths, fit one linear null per path (\code{a == 0} and \code{b == 0}), run
+branch with the larger statistic, which gives a wrong test. \code{\link[=mbco_product_null]{mbco_product_null()}}
+avoids this: give it the fitted full model and the path labels. By hand, fit
+one linear null per path (\code{a == 0} and \code{b == 0}), run
 \code{mbco()} on each, and report the smaller statistic with 1 degree of freedom
 (see the example). The smaller statistic is the exact constrained
 likelihood-ratio statistic for \eqn{ab = 0}. Its chi-square(1) p-value is
@@ -182,6 +183,9 @@ res_a1
 res_b1
 ## Test of H0: a1*b1 = 0 (df = 1): the smaller of the two statistics
 min(res_a1@statistic, res_b1@statistic)
+## The same test in one call: fixes each path at 0 in a copy of the fitted
+## full model and returns the binding branch (here b1, statistic 0.0831)
+mbco_product_null(full_model, c("a1", "b1"))
 }
 }
 \author{

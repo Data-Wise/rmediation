@@ -9,7 +9,8 @@ MBCOResult(
   df = integer(0),
   p_value = integer(0),
   type = character(0),
-  refit = NULL
+  refit = NULL,
+  branch = NULL
 )
 }
 \arguments{
@@ -25,6 +26,9 @@ MBCOResult(
 \code{tolerance}, \code{statistic_before} and \code{statistic_after} (all single finite
 numbers) when \code{\link[=mbco]{mbco()}} refit a violated \code{h0} at a tighter feasibility
 tolerance. \code{print()} and \code{summary()} show a note when it is set.}
+
+\item{branch}{\code{NULL} (default), or the label of the single-path null that gave
+the reported result when the result comes from \code{\link[=mbco_product_null]{mbco_product_null()}}.}
 }
 \description{
 A class representing the results of a Model-Based Constrained Optimization (MBCO) test.
