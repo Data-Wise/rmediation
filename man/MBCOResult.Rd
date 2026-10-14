@@ -8,7 +8,8 @@ MBCOResult(
   statistic = integer(0),
   df = integer(0),
   p_value = integer(0),
-  type = character(0)
+  type = character(0),
+  refit = NULL
 )
 }
 \arguments{
@@ -19,6 +20,11 @@ MBCOResult(
 \item{p_value}{Numeric p-value.}
 
 \item{type}{Character string indicating the type of test.}
+
+\item{refit}{\code{NULL} (default) when no refit happened, or a list with
+\code{tolerance}, \code{statistic_before} and \code{statistic_after} (all single finite
+numbers) when \code{\link[=mbco]{mbco()}} refit a violated \code{h0} at a tighter feasibility
+tolerance. \code{print()} and \code{summary()} show a note when it is set.}
 }
 \description{
 A class representing the results of a Model-Based Constrained Optimization (MBCO) test.

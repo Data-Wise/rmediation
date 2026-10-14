@@ -63,6 +63,51 @@
   invisible(v)
 }
 
+# Refit a violated h0 at a tighter feasibility tolerance (issue #34, grill 2026-10-14).
+# NULL when h0 has no violated constraint. Otherwise a list: `model` and `refit`
+# (tolerance, statistic_before, statistic_after) on success, or `model = NULL`,
+# `refit = NULL` and a `failure` reason when the refit errors, does not converge or is
+# still violated. Never an error: the caller falls back to the user's fit.
+.mbco_run_refit <- function(model) {
+  suppressWarnings(OpenMx::mxRun(model, silent = TRUE))
+}
+
+.mbco_signal <- function(class, message) {
+  warning(structure(
+    class = c(class, "warning", "condition"),
+    list(message = message, call = NULL)
+  ))
+}
+
+.mbco_refit_h0 <- function(h0, h1, threshold = 1e-6, tolerance = 1e-8) {
+  if (!any(.mbco_constraint_violation(h0) > threshold)) {
+    return(NULL)
+  }
+  failed <- function(why) list(model = NULL, refit = NULL, failure = why)
+  fit <- tryCatch(
+    .mbco_run_refit(OpenMx::mxOption(h0, "Feasibility tolerance", tolerance)),
+    error = function(e) e
+  )
+  if (inherits(fit, "error")) {
+    return(failed(sprintf("the refit failed: %s", conditionMessage(fit))))
+  }
+  code <- fit$output$status$code
+  if (length(code) != 1L || is.na(code) || !code %in% c(0, 1)) {
+    return(failed("the refit did not converge"))
+  }
+  if (any(.mbco_constraint_violation(fit) > threshold)) {
+    return(failed("a constraint is still violated after the refit"))
+  }
+  list(
+    model = fit,
+    refit = list(
+      tolerance = tolerance,
+      statistic_before = OpenMx::mxCompare(h1, h0)$diffLL[2],
+      statistic_after = OpenMx::mxCompare(h1, fit)$diffLL[2]
+    )
+  )
+}
+
 # Validate the observed comparison before any bootstrap sampling.
 .mbco_compare <- function(h0, h1) {
   .mbco_warn_constraints(h0, "h0")
