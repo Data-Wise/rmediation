@@ -36,3 +36,63 @@
   }, logical(1))
   names(values)[moved]
 }
+
+# Candidate for one involved parameter: h0 without the constraint under test, that parameter fixed
+# at 0. The constraint is dropped so the result does not depend on how the optimizer handles a
+# constraint whose gradient vanishes at the fixed path (SLSQP was observed to cope: keeping it
+# flagged the same 14 of 24 seeds); feasibility is rechecked afterwards instead.
+.mbco_probe_model <- function(h0, constraint, label) {
+  nocon <- OpenMx::mxModel(h0, name = "probe_base", remove = TRUE, constraint@name)
+  OpenMx::omxSetParameters(nocon, labels = label, free = FALSE, values = 0, name = "probe")
+}
+
+.mbco_run_probe <- function(model) {
+  suppressWarnings(OpenMx::mxRun(model, silent = TRUE))
+}
+
+# Scaled violation of the original constraint at a candidate fit (re-added, evaluated without
+# optimizing).
+.mbco_candidate_violation <- function(fit, h0, constraint) {
+  with_c <- suppressWarnings(OpenMx::mxRun(
+    OpenMx::mxModel(fit, constraint), useOptimizer = FALSE, silent = TRUE
+  ))
+  max(.mbco_constraint_violation(with_c)[[constraint@name]])
+}
+
+# Per equality constraint of h0: the involved parameter whose zero-fit has a converged, feasible
+# fit with -2LL lower than h0's by more than `gap`. Returns a list of
+# list(constraint, parameter, improvement); attribute "skipped" names constraints with more than
+# `cap` involved parameters. Advisory: any failure inside is skipped, never raised.
+.mbco_branch_probe <- function(h0, h1, gap = 1e-4, cap = 5L, threshold = 1e-6) {
+  out <- list()
+  skipped <- character()
+  m2ll <- function(m) OpenMx::mxEval(fitfunction, m)[1]
+  base_ll <- m2ll(h0)
+  for (constraint in h0@constraints) {
+    if (!identical(as.character(constraint@formula[[1L]]), "==")) next
+    involved <- tryCatch(.mbco_involved(h0, h1, constraint@name), error = function(e) NULL)
+    if (is.null(involved) || !length(involved)) next
+    if (length(involved) > cap) {
+      skipped <- c(skipped, constraint@name)
+      next
+    }
+    best <- NULL
+    for (label in involved) {
+      ll <- tryCatch({
+        fit <- .mbco_run_probe(.mbco_probe_model(h0, constraint, label))
+        code <- fit$output$status$code
+        ok <- length(code) == 1L && !is.na(code) && code %in% c(0, 1) &&
+          .mbco_candidate_violation(fit, h0, constraint) <= threshold
+        if (ok) m2ll(fit) else NA_real_
+      }, error = function(e) NA_real_)
+      improvement <- base_ll - ll
+      if (!is.na(improvement) && improvement > gap &&
+            (is.null(best) || improvement > best$improvement)) {
+        best <- list(constraint = constraint@name, parameter = label, improvement = improvement)
+      }
+    }
+    if (!is.null(best)) out[[length(out) + 1L]] <- best
+  }
+  attr(out, "skipped") <- skipped
+  out
+}
