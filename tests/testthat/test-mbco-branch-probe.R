@@ -148,3 +148,21 @@ test_that("planted defect: ignoring the feasibility recheck flags an infeasible 
   )
   expect_failure(expect_length(RMediation:::.mbco_branch_probe(far, f$h1), 0L))
 })
+
+test_that("a constraint with no involved parameters, or whose involvement step fails, is skipped quietly", {
+  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("testthat", "3.2.0")
+  f <- .guard_fits(1)
+  const <- .run(OpenMx::mxModel(f$h1, name = "const",
+    OpenMx::mxAlgebra(sum(1, 2), name = "k"), OpenMx::mxConstraint(k == 3, name = "k_eq3")
+  ))
+  out <- RMediation:::.mbco_branch_probe(const, f$h1)
+  expect_length(out, 0L)
+  expect_length(attr(out, "skipped"), 0L)
+  testthat::local_mocked_bindings(
+    .mbco_involved = function(h0, h1, name, ...) stop("involvement exploded"),
+    .package = "RMediation"
+  )
+  expect_no_error(out2 <- RMediation:::.mbco_branch_probe(f$h0, f$h1))
+  expect_length(out2, 0L)
+})
