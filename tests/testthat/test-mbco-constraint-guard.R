@@ -38,7 +38,18 @@
   list(h1 = h1, h0 = suppressWarnings(OpenMx::mxRun(h0, silent = TRUE)))
 }
 
+# mbco() now refits a violated h0 before the guard looks at it (tasks/plan-34-be.md), so tests that
+# exercise the guard through mbco() switch the refit off; the refit has its own test files.
+.guard_no_refit <- function(env = parent.frame()) {
+  testthat::local_mocked_bindings(
+    .mbco_refit_h0 = function(h0, h1, ...) NULL,
+    .package = "RMediation",
+    .env = env
+  )
+}
+
 test_that("a nonlinear equality fitted at the default tolerance triggers the guard (seeds 1-3)", {
+  .guard_no_refit()
   skip_if_not_installed("OpenMx")
   for (seed in 1:3) {
     f <- .guard_fits(seed)
@@ -58,6 +69,7 @@ test_that("the same model fitted at tolerance 1e-8 is silent", {
 })
 
 test_that("the warning names the constraint, the model and the remedy", {
+  .guard_no_refit()
   skip_if_not_installed("OpenMx")
   f <- .guard_fits(1)
   w <- tryCatch(mbco(f$h0, f$h1), RMediation_constraint_violation = function(w) w)
@@ -69,6 +81,7 @@ test_that("the warning names the constraint, the model and the remedy", {
 })
 
 test_that("the guard never changes the returned result", {
+  .guard_no_refit()
   skip_if_not_installed("OpenMx")
   f <- .guard_fits(2)
   res <- suppressWarnings(mbco(f$h0, f$h1))
@@ -87,6 +100,7 @@ test_that("the guard never changes the returned result", {
 }
 
 test_that("a linear equality fitted at the default tolerance is also flagged (seeds 1-3)", {
+  .guard_no_refit()
   skip_if_not_installed("OpenMx")
   for (seed in 1:3) {
     f <- .guard_fits(seed)
@@ -225,6 +239,7 @@ test_that("a model with no constraints is untouched", {
 })
 
 test_that("planted defect: a guard that ignores constraints is caught", {
+  .guard_no_refit()
   skip_if_not_installed("OpenMx")
   skip_if_not_installed("testthat", "3.2.0")
   f <- .guard_fits(1)
@@ -249,6 +264,7 @@ test_that("planted defect: a guard that ignores constraints is caught", {
 }
 
 test_that("the guard fires through type = 'parametric' and 'semi'", {
+  .guard_no_refit()
   skip_if_not_installed("OpenMx")
   f <- .guard_fits(1)
   for (type in c("parametric", "semi")) {
@@ -264,6 +280,7 @@ test_that("the guard fires through type = 'parametric' and 'semi'", {
 
 # Oracles: each asserts one behavior the guard must have; a mutant that breaks it fails here.
 .oracle_fires <- function() {
+  .guard_no_refit()
   f <- .guard_fits(1)
   expect_warning(mbco(f$h0, f$h1), class = "RMediation_constraint_violation")
 }
@@ -282,6 +299,7 @@ test_that("the guard fires through type = 'parametric' and 'semi'", {
   )
 }
 .oracle_h1 <- function() {
+  .guard_no_refit()
   f <- .guard_fits(1)
   h0b <- OpenMx::omxSetParameters(f$h1, labels = c("a", "b"), free = FALSE, values = 0)
   h0b <- suppressWarnings(OpenMx::mxRun(h0b, silent = TRUE))
@@ -289,6 +307,7 @@ test_that("the guard fires through type = 'parametric' and 'semi'", {
 }
 
 test_that("the oracles pass on the real guard", {
+  .guard_no_refit()
   skip_if_not_installed("OpenMx")
   .oracle_fires()
   .oracle_boundary()

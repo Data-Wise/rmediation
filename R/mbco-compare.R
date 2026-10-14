@@ -72,6 +72,13 @@
   suppressWarnings(OpenMx::mxRun(model, silent = TRUE))
 }
 
+.mbco_signal <- function(class, message) {
+  warning(structure(
+    class = c(class, "warning", "condition"),
+    list(message = message, call = NULL)
+  ))
+}
+
 .mbco_refit_h0 <- function(h0, h1, threshold = 1e-6, tolerance = 1e-8) {
   if (!any(.mbco_constraint_violation(h0) > threshold)) {
     return(NULL)

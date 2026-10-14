@@ -36,6 +36,28 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
     optim <- "SLSQP"
   } # if NPSOL is not available, use SLSQP
 
+  # A violated h0 is refit once at a tighter tolerance, so all three types see the same
+  # model; on failure the user's fit is kept and the guard warns (see ?mbco).
+  refit <- .mbco_refit_h0(h0, h1)
+  if (!is.null(refit)) {
+    if (is.null(refit$model)) {
+      .mbco_signal("RMediation_h0_refit_failed", sprintf(
+        "An h0 constraint is violated and %s; keeping your fit (see ?mbco).",
+        refit$failure
+      ))
+    } else {
+      h0 <- refit$model
+      .mbco_signal("RMediation_h0_refit", sprintf(
+        paste0(
+          "h0 violated a constraint at the default feasibility tolerance and was ",
+          "refit at %s: the statistic changed from %s to %s (see ?mbco)."
+        ),
+        format(refit$refit$tolerance), format(round(refit$refit$statistic_before, 4)),
+        format(round(refit$refit$statistic_after, 4))
+      ))
+    }
+  }
+
   res_list <-
     if (type == "asymp") {
       # Asymptotic MBCO LRT
@@ -72,6 +94,7 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
     statistic = as.numeric(res_list$chisq),
     df = as.numeric(res_list$df),
     p_value = as.numeric(res_list$p),
-    type = type
+    type = type,
+    refit = refit$refit
   )
 }
