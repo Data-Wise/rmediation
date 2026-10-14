@@ -259,6 +259,7 @@ The default screen keeps only admissible (positive-definite) grid points; use
 | `medci()` | CI for product of two normal variables |
 | `ci()` | CI for any function of parameters (formulas, lavaan, ProductNormal, ProductNormal3) |
 | `mbco()` | Asymptotic and OpenMx bootstrap MBCO hypothesis tests |
+| `mbco_product_null()` | MBCO test of a product null (`a*b = 0`, serial products) as an intersection-union test over single-path nulls, avoiding the wrong-branch failure of one nonlinear constraint |
 | `ml_omitted_confounder()` | Sensitivity of two-level (1-1-1) indirect effects to an omitted confounder (Tofighi & Kelley, 2016) |
 | `pprodnormal()` | CDF of product of two normals |
 | `qprodnormal()` | Quantiles of product of two normals |

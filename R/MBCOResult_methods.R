@@ -35,6 +35,13 @@
 }
 
 # One line describing a refit of h0 (see ?mbco); empty when no refit happened.
+.mbco_branch_line <- function(x) {
+  if (is.null(x@branch)) {
+    return(invisible(NULL))
+  }
+  cat(sprintf("Note: product null; binding single-path null: %s = 0.\n", x@branch))
+}
+
 .mbco_refit_line <- function(x) {
   r <- x@refit
   if (is.null(r)) {
@@ -64,6 +71,7 @@ S7::method(print, MBCOResult) <- function(x, ...) {
   } else {
     cat("Significance: ns (not significant)\n")
   }
+  .mbco_branch_line(x)
   .mbco_refit_line(x)
   invisible(x)
 }
@@ -87,6 +95,7 @@ S7::method(summary, MBCOResult) <- function(object, ...) {
     cat("The null hypothesis is not rejected at the 0.05 level.\n")
     cat("There is insufficient evidence for the alternative model.\n")
   }
+  .mbco_branch_line(object)
   .mbco_refit_line(object)
 
   invisible(object)

@@ -50,7 +50,8 @@
             "OpenMx accepts constraint violations up to its \"Feasibility ",
             "tolerance\" (default 0.05); refit with mxOption(model, ",
             "\"Feasibility tolerance\", 1e-8). For a product null such as ",
-            "a*b = 0, fit a = 0 and b = 0 separately and use the smaller -2LL; ",
+            "a*b = 0, use mbco_product_null() (or fit a = 0 and b = 0 separately and ",
+            "use the smaller -2LL); ",
             "note that a feasible single-constraint fit can still sit on the ",
             "wrong branch (see ?mbco)."
           ),

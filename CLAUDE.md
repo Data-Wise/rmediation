@@ -68,6 +68,7 @@ devtools::test()
 | `medci()` | Product a*b CIs | Two-variable indirect effects |
 | `ci()` | General nonlinear function CIs | Complex mediation models, formulas |
 | `mbco()` | Chi-squared tests: OpenMx (bootstrap or asymptotic) or two medfit `SEMFit` fits (asymptotic only) | Hypothesis testing H₀: indirect = 0 |
+| `mbco_product_null()` | OpenMx product-null test: one fixed-at-zero null per path, result of the largest-p branch (`@branch`); exact, no wrong branch (issue #35) | Testing `a*b = 0` with OpenMx |
 | `ml_omitted_confounder()` | Omitted-confounder sensitivity grid for 1-1-1 multilevel mediation (Tofighi & Kelley, 2016); default screen keeps positive-definite points only, `screen = "none"` reproduces the paper's tables (PR #48, merged to dev) | Sensitivity of indirect effects |
 
 ### Distribution Functions

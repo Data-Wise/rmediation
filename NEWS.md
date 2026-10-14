@@ -37,8 +37,15 @@
   the first replicate that fails to converge. A feasible `a*b == 0` fit on the
   larger-statistic branch is not detected (issue #35); use one linear null per
   path.
+- `mbco_product_null(h1, paths, ...)` tests a product null (`a*b = 0`, or a
+  serial product) with OpenMx as an intersection-union test: it fixes each path
+  at 0 in a copy of the fitted full model, runs `mbco()` on each, and returns the
+  result of the branch with the largest p-value, with the new optional
+  `MBCOResult@branch` slot naming it. Unlike a single nonlinear constraint such
+  as `ind == 0`, it cannot land on the larger-statistic branch (issue #35; on
+  `memory_exp` it returns 0.0831 where one constraint gives 221.05). The
+  p-value is conservative when more than one path is 0.
 
-## Bug fixes
 
 - For numeric/lavaan formula CIs, `MCError` now uses `SE / sqrt(n.mc)`,
   the sampling standard error of the simulated mean. The previous `SE / n.mc`
