@@ -4,8 +4,10 @@
 
 test_that("no top-level function is defined in more than one R/ file", {
   rdir <- testthat::test_path("..", "..", "R")
-  skip_if_not(dir.exists(rdir), "R/ sources are not available (installed-package test run)")
-  defs <- do.call(rbind, lapply(list.files(rdir, pattern = "[.][Rr]$", full.names = TRUE), function(f) {
+  files <- if (dir.exists(rdir)) list.files(rdir, pattern = "[.][Rr]$", full.names = TRUE) else character()
+  # An installed package has an R/ directory but no .R sources (only RMediation.rdb/.rdx).
+  skip_if(length(files) == 0L, "R/ sources are not available (installed-package test run)")
+  defs <- do.call(rbind, lapply(files, function(f) {
     exprs <- parse(f, keep.source = FALSE)
     nm <- unlist(lapply(exprs, function(e) {
       if (is.call(e) && as.character(e[[1L]])[1L] %in% c("<-", "=") && is.name(e[[2L]]) &&
