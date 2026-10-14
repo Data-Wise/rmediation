@@ -44,7 +44,8 @@
   `MBCOResult@branch` slot naming it. Unlike a single nonlinear constraint such
   as `ind == 0`, it cannot land on the larger-statistic branch (issue #35; on
   `memory_exp` it returns 0.0831 where one constraint gives 221.05). The
-  p-value is conservative when more than one path is 0.
+  p-value is conservative when more than one path is 0. A branch whose fit
+  does not converge is an error naming the branch.
 
 
 - For numeric/lavaan formula CIs, `MCError` now uses `SE / sqrt(n.mc)`,

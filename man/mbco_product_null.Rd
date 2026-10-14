@@ -33,5 +33,7 @@ A single nonlinear constraint such as \code{ind == 0} can converge to the branch
 with the larger statistic and give a wrong test; see \code{\link[=mbco]{mbco()}}. Fixing a
 parameter is exact, so this function avoids that and the feasibility
 tolerance problem. The p-value is conservative when more than one path is 0
-(standard intersection-union theory, not verified here).
+(standard intersection-union theory, not verified here). Each branch fit
+must converge (OpenMx status code 0 or 1); otherwise the function stops with
+an error naming the branch.
 }
