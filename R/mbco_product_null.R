@@ -13,7 +13,9 @@
 #' with the larger statistic and give a wrong test; see [mbco()]. Fixing a
 #' parameter is exact, so this function avoids that and the feasibility
 #' tolerance problem. The p-value is conservative when more than one path is 0
-#' (standard intersection-union theory, not verified here).
+#' (standard intersection-union theory, not verified here). Each branch fit
+#' must converge (OpenMx status code 0 or 1); otherwise the function stops with
+#' an error naming the branch.
 #'
 #' @param h1 A fitted full `OpenMx` model.
 #' @param paths Character vector of two or more labels of free parameters of
@@ -42,26 +44,40 @@ mbco_product_null <- function(h1, paths, ...) {
   }
 
   nulls <- .mbco_product_models(h1, paths)
-  results <- lapply(nulls, function(h0) mbco(.mbco_run_null(h0), h1, ...))
+  fits <- Map(function(h0, label) .mbco_check_branch_fit(.mbco_run_null(h0), label), nulls, names(nulls))
+  results <- lapply(fits, function(h0) mbco(h0, h1, ...))
   i <- .mbco_pick_branch(results)
   res <- results[[i]]
-  res@branch <- paths[i]
+  res@branch <- names(nulls)[i]
   res
 }
 
-# One copy of h1 per path with that path fixed at 0.
+# One copy of h1 per path with that path fixed at 0, named by the path label.
 .mbco_product_models <- function(h1, paths) {
-  lapply(paths, function(lab) {
+  stats::setNames(lapply(paths, function(lab) {
     OpenMx::omxSetParameters(
       h1,
       labels = lab, free = FALSE, values = 0,
       name = paste0(h1$name, "_", lab, "_zero")
     )
-  })
+  }), paths)
 }
 
 .mbco_run_null <- function(model) {
   suppressWarnings(OpenMx::mxRun(model, silent = TRUE))
+}
+
+# Every branch fit needs an accepted OpenMx status (0 or 1, as in the bootstrap code) before its
+# p-value may compete for the maximum.
+.mbco_check_branch_fit <- function(fit, label) {
+  code <- fit$output$status$code
+  if (length(code) != 1L || is.na(code) || !code %in% c(0, 1)) {
+    stop(sprintf(
+      "The fit for branch '%s' (%s fixed at 0) did not converge (OpenMx status code %s).",
+      label, label, if (length(code) == 1L) format(code) else "missing"
+    ), call. = FALSE)
+  }
+  invisible(fit)
 }
 
 # Intersection-union test: the binding branch has the largest p-value (first on ties).

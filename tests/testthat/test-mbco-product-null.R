@@ -96,3 +96,57 @@ test_that("planted defect: ignoring a path is caught by the three-path test", {
   expect_failure(expect_identical(res@branch, "b1"))
   expect_gt(abs(res@statistic - .pn_oracle_b1), 1e-3)
 })
+
+# Codex review 2026-10-14: every branch fit must have an accepted OpenMx status (0 or 1).
+test_that("a branch that did not converge is an error naming the branch", {
+  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("testthat", "3.2.0")
+  o <- .memory_exp_oracle()
+  orig <- RMediation:::.mbco_run_null
+  testthat::local_mocked_bindings(
+    .mbco_run_null = function(model) {
+      fit <- orig(model)
+      if (grepl("_b1_zero$", model$name)) fit@output$status$code <- 6
+      fit
+    },
+    .package = "RMediation"
+  )
+  expect_error(
+    mbco_product_null(o$full, c("a1", "b1")),
+    "branch 'b1'.*did not converge"
+  )
+})
+
+test_that("statuses 0 and 1 are accepted for every branch", {
+  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("testthat", "3.2.0")
+  o <- .memory_exp_oracle()
+  orig <- RMediation:::.mbco_run_null
+  testthat::local_mocked_bindings(
+    .mbco_run_null = function(model) {
+      fit <- orig(model)
+      fit@output$status$code <- 1
+      fit
+    },
+    .package = "RMediation"
+  )
+  res <- mbco_product_null(o$full, c("a1", "b1"))
+  expect_identical(res@branch, "b1")
+})
+
+test_that("planted defect: skipping the status check is caught", {
+  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("testthat", "3.2.0")
+  o <- .memory_exp_oracle()
+  orig <- RMediation:::.mbco_run_null
+  testthat::local_mocked_bindings(
+    .mbco_run_null = function(model) {
+      fit <- orig(model)
+      if (grepl("_b1_zero$", model$name)) fit@output$status$code <- 6
+      fit
+    },
+    .mbco_check_branch_fit = function(fit, label) invisible(fit), # the defect: no check
+    .package = "RMediation"
+  )
+  expect_failure(expect_error(mbco_product_null(o$full, c("a1", "b1")), "did not converge"))
+})
