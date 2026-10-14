@@ -166,3 +166,28 @@ test_that("the adapter never refits either input", {
   )
   expect_lt(abs(mbco(f$b1, f$full)@statistic - 0.083100), 1e-6)
 })
+
+test_that("SEMFit pairs agree across fixed_x settings; mismatched sets are refused", {
+  skip_if_not_installed("medfit", "0.8.0")
+  skip_if_not(
+    "fixed_x" %in% names(formals(medfit::fit_sem)),
+    "this medfit has no fixed_x argument"
+  )
+  d <- .memory_exp_data()
+  fit <- function(fixed_x, extra = "") {
+    medfit::fit_sem(
+      paste(.semfit_mbco_syntax, extra, sep = "\n"), d,
+      fixed_x = fixed_x
+    )
+  }
+  expected <- 221.045546
+  for (fx in list(FALSE, TRUE, "x")) {
+    r <- mbco(fit(fx, "a1 == 0"), fit(fx))
+    expect_lt(abs(r@statistic - expected), 1e-6)
+    expect_identical(r@df, 1)
+  }
+  expect_error(
+    mbco(fit(TRUE, "a1 == 0"), fit(FALSE)),
+    "fixed_x", fixed = TRUE
+  )
+})
