@@ -1,16 +1,24 @@
-# Scaled violation of every equality constraint of a fitted MxModel, named by
-# constraint: |lhs - rhs| / max(1, |lhs|, |rhs|) (largest entry for matrix-valued
-# sides). Evaluated at the final parameters, so it does not depend on how the
-# model was fitted. Operators other than "==" are not evaluated.
+# Scaled violation of every constraint of a fitted MxModel, named by constraint:
+# the violation divided by max(1, |lhs|, |rhs|) (largest entry for matrix-valued
+# sides). For "==" the violation is |lhs - rhs|; for "<" it is max(lhs - rhs, 0)
+# and for ">" it is max(rhs - lhs, 0), so a slack inequality has violation 0.
+# Evaluated at the final parameters, so it does not depend on how the model was
+# fitted. Operators other than these are not evaluated.
 .mbco_constraint_violation <- function(model) {
   out <- vapply(model@constraints, function(constraint) {
     f <- constraint@formula
-    if (!identical(as.character(f[[1L]]), "==")) {
+    op <- as.character(f[[1L]])
+    if (!op %in% c("==", "<", "<=", ">", ">=")) {
       return(NA_real_)
     }
     lhs <- eval(bquote(OpenMx::mxEval(.(f[[2L]]), model, compute = FALSE)))
     rhs <- eval(bquote(OpenMx::mxEval(.(f[[3L]]), model, compute = FALSE)))
-    max(abs(lhs - rhs) / pmax(1, abs(lhs), abs(rhs)))
+    d <- switch(op,
+      "==" = abs(lhs - rhs),
+      "<" = , "<=" = pmax(lhs - rhs, 0),
+      pmax(rhs - lhs, 0)
+    )
+    max(d / pmax(1, abs(lhs), abs(rhs)))
   }, numeric(1))
   out[!is.na(out)]
 }

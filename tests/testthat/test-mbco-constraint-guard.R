@@ -107,6 +107,82 @@ test_that("a linear equality fitted at tolerance 1e-8 is silent, and so are mode
   expect_identical(RMediation:::.mbco_constraint_violation(f$h1), numeric(0))
 })
 
+# Constraint formulas are evaluated at the model's parameter values, so the scaling and
+# operator rules can be tested on models run without the optimizer, at chosen values.
+.guard_unfitted <- function(a_value, ...) {
+  set.seed(1)
+  d <- data.frame(X = rnorm(50), M = rnorm(50), Y = rnorm(50))
+  m <- OpenMx::omxSetParameters(.guard_med_model(d), labels = "a", values = a_value)
+  m <- OpenMx::mxModel(m, OpenMx::mxAlgebra(a * 1, name = "alg"), ...)
+  # evaluate the algebras at the chosen values without optimizing
+  suppressWarnings(OpenMx::mxRun(m, useOptimizer = FALSE, silent = TRUE))
+}
+
+test_that("equality violation is scaled by the size of the two sides", {
+  skip_if_not_installed("OpenMx")
+  small <- .guard_unfitted(0.03, OpenMx::mxConstraint(alg == 0, name = "unit"))
+  big <- .guard_unfitted(0.03, OpenMx::mxAlgebra(alg + 1e6, name = "big"),
+    OpenMx::mxConstraint(big == 1e6, name = "large")
+  )
+  expect_equal(unname(RMediation:::.mbco_constraint_violation(small)), 0.03)
+  # the same absolute gap (0.03) on a constraint of size 1e6 is a relative 3e-8
+  expect_lt(unname(RMediation:::.mbco_constraint_violation(big)), 1e-6)
+  expect_silent(RMediation:::.mbco_warn_constraints(big, "h0"))
+  expect_warning(RMediation:::.mbco_warn_constraints(small, "h0"),
+    class = "RMediation_constraint_violation"
+  )
+})
+
+test_that("the threshold boundary behaves as specified on both sides", {
+  skip_if_not_installed("OpenMx")
+  m <- function(v) .guard_unfitted(v, OpenMx::mxConstraint(alg == 0, name = "eq"))
+  expect_no_warning(RMediation:::.mbco_warn_constraints(m(9e-7), "h0"),
+    class = "RMediation_constraint_violation"
+  )
+  expect_warning(RMediation:::.mbco_warn_constraints(m(2e-6), "h0"),
+    class = "RMediation_constraint_violation"
+  )
+})
+
+test_that("inequalities are violated only on the wrong side", {
+  skip_if_not_installed("OpenMx")
+  v <- function(...) RMediation:::.mbco_constraint_violation(.guard_unfitted(0.03, ...))
+  C <- OpenMx::mxConstraint
+  expect_equal(unname(v(C(alg < 1, name = "slack_lt"))), 0)
+  expect_equal(unname(v(C(alg > -1, name = "slack_gt"))), 0)
+  expect_equal(unname(v(C(alg < 0, name = "bad_lt"))), 0.03)
+  expect_equal(unname(v(C(alg > 1, name = "bad_gt"))), (1 - 0.03) / 1)
+  expect_identical(names(v(C(alg < 0, name = "bad_lt"))), "bad_lt")
+  expect_silent(RMediation:::.mbco_warn_constraints(
+    .guard_unfitted(0.03, C(alg < 1, name = "s1"), C(alg > -1, name = "s2")), "h0"
+  ))
+  expect_warning(
+    RMediation:::.mbco_warn_constraints(.guard_unfitted(0.03, C(alg > 1, name = "bad")), "h0"),
+    class = "RMediation_constraint_violation"
+  )
+})
+
+test_that("the warning labels the model: h1 as well as h0", {
+  skip_if_not_installed("OpenMx")
+  bad <- .guard_unfitted(0.03, OpenMx::mxConstraint(alg == 0, name = "eq"))
+  w <- tryCatch(RMediation:::.mbco_warn_constraints(bad, "h1"),
+    RMediation_constraint_violation = function(w) w
+  )
+  expect_match(conditionMessage(w), "of h1", fixed = TRUE)
+  expect_match(conditionMessage(w), "'eq'", fixed = TRUE)
+})
+
+test_that("an infeasible inequality fitted by mbco() warns", {
+  skip_if_not_installed("OpenMx")
+  f <- .guard_fits(1)
+  infeasible <- OpenMx::mxModel(f$h1, name = "ineq",
+    OpenMx::mxAlgebra(a * b, name = "ind"),
+    OpenMx::mxConstraint(ind > 0.5, name = "ind_gt")
+  )
+  infeasible <- suppressWarnings(OpenMx::mxRun(infeasible, silent = TRUE))
+  expect_gt(RMediation:::.mbco_constraint_violation(infeasible)[["ind_gt"]], 1e-6)
+})
+
 test_that("planted defect: a guard that ignores constraints is caught", {
   skip_if_not_installed("OpenMx")
   skip_if_not_installed("testthat", "3.2.0")
