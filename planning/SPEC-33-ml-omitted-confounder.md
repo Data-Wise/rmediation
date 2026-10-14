@@ -1,7 +1,7 @@
 # SPEC-33 — `ml_omitted_confounder()` (multilevel omitted-confounder sensitivity)
 
 **Issue:** [#33](https://github.com/Data-Wise/rmediation/issues/33) (its body is the draft spec; this file is the plan around it)
-**Branch:** `feature/ml-omitted-confounder` (worktree `~/.git-worktrees/rmediation/feature-ml-omitted-confounder`), PR #48 to `dev`, not merged.
+**Branch:** `feature/ml-omitted-confounder` (worktree `~/.git-worktrees/rmediation/feature-ml-omitted-confounder`), PR #48 squash-merged to `dev` as `09f5b8c` on 2026-10-14; worktree and branch removed.
 **Status:** implemented 2026-10-14 in PR #48 (79 new expectations; strict check 0/0/1 NOTE). Release: lands on `dev` for 1.8.0; it is not in the 1.7.1 candidate, and CRAN submission is on hold.
 **Created:** 2026-10-13
 
