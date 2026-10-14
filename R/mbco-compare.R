@@ -11,8 +11,19 @@
     if (!op %in% c("==", "<", "<=", ">", ">=")) {
       return(NA_real_)
     }
-    lhs <- eval(bquote(OpenMx::mxEval(.(f[[2L]]), model, compute = FALSE)))
-    rhs <- eval(bquote(OpenMx::mxEval(.(f[[3L]]), model, compute = FALSE)))
+    side <- function(expr) {
+      tryCatch(
+        eval(bquote(OpenMx::mxEval(.(expr), model, compute = FALSE))),
+        error = function(e) {
+          stop(sprintf(
+            "could not evaluate constraint '%s' for the violation check: %s",
+            constraint@name, conditionMessage(e)
+          ), call. = FALSE)
+        }
+      )
+    }
+    lhs <- side(f[[2L]])
+    rhs <- side(f[[3L]])
     d <- switch(op,
       "==" = abs(lhs - rhs),
       "<" = , "<=" = pmax(lhs - rhs, 0),

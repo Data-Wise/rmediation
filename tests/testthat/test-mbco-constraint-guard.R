@@ -104,7 +104,7 @@ test_that("a linear equality fitted at tolerance 1e-8 is silent, and so are mode
     mbco(.guard_linear_null(f, tol = 1e-8), f$h1),
     class = "RMediation_constraint_violation"
   )
-  expect_identical(RMediation:::.mbco_constraint_violation(f$h1), numeric(0))
+  expect_length(RMediation:::.mbco_constraint_violation(f$h1), 0L)
 })
 
 # Constraint formulas are evaluated at the model's parameter values, so the scaling and
@@ -181,6 +181,47 @@ test_that("an infeasible inequality fitted by mbco() warns", {
   )
   infeasible <- suppressWarnings(OpenMx::mxRun(infeasible, silent = TRUE))
   expect_gt(RMediation:::.mbco_constraint_violation(infeasible)[["ind_gt"]], 1e-6)
+})
+
+# Slice 3: a constraint the guard cannot evaluate is an error that names it (grill decision 5).
+.guard_tamper <- function(model, formula) {
+  model@constraints[[1L]]@formula <- formula
+  model
+}
+
+test_that("an unevaluable constraint errors, naming the constraint", {
+  skip_if_not_installed("OpenMx")
+  m <- .guard_unfitted(0.03, OpenMx::mxConstraint(alg == 0, name = "eq"))
+  broken <- .guard_tamper(m, quote(no_such_object == 0))
+  expect_error(
+    RMediation:::.mbco_constraint_violation(broken),
+    "could not evaluate constraint 'eq' for the violation check"
+  )
+})
+
+test_that("an unevaluable constraint errors from mbco() too", {
+  skip_if_not_installed("OpenMx")
+  f <- .guard_fits(1, tol = 1e-8)
+  broken <- .guard_tamper(f$h0, quote(no_such_object == 0))
+  expect_error(
+    mbco(broken, f$h1),
+    "could not evaluate constraint 'ind_eq0' for the violation check"
+  )
+})
+
+test_that("unsupported operators are skipped, not errors", {
+  skip_if_not_installed("OpenMx")
+  m <- .guard_unfitted(0.03, OpenMx::mxConstraint(alg == 0, name = "eq"))
+  odd <- .guard_tamper(m, quote(alg != 0))
+  expect_length(RMediation:::.mbco_constraint_violation(odd), 0L)
+  expect_no_warning(RMediation:::.mbco_warn_constraints(odd, "h0"))
+})
+
+test_that("a model with no constraints is untouched", {
+  skip_if_not_installed("OpenMx")
+  f <- .guard_fits(1)
+  expect_length(RMediation:::.mbco_constraint_violation(f$h1), 0L)
+  expect_no_warning(RMediation:::.mbco_warn_constraints(f$h1, "h1"))
 })
 
 test_that("planted defect: a guard that ignores constraints is caught", {
