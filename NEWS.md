@@ -8,6 +8,11 @@
 
 ## Bug fixes
 
+- `medci()` was defined twice, in `R/medci.R` and `R/medci_legacy_backup.R`
+  (identical code). The backup sorted later and was the live definition, and
+  `?medci` merged both sets of documentation into duplicated Usage, Value and
+  Details sections. The backup file is removed; behavior is unchanged. A test
+  now fails if any top-level function is defined in more than one `R/` file.
 - `pprodnormal()` and `qprodnormal()` with `type = "dop"` no longer collapse at
   large standardized means (`pprodnormal(400, 20, 20, 1, 1)` returned 8e-7
   instead of about 0.507) and are accurate in far tails (previously wrong by up
