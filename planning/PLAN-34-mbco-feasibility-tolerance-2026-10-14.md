@@ -1,7 +1,7 @@
 # PLAN — issue #34: MBCO nonlinear-constraint nulls and OpenMx's feasibility tolerance
 
 **Issue:** [#34](https://github.com/Data-Wise/rmediation/issues/34) (open; findings posted 2026-10-07)
-**Status:** planned 2026-10-14; T0 prototypes run 2026-10-14 (results below); worktree `~/.git-worktrees/rmediation/feature-mbco-tolerance` (branch `feature/mbco-tolerance`) created, no code yet.
+**Status:** planned 2026-10-14, grilled the same day (`planning/GRILL-mbco-feasibility-plan-2026-10-14.md`, 5 decisions folded in below); T0 prototypes run 2026-10-14 (results below); worktree `~/.git-worktrees/rmediation/feature-mbco-tolerance` (branch `feature/mbco-tolerance`) created, no code yet.
 **Scope:** OpenMx paths of `mbco()` only (`type = "asymp"`, `"parametric"`, `"semi"`). The SEMFit route is unaffected (it uses `anova()` on medfit fits).
 
 ## What is true now (verified 2026-10-14, OpenMx 2.22.11, scratch script)
@@ -58,6 +58,19 @@ with `mxEval(..., compute = FALSE)` on the fitted model and taking `lhs - rhs` w
 
 **Updated recommendation:** A (guard, all types) + C (docs) first; B only together with E or with a clear NEWS note that the observed
 statistic still comes from the user's fit. Decide E before coding B.
+
+## Decisions (from the grill, 2026-10-14; these override the options above)
+
+| Topic | Decision |
+|---|---|
+| Scope | Build the guard (A) and docs (C) only. **B and E are deferred**: no returned number changes. |
+| Threshold | Equality: `|lhs - rhs| / max(1, |lhs|, |rhs|) > 1e-6`; inequalities: the same scaling applied to the wrong-side violation. |
+| Form | Classed warning `RMediation_constraint_violation`, checking `h0` and `h1` in all three types (`"asymp"`, `"parametric"`, `"semi"`); results are still returned. The message names the constraint and its violation and points to the two-fit route. |
+| Docs wording | The smaller -2LL is the exact constrained LRT statistic for ab = 0; its chi-square(1) p-value is conservative when both paths are 0 (intersection-union test; standard theory, not verified here). |
+| Evaluation failures | **User override of the recommendation:** the error propagates. Condition: it is re-raised with the constraint's name ("could not evaluate constraint <name> for the violation check"), with a planted unevaluable constraint in the tests. Risk: an `mbco()` call that worked before can now fail for exotic constraint formulas. |
+
+Plan step T2 therefore reads: implement A, then C (no B, no E). Tests (T1) additionally cover: the scaled threshold on a large-scale constraint, an inequality
+slack control, the classed warning on `h1`, and the informative error.
 
 ## Open questions to settle before coding
 
