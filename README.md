@@ -231,6 +231,27 @@ active tested bounds. Bootstrap types and OpenMx fitting controls are not
 supported for SEMFit pairs. The analyst remains responsible for substantive
 nesting and a valid reference distribution for other nonlinear restrictions.
 
+## Sensitivity to an Omitted Confounder
+
+`ml_omitted_confounder()` shows how an unmeasured, standardized confounder of
+the mediator-outcome relation, described by its correlations with the treatment,
+mediator and outcome, would change the between- and within-cluster indirect
+effects of a two-level (1-1-1) model. See
+`vignette("omitted-confounder-sensitivity")`.
+
+```r
+R <- matrix(c(1, .3, .2, .3, 1, .4, .2, .4, 1), 3)
+res <- ml_omitted_confounder(
+  between = list(a = 0.3, b = 0.4, cor = R, sd = c(1, 1, 1)),
+  r_za = c(0, 0.1)
+)
+res
+plot(res, r_za = 0.1)
+```
+
+The default screen keeps only admissible (positive-definite) grid points; use
+`screen = "none"` to reproduce the published tables.
+
 ## Key Functions
 
 | Function | Purpose |
@@ -238,6 +259,7 @@ nesting and a valid reference distribution for other nonlinear restrictions.
 | `medci()` | CI for product of two normal variables |
 | `ci()` | CI for any function of parameters (formulas, lavaan, ProductNormal, ProductNormal3) |
 | `mbco()` | Asymptotic and OpenMx bootstrap MBCO hypothesis tests |
+| `ml_omitted_confounder()` | Sensitivity of two-level (1-1-1) indirect effects to an omitted confounder (Tofighi & Kelley, 2016) |
 | `pprodnormal()` | CDF of product of two normals |
 | `qprodnormal()` | Quantiles of product of two normals |
 | `pprodnormal3()` | Exact CDF of product of three normals (`a1*a2*b`) |
