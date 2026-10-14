@@ -87,5 +87,4 @@ Grid size at the default settings is 30,603 rows per level, so cost is not a con
 ## Open questions
 
 - Source and permission for the supplement's covariance values (blocks T1-T12 only).
-- Whether `ml_admissible()` stays exported or becomes internal.
-- Whether the default `r_zm`/`r_zy` grid (0.01 step over -0.5 to 0.5) is also the documented example grid.
+- Decided in the grill (`GRILL-ml-omitted-confounder-plan-2026-10-13.md`): `ml_admissible()` internal in v1; example grid measured at T6; single `r_za` applies to both levels with `print()` naming what was used; T1-T12 targets unconfirmed by the paper are dropped; paper endpoints use tolerance `0.0005 + 1e-9` plus an independent regression-based oracle; supplement may be committed after a redistribution check and per-file download approval.

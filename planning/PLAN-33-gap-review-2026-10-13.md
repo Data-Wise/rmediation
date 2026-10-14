@@ -1,7 +1,7 @@
 # PLAN — review and close the SPEC-33 gaps before coding `ml_omitted_confounder()`
 
 **Spec:** `planning/SPEC-33-ml-omitted-confounder.md` (issue #33)
-**Status:** planned 2026-10-13. Nothing in this plan writes code or creates a branch.
+**Status:** planned 2026-10-13, grilled the same day (`planning/GRILL-ml-omitted-confounder-plan-2026-10-13.md`, 7 decisions folded in below). Nothing in this plan writes code or creates a branch.
 **Goal:** every gap in SPEC-33 is either closed with evidence or turned into a decision you have made, so T0 (red tests) can start with no unknowns.
 
 ## Gap register
@@ -10,12 +10,12 @@
 |---|---|---|---|---|
 | G1 | Fixture covariances (between and within, order m, y, x) are not in the issue | missing data | you supply them, or approve a download of the public supplement | T1-T12 only |
 | G2 | The symmetry test holds only on a symmetric `(r_zm, r_zy)` grid | spec wording | edit SPEC-33 and the test description | nothing |
-| G3 | `r_za` semantics: single numeric, list per level, missing level | design decision | you decide among options below | T3 |
+| G3 | `r_za` semantics: single numeric, list per level, missing level | design decision | **decided** (see Decisions) | T3 |
 | G4 | Within-level random-slope covariance fixed at zero | documentation | add to `?ml_omitted_confounder` and `print()` text | T6 |
 | G5 | Method pattern for `print`, `summary`, `plot`, `as.data.frame` | investigation | **closed 2026-10-13**, see below | nothing |
 | G6 | The issue's paper-derived claims are unverified: T1-T12 targets, equation numbers, the zero-covariance assumption, the symmetry statement | verification | read the paper (a source I have not read) | T1-T12 targets |
-| G7 | `ml_admissible()` exported or internal | design decision | you decide | T1 |
-| G8 | Default `r_zm`/`r_zy` grid vs the documented example grid | design decision | you decide | T6 |
+| G7 | `ml_admissible()` exported or internal | design decision | **decided: internal** | T1 |
+| G8 | Default `r_zm`/`r_zy` grid vs the documented example grid | design decision | **decided: measure at T6** | T6 |
 
 ## What is already settled
 
@@ -33,33 +33,30 @@
 
 | # | Step | Gap | Output | Who |
 |---|---|---|---|---|
-| 1 | Decide G1 route: supply values, or approve a download of the supplement | G1 | one reply from you | you |
+| 1 | Approve each download (paper, supplement: name, source, size) or supply the values | G1, G6 | per-file approval | you |
 | 2 | Obtain the paper and read it against the issue: the T1-T12 endpoints and conditions, equation numbers 31-32 and A13-A18, the zero-covariance assumption, the symmetry statement on p. 98 | G6 | a short note in SPEC-33 listing each claim as confirmed, corrected or unreadable | me, after approval |
 | 3 | Run an independent review of SPEC-33 and the issue (a second reader that has not seen my reasoning), with the paper check in hand | all | findings list; each marked accepted or rejected | me, on your go-ahead |
 | 4 | Edit SPEC-33: symmetry wording (G2), the G4 documentation line, the corrected claims from step 2 | G2, G4, G6 | commit to `dev` | me |
-| 5 | Decide G3, G7, G8 (options below) | G3, G7, G8 | decisions recorded in SPEC-33 | you |
+| 5 | Record the decided G3, G7 and G8 in SPEC-33 | G3, G7, G8 | done in step 4 | me |
 | 6 | Re-state readiness: all gaps closed or decided, then T0 may start on your instruction | all | one-line verdict | me |
 
-## Options for the decisions (recommendation first)
+## Decisions (from the grill, 2026-10-13)
 
-**G3, `r_za` handling.**
-1. **Recommended:** a single numeric applies to both levels; a list with `between` and/or `within` sets levels
-   separately; a level with no `r_za` and no data is not computed. Reason: simplest rule, matches the issue's own signature.
-2. Require the list form always. Stricter, but forces boilerplate for the common one-level case.
-
-**G7, `ml_admissible()`.**
-1. **Recommended:** export it. Reason: the issue lists it in the API, users plotting their own regions need it, and a documented export is cheaper than reversing an internal later.
-2. Keep it internal. Smaller surface, but removes a tool the issue specifies.
-
-**G8, example grid.**
-1. **Recommended:** the documented example uses a coarser grid (step 0.05) so the roxygen example is fast; the default stays 0.01 and T1-T12 use the default. Reason: example time matters for CRAN checks and the endpoints are reproduced elsewhere.
-2. Use the default grid in the example. Exact, but slower in `R CMD check`.
+| Gap | Decision | Changes from the plan as first written |
+|---|---|---|
+| G6 / oracle | A T1-T12 target the paper does not confirm (or that cannot be checked) is dropped from the tests and listed as unverified in SPEC-33 | New rule |
+| Step 3 | Independent review stays; run once after the paper check, with the paper note | Order fixed |
+| Tolerance | Paper endpoints use `0.0005 + 1e-9`, and a second oracle is added: grid endpoints recomputed from simulated-data regressions | New test |
+| G7 | `ml_admissible()` stays internal in v1 | **Reverses** the earlier recommendation (an export is locked once on CRAN) |
+| G1 / fetched files | Supplement committed to the repo (your choice over the scratchpad-only recommendation). Conditions: per-file download approval (name, source, size); confirm its terms permit redistribution first; keep it outside the built package (build-ignored) unless the tests need it | New conditions |
+| G3 | Single numeric `r_za` applies to both levels; list form sets levels; a level with no data is skipped; `print()` states the levels and values used | Print requirement added |
+| G8 | Measure the example at T6; default grid if under about 1 s, else step 0.05 | Replaces "coarse grid now" |
 
 ## Exit criteria
 
 - G1 closed (values in hand, source and variable order recorded) or the decision to start with synthetic inputs only.
-- G6: every paper-derived claim in the issue is confirmed against the paper, or marked as unverified with the reason.
-- SPEC-33 edited and committed; G3, G7 and G8 decided.
+- G6: every paper-derived claim in the issue is confirmed against the paper, or marked as unverified and its test dropped.
+- SPEC-33 edited and committed with the decisions above.
 - Then, and only then, T0 (red tests) starts, on a `feature/ml-omitted-confounder` worktree that you ask me to create.
 
 ## Risks
