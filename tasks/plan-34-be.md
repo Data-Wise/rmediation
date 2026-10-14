@@ -17,6 +17,10 @@ When the guard finds `h0` violated (scaled > 1e-6), all three OpenMx types:
 - Does a bootstrap refit of `h0` inherit the model-level tolerance of the refit `h0`? If yes, B comes free from E and no global `mxOption` change is needed; if no, set 1e-8 in the existing `mxOption(NULL, ...)` block only when a refit happened. Measure in slice 2.
 - Exact slot contents and name (suggested `refit`: `NULL` or a list with `tolerance`, `statistic_before`, `statistic_after`); one more review before merge (the slot is locked once on CRAN).
 
+## Resolved in slice 2 (2026-10-14)
+
+- **Inheritance: yes.** A refit `h0` carrying the model-level tolerance 1e-8 makes `mbco(type = "parametric")` emit no OpenMx warnings and `type = "semi"` run without error at the default global tolerance (seeds 1-3, `R = 10`; the user's own `h0` gave warnings in 100/100 and semi errors in 100/100 at `R = 200`). So **B needs no global `mxOption` change**; E alone supplies it. Slice 4 re-checks this at scale (100 seeds, `R = 200`).
+
 ## Slices (tests first, each leaves the suite green)
 
 1. **Slot, backward compatible.** `MBCOResult` gets an optional `refit` property defaulting to `NULL`; `print`/`summary` show a refit line only when non-`NULL`; `$`/`[[`/`names` expose it. Acceptance: every existing `MBCOResult(...)` call and the SEMFit route are unchanged; new tests for construction without the slot, with it, and printing.
