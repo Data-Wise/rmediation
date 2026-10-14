@@ -3,6 +3,8 @@ asymp
 ci
 CMD
 Codecov
+Confounder
+confounder
 cubature
 df
 diffLL
@@ -70,6 +72,7 @@ SEMFits
 Sobel
 theming
 tibble
+Tofighi
 trivariate
 unpartitioned
 Valente
