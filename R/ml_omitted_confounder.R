@@ -133,7 +133,7 @@ ml_admissible <- function(r, R) {
   rowSums((r %*% solve(R)) * r)
 }
 
-.MLOC_RCOND <- 1e-12
+.MLOC_SINGULAR <- 1e-12 # smallest Var(Z | A, M) treated as non-singular
 
 .mloc_check_r <- function(x, name) {
   checkmate::assert_numeric(x,
@@ -247,29 +247,35 @@ ml_admissible <- function(r, R) {
   list(a = x$a, b = x$b, cov = S, cor = R, sd = sdv)
 }
 
-# Regression coefficient block by solve(), NA when the block is numerically singular.
-.mloc_solve <- function(V, y, x) {
-  B <- V[x, x, drop = FALSE]
-  if (rcond(B) < .MLOC_RCOND) {
-    return(rep(NA_real_, length(x)))
-  }
-  unname(solve(B, V[x, y]))
-}
-
-# The four coefficients that define the bias terms at one grid point. V is the
-# 4 x 4 covariance of (A, M, Y, Z) with Z standardized: the sensitivity
-# correlations enter as the covariances of Z with A, M and Y.
-.mloc_bias <- function(V) {
-  c(
-    d_za = V[4L, 1L] / V[1L, 1L],
-    d_mz = .mloc_solve(V, 2L, c(1L, 4L))[2L],
-    s_zm = .mloc_solve(V, 4L, c(1L, 2L))[2L],
-    d_yz = .mloc_solve(V, 3L, c(1L, 2L, 4L))[3L]
+# The four coefficients that define the bias terms, for every row of `r` (n x 3
+# sensitivity correlations). With Z standardized, the covariance of Z with
+# A, M, Y is `r * sd`. Each coefficient is a partial regression slope, computed
+# from residualized covariances so that the whole grid is handled at once:
+#   d_za = slope of Z on A
+#   d_mz = coefficient of Z in M ~ A + Z
+#   s_zm = coefficient of M in Z ~ A + M
+#   d_yz = coefficient of Z in Y ~ A + M + Z
+# Rows where the residual variance of Z given (A, M) is numerically zero (the
+# A, M, Z block is singular) return NA.
+.mloc_bias <- function(S, sd, r) {
+  cz <- sweep(r, 2L, sd, "*")
+  W <- solve(S[1:2, 1:2]) # constant 2 x 2 inverse of the (A, M) block
+  u <- cz[, 1:2, drop = FALSE] %*% W # Cov(A, M)^-1 Cov((A, M), Z)
+  var_z_am <- 1 - rowSums(u * cz[, 1:2, drop = FALSE]) # Var(Z | A, M)
+  cov_y_z <- cz[, 3L] - drop(u %*% S[1:2, 3L]) # Cov(Y, Z | A, M)
+  var_z_a <- 1 - cz[, 1L]^2 / S[1L, 1L] # Var(Z | A)
+  cov_m_z <- cz[, 2L] - S[1L, 2L] * cz[, 1L] / S[1L, 1L] # Cov(M, Z | A)
+  singular <- !(var_z_am > .MLOC_SINGULAR)
+  cbind(
+    d_za = cz[, 1L] / S[1L, 1L],
+    d_mz = cov_m_z / var_z_a,
+    s_zm = u[, 2L],
+    d_yz = ifelse(singular, NA_real_, cov_y_z / var_z_am)
   )
 }
 
 .mloc_adjust <- function(a0, b0, k) {
-  c(a = a0 - k[["d_mz"]] * k[["d_za"]], b = b0 - k[["d_yz"]] * k[["s_zm"]])
+  cbind(a = a0 - k[, "d_mz"] * k[, "d_za"], b = b0 - k[, "d_yz"] * k[, "s_zm"])
 }
 
 .mloc_grid <- function(lv, r_za, r_zm, r_zy, screen) {
@@ -280,15 +286,13 @@ ml_admissible <- function(r, R) {
   admissible <- r2 < 1
   compute <- if (screen == "pd") admissible else rep(TRUE, nrow(g))
   a_adj <- b_adj <- rep(NA_real_, nrow(g))
-  base <- rbind(cbind(unname(lv$cov), 0), 0)
-  base[4L, 4L] <- 1
-  for (i in which(compute)) {
-    V <- base
-    cz <- r[i, ] * lv$sd
-    V[4L, 1:3] <- V[1:3, 4L] <- cz
-    ab <- .mloc_adjust(lv$a, lv$b, .mloc_bias(V))
-    a_adj[i] <- ab[["a"]]
-    b_adj[i] <- ab[["b"]]
+  if (any(compute)) {
+    ab <- .mloc_adjust(
+      lv$a, lv$b,
+      .mloc_bias(unname(lv$cov), lv$sd, r[compute, , drop = FALSE])
+    )
+    a_adj[compute] <- ab[, "a"]
+    b_adj[compute] <- ab[, "b"]
   }
   data.frame(
     g,
