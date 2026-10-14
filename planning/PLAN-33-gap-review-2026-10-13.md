@@ -1,7 +1,7 @@
 # PLAN — review and close the SPEC-33 gaps before coding `ml_omitted_confounder()`
 
 **Spec:** `planning/SPEC-33-ml-omitted-confounder.md` (issue #33)
-**Status:** planned 2026-10-13, grilled the same day (`planning/GRILL-ml-omitted-confounder-plan-2026-10-13.md`, 7 decisions folded in below). Nothing in this plan writes code or creates a branch.
+**Status:** executed 2026-10-14 (steps 1-6 done; implementation in PR #48). Planned 2026-10-13, grilled the same day (`planning/GRILL-ml-omitted-confounder-plan-2026-10-13.md`, 7 decisions folded in below). Nothing in this plan writes code or creates a branch.
 **Goal:** every gap in SPEC-33 is either closed with evidence or turned into a decision you have made, so T0 (red tests) can start with no unknowns.
 
 ## Gap register
