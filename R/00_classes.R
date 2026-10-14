@@ -173,8 +173,31 @@ MBCOResult <- S7::new_class("MBCOResult",
     statistic = S7::class_numeric,
     df = S7::class_numeric,
     p_value = S7::class_numeric,
-    type = S7::class_character
-  )
+    type = S7::class_character,
+    # default must be quote(NULL): a bare NULL default is replaced by list()
+    refit = S7::new_property(
+      NULL | S7::class_list,
+      default = quote(NULL)
+    )
+  ),
+  validator = function(self) {
+    r <- self@refit
+    if (is.null(r)) {
+      return(NULL)
+    }
+    need <- c("tolerance", "statistic_before", "statistic_after")
+    if (!setequal(names(r), need)) {
+      return("@refit must be NULL or a list with tolerance, statistic_before, statistic_after")
+    }
+    ok <- vapply(r[need], function(v) is.numeric(v) && length(v) == 1L, logical(1))
+    if (!all(ok)) {
+      return("@refit entries must be single numeric values")
+    }
+    if (!all(is.finite(unlist(r[need])))) {
+      return("@refit entries must be finite")
+    }
+    NULL
+  }
 )
 
 # Register S4 for compatibility with base generics
