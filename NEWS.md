@@ -8,6 +8,10 @@
 
 ## Bug fixes
 
+- `pprodnormal3()` (and `cdf()`/`dist_quantile()` on `ProductNormal3`) returned 0
+  for every `q`, or an error, when two or three components had zero variance.
+  It now returns the exact answer: a point mass at `prod(mean)` when all three
+  are fixed, and a scaled normal when exactly one is random (#64).
 - `medci()` was defined twice, in `R/medci.R` and `R/medci_legacy_backup.R`
   (identical code). The backup sorted later and was the live definition, and
   `?medci` merged both sets of documentation into duplicated Usage, Value and

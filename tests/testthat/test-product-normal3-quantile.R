@@ -55,10 +55,9 @@ test_that("dist_quantile falls back to the component sds when the delta-method s
   expect_lt(q[1], 0)
 })
 
-test_that("known defect: an all-zero covariance is a point mass but the CDF returns 0", {
-  skip("pprodnormal3() with Sigma = 0 returns 0 for every q (truth: 1 for q >= prod(mean)); only a single zero-variance component is documented as supported. Remove this skip when fixed.")
+test_that("an all-zero covariance is a point mass for cdf() (issue #64)", {
   pn <- .pn3(Sigma = matrix(0, 3, 3))
-  expect_equal(cdf(pn, 0.07), 1)
+  expect_equal(cdf(pn, c(0.05, 0.07)), c(0, 1))
 })
 
 test_that("dist_quantile validates its arguments", {

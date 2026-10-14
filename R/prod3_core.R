@@ -252,7 +252,9 @@ NULL
 #' @param mean Numeric vector of means of length 3.
 #' @param cov 3x3 covariance matrix. Must be positive-definite, except that a
 #'   single zero-variance component is permitted (the problem then reduces to
-#'   the two-variable product-normal case). Perfect correlation between two
+#'   the two-variable product-normal case). Two zero-variance components give
+#'   the exact scaled-normal CDF, and three give a point mass at
+#'   `prod(mean)` (CDF 1 at and above it). Perfect correlation between two
 #'   components (`|rho| = 1`) or an indefinite matrix is rejected.
 #' @param method Integration method. `"gauss"` (default) is tensor-product
 #'   Gauss-Legendre quadrature on a domain partitioned at the coordinate axes,
@@ -328,6 +330,26 @@ pprodnormal3 <- function(q, mean, cov, method = c("gauss", "hcubature"),
   cov <- (cov + t(cov)) / 2
 
   sds <- sqrt(pmax(diag(cov), 0))
+
+  # Two or more zero-variance components: the product is a point mass (all three fixed) or a
+  # scaled normal c * X (exactly one random component). Exact, handled before the
+  # single-zero reductions below, which assume the other two components are random (#64).
+  fixed <- sds < .Machine$double.eps
+  # An atom at exactly 0 keeps the package's existing convention (0.5 at q = 0, see the
+  # single-zero branch below and test-product-normal3.R); other atoms are right-continuous.
+  if (sum(fixed) == 3L) {
+    v <- prod(mean)
+    return(if (v == 0 && q == 0) 0.5 else as.numeric(q >= v))
+  }
+  if (sum(fixed) == 2L) {
+    k <- which(!fixed)
+    cc <- prod(mean[fixed])
+    if (cc == 0) {
+      return(if (q == 0) 0.5 else as.numeric(q > 0))
+    }
+    p <- stats::pnorm((q / cc - mean[k]) / sds[k])
+    return(if (cc > 0) p else 1 - p)
+  }
 
   # Degenerate cases: reduce to the two-variable product-normal problem ----
   if (sds[1L] < .Machine$double.eps) {
