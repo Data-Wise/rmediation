@@ -1,7 +1,7 @@
 # PLAN — issue #34: MBCO nonlinear-constraint nulls and OpenMx's feasibility tolerance
 
 **Issue:** [#34](https://github.com/Data-Wise/rmediation/issues/34) (open; findings posted 2026-10-07)
-**Status:** planned 2026-10-14. Evidence below; nothing implemented, no branch yet.
+**Status:** planned 2026-10-14; T0 prototypes run 2026-10-14 (results below); worktree `~/.git-worktrees/rmediation/feature-mbco-tolerance` (branch `feature/mbco-tolerance`) created, no code yet.
 **Scope:** OpenMx paths of `mbco()` only (`type = "asymp"`, `"parametric"`, `"semi"`). The SEMFit route is unaffected (it uses `anova()` on medfit fits).
 
 ## What is true now (verified 2026-10-14, OpenMx 2.22.11, scratch script)
@@ -29,6 +29,35 @@ Twelve simulated datasets (n = 300, a = 0.5, b = 0, so the null ab = 0 is true),
 | D | Expose a `feasibility` argument | Full user control | New public argument, locked once on CRAN |
 
 **Recommendation: A + B + C, not D.** A is the only guard that works for `"asymp"`; B closes the part RMediation owns; C costs nothing. D adds API surface that can be added later if B proves too blunt.
+
+## T0 results (2026-10-14, OpenMx 2.22.11, scratch scripts, not saved in the repo)
+
+**1. Evaluating an arbitrary constraint (open question 1: answered).** An `MxConstraint` stores its expression in `@formula`
+(e.g. `ind == 0`; `@alg1`, `@alg2` and `@relation` are `NA` until compiled). Evaluating `lhs` and `rhs` of the formula
+with `mxEval(..., compute = FALSE)` on the fitted model and taking `lhs - rhs` works, with the violation defined per operator
+(`==`: `|d|`; `<`: `max(d, 0)`; `>`: `max(-d, 0)`).
+- Equality `ind == 0` fitted at the default tolerance: violation 0.0332 (flagged at a 1e-6 threshold).
+- Two slack inequalities (`ind < 1`, `ind > -1`): violation 0 and 0 (no false warning).
+- A binding inequality (`ind > 0.5` that the data cannot satisfy): violation 0.0311, OpenMx status 6 (flagged, appropriately).
+- A model with no constraints: nothing to evaluate. Operators other than `==`, `<`, `>` return `NA` and would be skipped.
+
+**2. Bootstrap behavior with a tighter global tolerance (open question 2: answered for this case).** Seeds 1-4, n = 300, a = .5, b = 0
+(null true), `R = 60`, user's `h0` fitted at the default tolerance, then `mbco()` with the global tolerance set to 0.05 or 1e-8:
+
+| Type | Tolerance 0.05 | Tolerance 1e-8 |
+|---|---|---|
+| `"semi"` | **error in 4 of 4 runs**: "Bootstrap replicate N did not converge" | 0 errors |
+| `"parametric"` | 1 OpenMx warning per run (4 of 4) | 0 warnings |
+
+- So tightening reduced non-convergence here; it did not add any. This is four seeds and one model; it is not a convergence guarantee.
+- **The observed statistic is still wrong in every run** (0 instead of the exact 0.0376 to 0.4745, p = 1): `mbco()` takes the statistic from the user's already-fitted `h0`, which was fitted at the default tolerance, so a global setting inside `mbco()` cannot repair it. B alone therefore does not fix the reported result; it only fixes the bootstrap null distribution. This makes A (the guard) essential and raises a new option:
+
+| # | Change | Effect | Cost / risk |
+|---|---|---|---|
+| E | In the bootstrap paths, refit `h0` on the original data at the tight tolerance before computing the observed statistic | Fixes the observed statistic for `"parametric"` and `"semi"` | RMediation then refits the user's `h0` (it never does today); `"asymp"` is still unfixable; needs a decision and tests |
+
+**Updated recommendation:** A (guard, all types) + C (docs) first; B only together with E or with a clear NEWS note that the observed
+statistic still comes from the user's fit. Decide E before coding B.
 
 ## Open questions to settle before coding
 
