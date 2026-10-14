@@ -36,9 +36,18 @@
   `RMediation_h0_refit_failed` naming the constraint, instead of returning a
   statistic from a known-invalid fit. A
   constraint that cannot be evaluated now errors. `type = "semi"` still stops at
-  the first replicate that fails to converge. A feasible `a*b == 0` fit on the
-  larger-statistic branch is not detected (issue #35); use one linear null per
-  path.
+  the first replicate that fails to converge. See the wrong-branch warning below.
+- OpenMx `mbco()` now warns (class `RMediation_constraint_branch`) when a
+  feasible, converged `h0` is not the constrained optimum of an equality
+  constraint: fixing one of the parameters the constraint depends on at 0 gives a
+  converged, feasible fit with -2LL lower by more than 1e-4 (issue #35). It
+  catches the single-constraint product null that lands on the larger-statistic
+  branch (`memory_exp`: 221.05 against 0.0831) without parsing the constraint.
+  It runs once per call for every `type`, costs one extra fit per involved
+  parameter (a constraint with more than 5 is skipped with a message), changes no
+  result, and cannot fail the call. In a simulation (60 seeds at each of three
+  effect sizes) it flagged all 28 wrong-branch fits with no false positives.
+  `mbco_product_null()` avoids the problem.
 - `mbco_product_null(h1, paths, ...)` tests a product null (`a*b = 0`, or a
   serial product) with OpenMx as an intersection-union test: it fixes each path
   at 0 in a copy of the fitted full model, runs `mbco()` on each, and returns the

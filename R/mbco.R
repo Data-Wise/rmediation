@@ -55,6 +55,10 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
     }
   }
 
+  # Advisory wrong-branch probe on the h0 that will be used: warns, never changes the result or
+  # fails the call (see ?mbco).
+  .mbco_report_branch(h0, h1)
+
   res_list <-
     if (type == "asymp") {
       # Asymptotic MBCO LRT

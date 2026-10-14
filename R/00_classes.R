@@ -322,9 +322,25 @@ S7::S4_register(MLOmittedConfounder)
 #' [mbco_product_null()] for a product null. `h1` is checked and warned about
 #' (`RMediation_constraint_violation`) but never refit.
 #' With `type = "semi"` the bootstrap still stops at the first replicate that
-#' fails to converge (6 of 100 runs in a simulation with `R = 200`). The refit
-#' cannot detect a feasible fit of `a*b == 0` on the larger-statistic branch
-#' (issue #35); only the two-fit route avoids that.
+#' fails to converge (6 of 100 runs in a simulation with `R = 200`).
+#'
+#' **Wrong-branch check (OpenMx).** A feasible, converged fit of a product null
+#' such as `a*b == 0` can still sit on the larger-statistic branch (for example
+#' `a = 0` when `b = 0` fits far better), which neither the violation guard nor
+#' the refit can see. After the refit, `mbco()` therefore checks every equality
+#' constraint of the `h0` it will use. It finds the free parameters the constraint
+#' depends on (by perturbing each at the full model's estimates, without parsing
+#' the formula), drops the constraint, fixes each of them at 0 in turn, and refits.
+#' If a converged fit that still satisfies the constraint has a -2LL lower than
+#' `h0`'s by more than 1e-4, `mbco()` warns with class
+#' `RMediation_constraint_branch`, naming the constraint, the parameter and the
+#' gap. It runs once per call for every `type`, costs one extra fit per involved
+#' parameter, and skips (with a message of class
+#' `RMediation_constraint_branch_skipped`) a constraint that depends on more than 5
+#' parameters. The check is advisory: it never changes the result and a failure
+#' inside it never fails the call. It only searches fits that fix one involved
+#' parameter at 0, so it can show that `h0` is not the constrained optimum but
+#' not that it is. Use [mbco_product_null()] to avoid the problem.
 #'
 #' @param h0 A fitted restricted \code{OpenMx} model or medfit \code{SEMFit} under the null hypothesis.
 #' @param h1 A fitted full model of the same class as \code{h0}, under the alternative hypothesis.

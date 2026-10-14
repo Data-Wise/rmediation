@@ -31,7 +31,7 @@ Within this design the wrong branch appears when both paths are substantial and 
 3. A candidate counts only if it satisfies the original constraint (checked numerically, violation <= 1e-6) and converged.
 4. Flag when a valid candidate has a lower -2LL than the null by more than 1e-6.
 
-Result: **28 / 28 wrong-branch cases flagged, 0 false positives in the 120 runs where the constraint fit was already optimal** (b = 0 and b = .15). Cost: one extra fit per involved parameter (two here). A first version that kept the constraint while fixing a path stalled (the constraint gradient vanishes) and flagged 0 / 28; it was discarded.
+Result: **28 / 28 wrong-branch cases flagged, 0 false positives in the 120 runs where the constraint fit was already optimal** (b = 0 and b = .15). Cost: one extra fit per involved parameter (two here). A first version flagged 0 / 28 because it found the involved parameters at the null's own solution (see step 1); it also kept the constraint while fixing a path. **Correction (2026-10-14, slice 2):** the constraint-kept variant does not stall under SLSQP (kept and dropped flagged the same 14 of 24 seeds), so dropping the constraint is a robustness choice, not a fix for an observed failure; the 0 / 28 result was caused by the involvement bug alone.
 
 ## 4. What this means for #35
 
