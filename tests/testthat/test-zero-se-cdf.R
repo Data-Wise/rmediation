@@ -28,9 +28,13 @@ test_that("upper tail, vector q and a negative fixed factor", {
 test_that("a zero fixed factor and two fixed factors give step functions", {
   for (type in c("dop", "MC")) {
     expect_equal(pprodnormal(c(-1, 1), 0, 0.4, se.x = 0, se.y = 0.1, type = type), c(0, 1))
-    expect_equal(pprodnormal(c(0.05, 0.12, 0.2), 0.3, 0.4, se.x = 0, se.y = 0, type = type), c(0, 0.5, 1))
+    expect_equal(pprodnormal(c(0.05, 0.12, 0.2), 0.3, 0.4, se.x = 0, se.y = 0, type = type), c(0, 1, 1))
   }
   expect_equal(pprodnormal(0.2, 0.3, 0.4, se.x = 0, se.y = 0, lower.tail = FALSE), 0)
+  # P(XY > q) is 0 at q = c and 1 just below it; the CDF at the atom is 1 (Codex review)
+  expect_equal(pprodnormal(0.12, 0.3, 0.4, se.x = 0, se.y = 0), 1)
+  expect_equal(pprodnormal(0.12, 0.3, 0.4, se.x = 0, se.y = 0, lower.tail = FALSE), 0)
+  expect_equal(pprodnormal(0.1199, 0.3, 0.4, se.x = 0, se.y = 0, lower.tail = FALSE), 1)
 })
 
 test_that("the degenerate CDF is the limit of the positive-se CDF", {

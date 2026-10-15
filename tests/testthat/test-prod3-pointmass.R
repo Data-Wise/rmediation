@@ -47,11 +47,11 @@ test_that("a zero fixed product with one random component is a point mass at 0",
   mm <- c(0, 0.4, 0.3)
   expect_equal(pprodnormal3(-0.01, mm, S), 0)
   expect_equal(pprodnormal3(0.01, mm, S), 1)
-  expect_equal(pprodnormal3(0, mm, S), 0.5) # the package's existing atom-at-zero convention
+  expect_equal(pprodnormal3(0, mm, S), 1) # right-continuous: P(XYZ <= 0) = 1 for a point mass at 0
 })
 
-test_that("an all-zero covariance with a zero mean keeps the 0.5-at-zero convention", {
-  expect_equal(pprodnormal3(0, c(0, 0.4, 0.3), matrix(0, 3, 3)), 0.5)
+test_that("an all-zero covariance with a zero mean is right-continuous at zero", {
+  expect_equal(pprodnormal3(0, c(0, 0.4, 0.3), matrix(0, 3, 3)), 1)
   expect_equal(pprodnormal3(0.01, c(0, 0.4, 0.3), matrix(0, 3, 3)), 1)
 })
 

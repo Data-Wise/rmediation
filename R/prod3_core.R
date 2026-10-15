@@ -289,9 +289,9 @@ NULL
 #'   deprecated alias).
 #'
 #' @return Probability `P(X1 * X2 * X3 <= q)` as a numeric scalar in `[0, 1]`.
-#' @note For a fully degenerate point mass (all variances zero) with zero means,
-#'   `q == 0` returns `0.5` by the mid-distribution convention rather than `0`
-#'   or `1`.
+#' @note A point mass (zero variances) has the right-continuous CDF: for a
+#'   product identically equal to `c`, the result is `1` for `q >= c` and `0`
+#'   below. Before 1.7.1 an atom at exactly `0` returned `0.5` at `q == 0`.
 #'
 #'   Before version 1.7.0 the default integrator was `"hcubature"`, which
 #'   returns materially wrong values on ill-conditioned covariance matrices --
@@ -336,17 +336,16 @@ pprodnormal3 <- function(q, mean, cov, method = c("gauss", "hcubature"),
   # scaled normal c * X (exactly one random component). Exact, handled before the
   # single-zero reductions below, which assume the other two components are random (#64).
   fixed <- sds < .Machine$double.eps
-  # An atom at exactly 0 keeps the package's existing convention (0.5 at q = 0, see the
-  # single-zero branch below and test-product-normal3.R); other atoms are right-continuous.
+  # Point masses use the right-continuous CDF, P(XYZ <= q) = 1 at q = c, as the contract states.
+  # (Versions up to 1.7.0 returned the mid-distribution value 0.5 for an atom at exactly 0.)
   if (sum(fixed) == 3L) {
-    v <- prod(mean)
-    return(if (v == 0 && q == 0) 0.5 else as.numeric(q >= v))
+    return(as.numeric(q >= prod(mean)))
   }
   if (sum(fixed) == 2L) {
     k <- which(!fixed)
     cc <- prod(mean[fixed])
     if (cc == 0) {
-      return(if (q == 0) 0.5 else as.numeric(q > 0))
+      return(as.numeric(q >= 0))
     }
     p <- stats::pnorm((q / cc - mean[k]) / sds[k])
     return(if (cc > 0) p else 1 - p)
@@ -356,7 +355,7 @@ pprodnormal3 <- function(q, mean, cov, method = c("gauss", "hcubature"),
   if (sds[1L] < .Machine$double.eps) {
     x1 <- mean[1L]
     if (abs(x1) < .Machine$double.eps) {
-      return(if (q == 0) 0.5 else as.numeric(q > 0))
+      return(as.numeric(q >= 0))
     }
     return(.p_prod3_degenerate(q, x1, c(2L, 3L), mean, sds, cov))
   }
@@ -472,7 +471,10 @@ p_prod3 <- function(...) pprodnormal3(...)
     stop("'cov' must contain only finite values.", call. = FALSE)
   }
   ev <- eigen(cov, symmetric = TRUE, only.values = TRUE)$values
-  if (min(ev) < -1e-8 * max(abs(ev))) {
+  # Roundoff on a singular PSD matrix is about machine epsilon times its largest entry, so
+  # that is the floor. A looser relative tolerance (1e-8) let diag(c(1e8, -0.1, 0)) through.
+  floor <- -64 * .Machine$double.eps * max(abs(ev))
+  if (min(ev) < floor || any(diag(cov) < floor)) {
     stop(
       "'cov' must be positive semidefinite: it has a negative variance, or a zero variance ",
       "with a nonzero covariance, or is otherwise not a covariance matrix (smallest ",

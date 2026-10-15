@@ -86,7 +86,7 @@ test_that("p_prod3 handles degenerate covariance matrices", {
   expect_equal(p_prod3(0.1, mu3, Sigma3), expected3)
 
   # All three variables degenerate at zero -> product is identically zero.
-  expect_equal(p_prod3(0, c(0, 0, 0), diag(c(0, 0, 0))), 0.5)
+  expect_equal(p_prod3(0, c(0, 0, 0), diag(c(0, 0, 0))), 1) # right-continuous point mass at 0
   expect_equal(p_prod3(1, c(0, 0, 0), diag(c(0, 0, 0))), 1)
   expect_equal(p_prod3(-1, c(0, 0, 0), diag(c(0, 0, 0))), 0)
 })
