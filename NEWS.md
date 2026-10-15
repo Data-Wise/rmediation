@@ -14,6 +14,15 @@
 
 ## Bug fixes
 
+- The DOP CDF (`pprodnormal()`, `qprodnormal()`, `medci()`) is exact at `|rho| = 1`: it now uses
+  Meeker & Escobar's (1994) quadratic-root solution instead of integrating a step function, which
+  was wrong by up to 4e-5 and could stop with "the integral is probably divergent". For
+  `|rho| < 1` the integrand is evaluated from the factored quadratic (no cancellation at large
+  means) with the roots as breakpoints, and a roundoff report from `integrate()` relaxes the
+  tolerance to 1e-8, then 1e-6, instead of failing. All 495 evaluations in the article's own test
+  domain (means of +/-3e5, `|rho|` up to 0.99999) now succeed; 10 used to stop with an integrator
+  error.
+
 - `mbco_product_null()` stops, with class `RMediation_h1_nonconverged`, when the full model `h1` did
   not converge or was never run. `mbco()` warns, with class `RMediation_fit_nonconverged`, when a
   supplied `h0` or `h1` carries an unaccepted OpenMx status; the result is unchanged.
