@@ -123,112 +123,6 @@ test_that("ProductNormal ci() with type='all' returns all methods", {
   expect_named(result$asymp, c("CI", "Estimate", "SE"))
 })
 
-test_that("medci_prototype() wrapper matches legacy medci() with type='dop'", {
-  mu.x <- 0.2
-  mu.y <- 0.4
-  se.x <- 1
-  se.y <- 1
-  rho <- 0
-  alpha <- 0.05
-
-  # Legacy
-  legacy <- medci(mu.x, mu.y, se.x, se.y, rho, alpha, type = "dop")
-
-  # Prototype wrapper
-  prototype <- medci_prototype(mu.x, mu.y, se.x, se.y, rho, alpha, type = "dop")
-
-  # Compare structure
-  expect_equal(names(prototype), names(legacy))
-
-  # Compare CI
-  expect_equal(prototype[[1]], legacy[[1]], tolerance = 1e-6)
-
-  # Compare Estimate
-  expect_equal(prototype$Estimate, legacy$Estimate, tolerance = 1e-10)
-
-  # Compare SE
-  expect_equal(prototype$SE, legacy$SE, tolerance = 1e-10)
-})
-
-test_that("medci_prototype() wrapper matches legacy medci() with type='mc'", {
-  mu.x <- 0.2
-  mu.y <- 0.4
-  se.x <- 1
-  se.y <- 1
-  rho <- 0
-  alpha <- 0.05
-  n.mc <- 1e5 # Larger for better convergence
-
-  # Legacy
-  set.seed(123)
-  legacy <- medci(mu.x, mu.y, se.x, se.y, rho, alpha, type = "mc", n.mc = n.mc)
-
-  # Prototype wrapper
-  set.seed(123)
-  prototype <- medci_prototype(mu.x, mu.y, se.x, se.y, rho, alpha, type = "mc", n.mc = n.mc)
-
-  # Compare structure
-  expect_equal(names(prototype), names(legacy))
-
-  # Compare CI (MC, so some tolerance)
-  expect_equal(prototype[[1]], legacy[[1]], tolerance = 0.01)
-
-  # Compare Estimate
-  expect_equal(prototype$Estimate, legacy$Estimate, tolerance = 0.01)
-})
-
-test_that("medci_prototype() wrapper matches legacy medci() with type='asymp'", {
-  mu.x <- 0.2
-  mu.y <- 0.4
-  se.x <- 1
-  se.y <- 1
-  rho <- 0
-  alpha <- 0.05
-
-  # Legacy
-  legacy <- medci(mu.x, mu.y, se.x, se.y, rho, alpha, type = "asymp")
-
-  # Prototype wrapper
-  prototype <- medci_prototype(mu.x, mu.y, se.x, se.y, rho, alpha, type = "asymp")
-
-  # Compare structure
-  expect_equal(names(prototype), names(legacy))
-
-  # Compare CI
-  expect_equal(prototype[[1]], legacy[[1]], tolerance = 1e-10)
-
-  # Compare Estimate
-  expect_equal(prototype$Estimate, legacy$Estimate, tolerance = 1e-10)
-
-  # Compare SE
-  expect_equal(prototype$SE, legacy$SE, tolerance = 1e-10)
-})
-
-test_that("medci_prototype() with type='all' matches legacy structure", {
-  mu.x <- 0.2
-  mu.y <- 0.4
-  se.x <- 1
-  se.y <- 1
-  rho <- 0.5
-  alpha <- 0.05
-
-  # Legacy
-  legacy <- medci(mu.x, mu.y, se.x, se.y, rho, alpha, type = "all")
-
-  # Prototype wrapper
-  prototype <- medci_prototype(mu.x, mu.y, se.x, se.y, rho, alpha, type = "all", n.mc = 1e5)
-
-  # Compare structure
-  expect_equal(names(prototype), names(legacy))
-  expect_length(prototype, 3)
-
-  # Compare DOP results
-  expect_equal(prototype$`Distribution of Product`[[1]],
-    legacy$`Distribution of Product`[[1]],
-    tolerance = 1e-6
-  )
-})
-
 test_that("S7 ProductNormal supports N-variable products with MC", {
   # 3-variable product
   mu <- c(0.2, 0.3, 0.4)
@@ -267,10 +161,11 @@ test_that("Edge case: high correlation rho=0.9", {
   # Legacy
   legacy <- medci(mu.x, mu.y, se.x, se.y, rho, alpha, type = "dop")
 
-  # Prototype
-  prototype <- medci_prototype(mu.x, mu.y, se.x, se.y, rho, alpha, type = "dop")
+  # S7 core
+  Sigma <- matrix(c(se.x^2, rho * se.x * se.y, rho * se.x * se.y, se.y^2), nrow = 2)
+  s7 <- .compute_ci_dop(ProductNormal(mu = c(mu.x, mu.y), Sigma = Sigma), alpha)
 
-  expect_equal(prototype[[1]], legacy[[1]], tolerance = 1e-6)
+  expect_equal(s7$CI, legacy[[1]], tolerance = 1e-6)
 })
 
 test_that("Edge case: negative correlation rho=-0.7", {
@@ -284,8 +179,9 @@ test_that("Edge case: negative correlation rho=-0.7", {
   # Legacy
   legacy <- medci(mu.x, mu.y, se.x, se.y, rho, alpha, type = "asymp")
 
-  # Prototype
-  prototype <- medci_prototype(mu.x, mu.y, se.x, se.y, rho, alpha, type = "asymp")
+  # S7 core
+  Sigma <- matrix(c(se.x^2, rho * se.x * se.y, rho * se.x * se.y, se.y^2), nrow = 2)
+  s7 <- .compute_ci_asymp(ProductNormal(mu = c(mu.x, mu.y), Sigma = Sigma), alpha)
 
-  expect_equal(prototype[[1]], legacy[[1]], tolerance = 1e-10)
+  expect_equal(s7$CI, legacy[[1]], tolerance = 1e-10)
 })
