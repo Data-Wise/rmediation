@@ -150,3 +150,36 @@ test_that("planted defect: skipping the status check is caught", {
   )
   expect_failure(expect_error(mbco_product_null(o$full, c("a1", "b1")), "did not converge"))
 })
+
+# Codex review 2026-10-14: h1 itself was never checked. A nonconverged h1 only failed by luck, in
+# a branch fit, with a message that blamed the branch.
+test_that("a nonconverged h1 is refused before any branch is fitted, and named as h1", {
+  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("testthat", "3.2.0")
+  o <- .memory_exp_oracle()
+  bad <- o$full
+  bad@output$status$code <- 6
+  fitted <- 0L
+  testthat::local_mocked_bindings(
+    .mbco_run_null = function(model) {
+      fitted <<- fitted + 1L
+      OpenMx::mxRun(model, silent = TRUE)
+    }
+  )
+  expect_error(mbco_product_null(bad, c("a1", "b1")), class = "RMediation_h1_nonconverged")
+  expect_error(mbco_product_null(bad, c("a1", "b1")), "full model h1 did not converge.*status code 6")
+  expect_identical(fitted, 0L)
+})
+
+test_that("an unfitted h1 (no status) is refused; statuses 0 and 1 are accepted", {
+  skip_if_not_installed("OpenMx")
+  o <- .memory_exp_oracle()
+  unfit <- o$full
+  unfit@output <- list()
+  expect_error(mbco_product_null(unfit, c("a1", "b1")), "status code missing")
+  for (code in c(0, 1)) {
+    ok <- o$full
+    ok@output$status$code <- code
+    expect_no_error(.mbco_check_full_fit(ok))
+  }
+})
