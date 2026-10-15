@@ -80,8 +80,7 @@
     for (label in involved) {
       ll <- tryCatch({
         fit <- .mbco_run_probe(.mbco_probe_model(h0, constraint, label))
-        code <- fit$output$status$code
-        ok <- length(code) == 1L && !is.na(code) && code %in% c(0, 1) &&
+        ok <- .mbco_status_ok(fit) &&
           .mbco_candidate_violation(fit, h0, constraint) <= threshold
         if (ok) m2ll(fit) else NA_real_
       }, error = function(e) NA_real_)

@@ -113,8 +113,7 @@
   if (inherits(fit, "error")) {
     return(failed(sprintf("the refit failed: %s", conditionMessage(fit))))
   }
-  code <- fit$output$status$code
-  if (length(code) != 1L || is.na(code) || !code %in% c(0, 1)) {
+  if (!.mbco_status_ok(fit)) {
     return(failed("the refit did not converge"))
   }
   if (any(.mbco_constraint_violation(fit) > threshold)) {
@@ -131,9 +130,36 @@
 }
 
 # Validate the observed comparison before any bootstrap sampling.
+# OpenMx optimizer status accepted as "converged" everywhere in this package: 0 (converged) and 1
+# (the final iterate meets the optimality conditions to the accuracy requested, though the
+# iterates have not converged; OpenMx itself still returns usable estimates). One definition so
+# the guards cannot drift apart.
+.mbco_status_ok <- function(fit) {
+  code <- fit$output$status$code
+  length(code) == 1L && !is.na(code) && code %in% c(0, 1)
+}
+
+# Warn (class RMediation_fit_nonconverged) when a user-supplied fit carries a status that is not
+# accepted. A model with no status at all (never run, or a stand-in) is not flagged here.
+.mbco_warn_unconverged <- function(model, label) {
+  code <- model$output$status$code
+  if (length(code) == 1L && !is.na(code) && !.mbco_status_ok(model)) {
+    .mbco_signal("RMediation_fit_nonconverged", sprintf(
+      paste0(
+        "%s did not converge (OpenMx status code %s), so the MBCO statistic and p-value may ",
+        "be unreliable; refit it until it converges."
+      ),
+      label, format(code)
+    ))
+  }
+  invisible(NULL)
+}
+
 .mbco_compare <- function(h0, h1) {
   .mbco_warn_constraints(h0, "h0")
   .mbco_warn_constraints(h1, "h1")
+  .mbco_warn_unconverged(h0, "h0")
+  .mbco_warn_unconverged(h1, "h1")
   result <- OpenMx::mxCompare(h1, h0)
   df <- result$df[2] - result$df[1]
   if (length(df) != 1L || !is.finite(df) || df <= 0) {
