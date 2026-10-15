@@ -80,3 +80,9 @@ test_that("invalid arguments are rejected", {
 test_that("default se and rho match pprodnormal's", {
   expect_equal(dprodnormal(0.4, 0.5, 0.3), dprodnormal(0.4, 0.5, 0.3, 1, 1, 0))
 })
+
+test_that("the density is 0 at infinite arguments", {
+  d <- dprodnormal(c(-Inf, Inf), mu.x = 0.3, mu.y = 0.4, se.x = 0.1, se.y = 0.2)
+  expect_identical(d, c(0, 0))
+  expect_identical(dprodnormal(Inf, 0.3, 0.4, log = TRUE), -Inf)
+})
