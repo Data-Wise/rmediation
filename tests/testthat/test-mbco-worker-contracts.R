@@ -169,3 +169,52 @@ test_that("an actual degenerate resample aborts and restores options", {
   )
   expect_identical(getOption("mxOptions"), saved)
 })
+
+# Codex adversarial review: bootstrap replicates were checked for convergence but not for
+# constraint feasibility, so an infeasible replicate fit entered the null distribution.
+.boot_mocks <- function(env, refit) {
+  testthat::local_mocked_bindings(mxRun = function(model, ...) {
+    model@output$status$code <- 0L
+    model
+  }, mxCompare = function(h1, h0, ...) {
+    data.frame(diffLL = c(NA_real_, if (isTRUE(attr(h0, "repaired"))) 5 else 1), df = c(1, 2))
+  }, .package = "OpenMx", .env = env)
+  testthat::local_mocked_bindings(.mbco_refit_h0 = refit, .env = env)
+}
+
+test_that("an unrepairable replicate constraint violation is an error, not a draw", {
+  skip_if_not_installed("OpenMx")
+  f <- .memory_exp_oracle()
+  saved <- getOption("mxOptions")
+  on.exit(options(mxOptions = saved), add = TRUE)
+  .boot_mocks(environment(), function(h0, h1, ...) {
+    list(model = NULL, refit = NULL, failure = "a constraint is still violated after the refit")
+  })
+  expect_error(
+    .mbco_semi(f$null_b1, f$full, R = 2L, optim = "SLSQP"),
+    class = "RMediation_bootstrap_infeasible"
+  )
+  expect_error(
+    .mbco_semi(f$null_b1, f$full, R = 2L, optim = "SLSQP"),
+    "replicate 1.*violated h0 constraint"
+  )
+  expect_identical(getOption("mxOptions"), saved)
+})
+
+test_that("a repaired replicate fit supplies the statistic; a feasible one is untouched", {
+  skip_if_not_installed("OpenMx")
+  f <- .memory_exp_oracle()
+  saved <- getOption("mxOptions")
+  on.exit(options(mxOptions = saved), add = TRUE)
+  set.seed(1)
+  .boot_mocks(environment(), function(h0, h1, ...) {
+    attr(h0, "repaired") <- TRUE
+    list(model = h0, refit = list())
+  })
+  res <- .mbco_semi(f$null_b1, f$full, R = 3L, optim = "SLSQP")
+  # observed statistic is the mocked 1 (feasible path); every replicate used the repaired fit (5)
+  expect_equal(res$p, mean(rep(5, 3) > res$chisq))
+  .boot_mocks(environment(), function(h0, h1, ...) NULL)
+  res2 <- .mbco_semi(f$null_b1, f$full, R = 3L, optim = "SLSQP")
+  expect_equal(res2$p, mean(rep(1, 3) > res2$chisq))
+})
