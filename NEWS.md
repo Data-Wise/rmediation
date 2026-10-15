@@ -68,6 +68,13 @@
 
 ## New features
 
+- `dprodnormal3()`: exact density of the product of three normal variables with any mean vector and
+  positive-definite covariance (the counterpart of `pprodnormal3()`), computed as a
+  two-dimensional integral that conditions on the first factor and reuses the `dprodnormal()`
+  integral for the other two. Matches the derivative of `pprodnormal3()` to about 7 digits.
+- `dprodnormal()` now resolves very small `z` at nonzero means (it previously could stop with
+  "the integral is probably divergent").
+
 - `dprodnormal()` is the exact density of the product of two normal random
   variables (any means, any `-1 < rho < 1`), completing the d/p/q family. It
   uses the one-dimensional integral of Rohatgi (Glen et al., 2004) in general

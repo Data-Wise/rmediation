@@ -36,5 +36,8 @@ parameter is exact, so this function avoids that and the feasibility
 tolerance problem. The p-value is conservative when more than one path is 0
 (standard intersection-union theory, not verified here). Each branch fit
 must converge (OpenMx status code 0 or 1); otherwise the function stops with
-an error naming the branch.
+an error naming the branch. \code{h1} must have converged too (class
+\code{RMediation_h1_nonconverged} otherwise): the null models start from its
+estimates and every statistic is measured against its fit, so a p-value from
+an unconverged \code{h1} would not be reliable.
 }
