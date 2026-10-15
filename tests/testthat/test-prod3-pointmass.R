@@ -67,3 +67,16 @@ test_that("two zero variances agree with a Monte Carlo draw", {
   est <- mean(x <= 0.05)
   expect_lt(abs(pprodnormal3(0.05, m, S) - est), 5 * sqrt(est * (1 - est) / 2e6))
 })
+
+test_that("one fixed zero component with two random ones is a right-continuous point mass at 0", {
+  # whichever component is the fixed zero, the product is identically 0
+  for (k in 1:3) {
+    S <- diag(c(0.2, 0.3, 0.1))
+    S[k, k] <- 0
+    mm <- c(0.4, 0.5, 0.6)
+    mm[k] <- 0
+    expect_equal(pprodnormal3(-0.01, mm, S), 0)
+    expect_equal(pprodnormal3(0, mm, S), 1)
+    expect_equal(pprodnormal3(0.01, mm, S), 1)
+  }
+})
