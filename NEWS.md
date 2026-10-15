@@ -14,6 +14,14 @@
 
 ## Bug fixes
 
+- Point masses now have the right-continuous CDF. `pprodnormal3()` returned `0.5` at `q == 0` for a
+  product identically equal to `0` (and for a single zero-variance, zero-mean first component);
+  it now returns `1`, matching `P(XYZ <= q)`. `pprodnormal()` with a zero standard error follows
+  the same rule (`q >= c` lower, `q < c` upper). Continuous zero-mean distributions still give
+  `0.5` at `0`.
+- `pprodnormal3()` rejects a covariance that is not finite and positive semidefinite, including
+  negative variances at very different scales, instead of clamping negative variances to zero.
+
 - `pprodnormal(lower.tail = FALSE)` and `qprodnormal(lower.tail = FALSE)` with
   `type = "dop"` now integrate the upper tail directly instead of computing
   `1 - P(XY <= q)`, which cancelled below about 1e-10 (an upper quantile at

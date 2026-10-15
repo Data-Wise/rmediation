@@ -27,3 +27,13 @@ test_that("valid singular and ill-conditioned matrices still pass", {
   expect_no_error(pprodnormal3(0.1, m, diag(c(0, 0, 0))))
   expect_no_error(pprodnormal3(0.1, m, diag(3)))
 })
+
+test_that("negative variances are rejected when scales differ greatly (Codex review)", {
+  expect_error(pprodnormal3(0.1, m, diag(c(1e8, -0.1, 0))), "positive semidefinite")
+  expect_error(pprodnormal3(0.1, m, diag(c(1e-8, -1e-9, 0))), "positive semidefinite")
+  # roundoff-sized negative eigenvalue on a singular PSD matrix still passes
+  big <- diag(c(1e8, 1, 0))
+  big[3, 3] <- -1e-9
+  expect_no_error(.assert_cov3(big))
+  expect_no_error(pprodnormal3(0.1, m, diag(c(1e8, 0, 0))))
+})

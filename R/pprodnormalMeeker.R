@@ -71,8 +71,8 @@ pprodnormalMeeker <- function(q, mu.x, mu.y, se.x, se.y, rho = 0, lower.tail = T
 # CDF of X * Y when a standard error is zero, so the standardizing integral does not apply. A
 # fixed factor c makes the product c * Y (a scaled normal, or a point mass if c = 0); both fixed
 # makes it a constant. rho is irrelevant: a constant is uncorrelated with everything. Returns
-# NULL when both standard errors are positive. A point mass answers 0.5 at its own location,
-# the convention .dop_cdf() uses at |rho| = 1.
+# NULL when both standard errors are positive. A point mass has the right-continuous CDF:
+# P(XY <= q) = 1 at q = c and P(XY > q) = 0 there.
 .degenerate_pprod <- function(q, mu.x, mu.y, se.x, se.y, lower.tail = TRUE) {
   if (se.x > 0 && se.y > 0) {
     return(NULL)
@@ -92,8 +92,7 @@ pprodnormalMeeker <- function(q, mu.x, mu.y, se.x, se.y, rho = 0, lower.tail = T
   }
   if (s == 0 || c0 == 0) {
     at <- if (s == 0) c0 else 0
-    lower <- (q > at) + 0.5 * (q == at)
-    return(if (lower.tail) lower else 1 - lower)
+    return(as.numeric(if (lower.tail) q >= at else q < at))
   }
   # c * Y <= q is Y <= q / c for c > 0 and Y >= q / c for c < 0
   pnorm((q / c0 - m) / s, lower.tail = xor(lower.tail, c0 < 0))
