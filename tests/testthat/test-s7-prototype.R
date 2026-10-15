@@ -20,9 +20,8 @@ test_that("S7 core .compute_ci_dop() matches legacy medciMeeker()", {
   pn <- ProductNormal(mu = c(mu.x, mu.y), Sigma = Sigma)
   s7 <- .compute_ci_dop(pn, alpha)
 
-  # Compare CI. The legacy copy still integrates over (-Inf, Inf) at integrate()'s default
-  # tolerance (differences ~1e-9, issue #60); 1e-6 is looser than that and far below any use.
-  expect_equal(s7$CI, legacy[[1]], tolerance = 1e-6)
+  # Compare CI
+  expect_equal(s7$CI, legacy[[1]], tolerance = 1e-10)
 
   # Compare Estimate
   expect_equal(s7$Estimate, legacy$Estimate, tolerance = 1e-10)
@@ -165,7 +164,7 @@ test_that("Edge case: high correlation rho=0.9", {
   Sigma <- matrix(c(se.x^2, rho * se.x * se.y, rho * se.x * se.y, se.y^2), nrow = 2)
   s7 <- .compute_ci_dop(ProductNormal(mu = c(mu.x, mu.y), Sigma = Sigma), alpha)
 
-  expect_equal(s7$CI, legacy[[1]], tolerance = 1e-6)
+  expect_equal(s7$CI, legacy[[1]], tolerance = 1e-10)
 })
 
 test_that("Edge case: negative correlation rho=-0.7", {
