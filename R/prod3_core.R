@@ -328,6 +328,7 @@ pprodnormal3 <- function(q, mean, cov, method = c("gauss", "hcubature"),
 
   # Symmetrize covariance
   cov <- (cov + t(cov)) / 2
+  .assert_cov3(cov)
 
   sds <- sqrt(pmax(diag(cov), 0))
 
@@ -460,3 +461,24 @@ pprodnormal3 <- function(q, mean, cov, method = c("gauss", "hcubature"),
 #' @export
 #' @rdname pprodnormal3
 p_prod3 <- function(...) pprodnormal3(...)
+
+# A covariance must be finite and positive semidefinite before any branch of pprodnormal3()
+# runs. The degenerate branches return early and clamp negative variances to 0, so without this a
+# negative variance, or a zero-variance component with a nonzero covariance, produced a plausible
+# probability from a matrix that cannot describe a distribution. The tolerance is relative to the
+# largest eigenvalue so roundoff on a genuinely singular matrix (the point-mass cases) passes.
+.assert_cov3 <- function(cov) {
+  if (!all(is.finite(cov))) {
+    stop("'cov' must contain only finite values.", call. = FALSE)
+  }
+  ev <- eigen(cov, symmetric = TRUE, only.values = TRUE)$values
+  if (min(ev) < -1e-8 * max(abs(ev))) {
+    stop(
+      "'cov' must be positive semidefinite: it has a negative variance, or a zero variance ",
+      "with a nonzero covariance, or is otherwise not a covariance matrix (smallest ",
+      "eigenvalue ", format(min(ev), digits = 3), ").",
+      call. = FALSE
+    )
+  }
+  invisible(TRUE)
+}

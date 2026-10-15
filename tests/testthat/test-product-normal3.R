@@ -382,7 +382,7 @@ test_that("p_prod3 rejects non-positive-definite covariance instead of hanging",
   # Indefinite cov whose (X, Y) block is still PD (eigenvalues 1.9, 1.9, -0.8):
   # previously this entered a non-convergent integral and hung. Must error.
   bad <- matrix(c(1, .9, .9, .9, 1, -.9, .9, -.9, 1), 3)
-  expect_error(p_prod3(0.5, c(0, 0, 0), bad), "positive-definite")
+  expect_error(p_prod3(0.5, c(0, 0, 0), bad), "positive semidefinite")
   # Perfect correlation between X and Y (singular (X, Y) block): previously
   # surfaced a raw Lapack error from inside the integrand. Must error cleanly.
   corr1 <- matrix(c(1, 1, .3, 1, 1, .3, .3, .3, 1), 3)
