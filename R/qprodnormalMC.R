@@ -10,8 +10,6 @@ qprodnormalMC <- function(p, mu.x, mu.y, se.x, se.y, rho = 0, lower.tail = TRUE,
   ab <- a_b[, 1] * a_b[, 2]
   q <- quantile(ab, c(p))
   names(q) <- NULL
-  x <- ab < q
-  mean.x <- sum(x) / n.mc
-  error.mean.x <- sd(x) / n.mc
+  error.mean.x <- vapply(q, function(qq) sd(ab < qq) / n.mc, numeric(1))
   return(list(q = q, error = error.mean.x))
 }

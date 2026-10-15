@@ -47,6 +47,11 @@
 
 ## New features
 
+- `pprodnormal()` and `qprodnormal()` accept a vector `q` / `p` and return one
+  probability / quantile per element (a list of two vectors for `type = "all"`).
+  For `type = "MC"` all elements share one simulated sample, so the estimates
+  are mutually consistent. Scalar calls are unchanged.
+
 - `ml_omitted_confounder()` adds a sensitivity analysis for an omitted
   confounder of the mediator-outcome relation in two-level (1-1-1) mediation,
   after Tofighi and Kelley (2016). It returns an `MLOmittedConfounder` object

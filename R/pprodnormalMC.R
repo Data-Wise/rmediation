@@ -9,9 +9,9 @@ pprodnormalMC <-
     a_b <- crossprod(.chol_psd(var.mat), a_b) + mean.v
     a_b <- t(a_b)
     ab <- a_b[, 1] * a_b[, 2]
-    x <- ab < q
-    percentile <- sum(x) / n.mc
-    error <- sd(x) / n.mc
+    # one shared sample for every q, so the estimates are mutually consistent and monotone
+    percentile <- vapply(q, function(qq) sum(ab < qq) / n.mc, numeric(1))
+    error <- vapply(q, function(qq) sd(ab < qq) / n.mc, numeric(1))
     if (!lower.tail) {
       percentile <- 1 - percentile
     }
