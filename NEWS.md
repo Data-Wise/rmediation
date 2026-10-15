@@ -14,6 +14,15 @@
 
 ## Bug fixes
 
+- `pprodnormal(lower.tail = FALSE)` and `qprodnormal(lower.tail = FALSE)` with
+  `type = "dop"` now integrate the upper tail directly instead of computing
+  `1 - P(XY <= q)`, which cancelled below about 1e-10 (an upper quantile at
+  `p = 1e-12` round-tripped to a relative error of 7e-5, and smaller tails
+  could not be resolved). The quantile root finder's tolerance is tightened
+  from the `uniroot()` default (1.2e-4) to 1e-12, and the integrand handles
+  `|rho| = 1` (a point-mass conditional) without a `0/0`. Probabilities below
+  about 1e-22 remain unresolved (the integration window leaves out 1.5e-23).
+
 - `medci(type = "mc")` reported `MC.Error` as `SE / n.mc`; it is now
   `SE / sqrt(n.mc)`, the standard error of the simulated mean, as documented
   elsewhere. Intervals and estimates are unchanged.
