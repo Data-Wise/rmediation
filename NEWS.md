@@ -47,6 +47,13 @@
 
 ## New features
 
+- `dprodnormal()` is the exact density of the product of two normal random
+  variables (any means, any `-1 < rho < 1`), completing the d/p/q family. It
+  uses the one-dimensional integral of Rohatgi (Glen et al., 2004) in general
+  and the Bessel-K closed form of Nadarajah and Pogany (2016) when both means
+  are zero; the two agree to near machine precision and each is the other's
+  test oracle. The density is `Inf` at exactly 0 (a log singularity).
+
 - `pprodnormal()` and `qprodnormal()` accept a vector `q` / `p` and return one
   probability / quantile per element (a list of two vectors for `type = "all"`).
   For `type = "MC"` all elements share one simulated sample, so the estimates
