@@ -19,7 +19,8 @@ test_that("medci(plot = TRUE) works at perfect correlation (singular covariance)
 test_that("a zero standard error gives an actionable error for type = 'dop', not a numerical one", {
   expect_error(medci(.3, .4, 0, .1, type = "dop"), "positive standard errors")
   expect_error(medci(.3, .4, .1, 0, type = "all"), "positive standard errors")
-  expect_error(pprodnormal(0.1, .3, .4, 0, .1), "positive standard errors")
+  # pprodnormal() handles a fixed factor exactly (test-zero-se-cdf.R); quantiles still do not
+  expect_no_error(pprodnormal(0.1, .3, .4, 0, .1))
   expect_error(qprodnormal(0.5, .3, .4, .1, 0), "positive standard errors")
   # the other methods keep working with se = 0
   expect_no_error(medci(.3, .4, 0, .1, type = "asymp"))
