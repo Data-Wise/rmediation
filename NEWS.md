@@ -14,6 +14,10 @@
 
 ## Bug fixes
 
+- `mbco_product_null()` stops, with class `RMediation_h1_nonconverged`, when the full model `h1` did
+  not converge or was never run. `mbco()` warns, with class `RMediation_fit_nonconverged`, when a
+  supplied `h0` or `h1` carries an unaccepted OpenMx status; the result is unchanged.
+
 - Point masses now have the right-continuous CDF. `pprodnormal3()` returned `0.5` at `q == 0` for a
   product identically equal to `0` (and for a single zero-variance, zero-mean first component);
   it now returns `1`, matching `P(XYZ <= q)`. `pprodnormal()` with a zero standard error follows

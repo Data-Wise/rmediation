@@ -59,8 +59,7 @@
         suppressWarnings = TRUE
       )
     for (fit in list(h0, h1)) {
-      code <- fit$output$status$code
-      if (length(code) != 1L || is.na(code) || !code %in% c(0, 1)) {
+      if (!.mbco_status_ok(fit)) {
         stop("Bootstrap replicate ", x, " did not converge.", call. = FALSE)
       }
     }

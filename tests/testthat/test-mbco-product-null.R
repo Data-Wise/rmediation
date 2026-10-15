@@ -148,5 +148,62 @@ test_that("planted defect: skipping the status check is caught", {
     .mbco_check_branch_fit = function(fit, label) invisible(fit), # the defect: no check
     .package = "RMediation"
   )
-  expect_failure(expect_error(mbco_product_null(o$full, c("a1", "b1")), "did not converge"))
+  # the unchecked status-6 branch fit now also reaches mbco()'s own nonconvergence warning
+  suppressWarnings(
+    expect_failure(expect_error(mbco_product_null(o$full, c("a1", "b1")), "did not converge"))
+  )
+})
+
+# Codex review 2026-10-14: h1 itself was never checked. A nonconverged h1 only failed by luck, in
+# a branch fit, with a message that blamed the branch.
+test_that("a nonconverged h1 is refused before any branch is fitted, and named as h1", {
+  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("testthat", "3.2.0")
+  o <- .memory_exp_oracle()
+  bad <- o$full
+  bad@output$status$code <- 6
+  fitted <- 0L
+  testthat::local_mocked_bindings(
+    .mbco_run_null = function(model) {
+      fitted <<- fitted + 1L
+      OpenMx::mxRun(model, silent = TRUE)
+    }
+  )
+  cond <- tryCatch(mbco_product_null(bad, c("a1", "b1")), error = function(e) e)
+  expect_s3_class(cond, "RMediation_h1_nonconverged")
+  expect_match(conditionMessage(cond), "full model h1 did not converge.*status code 6")
+  expect_identical(fitted, 0L)
+})
+
+test_that("an unfitted h1 (no status) is refused; statuses 0 and 1 are accepted", {
+  skip_if_not_installed("OpenMx")
+  o <- .memory_exp_oracle()
+  unfit <- o$full
+  unfit@output <- list()
+  expect_error(mbco_product_null(unfit, c("a1", "b1")), "h1 has no fit result.*never run")
+  for (code in c(0, 1)) {
+    ok <- o$full
+    ok@output$status$code <- code
+    expect_no_error(.mbco_check_full_fit(ok))
+  }
+})
+
+test_that("mbco() warns, with a class, when a user-supplied fit did not converge", {
+  skip_if_not_installed("OpenMx")
+  o <- .memory_exp_oracle()
+  bad <- o$full
+  bad@output$status$code <- 6
+  expect_warning(.mbco_warn_unconverged(bad, "h1"), class = "RMediation_fit_nonconverged")
+  expect_warning(.mbco_warn_unconverged(bad, "h1"), "h1 did not converge.*status code 6")
+  expect_no_warning(.mbco_warn_unconverged(o$full, "h1"))
+  unfit <- o$full
+  unfit@output <- list()
+  expect_no_warning(.mbco_warn_unconverged(unfit, "h1")) # no status at all is not flagged
+})
+
+test_that(".mbco_status_ok accepts exactly status 0 and 1", {
+  mk <- function(code) list(output = list(status = list(code = code)))
+  expect_true(.mbco_status_ok(mk(0)))
+  expect_true(.mbco_status_ok(mk(1)))
+  for (code in list(2, 5, 6, NA_real_, NULL, c(0, 1))) expect_false(.mbco_status_ok(mk(code)))
 })

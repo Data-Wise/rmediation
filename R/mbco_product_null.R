@@ -16,7 +16,10 @@
 #' tolerance problem. The p-value is conservative when more than one path is 0
 #' (standard intersection-union theory, not verified here). Each branch fit
 #' must converge (OpenMx status code 0 or 1); otherwise the function stops with
-#' an error naming the branch.
+#' an error naming the branch. `h1` must have converged too (class
+#' `RMediation_h1_nonconverged` otherwise): the null models start from its
+#' estimates and every statistic is measured against its fit, so a p-value from
+#' an unconverged `h1` would not be reliable.
 #'
 #' @param h1 A fitted full `OpenMx` model.
 #' @param paths Character vector of two or more labels of free parameters of
@@ -44,6 +47,7 @@ mbco_product_null <- function(h1, paths, ...) {
     )
   }
 
+  .mbco_check_full_fit(h1)
   nulls <- .mbco_product_models(h1, paths)
   fits <- Map(function(h0, label) .mbco_check_branch_fit(.mbco_run_null(h0), label), nulls, names(nulls))
   results <- lapply(fits, function(h0) mbco(h0, h1, ...))
@@ -68,11 +72,35 @@ mbco_product_null <- function(h1, paths, ...) {
   suppressWarnings(OpenMx::mxRun(model, silent = TRUE))
 }
 
+# The full model anchors every branch: the nulls start from its estimates and each statistic is
+# a difference from its -2LL. Same accepted statuses (0 or 1) as the branch fits.
+.mbco_check_full_fit <- function(h1) {
+  if (!.mbco_status_ok(h1)) {
+    code <- h1$output$status$code
+    why <- if (length(code) == 1L && !is.na(code)) {
+      sprintf("did not converge (OpenMx status code %s)", format(code))
+    } else {
+      "has no fit result (it was never run; fit it with mxRun() first)"
+    }
+    stop(structure(
+      class = c("RMediation_h1_nonconverged", "error", "condition"),
+      list(
+        message = sprintf(
+          "The full model h1 %s, so no branch p-value is reliable. Refit h1 until it converges.",
+          why
+        ),
+        call = NULL
+      )
+    ))
+  }
+  invisible(h1)
+}
+
 # Every branch fit needs an accepted OpenMx status (0 or 1, as in the bootstrap code) before its
 # p-value may compete for the maximum.
 .mbco_check_branch_fit <- function(fit, label) {
-  code <- fit$output$status$code
-  if (length(code) != 1L || is.na(code) || !code %in% c(0, 1)) {
+  if (!.mbco_status_ok(fit)) {
+    code <- fit$output$status$code
     stop(sprintf(
       "The fit for branch '%s' (%s fixed at 0) did not converge (OpenMx status code %s).",
       label, label, if (length(code) == 1L) format(code) else "missing"
