@@ -103,7 +103,13 @@ dprodnormal <- function(x, mu.x, mu.y, se.x = 1, se.y = 1, rho = 0, log = FALSE)
   }
   lo <- mu.b - 10
   hi <- mu.b + 10
-  breaks <- sort(unique(c(lo, if (lo < 0 && hi > 0) 0, hi)))
+  # For small |z| the integrand has a log-singular spike at x = 0 that decays like 1/|x| out to
+  # |x| ~ 1: break the range at decades so integrate() resolves it instead of reporting
+  # "probably divergent" (dprodnormal3() reaches small z through its inner integral).
+  za <- abs(z)
+  decades <- if (za > 0 && za < 1e-2) 10^seq(floor(log10(za)) - 1, 0) else numeric()
+  decades <- c(-decades, decades)
+  breaks <- sort(unique(c(lo, if (lo < 0 && hi > 0) 0, decades[decades > lo & decades < hi], hi)))
   sum(vapply(seq_len(length(breaks) - 1L), function(i) {
     integrate(g, breaks[i], breaks[i + 1L], subdivisions = 2000L, rel.tol = 1e-10, abs.tol = 1e-300)$value
   }, numeric(1)))
