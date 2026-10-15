@@ -75,3 +75,26 @@ test_that("planted defect: the |rho| = 1 branch and the roundoff fallback are bo
   testthat::local_mocked_bindings(.dop_cdf_collinear = function(...) stop("collinear branch removed"))
   expect_error(pprodnormal(0.2, 0.7, 2.5, 1, 1, 1), "collinear branch removed")
 })
+
+test_that(".quad_roots handles the double root at the origin, no real roots, and rho = 0", {
+  expect_identical(.quad_roots(1, 0, 0), c(0, 0)) # D = 0 and c = 0: rho x^2 = 0
+  expect_null(.quad_roots(1, 0, -1)) # D < 0
+  expect_null(.quad_roots(0, 2, 1)) # linear case is not a quadratic
+  r <- .quad_roots(0.5, -3, 2) # 0.5 x^2 - 3 x - 2 = 0
+  expect_equal(0.5 * r^2 - 3 * r - 2, c(0, 0), tolerance = 1e-12)
+  expect_true(!is.unsorted(r))
+})
+
+test_that(".integrate_relaxing retries on roundoff reports and rethrows anything else", {
+  calls <- 0L
+  f_once <- function(x) {
+    calls <<- calls + 1L
+    if (calls == 1L) stop("roundoff error was detected")
+    dnorm(x)
+  }
+  res <- .integrate_relaxing(f_once, -8, 8)
+  expect_equal(res$value, 1, tolerance = 1e-8) # first tolerance failed, a later one succeeded
+  expect_gt(calls, 1L)
+  expect_error(.integrate_relaxing(function(x) stop("something else"), 0, 1), "something else")
+  expect_error(.integrate_relaxing(function(x) stop("extremely bad integrand behaviour"), 0, 1), "bad integrand")
+})
