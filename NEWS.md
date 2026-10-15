@@ -14,6 +14,16 @@
 
 ## Bug fixes
 
+- `medci(type = "mc")` reported `MC.Error` as `SE / n.mc`; it is now
+  `SE / sqrt(n.mc)`, the standard error of the simulated mean, as documented
+  elsewhere. Intervals and estimates are unchanged.
+- `medci()` Monte Carlo and plotting no longer stop with a Cholesky error when
+  the covariance is singular (`rho = +/-1` or a zero standard error); `type =
+  "dop"`/`"all"` with a zero standard error now fails with an actionable
+  message instead of "non-finite function value".
+- `plot`/`plotCI` must be a single `TRUE`/`FALSE` in `medci()` and `ci()`
+  (a vector or `NA` previously failed with an obscure condition error).
+
 - `ci(<ProductNormal>, type = "dop")` shared the large-mean defect of #60 through
   a second copy of the integral (it stopped with "please use type='MC'" at
   `mu/se` of about 20 where `medci()` already worked). The S7 core now calls

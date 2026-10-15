@@ -113,8 +113,8 @@
   assert_number(alpha, lower = 0, upper = 1, finite = TRUE)
   type <- tolower(type)
   type <- match.arg(type, c("mc", "asymp", "all"))
-  checkmate::assert_logical(plot)
-  checkmate::assert_logical(plotCI)
+  checkmate::assert_flag(plot)
+  checkmate::assert_flag(plotCI)
   checkmate::assert_count(n.mc, positive = TRUE)
   checkmate::assert_logical(H0)
 
@@ -131,7 +131,7 @@
   }
 
   if (!inherits(mu, "lavaan")) {
-    if (is.null(Sigma) || missing(Sigma)) {
+    if (missing(Sigma) || is.null(Sigma)) {
       stop(paste("argument", sQuote("Sigma"), "cannot be a NULL value"))
     }
     assert(
