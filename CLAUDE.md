@@ -77,6 +77,11 @@ devtools::test()
 - `pprodnormal3()`: CDF for the product of **three** normals (serial indirect
   effects `a1 * a2 * b`); `p_prod3()` is a superseded alias
 - `pMC()` / `qMC()`: Monte Carlo-based for arbitrary functions
+- `dprodnormal()` / `dprodnormal3()`: exact densities of the product of two / three normals
+  (Bessel K0 for zero-mean K = 2; Rohatgi/Glen integral otherwise; K = 3 is a 1-D integral of
+  the K = 2 density conditioned on the first factor). Log singularity at exactly 0 (`Inf`).
+- Point masses (zero variance) have the right-continuous CDF everywhere; `|rho| = 1` in
+  `.dop_cdf()` uses Meeker & Escobar's (1994) quadratic-root closed form, not a step integral.
 
 **`pprodnormal3()` integrator (v1.7.0+):** the default is `method = "gauss"` —
 tensor-product Gauss-Legendre on a domain partitioned at the coordinate axes,
@@ -184,4 +189,4 @@ force-tracked), `.STATUS`.
 
 ---
 
-**Last Updated**: 2026-10-13
+**Last Updated**: 2026-10-15
