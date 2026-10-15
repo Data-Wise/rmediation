@@ -51,67 +51,12 @@
 
 #' Internal: Compute quantile using Meeker & Escobar (1994) algorithm
 #'
+#' Delegates to `qprodnormalMeeker()` so the S7 core and `medci()` share one integral
+#' (this function used to carry its own copy, which kept the issue #60 defect).
+#'
 #' @keywords internal
 .compute_quantile_dop_internal <- function(p, mu.x, mu.y, se.x, se.y, rho = 0, lower.tail = TRUE) {
-  max.iter <- 1000
-
-  # Rescale distributions so SD = 1
-  mu.a <- mu.x / se.x
-  mu.b <- mu.y / se.y
-  se.ab <- sqrt(1 + mu.a^2 + mu.b^2 + 2 * mu.a * mu.b * rho + rho^2)
-  s.a.on.b <- sqrt(1 - rho^2) # SD of b conditional on a
-
-  if (lower.tail == FALSE) {
-    u0 <- mu.a * mu.b + 6 * se.ab # upper
-    l0 <- mu.a * mu.b - 6 * se.ab
-    alpha <- 1 - p
-  } else {
-    l0 <- mu.a * mu.b - 6 * se.ab # lower
-    u0 <- mu.a * mu.b + 6 * se.ab
-    alpha <- p
-  }
-
-  # Define CDF function
-  gx <- function(x, z) {
-    mu.a.on.b <- mu.a + rho * (x - mu.b) # mean of a conditional on b
-    integ <- pnorm(sign(x) * (z / x - mu.a.on.b) / s.a.on.b) * dnorm(x - mu.b)
-    return(integ)
-  }
-
-  fx <- function(z) {
-    return(integrate(gx, lower = -Inf, upper = Inf, z = z)$value - alpha)
-  }
-
-  # Find bracketing interval
-  p.l <- fx(l0)
-  p.u <- fx(u0)
-  iter <- 0
-
-  while (p.l > 0) {
-    iter <- iter + 1
-    l0 <- l0 - 0.5 * se.ab
-    p.l <- fx(l0)
-    if (iter > max.iter) {
-      stop("Numerical algorithm does not work in type='dop'! please use type='MC'.\n")
-    }
-  }
-
-  iter <- 0 # Reset iteration counter
-  while (p.u < 0) {
-    iter <- iter + 1
-    u0 <- u0 + 0.5 * se.ab
-    p.u <- fx(u0)
-    if (iter > max.iter) {
-      stop("Numerical algorithm does not work in type='dop'! please use type='MC'.\n")
-    }
-  }
-
-  # Root finding
-  res <- uniroot(fx, c(l0, u0))
-  new <- res$root * se.x * se.y # Scale back
-  error.new <- res$estim.prec
-
-  list(q = new, error = error.new)
+  qprodnormalMeeker(p, mu.x, mu.y, se.x, se.y, rho, lower.tail)
 }
 
 #' Internal: Compute CI using Monte Carlo method

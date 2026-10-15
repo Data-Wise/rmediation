@@ -14,6 +14,11 @@
 
 ## Bug fixes
 
+- `ci(<ProductNormal>, type = "dop")` shared the large-mean defect of #60 through
+  a second copy of the integral (it stopped with "please use type='MC'" at
+  `mu/se` of about 20 where `medci()` already worked). The S7 core now calls
+  `qprodnormalMeeker()`, so both paths use one integral.
+
 - `pprodnormal3()` (and `cdf()`/`dist_quantile()` on `ProductNormal3`) returned 0
   for every `q`, or an error, when two or three components had zero variance.
   It now returns the exact answer: a point mass at `prod(mean)` when all three
