@@ -163,7 +163,7 @@ medci <- function(
     )
     axis(1, xrange)
     axis(2)
-    smidge <- par("cin") * abs(par("tcl"))
+    smidge <- (par("cin") * abs(par("tcl")))[1L] # arrows(length =) takes one value
     text(
       max1 - (max1 - min1) / 7,
       (par("usr")[4]),
