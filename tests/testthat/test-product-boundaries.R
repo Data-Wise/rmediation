@@ -138,11 +138,10 @@ test_that("near-perfect correlation agrees with Monte Carlo within its uncertain
   expect_lt(abs(P(0.1, 0.5, 0.3, 0.2, 0.4, 0.999) - est), 5 * se)
 })
 
-test_that("rho = 1 is accepted and close to rho = 0.999; a zero standard error fails loudly", {
+test_that("rho = 1 is accepted and close to rho = 0.999; a zero standard error is handled exactly", {
   expect_equal(P(0.1, 0.5, 0.3, 0.2, 0.4, 1), P(0.1, 0.5, 0.3, 0.2, 0.4, 0.999), tolerance = 1e-3)
-  # se = 0 is outside the supported domain of the DOP integral; pin the behavior so a silent
-  # wrong value is caught.
-  expect_error(P(0.1, 0.5, 0.3, 0, 0.4, 0))
+  # se = 0 is outside the DOP integral's domain; the CDF is the exact scaled normal instead
+  expect_equal(P(0.1, 0.5, 0.3, 0, 0.4, 0), pnorm((0.1 / 0.5 - 0.3) / 0.4))
 })
 
 test_that("qprodnormal inverts pprodnormal at both extreme probabilities", {
