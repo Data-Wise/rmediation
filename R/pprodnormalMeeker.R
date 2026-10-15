@@ -1,4 +1,5 @@
 pprodnormalMeeker <- function(q, mu.x, mu.y, se.x, se.y, rho = 0, lower.tail = TRUE) {
+  .assert_positive_se(se.x, se.y)
   mu.a <- mu.x / se.x
   mu.b <- mu.y / se.y
   q <- q / (se.x * se.y)
@@ -42,4 +43,17 @@ pprodnormalMeeker <- function(q, mu.x, mu.y, se.x, se.y, rho = 0, lower.tail = T
     value = sum(vapply(parts, function(a) a$value, numeric(1))),
     abs.error = sum(vapply(parts, function(a) a$abs.error, numeric(1)))
   )
+}
+
+# The DOP integral standardizes by se.x and se.y, so a zero standard error divides by zero and
+# surfaced as "non-finite function value". Say what to do instead.
+.assert_positive_se <- function(se.x, se.y) {
+  if (se.x <= 0 || se.y <= 0) {
+    stop(
+      "type = 'dop' needs positive standard errors (se.x = ", format(se.x), ", se.y = ",
+      format(se.y), "); use type = 'asymp' or type = 'mc' for a degenerate product.",
+      call. = FALSE
+    )
+  }
+  invisible(TRUE)
 }

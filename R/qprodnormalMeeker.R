@@ -1,5 +1,6 @@
 qprodnormalMeeker <-
   function(p, mu.x, mu.y, se.x, se.y, rho = 0, lower.tail = TRUE) {
+    .assert_positive_se(se.x, se.y)
     max.iter <- 1000
     eps <- 1 # initial value for precision
     mu.a <- mu.x / se.x # Rescaling distribution of a so that SD of a is 1

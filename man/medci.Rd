@@ -39,7 +39,9 @@ values \code{"dop"} (default), \code{"MC"}, \code{"asymp"} or \code{"all"}}
 \item{plot}{when \code{TRUE}, plots the distribution of \code{n.mc} data
 points from the distribution of product of two normal random variables
 using the density estimates provided by the function \code{\link{density}}.
-The default value is \code{FALSE}.}
+The default value is \code{FALSE}. Drawing the sample consumes random numbers, so
+a later Monte Carlo call in the same session differs from the same call made
+without \code{plot = TRUE}.}
 
 \item{plotCI}{when \code{TRUE}, overlays a confidence interval with error
 bars on the plot for the mediated effect. Note that to obtain the CI plot,
@@ -59,7 +61,8 @@ A vector of lower confidence limit and upper confidence limit. When
 \item{CI}{a vector of lower and upper confidence limits (at significance
 level \eqn{\alpha}),} \item{Estimate}{a point estimate of the quantity of
 interest,} \item{SE}{standard error of the quantity of interest,}
-\item{MC Error}{When \code{type="MC"}, error of the Monte Carlo estimate.}
+\item{MC Error}{When \code{type="MC"}, standard error of the simulated mean,
+\code{SE / sqrt(n.mc)}.}
 Note that when \code{type="all"}, \code{medci} returns a \link{list} of
 \emph{four} objects, each of which a \link{list} that contains the results
 produced by each method as described above.

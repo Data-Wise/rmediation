@@ -16,7 +16,9 @@
 #' @param plot when \code{TRUE}, plots the distribution of \code{n.mc} data
 #'   points from the distribution of product of two normal random variables
 #'   using the density estimates provided by the function \code{\link{density}}.
-#'   The default value is \code{FALSE}.
+#'   The default value is \code{FALSE}. Drawing the sample consumes random numbers, so
+#'   a later Monte Carlo call in the same session differs from the same call made
+#'   without \code{plot = TRUE}.
 #' @param plotCI  when \code{TRUE}, overlays a confidence interval with error
 #'   bars on the plot for the mediated effect. Note that to obtain the CI plot,
 #'   one must also specify \code{plot="TRUE"}. The default value is
@@ -50,7 +52,8 @@
 #'   \item{CI}{a vector of lower and upper confidence limits (at significance
 #'   level \eqn{\alpha}),} \item{Estimate}{a point estimate of the quantity of
 #'   interest,} \item{SE}{standard error of the quantity of interest,}
-#'   \item{MC Error}{When \code{type="MC"}, error of the Monte Carlo estimate.}
+#'   \item{MC Error}{When \code{type="MC"}, standard error of the simulated mean,
+#'   \code{SE / sqrt(n.mc)}.}
 #'   Note that when \code{type="all"}, \code{medci} returns a \link{list} of
 #'   \emph{four} objects, each of which a \link{list} that contains the results
 #'   produced by each method as described above.
@@ -115,21 +118,23 @@ medci <- function(
   if (alpha <= 0 || alpha >= 1) {
     stop("alpha must be between 0 and 1")
   }
-  checkmate::assert_logical(plot)
-  checkmate::assert_logical(plotCI)
+  checkmate::assert_flag(plot)
+  checkmate::assert_flag(plotCI)
   checkmate::assert_count(n.mc, positive = TRUE)
 
   type <- tolower(type)
   type <- match.arg(type, c("dop", "mc", "asymp", "all", "prodclin"))
+  # type = "all" runs the Monte Carlo step before the DOP step, so check up front
+  if (type %in% c("dop", "prodclin", "all")) .assert_positive_se(se.x, se.y)
 
-  if (plot == TRUE) {
+  if (plot) {
     mean.v <- c(mu.x, mu.y)
     var.mat <- matrix(
       c(se.x^2, se.x * se.y * rho, se.x * se.y * rho, se.y^2),
       2
     )
     x_y <- matrix(rnorm(2 * n.mc), ncol = n.mc)
-    x_y <- crossprod(chol(var.mat), x_y) + mean.v
+    x_y <- crossprod(.chol_psd(var.mat), x_y) + mean.v
     x_y <- t(x_y)
     xy <- x_y[, 1] * x_y[, 2]
     se.xy <- sqrt(
@@ -179,7 +184,6 @@ medci <- function(
       ...
     )
     if (plotCI) {
-      yci <- par("usr")[3] + diff(par("usr")[3:4]) / 25
       yci <- 0
       MedCI <- medciMeeker(mu.x, mu.y, se.x, se.y, rho, alpha)
       arrows(

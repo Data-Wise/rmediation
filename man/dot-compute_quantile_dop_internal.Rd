@@ -15,6 +15,7 @@
 )
 }
 \description{
-Internal: Compute quantile using Meeker & Escobar (1994) algorithm
+Delegates to \code{qprodnormalMeeker()} so the S7 core and \code{medci()} share one integral
+(this function used to carry its own copy, which kept the issue #60 defect).
 }
 \keyword{internal}
