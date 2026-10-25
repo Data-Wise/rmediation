@@ -12,7 +12,7 @@ test_that("branch, label and df mutants fail the oracles", {
   expect_lt(abs(mbco(f$product, f$full)@statistic - 0.083100), 1e-6)
   larger <- .mbco_semfit(f$a1, f$full)
   expect_failure(expect_lt(abs(larger@statistic - 0.083100), 1e-6))
-  shifted <- medfit::fit_sem(paste(
+  shifted <- .fit_sem(paste(
     "repetition ~ a2*x", "imagery ~ cp*x",
     "recall ~ a1*x + b1*repetition + b2*imagery", "a1*b1 == 0",
     sep = "\n"
@@ -32,8 +32,8 @@ test_that("boundary and version mutants fail refusals", {
   skip_if_not_installed("medfit", "0.8.0")
   f <- .semfit_mbco_fits()
   base <- paste(.semfit_mbco_syntax, "a1 > 0", sep = "\n")
-  full <- medfit::fit_sem(base, f$data)
-  null <- medfit::fit_sem(paste(base, "a1 == 0", sep = "\n"), f$data)
+  full <- .fit_sem(base, f$data)
+  null <- .fit_sem(paste(base, "a1 == 0", sep = "\n"), f$data)
   missing_guard <- .semfit_mutate(
     .mbco_semfit,
     ".mbco_semfit_compare(h0, h1)", "suppressWarnings(stats::anova(h1, h0))"

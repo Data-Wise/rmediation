@@ -74,12 +74,12 @@ test_that("SEMFit comparisons preserve medfit refusal guards", {
   bad <- f$b1
   bad@f <- f$full@f - 0.01
   expect_error(mbco(bad, f$full), "global optimum")
-  weighted <- medfit::fit_sem(paste(.semfit_mbco_syntax, "b1 == 0", sep = "\n"),
+  weighted <- .fit_sem(paste(.semfit_mbco_syntax, "b1 == 0", sep = "\n"),
     f$data,
     weights = rep(1, nrow(f$data)), se_type = "sandwich"
   )
   expect_error(mbco(weighted, f$full), "sampling weights")
-  short <- medfit::fit_sem(paste(
+  short <- .fit_sem(paste(
     .semfit_mbco_syntax,
     "b1 == 0",
     sep = "\n"
@@ -87,19 +87,19 @@ test_that("SEMFit comparisons preserve medfit refusal guards", {
   expect_error(mbco(short, f$full), "different numbers of rows")
   changed <- f$data
   changed$recall[1] <- changed$recall[1] + 1
-  other <- medfit::fit_sem(paste(
+  other <- .fit_sem(paste(
     .semfit_mbco_syntax,
     "b1 == 0",
     sep = "\n"
   ), changed)
   expect_error(mbco(other, f$full), "different data")
-  not_nested <- medfit::fit_sem(paste(
+  not_nested <- .fit_sem(paste(
     "repetition ~ a1*x", "recall ~ b1*repetition + b2*imagery",
     "imagery ~~ repetition", "imagery ~ 0*x",
     sep = "\n"
   ), f$data)
   expect_error(mbco(not_nested, f$full), "not nested")
-  fewer <- medfit::fit_sem(
+  fewer <- .fit_sem(
     "repetition ~ a1*x\nimagery ~ a2*x\na1 == 0\na2 == 0", f$data
   )
   # Two constraints give this different-variable model a larger df.
@@ -117,8 +117,8 @@ test_that("tested bounds refuse p-values; interior nulls are accepted", {
   pair <- function(bound) {
     base <- paste(.semfit_mbco_syntax, bound, sep = "\n")
     list(
-      full = medfit::fit_sem(base, f$data),
-      null = medfit::fit_sem(paste(base, "a1 == 0", sep = "\n"), f$data)
+      full = .fit_sem(base, f$data),
+      null = .fit_sem(paste(base, "a1 == 0", sep = "\n"), f$data)
     )
   }
   edge <- pair("a1 > 0")
@@ -148,8 +148,8 @@ test_that("old SEMFit dispatch errors; CI integration remains available", {
     skip("old-version library gate")
   }
   d <- .memory_exp_data()
-  full <- medfit::fit_sem(.semfit_mbco_syntax, d)
-  null <- medfit::fit_sem(paste(.semfit_mbco_syntax, "b1 == 0", sep = "\n"), d)
+  full <- .fit_sem(.semfit_mbco_syntax, d)
+  null <- .fit_sem(paste(.semfit_mbco_syntax, "b1 == 0", sep = "\n"), d)
   expect_error(mbco(null, full), "requires medfit >= 0.8.0", fixed = TRUE)
   obj <- medfit::fit_mediation(recall ~ x + repetition, repetition ~ x,
     data = d, treatment = "x", mediator = "repetition"
@@ -175,7 +175,7 @@ test_that("SEMFit pairs agree across fixed_x settings; mismatched sets are refus
   )
   d <- .memory_exp_data()
   fit <- function(fixed_x, extra = "") {
-    medfit::fit_sem(
+    .fit_sem(
       paste(.semfit_mbco_syntax, extra, sep = "\n"), d,
       fixed_x = fixed_x
     )
