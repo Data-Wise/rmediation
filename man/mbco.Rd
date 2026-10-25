@@ -115,13 +115,14 @@ not that it is. Use \code{\link[=mbco_product_null]{mbco_product_null()}} to avo
 }
 \examples{
 if (requireNamespace("medfit", quietly = TRUE) &&
-    utils::packageVersion("medfit") >= "0.8.0") {
+    utils::packageVersion("medfit") >= "0.9.0") {
   d <- as.data.frame(memory_exp)
   d$x <- as.numeric(d$x) - 1
   syntax <- paste("repetition ~ a1*x", "imagery ~ a2*x",
                   "recall ~ cp*x + b1*repetition + b2*imagery", sep = "\n")
-  full <- medfit::fit_sem(syntax, d)
-  null <- medfit::fit_sem(paste(syntax, "a1*b1 == 0", sep = "\n"), d)
+  full <- medfit::fit_sem(syntax, d, fixed_x = FALSE, meanstructure = NULL)
+  null <- medfit::fit_sem(paste(syntax, "a1*b1 == 0", sep = "\n"), d,
+                          fixed_x = FALSE, meanstructure = NULL)
   mbco(null, full) # statistic 0.0831, df 1
 }
 \dontrun{

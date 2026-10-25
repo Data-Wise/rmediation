@@ -5,6 +5,11 @@
 - Expanded public OpenMx MBCO argument, bootstrap-routing and optimizer-fallback
   tests, including result-field mutation checks and fitted RAM smoke tests.
   Coverage CI now retains line/expression summaries and uncovered-line artifacts.
+- The `SEMFit` MBCO tests and the `mbco()` example pass `fixed_x` and
+  `meanstructure` to `medfit::fit_sem()` explicitly, at today's values, so
+  medfit 0.14.0's default-change warning does not appear (medfit flips these
+  defaults in 0.15.0). Results are unchanged; the example now needs medfit
+  >= 0.9.0 (#85).
 
 ## Removed
 
