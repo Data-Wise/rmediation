@@ -1,5 +1,7 @@
 # RMediation 1.7.1 (development version)
 
+* S7 property access now works under the declared R 4.1 minimum.
+
 ## Testing
 
 - Expanded public OpenMx MBCO argument, bootstrap-routing and optimizer-fallback

@@ -86,3 +86,5 @@ importFrom(stats,
   var,
   vcov
 )
+
+if (getRversion() < "4.3.0") importFrom(S7, "@")
