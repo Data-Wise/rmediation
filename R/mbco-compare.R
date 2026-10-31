@@ -152,10 +152,12 @@
 }
 
 # One bootstrap replicate shared by type = "semi" and type = "parametric": fit h0 and h1 to
-# `data`, require both to converge, repair a violated h0 constraint as the observed h0 is repaired,
-# and return the replicate statistic. A converged replicate null can still violate its constraint,
-# and an infeasible fit understates the statistic; a replicate that cannot be repaired is an error
-# (class RMediation_bootstrap_infeasible), never a draw from the null distribution.
+# `data`, repair a violated h0 constraint as the observed h0 is repaired, and return the replicate
+# statistic. A replicate whose fits did not converge returns NA_real_: the callers drop it and
+# .mbco_bootstrap_p() bounds how many may be dropped (issue #92). Nothing else is dropped. A
+# converged replicate null can still violate its constraint, and an infeasible fit understates the
+# statistic; a replicate that cannot be repaired is an error (class RMediation_bootstrap_infeasible),
+# and so are a non-finite and a negative statistic, never a draw from the null distribution.
 .mbco_replicate_statistic <- function(h0, h1, data, x) {
   h0 <- OpenMx::mxRun(
     OpenMx::mxModel(h0, OpenMx::mxData(data, type = "raw")),
@@ -169,7 +171,7 @@
   )
   for (fit in list(h0, h1)) {
     if (!.mbco_status_ok(fit)) {
-      stop("Bootstrap replicate ", x, " did not converge.", call. = FALSE)
+      return(NA_real_)
     }
   }
   repaired <- .mbco_refit_h0(h0, h1)
@@ -248,4 +250,31 @@
     )
   }
   result
+}
+
+# Bootstrap p-value from the replicate statistics `null_samp` (NA = a replicate that did not
+# converge). The p-value is the proportion of the KEPT replicates strictly above `observed`, with no
+# +1 correction, as in OpenMx's mxCompare(boot = TRUE). More than `max_dropped` of the replicates
+# dropped stops the call: the null distribution would rest on too few draws, and non-convergence
+# is rarely random. Returns list(p, dropped) with `dropped` a single integer.
+.mbco_bootstrap_p <- function(null_samp, observed, max_dropped = 0.05) {
+  dropped <- sum(is.na(null_samp))
+  total <- length(null_samp)
+  if (dropped == total || dropped / total > max_dropped) {
+    stop(structure(
+      class = c("RMediation_bootstrap_too_many_dropped", "error", "condition"),
+      list(
+        message = sprintf(
+          paste0(
+            "%d of %d bootstrap replicates did not converge, which is more than %s%% of the ",
+            "replicates; the bootstrap p-value would rest on too few draws. Check the models, ",
+            "increase R or use another optimizer."
+          ),
+          dropped, total, format(100 * max_dropped)
+        ),
+        call = NULL
+      )
+    ))
+  }
+  list(p = mean(null_samp[!is.na(null_samp)] > observed), dropped = as.integer(dropped))
 }

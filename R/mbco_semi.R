@@ -50,11 +50,12 @@
   null_samp <- vapply(seq.int(R), compare_boot,
     FUN.VALUE = numeric(1), df = df_trans
   )
-  mbco_pvalue <- mean(null_samp > mbco_chisq)
+  boot_p <- .mbco_bootstrap_p(null_samp, mbco_chisq)
   mbco_boot <- list(
     chisq = mbco_chisq,
     df = mbco_df,
-    p = mbco_pvalue
+    p = boot_p$p,
+    dropped = boot_p$dropped
   )
   return(mbco_boot)
 }

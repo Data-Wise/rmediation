@@ -97,11 +97,11 @@ test_that("a repaired parametric replicate supplies the statistic; a feasible on
   res2 <- mbco_parametric(f$null_b1, f$full, R = 3L, optim = "SLSQP")
   expect_equal(res2$p, mean(rep(1, 3) > res2$chisq))
   expect_equal(res2$p, 0)
-  expect_named(res2, c("chisq", "df", "p"))
+  expect_named(res2, c("chisq", "df", "p", "dropped"))
   expect_equal(res2$df, 1)
 })
 
-test_that("a parametric replicate that does not converge is an error, not a draw", {
+test_that("when every parametric replicate fails to converge the call stops, not a p-value", {
   skip_if_not_installed("OpenMx")
   skip_if_not_installed("mvtnorm")
   f <- .memory_exp_oracle()
@@ -113,7 +113,11 @@ test_that("a parametric replicate that does not converge is an error, not a draw
   }, .package = "OpenMx")
   expect_error(
     mbco_parametric(f$null_b1, f$full, R = 2L, optim = "SLSQP"),
-    "replicate 1.*did not converge"
+    class = "RMediation_bootstrap_too_many_dropped"
+  )
+  expect_error(
+    mbco_parametric(f$null_b1, f$full, R = 2L, optim = "SLSQP"),
+    "2 of 2 bootstrap replicates did not converge"
   )
   expect_identical(getOption("mxOptions"), saved)
 })

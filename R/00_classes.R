@@ -171,6 +171,10 @@ ci <- S7::new_generic("ci", "object")
 #'   tolerance. `print()` and `summary()` show a note when it is set.
 #' @param branch `NULL` (default), or the label of the single-path null that gave
 #'   the reported result when the result comes from [mbco_product_null()].
+#' @param dropped `NULL` (default) for a result without a bootstrap, or a single
+#'   non-negative whole number: the count of bootstrap replicates whose fits did not
+#'   converge and were left out of the null distribution (`0` when none were). The
+#'   p-value is taken over the remaining `R - dropped` replicates.
 #' @export
 #' @examples
 #' res <- MBCOResult(statistic = 4.2, df = 1, p_value = 0.04, type = "asymp")
@@ -188,9 +192,17 @@ MBCOResult <- S7::new_class("MBCOResult",
     branch = S7::new_property(
       NULL | S7::class_character,
       default = quote(NULL)
+    ),
+    dropped = S7::new_property(
+      NULL | S7::class_integer,
+      default = quote(NULL)
     )
   ),
   validator = function(self) {
+    d <- self@dropped
+    if (!is.null(d) && !(length(d) == 1L && !is.na(d) && d >= 0L)) {
+      return("@dropped must be NULL or a single non-negative whole number")
+    }
     b <- self@branch
     if (!is.null(b) && !(length(b) == 1L && !is.na(b) && nzchar(b))) {
       return("@branch must be NULL or a single non-empty string")
@@ -278,15 +290,21 @@ S7::S4_register(MLOmittedConfounder)
 #' OpenMx bootstrap methods restore global options on success and error.
 #' Set a seed before calling for reproducibility; bootstrap sampling consumes the
 #' current RNG stream. The semiparametric method requires positive-definite sample
-#' and null covariances and stops at the first failed refit or nonfinite replicate
-#' statistic. It does not retry or discard failed replicates. The parametric method
+#' and null covariances. The parametric method
 #' simulates each replicate from the fitted `h0` with [OpenMx::mxGenerateData()] (the
 #' `mvtnorm` package is required) and fits `h0` and `h1` to it in a loop the package
-#' runs itself, under the same stopping rules as the semiparametric method; it needs a
-#' model with a single raw data set. For both bootstrap types the p-value is the
-#' proportion of the R replicate statistics strictly above the observed one,
-#' `mean(null > observed)`, with no `(1 + k)/(R + 1)` correction, so it can be exactly 0
-#' when no replicate exceeds the observed statistic.
+#' runs itself, under the same rules as the semiparametric method; it needs a
+#' model with a single raw data set. For both bootstrap types a replicate whose
+#' fits did not converge is left out of the null distribution, and the `dropped` slot
+#' of the result counts them. If more than 5% of the `R` replicates are dropped, the
+#' call stops with an error of class `RMediation_bootstrap_too_many_dropped` (with
+#' fewer than 20 replicates no replicate may be dropped). Nothing else is dropped: a
+#' replicate with an unrepairable constraint violation (class
+#' `RMediation_bootstrap_infeasible`), a non-finite statistic, or an h1 fit worse than
+#' its h0 fit stops the call. The p-value is the proportion of the kept replicates,
+#' `R - dropped` of them, whose statistic is strictly above the observed one, `mean(null >
+#' observed)` over the kept replicates. There is no `(1 + k)/(R + 1)` correction, so it can
+#' be exactly 0 when no kept replicate exceeds the observed statistic.
 #'
 #' **Testing an OpenMx product null (\eqn{a b = 0}).** The null \eqn{ab = 0} holds when
 #' \eqn{a = 0} or \eqn{b = 0}. A single nonlinear constraint such as

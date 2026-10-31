@@ -28,9 +28,9 @@
   statistic. The package now simulates each replicate from the fitted `h0` with
   `OpenMx::mxGenerateData()`, fits `h0` and `h1`, refits a violated `h0` constraint, and stops
   with an error of class `RMediation_bootstrap_infeasible` when it cannot be repaired. Behavior
-  changes: a replicate that does not converge, has a non-finite statistic, or has an h1 fit worse
-  than its h0 fit now stops the call (`mxCompare` dropped such replicates, warning only when fewer
-  than 95% converged; the last check also applies to `type = "semi"`), and a model without a
+  changes: a replicate with a non-finite statistic or an h1 fit worse than its h0 fit now stops the
+  call (`mxCompare` dropped such replicates; the last check also applies to `type = "semi"`; a
+  replicate that does not converge is dropped within a 5% bound, see the next entry), and a model without a
   single raw data set (a covariance-data or multigroup model) is refused before sampling. The
   observed statistic, df and the result shape are
   unchanged; seeded p-values differ because the replicates are drawn by a different loop.
@@ -144,8 +144,7 @@
   the constraint violated, `mbco()` stops with an error of class
   `RMediation_h0_refit_failed` naming the constraint, instead of returning a
   statistic from a known-invalid fit. A
-  constraint that cannot be evaluated now errors. `type = "semi"` still stops at
-  the first replicate that fails to converge. See the wrong-branch warning below.
+  constraint that cannot be evaluated now errors. See the wrong-branch warning below.
 - OpenMx `mbco()` now also warns, with class `RMediation_constraint_not_enforced` and right
   after `RMediation_h0_refit`, when the refit ran and `h0`'s fit was identical to
   `h1`'s (statistic 0 before the refit) although a constraint of `h0` was violated
@@ -157,10 +156,17 @@
   unchanged (the seeded example goes from 0 to 0.0878); for a product null use
   `mbco_product_null()`. Bootstrap replicates are refit and checked the same way
   for both bootstrap types (see the `type = "parametric"` entry under Bug fixes).
-- `?mbco` now states the bootstrap p-value rule for both bootstrap types: the proportion of
-  replicate statistics strictly above the observed one, with no `(1 + k)/(R + 1)` correction
-  (the same strict `>` rule as OpenMx's `mxCompare(boot = TRUE)`; the denominator is all R
-  because a failed replicate now stops the call instead of being dropped).
+- `mbco(type = "semi")` and `mbco(type = "parametric")` now drop a bootstrap replicate whose
+  fits did not converge instead of stopping at the first one (issue #92). Up to 5% of the `R`
+  replicates may be dropped; above that the call stops with an error of class
+  `RMediation_bootstrap_too_many_dropped` (with fewer than 20 replicates none may be dropped).
+  The new `dropped` slot of `MBCOResult` reports the count (`NULL` for results without a
+  bootstrap), and the p-value is the proportion of the kept replicates strictly above the
+  observed statistic, with no `(1 + k)/(R + 1)` correction: the rule of
+  `OpenMx::mxCompare(boot = TRUE)`, whose denominator was also the kept replicates. Only
+  non-convergence is dropped; an unrepairable constraint violation
+  (`RMediation_bootstrap_infeasible`), a non-finite statistic and an h1 fit worse than its h0
+  fit still stop the call. `?mbco` states the rule.
 - OpenMx `mbco()` now warns (class `RMediation_constraint_branch`) when a
   feasible, converged `h0` is not the constrained optimum of an equality
   constraint: fixing one of the parameters the constraint depends on at 0 gives a
