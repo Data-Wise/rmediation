@@ -1,0 +1,7 @@
+# Files whose change can silently change numerical results; a PR touching one needs the risk-tier evidence
+# in its body (scripts/risk_tier.py). Globs are matched against repository-relative paths.
+R/mbco*.R
+R/prod3_core.R
+R/dop*.R
+R/pprodnormal*.R
+R/ci*.R

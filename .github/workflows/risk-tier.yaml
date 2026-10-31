@@ -1,0 +1,34 @@
+# Risk tier (CI policy exception, plan G9): a PR that changes a risk file (.github/risk-files.txt) must carry the
+# evidence checklist in its body (scripts/risk_tier.py; template in .github/PULL_REQUEST_TEMPLATE.md). A test cannot
+# see a diff or a PR body, so a job does. Cheap by design: a standard-library Python script, no R install, a few
+# seconds, so it may run on PRs to dev while the expensive checks run for main and releases only
+# (scripts/check-ci-policy.R enforces that this stays cheap). Release PRs from dev are exempt.
+# Advisory: not a required status check. Make it required only after three clean runs, by the repository owner.
+on:
+  pull_request:
+    branches: [dev, main]
+    types: [opened, edited, synchronize, reopened]
+
+name: risk-tier
+
+permissions: read-all
+
+jobs:
+  risk-tier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PR_BODY: ${{ github.event.pull_request.body }}
+      HEAD_REF: ${{ github.head_ref }}
+      BASE_REF: ${{ github.base_ref }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check the risk-tier evidence
+        shell: bash
+        run: |
+          git diff --name-only "origin/${BASE_REF}...HEAD" > "$RUNNER_TEMP/changed.txt"
+          printf '%s\n' "$PR_BODY" > "$RUNNER_TEMP/body.txt"
+          python3 scripts/risk_tier.py --changed "$RUNNER_TEMP/changed.txt" --body "$RUNNER_TEMP/body.txt" \
+            --head-ref "$HEAD_REF" --base-ref "$BASE_REF"

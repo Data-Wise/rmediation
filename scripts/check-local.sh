@@ -12,7 +12,8 @@
 #
 # CI policy: GitHub runs the expensive checks (full matrix, coverage, medfit compatibility) for main and
 # releases only; PRs to dev are gated here. This script therefore also runs scripts/check-ci-policy.R (workflow
-# triggers), scripts/check-docs.R (roxygen output matches man/ and NAMESPACE) and
+# triggers), scripts/test_risk_tier.py (the risk-tier PR-body check's own tests), scripts/check-docs.R
+# (roxygen output matches man/ and NAMESPACE) and
 # scripts/verify-constraint-not-enforced.R (issue #84 gate, about 2 s) first, so the cheap checks fail fast
 # before the tests.
 #
@@ -59,6 +60,12 @@ echo "check-local: $pkg (NOT_CRAN=false), log: $LOG"
 echo "== CI policy ==" >> "$LOG"
 if ! ( cd "$root" && Rscript scripts/check-ci-policy.R ) >> "$LOG" 2>&1; then
   echo "check-local: FAIL (CI policy) -- see $LOG"
+  exit 1
+fi
+
+echo "== risk-tier script tests ==" >> "$LOG"
+if ! ( cd "$root" && python3 scripts/test_risk_tier.py ) >> "$LOG" 2>&1; then
+  echo "check-local: FAIL (risk-tier script tests) -- see $LOG"
   exit 1
 fi
 

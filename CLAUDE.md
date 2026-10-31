@@ -133,7 +133,9 @@ trigger and job name. The R-devel leg of R-CMD-check runs with `_R_CHECK_DEPENDS
 unguarded use of a Suggests package in an example or test fails there; `scripts/check-local.sh --depends-only` is the local
 equivalent. The Ubuntu release leg also runs the issue #84 gate (`scripts/verify-constraint-not-enforced.R`, about 2 s) as a
 step, with no path filter and no `continue-on-error`; `check-local.sh` runs it first. Plan and decisions:
-`planning/PLAN-mechanical-checks-2026-10-30.md`.
+`planning/PLAN-mechanical-checks-2026-10-30.md`. One cheap check does run on PRs to `dev`: `risk-tier` (a stdlib Python
+script, no R install). A PR that changes a file listed in `.github/risk-files.txt` must carry the evidence checklist from
+`.github/PULL_REQUEST_TEMPLATE.md` in its body; release PRs from `dev` are exempt. It is advisory, not a required check.
 
 ---
 

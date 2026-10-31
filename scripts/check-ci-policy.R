@@ -88,11 +88,37 @@ if ("R-CMD-check.yaml" %in% expensive && file.exists(".github/workflows/R-CMD-ch
   }
 }
 
+# The one cheap exception on PRs to dev: the risk-tier check. It stays cheap only while it needs no R install and
+# a short timeout, and it needs its script and its risk-file list.
+rt <- ".github/workflows/risk-tier.yaml"
+if (!file.exists(rt)) {
+  bad("risk-tier.yaml: workflow file is missing")
+} else {
+  rwf <- yaml::read_yaml(rt)
+  rjob <- rwf$jobs[[1]]
+  uses <- vapply(rjob$steps, function(x) as.character(x$uses %||% ""), "")
+  if (any(grepl("r-lib/actions", uses, fixed = TRUE))) bad("risk-tier.yaml: must not install R (r-lib/actions); it has to stay cheap")
+  if (is.null(rjob[["timeout-minutes"]]) || as.numeric(rjob[["timeout-minutes"]]) > 10) {
+    bad("risk-tier.yaml: timeout-minutes must be set and at most 10")
+  }
+  runs <- paste(vapply(rjob$steps, function(x) as.character(x$run %||% ""), ""), collapse = "\n")
+  if (!grepl("scripts/risk_tier.py", runs, fixed = TRUE)) bad("risk-tier.yaml: no step runs scripts/risk_tier.py")
+  rbr <- as.character(unlist((rwf[["on"]] %||% rwf[["TRUE"]])$pull_request$branches))
+  if (!all(c("dev", "main") %in% rbr)) bad("risk-tier.yaml: must run on pull requests to dev and main")
+}
+for (f in c("scripts/risk_tier.py", ".github/risk-files.txt")) {
+  if (!file.exists(f)) bad(sprintf("%s is missing (risk-tier needs it)", f))
+}
+if (file.exists(".github/risk-files.txt")) {
+  globs <- trimws(readLines(".github/risk-files.txt", warn = FALSE))
+  if (!length(globs[nzchar(globs) & !startsWith(globs, "#")])) bad(".github/risk-files.txt lists no risk files")
+}
+
 cat(sprintf("CI policy: %d workflow(s) checked\n", length(expensive)))
 if (length(violations)) {
   cat(paste0("  [FAIL] ", violations, "\n"), sep = "")
   cat("CI policy: FAILED\n")
   quit(status = 1L)
 }
-cat("  [PASS] no expensive workflow triggers on dev; main's required check still starts; the R-devel leg runs depends-only\n")
+cat("  [PASS] no expensive workflow triggers on dev; main's required check still starts; the R-devel leg runs depends-only; the issue #84 gate step is in place; risk-tier stays cheap\n")
 cat("CI policy: PASSED\n")
