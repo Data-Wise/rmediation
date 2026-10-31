@@ -7,6 +7,14 @@
   `95% CI`). The interval itself was always correct. Code that indexes the result by the old name, such as
   `res$"97.5% CI"`, must use `res[[1]]` or the new name (`"95% CI"` at the default `alpha`) (#123).
 
+## Bug fixes
+
+- `dprodnormal()` and `dprodnormal3()` no longer return `0`, `NA` or a silently low density when a factor's mean is
+  very large relative to its standard error (`mu / se` above about 3000 for two factors, about 1000 for some
+  three-factor cases). The integrand is a narrow spike there and the fixed integration window missed it. The window is
+  now split at the spike (found from the roots of the conditional mean), with a scaled absolute tolerance for the
+  far subintervals. Values for well-conditioned inputs are unchanged (#117).
+
 # RMediation 1.8.1 (2026-10-31)
 
 No change to returned values or to the API.
