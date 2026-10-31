@@ -131,7 +131,9 @@ are gated locally with `scripts/check-local.sh` (workflow triggers, docs currenc
 `R CMD check`) and rforge (`/rforge:r:cycle`). `main` requires the status check `ubuntu-latest (release)`: keep that
 trigger and job name. The R-devel leg of R-CMD-check runs with `_R_CHECK_DEPENDS_ONLY_=true` (hard dependencies only), so an
 unguarded use of a Suggests package in an example or test fails there; `scripts/check-local.sh --depends-only` is the local
-equivalent. Plan and decisions: `planning/PLAN-mechanical-checks-2026-10-30.md`.
+equivalent. The Ubuntu release leg also runs the issue #84 gate (`scripts/verify-constraint-not-enforced.R`, about 2 s) as a
+step, with no path filter and no `continue-on-error`; `check-local.sh` runs it first. Plan and decisions:
+`planning/PLAN-mechanical-checks-2026-10-30.md`.
 
 ---
 

@@ -7,6 +7,8 @@
 expensive <- c("R-CMD-check.yaml", "semfit-mbco.yaml", "test-coverage.yaml", "pkgdown.yaml")
 required_context <- "ubuntu-latest (release)" # the required status check on `main`
 
+`%||%` <- function(a, b) if (is.null(a)) b else a
+
 violations <- character()
 bad <- function(msg) violations <<- c(violations, msg)
 
@@ -60,6 +62,29 @@ if ("R-CMD-check.yaml" %in% expensive && file.exists(".github/workflows/R-CMD-ch
   }
   if (!identical(wf$jobs[[1]]$env[["_R_CHECK_DEPENDS_ONLY_"]], "${{ matrix.config.depends-only }}")) {
     bad("R-CMD-check.yaml: job env _R_CHECK_DEPENDS_ONLY_ must be ${{ matrix.config.depends-only }}")
+  }
+
+  # The issue #84 gate (scripts/verify-constraint-not-enforced.R) runs as one step of the Ubuntu release leg: it
+  # needs OpenMx, so a missing OpenMx fails the job; it takes about 2 s; it has no path filter (a filter that
+  # misses a file would skip it silently) and no continue-on-error (a failing gate must fail the job).
+  steps <- wf$jobs[[1]]$steps
+  is_gate <- vapply(steps, function(x) grepl("verify-constraint-not-enforced.R", x$run %||% "", fixed = TRUE), NA)
+  if (sum(is_gate) != 1L) {
+    bad(sprintf("R-CMD-check.yaml: expected exactly one step running the issue #84 gate, found %d", sum(is_gate)))
+  } else {
+    gate <- steps[is_gate][[1]]
+    cond <- gate[["if"]] %||% ""
+    if (!(grepl("ubuntu-latest", cond, fixed = TRUE) && grepl("release", cond, fixed = TRUE))) {
+      bad("R-CMD-check.yaml: the issue #84 gate step must be limited to the ubuntu-latest release leg")
+    }
+    if (isTRUE(gate[["continue-on-error"]]) || identical(gate[["continue-on-error"]], "true")) {
+      bad("R-CMD-check.yaml: the issue #84 gate step must not set continue-on-error")
+    }
+  }
+  for (event in names(on)) {
+    if (is.list(on[[event]]) && any(c("paths", "paths-ignore") %in% names(on[[event]]))) {
+      bad(sprintf("R-CMD-check.yaml: `%s` has a paths filter, which could skip the issue #84 gate silently", event))
+    }
   }
 }
 
