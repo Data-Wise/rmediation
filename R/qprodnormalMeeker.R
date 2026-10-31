@@ -1,27 +1,20 @@
 qprodnormalMeeker <-
   function(p, mu.x, mu.y, se.x, se.y, rho = 0, lower.tail = TRUE) {
+    .assert_positive_se(se.x, se.y)
     max.iter <- 1000
     eps <- 1 # initial value for precision
     mu.a <- mu.x / se.x # Rescaling distribution of a so that SD of a is 1
     mu.b <- mu.y / se.y # Rescaling distribution of b so that SD of b is 1
     se.ab <- sqrt(1 + mu.a^2 + mu.b^2 + 2 * mu.a * mu.b * rho + rho^2)
     s.a.on.b <- sqrt(1 - rho^2) # SD of b conditional on a
-    if (lower.tail == FALSE) {
-      u0 <- mu.a * mu.b + 6 * se.ab # upper
-      l0 <- mu.a * mu.b - 6 * se.ab
-      alpha <- 1 - p
+    l0 <- mu.a * mu.b - 6 * se.ab
+    u0 <- mu.a * mu.b + 6 * se.ab
+    # Both tails are solved directly and increasing in z: F(z) - p for the lower tail,
+    # p - (1 - F(z)) for the upper, so a far upper tail is not lost to 1 - F cancellation.
+    fx <- if (lower.tail == FALSE) {
+      function(z) p - .dop_cdf(z, mu.a, mu.b, rho, lower.tail = FALSE)$value
     } else {
-      l0 <- mu.a * mu.b - 6 * se.ab # lower
-      u0 <- mu.a * mu.b + 6 * se.ab
-      alpha <- p
-    }
-    gx <- function(x, z) {
-      mu.a.on.b <- mu.a + rho * (x - mu.b) # mean of a conditional on b
-      integ <- pnorm(sign(x) * (z / x - mu.a.on.b) / s.a.on.b) * dnorm(x - mu.b)
-      return(integ)
-    }
-    fx <- function(z) {
-      return(integrate(gx, lower = -Inf, upper = Inf, z = z)$value - alpha)
+      function(z) .dop_cdf(z, mu.a, mu.b, rho)$value - p
     }
     # converge <- TRUE
     p.l <- fx(l0)
@@ -48,7 +41,7 @@ qprodnormalMeeker <-
       }
     }
 
-    res <- uniroot(fx, c(l0, u0))
+    res <- uniroot(fx, c(l0, u0), tol = 1e-12) # default tol (1.2e-4) is too coarse in a tail
     new <- res$root
     new <- new * se.x * se.y
     error.new <- res$estim.prec

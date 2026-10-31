@@ -17,7 +17,8 @@ qprodnormal(
 )
 }
 \arguments{
-\item{p}{probability}
+\item{p}{probability; a numeric vector returns one quantile per element (for
+\code{type="MC"} all elements share one simulated sample)}
 
 \item{mu.x}{mean of \eqn{x}}
 
@@ -40,9 +41,9 @@ values \code{"dop"} (default), \code{"MC"}, or \code{"all"}}
 Larger values provide more precision but take longer to compute.}
 }
 \value{
-An object of the type \code{\link{list}} that contains the
-following values: \item{q}{quantile corresponding to probability \code{p}}
-\item{error}{estimate of the absolute error}
+A numeric vector of quantiles, one per element of \code{p}, for
+\code{type="dop"} or \code{"MC"}; for \code{type="all"} a list of two such
+vectors (\code{"Distribution of Product"} and \code{"Monte Carlo"}).
 }
 \description{
 Generates quantiles for the distribution of product of two normal random

@@ -4,15 +4,16 @@
 \alias{ProductNormal3}
 \title{ProductNormal3 Class}
 \usage{
-ProductNormal3(mu = integer(0), Sigma = integer(0), method = character(0))
+ProductNormal3(mu = integer(0), Sigma = integer(0), method = "gauss")
 }
 \arguments{
 \item{mu}{Numeric vector of means of length 3: \code{c(a1_hat, a2_hat, b_hat)}.}
 
 \item{Sigma}{3x3 asymptotic covariance matrix of \verb{(a1, a2, b)}.}
 
-\item{method}{Integration method. Currently only \code{"hcubature"} is
-supported.}
+\item{method}{Integration method passed to \code{\link[=pprodnormal3]{pprodnormal3()}}: \code{"gauss"}
+(default) or \code{"hcubature"}. See the Note in \code{\link[=pprodnormal3]{pprodnormal3()}} for why
+\code{"gauss"} became the default in version 1.7.0.}
 }
 \description{
 Represents the distribution of the product of three normal random variables.
@@ -22,8 +23,7 @@ Intended for sequential indirect effects of the form \code{a1 * a2 * b}, where
 \examples{
 obj <- ProductNormal3(
   mu = c(0.5, 0.3, 0.2),
-  Sigma = diag(3),
-  method = "hcubature"
+  Sigma = diag(3)
 )
 obj
 cdf(obj, q = 1)

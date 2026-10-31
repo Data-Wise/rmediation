@@ -17,7 +17,9 @@ pprodnormal(
 )
 }
 \arguments{
-\item{q}{quantile or value of the product}
+\item{q}{quantile or value of the product; a numeric vector returns one
+probability per element (for \code{type="MC"} all elements share one
+simulated sample)}
 
 \item{mu.x}{mean of \eqn{x}}
 
@@ -40,9 +42,9 @@ values \code{"dop"} (default), \code{"MC"}, or \code{"all"}}
 Larger values provide more precision but take longer to compute.}
 }
 \value{
-An object of the type \code{\link{list}} that contains the
-following values: \item{p}{probability (percentile) corresponding to
-quantile \code{q}} \item{error}{estimate of the absolute error}
+A numeric vector of probabilities, one per element of \code{q}, for
+\code{type="dop"} or \code{"MC"}; for \code{type="all"} a list of two such
+vectors (\code{"Distribution of Product"} and \code{"Monte Carlo"}).
 }
 \description{
 Generates percentiles (100 based quantiles) for the distribution of product

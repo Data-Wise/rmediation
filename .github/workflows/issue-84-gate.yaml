@@ -1,0 +1,38 @@
+# Issue #84 gate: known answer (OpenMx/OpenMx#433) plus a planted defect, per optimizer; about 2 s of checking.
+# A separate, NON-required workflow on purpose: as a step of R-CMD-check it would fail `ubuntu-latest (release)`,
+# the one check `main` requires, and so block a release on an OpenMx behavior change. Red here is visible, not blocking.
+# Main and releases only (CI policy), plus on-demand dispatch. No path filter, no continue-on-error, OpenMx installed
+# explicitly (scripts/check-ci-policy.R enforces all of it). Locally: scripts/check-local.sh runs it first.
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+name: issue-84-gate
+
+permissions: read-all
+
+jobs:
+  issue-84-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::OpenMx, any::pkgload
+          needs: check
+
+      - name: Issue #84 gate (OpenMx constraint not enforced)
+        shell: bash
+        run: Rscript scripts/verify-constraint-not-enforced.R

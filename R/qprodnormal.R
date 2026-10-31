@@ -3,7 +3,8 @@
 #' Generates quantiles for the distribution of product of two normal random
 #' variables
 #'
-#' @param p probability
+#' @param p probability; a numeric vector returns one quantile per element (for
+#'   \code{type="MC"} all elements share one simulated sample)
 #' @param mu.x  mean of \eqn{x}
 #' @param mu.y mean of \eqn{y}
 #' @param se.x standard error (deviation) of \eqn{x}
@@ -29,9 +30,9 @@
 #'   absolute error for the numerical integration (for more information see
 #'   Meeker and Escobar, 1994). For \code{type="MC"}, the error refers to the
 #'   Monte Carlo error.
-#' @return   An object of the type \code{\link{list}} that contains the
-#'   following values: \item{q}{quantile corresponding to probability \code{p}}
-#'   \item{error}{estimate of the absolute error}
+#' @return   A numeric vector of quantiles, one per element of \code{p}, for
+#'   \code{type="dop"} or \code{"MC"}; for \code{type="all"} a list of two such
+#'   vectors (\code{"Distribution of Product"} and \code{"Monte Carlo"}).
 #' @author Davood Tofighi \email{dtofighi@@gmail.com}
 #' @references  Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R
 #'   package for mediation analysis confidence intervals. \emph{Behavior
@@ -53,7 +54,7 @@
 qprodnormal <-
   function(p, mu.x, mu.y, se.x, se.y, rho = 0, lower.tail = TRUE, type = "dop", n.mc = 1e5) {
     # Input validation
-    assert_numeric(p, lower = 0, upper = 1, finite = TRUE, len = 1)
+    assert_numeric(p, lower = 0, upper = 1, finite = TRUE, min.len = 1)
     assert_numeric(mu.x, finite = TRUE)
     assert_numeric(mu.y, finite = TRUE)
     assert_numeric(se.x, lower = 0, finite = TRUE)
@@ -64,16 +65,21 @@ qprodnormal <-
     assert_count(n.mc, positive = TRUE)
 
     if (type == "all") {
-      q2 <- qprodnormalMeeker(p, mu.x, mu.y, se.x, se.y, rho, lower.tail)$q
+      q2 <- .qprodnormal_dop(p, mu.x, mu.y, se.x, se.y, rho, lower.tail)
       q3 <- qprodnormalMC(p, mu.x, mu.y, se.x, se.y, rho, lower.tail, n.mc)$q
       res <- list(q2, q3)
       names(res) <- c("Distribution of Product", "Monte Carlo")
       return(res)
     } else if (type == "dop") {
-      q2 <- qprodnormalMeeker(p, mu.x, mu.y, se.x, se.y, rho, lower.tail)$q
+      q2 <- .qprodnormal_dop(p, mu.x, mu.y, se.x, se.y, rho, lower.tail)
       return(q2)
     } else if (type == "MC") {
       q3 <- qprodnormalMC(p, mu.x, mu.y, se.x, se.y, rho, lower.tail, n.mc)$q
       return(q3)
     }
   }
+
+# DOP quantile for each element of p (the root find is scalar in p).
+.qprodnormal_dop <- function(p, mu.x, mu.y, se.x, se.y, rho, lower.tail) {
+  vapply(p, function(pp) qprodnormalMeeker(pp, mu.x, mu.y, se.x, se.y, rho, lower.tail)$q, numeric(1))
+}

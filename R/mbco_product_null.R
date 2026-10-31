@@ -1,0 +1,115 @@
+#' MBCO test of a product null (a zero-product indirect effect)
+#'
+#' Tests the null that a product of paths is zero (`a * b = 0`, or a serial
+#' `a1 * a2 * b = 0`) with OpenMx. The null holds when any single path is 0, so
+#' it is a union of single-path nulls. `mbco_product_null()` fits one null per
+#' path by fixing that path at 0 in a copy of the fitted full model, runs
+#' [mbco()] on each, and returns the result of the branch with the largest
+#' p-value, because a test of a union rejects only if every single-path null is
+#' rejected (an intersection-union test). For `type = "asymp"` this is the
+#' smaller statistic with 1 degree of freedom.
+#'
+#' A single nonlinear constraint such as `ind == 0` can converge to the branch
+#' with the larger statistic and give a wrong test; see [mbco()], which warns
+#' when it detects this. Fixing a
+#' parameter is exact, so this function avoids that and the feasibility
+#' tolerance problem. The p-value is conservative when more than one path is 0
+#' (standard intersection-union theory, not verified here). Each branch fit
+#' must converge (OpenMx status code 0 or 1); otherwise the function stops with
+#' an error naming the branch. `h1` must have converged too (class
+#' `RMediation_h1_nonconverged` otherwise): the null models start from its
+#' estimates and every statistic is measured against its fit, so a p-value from
+#' an unconverged `h1` would not be reliable.
+#'
+#' @param h1 A fitted full `OpenMx` model.
+#' @param paths Character vector of two or more labels of free parameters of
+#'   `h1`, the paths whose product is tested.
+#' @param ... Passed to [mbco()] (`type`, `R`, `alpha`, `optim`, ...).
+#' @return An [MBCOResult] for the binding branch, with the label of its
+#'   single-path null in the `branch` slot.
+#' @export
+mbco_product_null <- function(h1, paths, ...) {
+  if (!requireNamespace("OpenMx", quietly = TRUE)) {
+    stop(
+      "Package 'OpenMx' is required for MBCO functions but is not installed.",
+      call. = FALSE
+    )
+  }
+  if (!methods::is(h1, "MxModel")) stop("h1 must be an MxModel", call. = FALSE)
+  checkmate::assert_character(paths, any.missing = FALSE, min.len = 2L, unique = TRUE, min.chars = 1L)
+  free <- names(OpenMx::omxGetParameters(h1, free = TRUE))
+  missing <- setdiff(paths, free)
+  if (length(missing)) {
+    stop(
+      "paths must be labels of free parameters of h1; not found: ",
+      paste(missing, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  .mbco_check_full_fit(h1)
+  nulls <- .mbco_product_models(h1, paths)
+  fits <- Map(function(h0, label) .mbco_check_branch_fit(.mbco_run_null(h0), label), nulls, names(nulls))
+  results <- lapply(fits, function(h0) mbco(h0, h1, ...))
+  i <- .mbco_pick_branch(results)
+  res <- results[[i]]
+  res@branch <- names(nulls)[i]
+  res
+}
+
+# One copy of h1 per path with that path fixed at 0, named by the path label.
+.mbco_product_models <- function(h1, paths) {
+  stats::setNames(lapply(paths, function(lab) {
+    OpenMx::omxSetParameters(
+      h1,
+      labels = lab, free = FALSE, values = 0,
+      name = paste0(h1$name, "_", lab, "_zero")
+    )
+  }), paths)
+}
+
+.mbco_run_null <- function(model) {
+  suppressWarnings(OpenMx::mxRun(model, silent = TRUE))
+}
+
+# The full model anchors every branch: the nulls start from its estimates and each statistic is
+# a difference from its -2LL. Same accepted statuses (0 or 1) as the branch fits.
+.mbco_check_full_fit <- function(h1) {
+  if (!.mbco_status_ok(h1)) {
+    code <- h1$output$status$code
+    why <- if (length(code) == 1L && !is.na(code)) {
+      sprintf("did not converge (OpenMx status code %s)", format(code))
+    } else {
+      "has no fit result (it was never run; fit it with mxRun() first)"
+    }
+    stop(structure(
+      class = c("RMediation_h1_nonconverged", "error", "condition"),
+      list(
+        message = sprintf(
+          "The full model h1 %s, so no branch p-value is reliable. Refit h1 until it converges.",
+          why
+        ),
+        call = NULL
+      )
+    ))
+  }
+  invisible(h1)
+}
+
+# Every branch fit needs an accepted OpenMx status (0 or 1, as in the bootstrap code) before its
+# p-value may compete for the maximum.
+.mbco_check_branch_fit <- function(fit, label) {
+  if (!.mbco_status_ok(fit)) {
+    code <- fit$output$status$code
+    stop(sprintf(
+      "The fit for branch '%s' (%s fixed at 0) did not converge (OpenMx status code %s).",
+      label, label, if (length(code) == 1L) format(code) else "missing"
+    ), call. = FALSE)
+  }
+  invisible(fit)
+}
+
+# Intersection-union test: the binding branch has the largest p-value (first on ties).
+.mbco_pick_branch <- function(results) {
+  which.max(vapply(results, function(r) r@p_value, numeric(1)))
+}

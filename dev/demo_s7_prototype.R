@@ -27,15 +27,6 @@ legacy_result <- medci(mu.x = mu.x, mu.y = mu.y,
 utils::str(legacy_result)
 cat("\n")
 
-# --- Prototype wrapper (same interface, S7 core) ---
-cat("Prototype medci_prototype():\n")
-prototype_result <- medci_prototype(mu.x = mu.x, mu.y = mu.y,
-                                    se.x = se.x, se.y = se.y,
-                                    rho = rho, alpha = alpha,
-                                    type = "dop")
-utils::str(prototype_result)
-cat("\n")
-
 # --- New S7 interface ---
 cat("New S7 interface:\n")
 Sigma <- matrix(c(se.x^2, rho * se.x * se.y,
@@ -48,7 +39,6 @@ cat("\n")
 # --- Verification ---
 cat("Verification (CI bounds should match):\n")
 cat("Legacy:    [", legacy_result$`95% CI`[1], ",", legacy_result$`95% CI`[2], "]\n")
-cat("Prototype: [", prototype_result$`95% CI`[1], ",", prototype_result$`95% CI`[2], "]\n")
 cat("S7:        [", s7_result$CI[1], ",", s7_result$CI[2], "]\n")
 cat("\n\n")
 

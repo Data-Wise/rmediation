@@ -67,12 +67,38 @@ devtools::test()
 |----------|---------|---------|
 | `medci()` | Product a*b CIs | Two-variable indirect effects |
 | `ci()` | General nonlinear function CIs | Complex mediation models, formulas |
-| `mbco()` | Bootstrap chi-squared tests | Hypothesis testing H₀: indirect = 0 |
+| `mbco()` | Chi-squared tests: OpenMx (bootstrap or asymptotic) or two medfit `SEMFit` fits (asymptotic only) | Hypothesis testing H₀: indirect = 0 |
+| `mbco_product_null()` | OpenMx product-null test: one fixed-at-zero null per path, result of the largest-p branch (`@branch`); exact, no wrong branch (issue #35) | Testing `a*b = 0` with OpenMx |
+| `ml_omitted_confounder()` | Omitted-confounder sensitivity grid for 1-1-1 multilevel mediation (Tofighi & Kelley, 2016); default screen keeps positive-definite points only, `screen = "none"` reproduces the paper's tables (PR #48, merged to dev) | Sensitivity of indirect effects |
 
 ### Distribution Functions
 
 - `pprodnormal()` / `qprodnormal()`: CDF and quantile for product of two normals
+- `pprodnormal3()`: CDF for the product of **three** normals (serial indirect
+  effects `a1 * a2 * b`); `p_prod3()` is a superseded alias
 - `pMC()` / `qMC()`: Monte Carlo-based for arbitrary functions
+- `dprodnormal()` / `dprodnormal3()`: exact densities of the product of two / three normals
+  (Bessel K0 for zero-mean K = 2; Rohatgi/Glen integral otherwise; K = 3 is a 1-D integral of
+  the K = 2 density conditioned on the first factor). Log singularity at exactly 0 (`Inf`).
+- Point masses (zero variance) have the right-continuous CDF everywhere; `|rho| = 1` in
+  `.dop_cdf()` uses Meeker & Escobar's (1994) quadratic-root closed form, not a step integral.
+
+**`pprodnormal3()` integrator (v1.7.0+):** the default is `method = "gauss"` —
+tensor-product Gauss-Legendre on a domain partitioned at the coordinate axes,
+with node count escalated until successive rules agree to `tol`. Do **not**
+switch the default back to `"hcubature"`: it returns silently wrong values on
+ill-conditioned covariance (24% error at rho = 0.999, up to 92% relative in the
+lower tail) and exactly `0` at large standardized means. It is retained only for
+cross-checking. See `SPEC-27-prod3-integrator.md` and issue #27.
+
+Two invariants in `R/prod3_core.R` that look like bugs and are not — both carry
+explanatory comments and regression tests, so read those before "fixing" either:
+
+- The truncation bound is **derived** from a tail-mass argument
+  (`.prod3_bound()`), never tuned. Truncation error is a bias, and bias is
+  invisible to the self-consistency check.
+- The domain splits at 0 even when `|m| > bound`, which gives one cell reversed
+  limits and negative weights. The two cells telescope to the intended box.
 
 ### Key Dependencies
 
@@ -94,6 +120,24 @@ devtools::test()
 - Compare to published examples (MacKinnon et al. 2007, Tofighi & MacKinnon 2011)
 - Test CI method consistency (DOP ≈ MC for large n.mc)
 - Test edge cases: small n, high correlation rho, near-zero effects
+
+---
+
+## CI Policy
+
+Code coverage and expensive GitHub checks (the R-CMD-check matrix, `semfit-mbco`, `test-coverage`, `pkgdown`) run only
+for merge to `main`, for releases and on `workflow_dispatch`. PRs to `dev` and pushes to `dev` start none of them; they
+are gated locally with `scripts/check-local.sh` (workflow triggers, docs currency, the issue #84 gate, tests, then
+`R CMD check`) and rforge (`/rforge:r:cycle`). `main` requires the status check `ubuntu-latest (release)`: keep that
+trigger and job name. The R-devel leg of R-CMD-check runs with `_R_CHECK_DEPENDS_ONLY_=true` (hard dependencies only), so an
+unguarded use of a Suggests package in an example or test fails there; `scripts/check-local.sh --depends-only` is the local
+equivalent. The issue #84 gate (`scripts/verify-constraint-not-enforced.R`, about 2 s) is its own workflow and job,
+`issue-84-gate.yaml`, not a step of `R-CMD-check`: a step there would fail `main`'s required check, so a red gate would block
+the release. It runs for `main`, releases and dispatch, with no path filter and no `continue-on-error`; `check-local.sh`
+runs it first. Plan and decisions:
+`planning/PLAN-mechanical-checks-2026-10-30.md`. One cheap check does run on PRs to `dev`: `risk-tier` (a stdlib Python
+script, no R install). A PR that changes a file listed in `.github/risk-files.txt` must carry the evidence checklist from
+`.github/PULL_REQUEST_TEMPLATE.md` in its body; release PRs from `dev` are exempt. It is advisory, not a required check.
 
 ---
 
@@ -134,6 +178,24 @@ at `>= 0.2.0` and intentionally kept there — all usage in `R/ci_medfit.R` is
 guarded by `requireNamespace()`, satisfying the Suggests contract. Do NOT promote
 to Imports.
 
+### SEMFit MBCO route and release status (2026-10-13)
+
+`mbco(h0, h1, type = "asymp")` accepts two fitted medfit `SEMFit` objects
+(`R/mbco_semfit.R`, added in PR #41). It calls `stats::anova(h1, h0)`, never
+refits, requires medfit >= 0.8.0 (version-gated; older medfit gets a clear
+error), and does not need OpenMx. The OpenMx paths are unchanged.
+
+**Nothing is submitted to CRAN, by user decision.** CRAN serves 1.6.1. The GitHub
+release is 1.8.0, cut from `dev` with the SEMFit route included (experimental); the earlier 1.7.1 candidate on
+`release/1.7.1` (draft PR #46, route removed) is superseded and not merged. A later CRAN candidate must remove or finish
+the route, so its version will be later than 1.8.0. Never start `devtools::submit_cran()` without an explicit
+instruction. The hold lifts only when the SEM features are no longer
+experimental and `fixed.x` (medfit `fixed_x`, merged to medfit dev 2026-10-13, PR #175,
+unreleased) and mean structure (observed means merged, PR #174; latent means target 0.11.0,
+which is also the target for dropping "experimental", criteria undefined) are completed in medfit. Then Suggests rises to `medfit >= 0.8.0`. Decisions and
+reasons: `planning/GRILL-semfit-dependency-policy-2026-10-12.md` (gitignored but
+force-tracked), `.STATUS`.
+
 ---
 
 ## Key References
@@ -146,4 +208,4 @@ to Imports.
 
 ---
 
-**Last Updated**: 2026-06-29
+**Last Updated**: 2026-10-30

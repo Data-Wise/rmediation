@@ -232,13 +232,16 @@ ci_serial_mediation_data <- function(object, level = 0.95, type = "MC",
         # Register ci method for SerialMediationData
         SerialMediationData_class <- medfit::SerialMediationData
         S7::method(ci, SerialMediationData_class) <- ci_serial_mediation_data
+
+        # requireNamespace() loads medfit even when RMediation is loaded first.
+        .register_semfit_mbco()
       },
       error = function(e) {
         # Make registration failure visible (but non-fatal): the functions remain
         # available as regular exported functions, but a broken S7 registration
         # should be diagnosable rather than silently swallowed.
         packageStartupMessage(
-          "RMediation: failed to register medfit S7 ci methods: ",
+          "RMediation: failed to register medfit S7 methods: ",
           conditionMessage(e)
         )
       }

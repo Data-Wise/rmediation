@@ -1,0 +1,188 @@
+# AGENTS.md for RMediation Package
+
+This file provides guidance to Codex when working with code in this repository. For global workflow rules — git, branch guards, worktrees, pre-PR/release checklists, hooks, and tooling notes — see `~/.config/opencode/AGENTS.md`.
+
+---
+
+## About This Package
+
+**RMediation** provides confidence intervals for nonlinear functions of model parameters (e.g., indirect effects) in mediation analysis. It implements parametric, semiparametric, and non-parametric methods with emphasis on exact distribution theory and robust bootstrap procedures.
+
+### Core Mission
+
+Provide statistically rigorous tools for quantifying mediation mechanisms through Distribution of Product (DOP), Model-Based Constrained Optimization (MBCO), and Monte Carlo methods.
+
+### Key Methods
+
+| Method | Description | Use When |
+|--------|-------------|----------|
+| **DOP** | Exact distribution of product | Accuracy matters, two-variable product |
+| **MC** | Monte Carlo sampling | Flexibility needed, complex functions |
+| **MBCO** | Bootstrap chi-squared tests | Hypothesis testing for indirect effects |
+| **Asymptotic** | Delta method (Sobel) | Quick approximation (not recommended for inference) |
+
+---
+
+## Common Development Commands
+
+```r
+# Install dependencies and check package
+remotes::install_deps(dependencies = TRUE)
+rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
+
+# Development workflow
+devtools::load_all()
+devtools::document()
+devtools::test()
+```
+
+---
+
+## Coding Standards
+
+### R Version and Style
+
+- **Minimum R version**: 3.5.0
+- **Style**: Mixed camelCase and snake_case (legacy codebase)
+- **Functional approach**: Vectorize operations, avoid loops
+- **Namespacing**: Use explicit `package::function()` for non-base functions
+
+### Naming Conventions (Current Codebase)
+
+| Type | Convention | Examples |
+|------|------------|----------|
+| Main functions | camelCase | `medci()`, `qprodnormal()`, `pprodnormal()` |
+| Internal helpers | camelCase lowercase | `medciMeeker()`, `medciMC()` |
+| Arguments | dot.case | `mu.x`, `mu.y`, `se.x`, `se.y`, `rho` |
+
+**Note**: When adding new functions, maintain consistency with existing patterns.
+
+---
+
+## Code Architecture
+
+### Core Functions
+
+| Function | Purpose | Use For |
+|----------|---------|---------|
+| `medci()` | Product a*b CIs | Two-variable indirect effects |
+| `ci()` | General nonlinear function CIs | Complex mediation models, formulas |
+| `mbco()` | Chi-squared tests: OpenMx (bootstrap or asymptotic) or two medfit `SEMFit` fits (asymptotic only) | Hypothesis testing H₀: indirect = 0 |
+| `mbco_product_null()` | OpenMx product-null test: one fixed-at-zero null per path, result of the largest-p branch (`@branch`); exact, no wrong branch (issue #35) | Testing `a*b = 0` with OpenMx |
+| `ml_omitted_confounder()` | Omitted-confounder sensitivity grid for 1-1-1 multilevel mediation (Tofighi & Kelley, 2016); default screen keeps positive-definite points only, `screen = "none"` reproduces the paper's tables (PR #48, merged to dev) | Sensitivity of indirect effects |
+
+### Distribution Functions
+
+- `pprodnormal()` / `qprodnormal()`: CDF and quantile for product of two normals
+- `pprodnormal3()`: CDF for the product of **three** normals (serial indirect
+  effects `a1 * a2 * b`); `p_prod3()` is a superseded alias
+- `pMC()` / `qMC()`: Monte Carlo-based for arbitrary functions
+
+**`pprodnormal3()` integrator (v1.7.0+):** the default is `method = "gauss"` —
+tensor-product Gauss-Legendre on a domain partitioned at the coordinate axes,
+with node count escalated until successive rules agree to `tol`. Do **not**
+switch the default back to `"hcubature"`: it returns silently wrong values on
+ill-conditioned covariance (24% error at rho = 0.999, up to 92% relative in the
+lower tail) and exactly `0` at large standardized means. It is retained only for
+cross-checking. See `SPEC-27-prod3-integrator.md` and issue #27.
+
+Two invariants in `R/prod3_core.R` that look like bugs and are not — both carry
+explanatory comments and regression tests, so read those before "fixing" either:
+
+- The truncation bound is **derived** from a tail-mass argument
+  (`.prod3_bound()`), never tuned. Truncation error is a bias, and bias is
+  invisible to the self-consistency check.
+- The domain splits at 0 even when `|m| > bound`, which gives one cell reversed
+  limits and negative weights. The two cells telescope to the intended box.
+
+### Key Dependencies
+
+- **lavaan**: SEM parameter extraction
+- **OpenMx**: For MBCO model-based tests (Suggests)
+- **MASS**: Multivariate normal sampling
+- **checkmate**: Input validation
+- **S7**: Object-oriented programming system
+
+**Note**: Dependencies reduced in development version. Internal implementations replace `e1071`, `modelr`, and `generics`.
+
+---
+
+## Testing Strategy
+
+### Coverage Targets
+
+- **Target**: >80% overall
+- Compare to published examples (MacKinnon et al. 2007, Tofighi & MacKinnon 2011)
+- Test CI method consistency (DOP ≈ MC for large n.mc)
+- Test edge cases: small n, high correlation rho, near-zero effects
+
+---
+
+## Ecosystem Coordination
+
+RMediation is an **application package** in the mediationverse ecosystem.
+
+### Ecosystem Resources
+
+| Resource | URL |
+|----------|-----|
+| Ecosystem Coordination | https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md |
+| Development Roadmap | https://data-wise.github.io/mediationverse/articles/roadmap.html |
+| Package Status Dashboard | https://github.com/data-wise/mediationverse/blob/main/STATUS.md |
+
+### Related Packages
+
+| Package | Purpose | Role | Website |
+|---------|---------|------|---------|
+| mediationverse | Meta-package (loads all) | Umbrella | https://data-wise.github.io/mediationverse/ |
+| medfit | Model fitting, extraction, bootstrap | Foundation | https://data-wise.github.io/medfit/ |
+| probmed | Probabilistic effect size (P_med) | Application | https://data-wise.github.io/probmed/ |
+| RMediation | Confidence intervals (DOP, MBCO) | Application | https://data-wise.github.io/rmediation/ |
+| medrobust | Sensitivity analysis | Application | https://data-wise.github.io/medrobust/ |
+| medsim | Simulation infrastructure | Support | https://data-wise.github.io/medsim/ |
+
+### Integration with medfit (v1.5.0)
+
+medfit integration is **implemented** as of 2026-06: `ci()` consumes medfit
+`MediationData`/`SerialMediationData` objects, extracting the path covariance by
+parameter name (the `a, d1, ..., b, c_prime` contract). The serial-mediation
+pipeline (`ci_serial_mediation_data()`) is verified end-to-end against medfit's
+released serial extractor (medfit >= 0.2.0), for both lavaan and lm/glm chains.
+
+**v1.5.0 shipped (2026-06-18):** medfit is on CRAN (v0.2.0+). `Remotes:
+data-wise/medfit` was removed from DESCRIPTION; medfit is pinned in **Suggests**
+at `>= 0.2.0` and intentionally kept there — all usage in `R/ci_medfit.R` is
+guarded by `requireNamespace()`, satisfying the Suggests contract. Do NOT promote
+to Imports.
+
+### SEMFit MBCO route and release status (2026-10-13)
+
+`mbco(h0, h1, type = "asymp")` accepts two fitted medfit `SEMFit` objects
+(`R/mbco_semfit.R`, added in PR #41). It calls `stats::anova(h1, h0)`, never
+refits, requires medfit >= 0.8.0 (version-gated; older medfit gets a clear
+error), and does not need OpenMx. The OpenMx paths are unchanged.
+
+**Nothing is submitted to CRAN, by user decision.** CRAN serves 1.6.1. The GitHub
+release is 1.8.0, cut from `dev` with the SEMFit route included (experimental); the earlier 1.7.1 candidate on
+`release/1.7.1` (draft PR #46, route removed) is superseded and not merged. A later CRAN candidate must remove or finish
+the route, so its version will be later than 1.8.0. Never start `devtools::submit_cran()` without an explicit
+instruction. The hold lifts only when the SEM features are no longer
+experimental and `fixed.x` (medfit `fixed_x`, merged to medfit dev 2026-10-13, PR #175,
+unreleased) and mean structure (observed means merged, PR #174; latent means target 0.11.0,
+which is also the target for dropping "experimental", criteria undefined) are completed in medfit. Then Suggests rises to `medfit >= 0.8.0`. Decisions and
+reasons: `planning/GRILL-semfit-dependency-policy-2026-10-12.md` (gitignored but
+force-tracked), `.STATUS`.
+
+---
+
+## Key References
+
+- Craig (1936): Frequency function of product of two normals
+- MacKinnon et al. (2007): PRODCLIN distribution of product
+- Meeker & Escobar (1994): CDF computation algorithm
+- Tofighi & MacKinnon (2011): RMediation R package
+- Tofighi (2020): MBCO bootstrap methods
+
+---
+
+**Last Updated**: 2026-10-13

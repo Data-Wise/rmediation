@@ -8,7 +8,10 @@ MBCOResult(
   statistic = integer(0),
   df = integer(0),
   p_value = integer(0),
-  type = character(0)
+  type = character(0),
+  refit = NULL,
+  branch = NULL,
+  dropped = NULL
 )
 }
 \arguments{
@@ -19,6 +22,19 @@ MBCOResult(
 \item{p_value}{Numeric p-value.}
 
 \item{type}{Character string indicating the type of test.}
+
+\item{refit}{\code{NULL} (default) when no refit happened, or a list with
+\code{tolerance}, \code{statistic_before} and \code{statistic_after} (all single finite
+numbers) when \code{\link[=mbco]{mbco()}} refit a violated \code{h0} at a tighter feasibility
+tolerance. \code{print()} and \code{summary()} show a note when it is set.}
+
+\item{branch}{\code{NULL} (default), or the label of the single-path null that gave
+the reported result when the result comes from \code{\link[=mbco_product_null]{mbco_product_null()}}.}
+
+\item{dropped}{\code{NULL} (default) for a result without a bootstrap, or a single
+non-negative whole number: the count of bootstrap replicates whose fits did not
+converge and were left out of the null distribution (\code{0} when none were). The
+p-value is taken over the remaining \code{R - dropped} replicates.}
 }
 \description{
 A class representing the results of a Model-Based Constrained Optimization (MBCO) test.

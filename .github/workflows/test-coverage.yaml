@@ -1,10 +1,10 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+# Expensive: runs for main and releases only (CI policy); `workflow_dispatch` runs it on demand.
 on:
   push:
-    branches: [main, master, dev]
-  pull_request:
-    branches: [main, master, dev]
+    branches: [main, master]
+  workflow_dispatch:
 
 name: test-coverage
 
@@ -13,6 +13,7 @@ permissions: read-all
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
@@ -27,7 +28,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::covr, any::xml2
+          extra-packages: any::covr, any::xml2, github::Data-Wise/medfit@v0.8.0
           needs: coverage
 
       - name: Test coverage
@@ -38,7 +39,16 @@ jobs:
             install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
           )
           covr::to_cobertura(cov)
+          saveRDS(cov, "coverage.rds")
         shell: Rscript {0}
+
+      - name: Coverage inventory
+        run: Rscript scripts/report-coverage.R coverage-report coverage.rds
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-inventory
+          path: coverage-report
 
       - uses: codecov/codecov-action@v4
         with:

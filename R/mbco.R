@@ -21,8 +21,8 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
   }
 
   # Input validation (check class without requiring OpenMx at load time)
-  if (!"MxModel" %in% class(h0)) stop("h0 must be an MxModel")
-  if (!"MxModel" %in% class(h1)) stop("h1 must be an MxModel")
+  if (!methods::is(h0, "MxModel")) stop("h0 must be an MxModel")
+  if (!methods::is(h1, "MxModel")) stop("h1 must be an MxModel")
 
   checkmate::assert_count(R, positive = TRUE)
   type <- match.arg(type, c("asymp", "parametric", "semi"))
@@ -35,6 +35,30 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
   if (!OpenMx::imxHasNPSOL()) {
     optim <- "SLSQP"
   } # if NPSOL is not available, use SLSQP
+
+  # A violated h0 is refit once at a tighter tolerance, so all three types see the same
+  # model; if it cannot be repaired the call stops (fail closed, see ?mbco).
+  refit <- .mbco_refit_h0(h0, h1)
+  if (!is.null(refit)) {
+    if (is.null(refit$model)) {
+      .mbco_stop_refit_failed(h0, refit$failure)
+    } else {
+      h0 <- refit$model
+      .mbco_signal("RMediation_h0_refit", sprintf(
+        paste0(
+          "h0 violated a constraint at the default feasibility tolerance and was ",
+          "refit at %s: the statistic changed from %s to %s (see ?mbco)."
+        ),
+        format(refit$refit$tolerance), format(round(refit$refit$statistic_before, 4)),
+        format(round(refit$refit$statistic_after, 4))
+      ))
+      .mbco_report_not_enforced(refit)
+    }
+  }
+
+  # Advisory wrong-branch probe on the h0 that will be used: warns, never changes the result or
+  # fails the call (see ?mbco).
+  .mbco_report_branch(h0, h1)
 
   res_list <-
     if (type == "asymp") {
@@ -72,6 +96,8 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
     statistic = as.numeric(res_list$chisq),
     df = as.numeric(res_list$df),
     p_value = as.numeric(res_list$p),
-    type = type
+    type = type,
+    refit = refit$refit,
+    dropped = res_list$dropped
   )
 }

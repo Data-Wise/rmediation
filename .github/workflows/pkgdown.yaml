@@ -5,8 +5,13 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
-  release:
-    types: [published]
+  # Deliberately NOT triggered by `release: types: [published]`. For a correct
+  # release -- merge dev -> main, then tag main -- the push-to-main trigger above
+  # already deploys, so a release trigger is redundant in every correct case and
+  # active only in the incorrect one: a tag on any other ref republishing the
+  # public site. That happened on 2026-08-17, when the v1.7.0 pre-release tag on
+  # `dev` overwrote the site while main and CRAN were still 1.6.1. See SPEC-29.
+  # Use workflow_dispatch below to deploy from a specific ref on purpose.
   workflow_dispatch:
 
 name: pkgdown
@@ -16,6 +21,7 @@ permissions: read-all
 jobs:
   pkgdown:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     # Only restrict concurrency for non-PR jobs
     concurrency:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
@@ -36,6 +42,19 @@ jobs:
         with:
           extra-packages: any::pkgdown, local::.
           needs: website
+
+      - name: Hide agent-instruction docs from pkgdown
+        run: |
+          # pkgdown renders every root-level *.md into a site page (HTML, plus
+          # an llms.txt-era markdown twin, a sitemap.xml entry, and a
+          # full-text search.json entry — see pkgdown:::package_mds(), which
+          # hardcodes README/LICENSE/NEWS/cran-comments as the only skipped
+          # root .md files). CLAUDE.md, GEMINI.md and AGENTS.md must stay at the repo
+          # root for Claude Code / Gemini / Codex discovery, so they can't be moved
+          # like the SPEC-*.md planning docs (now under planning/). This
+          # checkout is a disposable CI copy, so just remove them here
+          # before the build ever sees them; the tracked files are untouched.
+          rm -f CLAUDE.md GEMINI.md AGENTS.md
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = TRUE)

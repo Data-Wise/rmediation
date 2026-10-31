@@ -7,9 +7,9 @@
 mbco(h0, h1, ...)
 }
 \arguments{
-\item{h0}{An \code{OpenMx} model estimated under a null hypothesis, which is a more constrained model}
+\item{h0}{A fitted restricted \code{OpenMx} model or medfit \code{SEMFit} under the null hypothesis.}
 
-\item{h1}{An \code{OpenMx} model estimated under an alternative hypothesis, which is a less constrained model. This is usually a model hypothesized by a researcher.}
+\item{h1}{A fitted full model of the same class as \code{h0}, under the alternative hypothesis.}
 
 \item{...}{Additional arguments.}
 }
@@ -19,11 +19,149 @@ An object of class \code{MBCOResult} containing \item{statistic}{asymptotic chi-
 \description{
 This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a function of indirect effects.
 }
+\details{
+\strong{Two medfit SEMFits (medfit >= 0.8.0).} Supply the already-fitted
+restricted model as \code{h0} and the full model as \code{h1}. Only \code{type = "asymp"}
+is supported; \code{alpha} is validated as for OpenMx. The adapter compares the
+fits through \code{stats::anova(h1, h0)} and uses the degrees-of-freedom difference.
+It never refits. Bootstrap types, mixed model classes, OpenMx-only fitting
+controls (\code{R}, \code{checkHess}, \code{checkSE}, \code{optim}, \code{precision}) and unused dots
+are rejected. This route does not require OpenMx.
+
+medfit checks convergence, identical data and observed variables, unweighted
+fits, and parameter-table nesting. The analyst must establish substantive
+nesting and a valid chi-square reference distribution; arbitrary nonlinear
+restrictions do not necessarily have one. An active tested bound or inequality
+at the null causes an error here because the ordinary chi-square p-value is
+invalid. Other medfit warnings propagate.
+
+For a product-zero null, \code{medfit::fit_sem()} with \code{a*b == 0} fits one branch
+per factor from clean starts and selects the smallest discrepancy. Pass that
+fitted null and the full fit to \code{mbco()}. medfit is optional: this route needs
+0.8.0 or later (GitHub/r-universe); existing \code{ci()} integration needs only
+0.2.0. No change to the CRAN dependency minimum is implied.
+
+OpenMx comparisons require a finite nonnegative observed statistic and a
+positive degrees-of-freedom difference: supply the restricted model as h0
+and the full model as h1. Equal-df and reversed pairs error before bootstrap
+sampling. These checks do not establish substantive model nesting.
+
+OpenMx bootstrap methods restore global options on success and error.
+Set a seed before calling for reproducibility; bootstrap sampling consumes the
+current RNG stream. The semiparametric method requires positive-definite sample
+and null covariances. The parametric method
+simulates each replicate from the fitted \code{h0} with \code{\link[OpenMx:mxGenerateData]{OpenMx::mxGenerateData()}} (the
+\code{mvtnorm} package is required) and fits \code{h0} and \code{h1} to it in a loop the package
+runs itself, under the same rules as the semiparametric method; it needs a
+model with a single raw data set. For both bootstrap types a replicate whose
+fits did not converge is left out of the null distribution, and the \code{dropped} slot
+of the result counts them. If more than 5\% of the \code{R} replicates are dropped, the
+call stops with an error of class \code{RMediation_bootstrap_too_many_dropped} (with
+fewer than 20 replicates no replicate may be dropped). Nothing else is dropped: a
+replicate with an unrepairable constraint violation (class
+\code{RMediation_bootstrap_infeasible}), a non-finite statistic, or an h1 fit worse than
+its h0 fit stops the call. The p-value is the proportion of the kept replicates,
+\code{R - dropped} of them, whose statistic is strictly above the observed one, \code{mean(null > observed)} over the kept replicates. There is no \code{(1 + k)/(R + 1)} correction, so it can
+be exactly 0 when no kept replicate exceeds the observed statistic.
+
+\strong{Testing an OpenMx product null (\eqn{a b = 0}).} The null \eqn{ab = 0} holds when
+\eqn{a = 0} or \eqn{b = 0}. A single nonlinear constraint such as
+\code{ind == 0} can converge to either branch, and the optimizer may return the
+branch with the larger statistic, which gives a wrong test. \code{\link[=mbco_product_null]{mbco_product_null()}}
+avoids this: give it the fitted full model and the path labels. By hand, fit
+one linear null per path (\code{a == 0} and \code{b == 0}), run
+\code{mbco()} on each, and report the smaller statistic with 1 degree of freedom
+(see the example). The smaller statistic is the exact constrained
+likelihood-ratio statistic for \eqn{ab = 0}. Its chi-square(1) p-value is
+conservative when both paths are 0 (an intersection-union test; standard
+theory, not verified here).
+
+Build each \code{h0} from the unfitted model. A constraint refit from the fitted
+model's estimates can stop at an infeasible point and return a statistic of 0.
+
+\strong{Constraint violations and the automatic refit (OpenMx).} OpenMx accepts a
+constrained fit whose constraints are violated by up to its
+\code{"Feasibility tolerance"} (default 0.05), which can understate the statistic
+(for example 0 where the exact value is 0.4745). Before comparing, \code{mbco()}
+evaluates every equality and inequality constraint of \code{h0} and \code{h1} at the
+fitted solution. A constraint counts as violated when its scaled violation,
+\verb{|lhs - rhs| / max(1, |lhs|, |rhs|)} for equalities and the wrong-side gap
+for inequalities, exceeds 1e-6. Constraints with other operators are skipped;
+a constraint that cannot be evaluated is an error naming it.
+
+When \code{h0} is violated, all three \code{type}s refit it once from its own estimates
+with \code{"Feasibility tolerance"} set to 1e-8, then use the refit model for the
+observed statistic and the bootstrap, and warn with class
+\code{RMediation_h0_refit} (statistic before and after). The \code{refit} slot of the
+result records \code{tolerance}, \code{statistic_before} and \code{statistic_after}, and is
+\code{NULL} when no refit was needed. Your own model object is not modified. This
+is the one case where the returned statistic differs from \code{OpenMx::mxCompare()}
+on your fits. If the refit errors, does not converge or leaves the constraint
+violated, \code{mbco()} stops with an error of class \code{RMediation_h0_refit_failed}
+that names the constraint and the reason, before any bootstrap work and for
+every \code{type}: no statistic is returned from a fit known to be invalid. Refit
+yourself with \code{mxOption(model, "Feasibility tolerance", 1e-8)} or use
+\code{\link[=mbco_product_null]{mbco_product_null()}} for a product null. \code{h1} is checked and warned about
+(\code{RMediation_constraint_violation}) but never refit.
+Both bootstrap types (\code{"semi"} and \code{"parametric"}) apply the same checks to every
+replicate: a replicate whose \code{h0} or \code{h1} fit does not converge stops the call at the
+first one (6 of 100 runs in a simulation with \code{R = 200}); a replicate null fit that
+violates its constraint is refit as above, and one that cannot be repaired stops the call
+with an error of class \code{RMediation_bootstrap_infeasible} instead of entering the null
+distribution. (Before 1.8.0 \code{type = "parametric"} delegated its bootstrap to
+\code{OpenMx::mxCompare(boot = TRUE)}, which does neither.)
+
+\strong{When h0 came back identical to h1.} A refit whose \code{statistic_before} is about 0
+(|statistic| < 1e-6, h0 and h1 have the same -2LL although a constraint of \code{h0} was violated)
+also raises a warning of class \code{RMediation_constraint_not_enforced}, right after
+\code{RMediation_h0_refit}. It means the constraint may not have been enforced. Two
+causes give this symptom. OpenMx (2.19.1 and later) silently drops an equality constraint
+whose Jacobian row is zero at the starting values, so \code{b1 * b2 == 0} started at
+\code{b1 = b2 = 0} returns the unconstrained fit (\href{https://github.com/OpenMx/OpenMx/issues/433}{OpenMx/OpenMx#433});
+a violation within the feasibility tolerance looks the same. A fitted \code{h0} keeps no
+starting values, so \code{mbco()} cannot tell the causes apart and the warning does not name
+either one as the cause. The reported statistic is the refit one. For a product null,
+skip the problem: \code{\link[=mbco_product_null]{mbco_product_null()}} fits exact single-path nulls and never
+relies on a nonlinear constraint. The refit and this warning apply to the observed
+statistic for every \code{type}. Both bootstrap types (\code{"semi"} and \code{"parametric"}) repeat the
+refit on every bootstrap replicate, and a replicate null fit that cannot be repaired stops
+the call (see above).
+
+\strong{Wrong-branch check (OpenMx).} A feasible, converged fit of a product null
+such as \code{a*b == 0} can still sit on the larger-statistic branch (for example
+\code{a = 0} when \code{b = 0} fits far better), which neither the violation guard nor
+the refit can see. After the refit, \code{mbco()} therefore checks every equality
+constraint of the \code{h0} it will use. It finds the free parameters the constraint
+depends on (by perturbing each at the full model's estimates, without parsing
+the formula), drops the constraint, fixes each of them at 0 in turn, and refits.
+If a converged fit that still satisfies the constraint has a -2LL lower than
+\code{h0}'s by more than 1e-4, \code{mbco()} warns with class
+\code{RMediation_constraint_branch}, naming the constraint, the parameter and the
+gap. It runs once per call for every \code{type}, costs one extra fit per involved
+parameter, and skips (with a message of class
+\code{RMediation_constraint_branch_skipped}) a constraint that depends on more than 5
+parameters. The check is advisory: it never changes the result and a failure
+inside it never fails the call. It only searches fits that fix one involved
+parameter at 0, so it can show that \code{h0} is not the constrained optimum but
+not that it is. Use \code{\link[=mbco_product_null]{mbco_product_null()}} to avoid the problem.
+}
 \examples{
+if (requireNamespace("medfit", quietly = TRUE) &&
+    utils::packageVersion("medfit") >= "0.9.0") {
+  d <- as.data.frame(memory_exp)
+  d$x <- as.numeric(d$x) - 1
+  syntax <- paste("repetition ~ a1*x", "imagery ~ a2*x",
+                  "recall ~ cp*x + b1*repetition + b2*imagery", sep = "\n")
+  full <- medfit::fit_sem(syntax, d, fixed_x = FALSE, meanstructure = NULL)
+  null <- medfit::fit_sem(paste(syntax, "a1*b1 == 0", sep = "\n"), d,
+                          fixed_x = FALSE, meanstructure = NULL)
+  mbco(null, full) # statistic 0.0831, df 1
+}
 \dontrun{
 data(memory_exp)
+memory_exp <- as.data.frame(memory_exp) # mxData() does not accept tibbles
 memory_exp$x <- as.numeric(memory_exp$x) - 1 # manually creating dummy codes
-endVar <- c("x", "repetition", "imagery", "recall")
+endVar <- c("repetition", "imagery", "recall") # endogenous variables (not "x")
 manifests <- c("x", "repetition", "imagery", "recall")
 full_model <- OpenMx::mxModel(
   "memory_example",
@@ -61,7 +199,7 @@ full_model <- OpenMx::mxModel(
   ),
   OpenMx::mxPath(
     from = "one",
-    to = endVar,
+    to = manifests,
     arrows = 1,
     free = TRUE,
     values = .1
@@ -72,15 +210,33 @@ full_model <- OpenMx::mxModel(
   OpenMx::mxCI("ind2", type = "both"),
   OpenMx::mxData(observed = memory_exp, type = "raw")
 )
-## Reduced  Model for indirect effect: a1*b1
-null_model1 <- OpenMx::mxModel(
+## H0: a1*b1 = 0 holds if a1 = 0 or b1 = 0. Fit one linear null per path and
+## report the smaller statistic (what medfit::mbco_sem() automates). A single
+## nonlinear null ind1 == 0 can converge to the wrong branch (rmediation#35).
+## Build each h0 from the unfitted model: a constraint refit from the fitted
+## model's estimates can stop at an infeasible point.
+null_a1 <- OpenMx::mxModel(
   model = full_model,
-  name = "Null Model 1",
-  OpenMx::mxConstraint(ind1 == 0, name = "ind1_eq0_constr")
+  name = "Null a1 = 0",
+  OpenMx::mxConstraint(a1 == 0, name = "a1_eq0_constr")
+)
+null_b1 <- OpenMx::mxModel(
+  model = full_model,
+  name = "Null b1 = 0",
+  OpenMx::mxConstraint(b1 == 0, name = "b1_eq0_constr")
 )
 full_model <- OpenMx::mxTryHard(full_model, checkHess = FALSE, silent = TRUE)
-null_model1 <- OpenMx::mxTryHard(null_model1, checkHess = FALSE, silent = TRUE)
-mbco(null_model1, full_model)
+null_a1 <- OpenMx::mxTryHard(null_a1, checkHess = FALSE, silent = TRUE)
+null_b1 <- OpenMx::mxTryHard(null_b1, checkHess = FALSE, silent = TRUE)
+res_a1 <- mbco(null_a1, full_model)
+res_b1 <- mbco(null_b1, full_model)
+res_a1
+res_b1
+## Test of H0: a1*b1 = 0 (df = 1): the smaller of the two statistics
+min(res_a1@statistic, res_b1@statistic)
+## The same test in one call: fixes each path at 0 in a copy of the fitted
+## full model and returns the binding branch (here b1, statistic 0.0831)
+mbco_product_null(full_model, c("a1", "b1"))
 }
 }
 \author{

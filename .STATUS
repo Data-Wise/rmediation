@@ -1,15 +1,336 @@
-status: in_progress
+# 2026-10-29 compatibility: PR #87 merged into dev as 4bda1c2; R 4.1 S7 namespace fix verified on R 4.1.3 and 4.6.2, and all PR checks passed. Existing submission holds remain.
+status: released
 priority: high
 progress: 100
 kind: package
-version: 1.6.1
-next: Re-run win-builder + r-hub for 1.6.1 (results in cran-comments.md are stale, from 1.6.0), then submit via devtools::submit_cran() — cadence gate 2026-07-02 (≥2 weeks since v1.5.0)
+version: 1.8.0
+next: **1.8.0 GitHub pre-release: release PR #106 (dev->main) is open and CLEAN; merge (merge commit) and the `v1.8.0` tag await the maintainer.** **CRAN SUBMISSION ON HOLD — user called a hold 2026-08-17 00:52 MDT; do NOT submit or merge dev->main without explicit go-ahead.** **HOLD UPDATE 2026-10-13: no CRAN submission of RMediation until BOTH RMediation and medfit are mature (user decision; "mature" is not yet defined, so ask before treating any date or green check as the trigger).** **Policy update 2026-10-12 (grill ledger `planning/GRILL-semfit-dependency-policy-2026-10-12.md`): the `method="gauss"` default hold is lifted (no CRAN reverse dependencies; NEWS + retained `hcubature` mitigate); submission and dev->main still need an explicit go-ahead; CRAN gets 1.7.1 from a `release/1.7.1` branch that omits the SEMFit route (held until medfit 0.8.0 is on CRAN, then Suggests >= 0.8.0).** v1.7.0 is published on GitHub as a PRE-RELEASE only (tag `v1.7.0` on `dev`); `main` deliberately remains at 1.6.1, which is what CRAN serves. Users can get the fix via `remotes::install_github("Data-Wise/RMediation", ref = "dev")`. v1.7.0 fixes issue #27: `pprodnormal3()` returned silently wrong probabilities on ill-conditioned covariance (24% error at rho=0.999, 92% relative in the lower tail, at every q). Default integrator is now `method="gauss"`; `"hcubature"` retained for cross-checking. **The open decision, if the hold is reconsidered: making "gauss" the default changes returned values for every user — that is the one choice that becomes irreversible once on CRAN.** Gates all green: 424 tests pass (0 fail/warn/skip; 345 -> 424 after PR #30's coverage work), `R CMD check --as-cran` 0 errors/0 warnings (1 local-only NOTE, HTML-Tidy version, not CRAN-relevant), test coverage 71.70% (up from 55.45%), r-hub 3/3 pass (linux/windows/macos-arm64, 2026-08-17) **and re-run 3/3 `Status: OK` on the final tree `e557536` (2026-08-22 16:14 MDT, run 32601694146)**, win-builder 3/3 Status: OK — R-devel (r90413), R-release (4.6.1), R-oldrelease (4.5.3), all received 2026-08-17 and confirmed in Gmail 2026-08-21. `cran-comments.md` is complete for 1.7.0: r-hub and all three win-builder results filled in, nothing left PENDING; a 2026-08-22 addendum documents the post-dispatch `mvtnorm` Suggests addition, coverage work, and the #31 warning-text change — all covered by the 2026-08-22 r-hub re-run; only win-builder was not re-dispatched. **Every technical gate is green and the 2026-08-21 cadence window has opened — the only thing outstanding is the hold itself and the `method="gauss"` default decision.** Issues #26 and #27 stay open on GitHub until dev->main. Live pkgdown site is at 1.7.0 (deployed from the tag before that trigger was removed) while CRAN is 1.6.1 — deliberate, see SPEC-29. **Current development follow-up (2026-10-12):** medfit 0.8.0 clears the SEMFit anova/W3 prerequisites; the additive plan is reviewed in `planning/PLAN-semfit-mbco-2026-10-12.md`, and PR #41 is reviewed and merged into dev as `d29685f`; all ten PR checks passed. Release holds are unchanged. **Post-hold note (2026-10-11):** dev also carries PR #36 (`mbco()` fitted-RAM-model fix, corrected `?mbco` example, OpenMx known-answer tests); NEWS has a `1.7.1 (development version)` heading while DESCRIPTION is still 1.7.0 (the `v1.7.0` tag predates later dev commits; bump to 1.7.1 at ship is undecided).
 
 # rmediation
 
 ## Status: Active
 ## Progress: 100
-## Focus: v1.6.1 on dev (naming cleanup + goodpractice/docs fixes), pushed but not yet released to main. CRAN submission pending win-builder/r-hub re-run + cadence gate (2026-07-02).
+## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
+
+## Hold 2026-10-13
+- 2026-10-31 10:40 MDT: local `dev` fast-forwarded to `origin/dev` (0dc3592, DESCRIPTION 1.8.0). Read-only CI review (repo is PUBLIC, so minutes are free; the cost is wall time and hangs): triggers match the G8 policy, but R-CMD-check, semfit-mbco, test-coverage and pkgdown have no `timeout-minutes`, and R-CMD-check, semfit-mbco and test-coverage have no `concurrency`/`cancel-in-progress`. Hardening PR #107 squash-merged to dev as 9f5b0fa (timeouts on all four jobs; PR-only cancel-in-progress on R-CMD-check and semfit-mbco; enforced by check-ci-policy.R; planted defect verified; workflows themselves not yet run on GitHub, first run is the dev->main PR); worktree and branch removed. G1's 3-clean-runs rule cannot advance at about one `main` PR per release (open question). Release PR #106 untouched.
+- 2026-10-31 00:50 MDT: docs PR (branch `docs/pkgdown-set`): three pkgdown-only articles under `vignettes/articles/` (Quick Reference, Cookbook, Technical Notes), listed in the Articles menu of `_pkgdown.yml` and excluded from the package build by `^vignettes/articles$` in `.Rbuildignore`. Plain Rmd, not Quarto: the pkgdown workflow installs no Quarto. Every cookbook chunk runs (the OpenMx ones are guarded by `requireNamespace`); `pkgdown::check_pkgdown()` clean; `check-local.sh` PASS with the same single NOTE. The articles reach the live site only at the dev->main release.
+- 2026-10-31 00:20 MDT: T5b PR (branch `feature/gate-job`): the #84 gate moved out of the required job into its own non-required workflow `.github/workflows/issue-84-gate.yaml` (main PRs, main pushes, dispatch; OpenMx and pkgload named explicitly; no path filter, no continue-on-error), so a red gate no longer blocks `ubuntu-latest (release)`. `check-ci-policy.R` now fails if the gate is a step of R-CMD-check, or if the gate workflow runs on dev, lacks dispatch, has a paths filter or continue-on-error, omits OpenMx, or takes the required check's name. Proven: red before the move; six planted defects each fail the policy check; restored tree passes. Not run on GitHub yet (first at the dispatch dry run or the release PR).
+- 2026-10-30 23:59 MDT: release-path plan `planning/PLAN-github-release-1.8.0-2026-10-30.md` (grill decisions R1-R6): release 1.8.0 from dev with the experimental SEMFit route included (PR #46 superseded), pkgdown publishes with a README note, GitHub pre-release not Latest, one dry-run dispatch of R-CMD-check on dev first, #84 gate moves to its own non-required job. CORRECTION: PR #99's claim that a red gate step cannot block a merge was wrong; the step is inside the required job `ubuntu-latest (release)`, so it is effectively required until the gate moves (plan R6). CRAN submission stays on hold; nothing here submits to CRAN.
+- 2026-10-30 23:55 MDT: T4 PR (branch `feature/risk-tier`): `risk-tier` check on PRs to dev and main (`.github/workflows/risk-tier.yaml`, stdlib Python `scripts/risk_tier.py`, 22 tests in `scripts/test_risk_tier.py`, list `.github/risk-files.txt`, template `.github/PULL_REQUEST_TEMPLATE.md`). A PR changing a risk file needs the six-item evidence block; known-answer and planted-defect items must cite a tests/testthat file in the diff; release PRs from dev exempt; advisory, not required. Proven: 5 planted script defects killed by the tests, 4 planted workflow defects fail check-ci-policy.R, real-PR replay (#89/#91/#97 fail without the block, #94/#98 pass, a conforming body for #97 passes, one citing a file outside the diff fails). Risk-file list: the first five patterns matched 14 of 43 R files and `R/dop*.R` matched none; after the author's decision the list covers 30 of 43 (adds dprodnormal*, qprodnormal*, medci*, confintMC, confintAsymp, pMC, qMC, internal_s7_compute, chol_psd, ml_omitted_confounder, plus utils_stats.R for the bootstrap resampler) and a test fails on a dead pattern or an uncovered core file. Plan: `planning/PLAN-mechanical-checks-2026-10-30.md`.
+- 2026-10-30 23:35 MDT: T5 PR (branch `feature/gate-in-ci`): `R-CMD-check` gains a step running `scripts/verify-constraint-not-enforced.R` on the ubuntu-latest release leg only (no path filter, no continue-on-error; `any::pkgload` named explicitly in that leg's extra packages); `scripts/check-ci-policy.R` enforces the step. Proven locally: the step's own `run:` string under `bash -e` exits 0 clean and 1 with a planted pinned-value failure; three planted workflow defects (wrong leg, continue-on-error, paths filter) fail the policy check. Not run on GitHub yet (first at the next dev->main PR); advisory by placement. Caught while testing: an unquoted `#84` in a step name is a YAML comment, so the name is quoted. Plan: `planning/PLAN-mechanical-checks-2026-10-30.md`.
+- 2026-10-30 23:10 MDT: T3 PR (branch `feature/depends-only`): the R-devel leg of `R-CMD-check` runs with `_R_CHECK_DEPENDS_ONLY_=true` via a per-leg `depends-only` matrix value (release legs `'false'`); `scripts/check-ci-policy.R` enforces it. Proven locally: clean `check-local.sh --depends-only` PASS, and a planted unguarded `OpenMx::` call in an example fails with `there is no package called 'OpenMx'`. Not run on GitHub yet (first runs at the next dev->main PR); advisory by placement, not a required check. Plan: `planning/PLAN-mechanical-checks-2026-10-30.md`.
+- 2026-10-30 22:45 MDT: CI policy PR (branch `feature/ci-policy`): expensive checks run for main and releases only (`R-CMD-check`, `semfit-mbco`, `test-coverage` no longer trigger on dev; each gains `workflow_dispatch`); `scripts/check-ci-policy.R` enforces it and keeps main's required check `ubuntu-latest (release)` startable; `scripts/check-docs.R` fails on stale `man/`/`NAMESPACE`; `scripts/check-local.sh` runs the policy, docs and issue #84 checks first, plus `--no-docs`, `--no-gate`, `--depends-only`. Plan and decisions G1-G10: `planning/PLAN-mechanical-checks-2026-10-30.md`. Nothing is required-check or branch-protection related; those stay the author's.
+- 2026-10-30 22:17 MDT: PR #93 (`f33cd9a`) squash-merged to dev (CI 8/8): class `RMediation_constraint_dropped` renamed to `RMediation_constraint_not_enforced` (never released; CRAN serves 1.6.1) because a fitted h0 cannot show whether OpenMx dropped the constraint or a violation was accepted within tolerance; `?mbco` and NEWS now state the bootstrap p-value rule, `mean(null > observed)` over all R replicates (no `(1 + k)/(R + 1)` correction; failed replicates stop the call, since #91). Full suite 456 tests / 2380 expectations, 0 failed, 10 skipped (medfit 0.8.0 absent). Decision comments on #88 and #84.
+- 2026-10-30 19:55 MDT: issue #84 R1-R3 (PR #89, squash-merged to dev as `542043b`): `mbco()` warns `RMediation_constraint_dropped` after `RMediation_h0_refit` when the refit ran and statistic_before is about 0 (h0 fit identical to h1's although a constraint was violated). The planned predicate (`.mbco_involved()` empty at h0's own starts) is not implementable: a fitted h0 keeps no starting values, so the class cannot separate OpenMx/OpenMx#433 from a tolerance violation and the message says so. Codex review and dispositions in `tasks/codex-review-84.md`. The `type = "parametric"` replicate gap noted here is closed in PR #91 (`0420391`). The class was renamed in PR #93 (see the entry above). R4/release stays in #88.
+- 2026-10-15 06:55 MDT: PRs #81-#83 squash-merged to dev (CI 10/10 each; #83 needed helper tests for codecov/patch). #81 `18e5d36` mbco_product_null() refuses a nonconverged/unrun h1 (RMediation_h1_nonconverged); mbco() warns (RMediation_fit_nonconverged) on an unconverged user h0/h1; one `.mbco_status_ok()` replaces five copies. #82 `b535ce0` `dprodnormal3()` (exact K=3 density, 1-D integral over the first factor, verified vs d/dv pprodnormal3 to ~7 digits) plus a `dprodnormal()` fix for small z (decade breaks). #83 `9e94f7b` Meeker & Escobar (1994) check of `.dop_cdf()`: exact |rho| = 1 via the article's quadratic roots (old step integral was off by up to 4.3e-5 and once stopped with 'probably divergent'); factored-quadratic integrand + root breakpoints + tolerance relaxation on roundoff; all 495 evaluations in the article's test domain succeed (10 errored). Suite 2314 expectations/0 fail. Open: plots PR (`medci(plot = TRUE)` drawing the analytic density, no returned-number changes); the 1.7.1 release candidate (draft #46, needs a rebase); local branch `feature/zero-se` (closed #76; branch-guard blocks -D). CRAN hold unchanged.
+- 2026-10-14 22:45 MDT: PRs #70-#80 squash-merged to dev (CI 10/10 each; #76 closed and rebuilt as #79). #70 `cf19dc6` medci plot tests + arrows() fix; #71 `80f40ae` S7 core DOP quantile delegates to qprodnormalMeeker (completes #60); #72 `02218fb` medci robustness (flags, singular covariance, se = 0, MC.Error); #73 `0c1caef` pprodnormal/qprodnormal vectorized over q/p; #74 `30db465` DOP upper tail integrated directly; #75 `d050ec7` `dprodnormal()` (exact K=2 density: Bessel K0 for zero means, 1-D integral otherwise); #77 `999c99d` semiparametric bootstrap refuses infeasible replicates (RMediation_bootstrap_infeasible); #78 `2875fb8` pprodnormal3 requires a PSD covariance; #79 `2551924` exact pprodnormal CDF at a zero standard error (DOP and MC); #80 `7b3e734` point masses are right-continuous (behavior change: 0.5 at an atom at 0 -> 1, in NEWS) and the PSD tolerance is 64 eps x max eigenvalue. Four Codex adversarial reviews drove #77-#80; all findings so far were real. Suite 1374 expectations/0 fail. All merged worktrees pruned; `feature/zero-se` (closed #76) remains locally (branch-guard blocks -D). Open: PR B (mbco_product_null() does not check h1 convergence; a nonconverged h1 errors but blames the branch), `dprodnormal3()` (K=3 pdf as a 2-D integral), plots drawing the analytic pdf, the 1.7.1 release candidate (draft #46, needs rebase). CRAN hold unchanged.
+- 2026-10-14 18:30 MDT: PR #69 (`c7002ff`) squash-merged to dev (CI 10/10): exported `medci_prototype()` removed (breaking; it shipped in CRAN 1.6.1, so NEWS has a `Removed` entry and it lands only with the next release, which is held; a deprecation cycle was the alternative). The four wrapper-only tests went with it; the two edge-case tests now call `.compute_ci_dop`/`.compute_ci_asymp`. `dev/demo_s7_prototype.R` no longer calls it (it still fails later on `quantile(pn4, type = "dop")`, pre-existing). Cleanup: 8 merged feature worktrees and branches removed (#61-#63, #65-#69), each gated on PR head == local tip, merge commit an ancestor of dev, clean tree. Remaining worktrees: main, release-1.7.1 (`fd140a3`, draft PR #46), and the detached eloquent-pasteur-bbc3e7. Local line coverage 90.61% (2258 instrumented / 212 uncovered; 73.0% at the plan baseline). Lowest: zzz.R 0% (startup, runs before covr instruments), mbco_semfit.R 10.2% (skipped locally: medfit 0.7.0 installed; CI runs 0.8.0), **R/medci.R 29.1% (the live medci(); the largest real gap)**, external_methods.R 72.9%, pprodnormal.R/qprodnormal.R 76.2%. Per-file table in the session scratchpad (cov-final.csv). Open: the 1.7.1 release candidate (draft PR #46 predates all of this session's work and would need a rebase; the maintainer's decision; no CRAN submission). CRAN hold unchanged.
+- 2026-10-14 16:41 MDT: PR #68 (`0457e21`) squash-merged to dev (CI 10/10): `Config/roxygen2/version` 8.0.0 -> 8.1.0. roxygen 8.1.0 treats a code span starting with `r ` as inline R code, which aborted the Rd roclet on `r = (r_za, r_zm, r_zy)` in R/ml_omitted_confounder.R:35 (rewritten; only man/ml_omitted_confounder.Rd changed). NAMESPACE reformatted to one multi-line importFrom per package (same 75 directives, verified by parsing old and new). The roxygen-pin item from the 15:58 and 16:32 entries is closed. `devtools::check_man()` reports 16 pre-existing 'Skipping; no name and/or title' messages (same before and after). Suite 1159 expectations/0 fail/10 skip. Open: `medci_prototype()` removal (exported, API decision, deferred to the CRAN decision); near-degenerate variances (1e-14) warn at the Gauss node cap. CRAN hold unchanged.
+- 2026-10-14 16:32 MDT: PRs #65, #66, #67 squash-merged to dev (CI 10/10 each). #65 (`b08c24f`): tests for ProductNormal3 `dist_quantile`/`show` (R/ProductNormal3_methods.R now fully covered; two equivalent mutants noted: the uniroot bracket only seeds `extendInt`). #66 (`de008c8`): docs sync, `man/dot-ci_core.Rd` was stale and a bare `[0, 1]` in R/00_classes.R rendered as a broken link under roxygen 8.1.0 (now a code span). #67 (`e0c9dec`, issue #64): `pprodnormal3()` returned 0 for every q, or errored, with two or three zero-variance components; now exact (point mass at prod(mean), or a scaled normal when one component is random; an atom at exactly 0 keeps the 0.5-at-q=0 convention pinned by test-product-normal3.R:89). Issue #64 closed by hand. Suite 1159 expectations/0 fail/10 skip; local line coverage 87.29% before #67. Open: roxygen pin 8.0.0 vs installed 8.1.0 (8.1.0 reformats NAMESPACE importFrom lines; bump is a maintainer decision); `medci_prototype()` removal (exported, API decision, deferred to the CRAN decision); near-degenerate variances (1e-14) warn at the Gauss node cap instead of failing silently (left as is). CRAN hold unchanged.
+- 2026-10-14 15:58 MDT: coverage plan Task 5a/5b done. PR #62 (`de96609`): `medci()` was defined twice (R/medci.R and R/medci_legacy_backup.R, identical bodies; the backup sorted later and was the live definition, `?medci` merged both doc sets); backup removed, behavior unchanged, plus guard test `test-no-duplicate-definitions.R` (skips on installed-package runs, where R/ has no .R sources). PR #63 (`7a69a4b`): plot-branch tests for ci/confintMC/confintAsymp on a null device. Both squash-merged to dev (CI 10/10). Local line coverage 79.93% -> 86.36% (R/ci.R 100%, confintAsymp.R 100%, confintMC.R 96.8%); CI with medfit 0.8.0 will report higher for mbco_semfit.R. Suite 1112 expectations/0 fail/10 skip. Open: `medci_prototype()` is exported and used only by test-s7-prototype.R (removal is an API decision, deferred to the CRAN decision); roxygen 8.1.0 installed vs 8.0.0 pinned rewrites DESCRIPTION/NAMESPACE, and man/mbco.Rd and man/dot-ci_core.Rd are stale against their source; Task 5c (remaining lines: zzz.R, medci_prototype.R, ProductNormal3_methods.R). CRAN hold unchanged.
+- 2026-10-14 15:25 MDT: coverage plan Tasks 3 and 4 done. PR #58 (`bc94a38`, validation/`.ci_core()` guard tests; fixed `is_valid_for_computation()` erroring on an NA Sigma), PR #59 (`f519ccc`, product-distribution boundary tests; DOP CDF clamped to [0, 1]) and PR #61 (`94afd1f`, issue #60: `.dop_cdf()` shared by `pprodnormalMeeker()`/`qprodnormalMeeker()`, window mu.b +/- 10 sd, split at 0, rel.tol 1e-10; DOP had collapsed at standardized means >= ~20 and was wrong in far tails) squash-merged to dev (CI 10/10 each). Issue #60 closed by hand (dev is not the default branch). Suite 1090 expectations/0 fail/10 skip. Decisions: planning/GRILL-dop-large-mean-60-2026-10-14.md. Known remaining: upper tail is still 1 - lower (tail-precision follow-up); legacy copy `medciMeeker` keeps the old integrator (4 legacy-vs-S7 comparisons loosened to 1e-6). Next: Checkpoint B, Tasks 5a-5c; CRAN hold unchanged.
+- 2026-10-14 14:45 MDT: PR #57 (test-only: covers the branch probe's no-involved-parameter / involvement-failure skip, R/mbco_branch_probe.R:74, flagged by Codecov on #56) squash-merged to dev as 2c1b37f23e768b2cd2460ca02c1c26e203d34130 (CI 10/10); worktree feature-probe-coverage and branch removed (tip 40d2b70 == PR head; merge commit is an ancestor of dev). Suite 1001 expectations/0 fail/10 skip. No R code changed. The four uncovered lines in R/mbco_product_null.R (OpenMx-not-installed branch) are left as is. Next decision: the 1.7.1 release candidate (draft PR #46), held by the CRAN decision.
+- 2026-10-14 14:35 MDT: issues #34 and #35 closed with summary comments (all planned pieces shipped: #51, #52, #53, #54, #55, #56). Next decision is the 1.7.1 release candidate (draft PR #46), held by the CRAN decision; CRAN hold unchanged.
+- 2026-10-14 14:00 MDT: PR #56 (warn-only wrong-branch probe, issue #35: RMediation_constraint_branch; advisory, no returned number changes) squash-merged to dev as b96a1fb7b78d743e782794a281c8fc7a3df5ea2d (CI 10/10); worktree feature-mbco-branch-probe and branch removed (tip 88a793a == PR head; merge commit is an ancestor of dev). Suite 997 expectations/0 fail/10 skip; strict check 0E/0W/1 NOTE (Date). Checkpoint: 60 seeds x 3 settings through public mbco(), 28/28 wrong-branch flagged, 0 false positives, plus memory_exp (221.05 flagged, 0.0831 silent). All planned pieces of #34 and #35 are shipped; both issues stay open pending the maintainer's close decision. Untested: NPSOL, several constraints at once, >3 involved parameters. CRAN hold unchanged.
+- 2026-10-14 12:10 MDT: PR #55 (fail closed: a violated h0 that cannot be refit is a classed error RMediation_h0_refit_failed; Codex adversarial review finding; reverses Q4 of the B+E grill) squash-merged to dev as e9641235fbfb86e719cabbe9442cc9c735673fe4 (CI 10/10); worktree feature-mbco-refit-failclosed and branch removed (tip e64e033 == PR head; merge commit is an ancestor of dev). Suite 937 expectations/0 fail/10 skip; strict check 0E/0W/1 NOTE (Date). Decisions: planning/GRILL-mbco-refit-failclosed-2026-10-14.md (violated h1 stays warn-only). Open: warn-only wrong-branch probe planned in tasks/plan-35-probe.md (no code); #35 and #34 open; CRAN hold unchanged.
+- 2026-10-14 11:55 MDT: PR #54 (mbco_product_null() requires every branch fit to converge; Codex review finding 2) squash-merged to dev as 26e6d3bccb769671e6026d4c37a46bb150e702a9 (CI 10/10); worktree feature-mbco-product-null-status and branch removed (tip 2b5b06d == PR head; merge commit is an ancestor of dev). Suite 917 expectations/0 fail/10 skip; strict check 0E/0W/1 NOTE (Date). Open: Codex finding 1 (failed h0 refit falls back to the user's fit; grill Q4) awaits the maintainer's decision (keep / fail closed / fail closed above a larger violation); warn-only wrong-branch probe planned in tasks/plan-35-probe.md (no code); #35 open; CRAN hold unchanged.
+- 2026-10-14 11:25 MDT: PR #53 (`mbco_product_null(h1, paths, ...)`, new optional `MBCOResult@branch` slot, issue #35) squash-merged to dev as 02ab02a (CI 10/10); worktree feature-mbco-product-null and branch removed (tip a166517 == PR head; merge commit is an ancestor of dev). Suite 914 expectations/0 fail/10 skip; strict check 0E/0W/1 NOTE (Date). Research note planning/RESEARCH-35-wrong-branch-probe-2026-10-14.md: the single-constraint route lands on the wrong branch (memory_exp 221.05; 28/60 seeds at b=.4, SLSQP), invisible to the guard; a numeric probe (fix each involved parameter at 0, constraint dropped, feasibility rechecked) flagged 28/28 with 0 false positives in 120. Open: #35 stays open pending the decision on a warn-only probe (recommended), a correcting probe, or neither; CRAN hold unchanged.
+- 2026-10-14 11:05 MDT: PR #52 (refit of a violated `h0` at tolerance 1e-8 for asymp/parametric/semi, new optional `MBCOResult@refit` slot, issue #34 B+E) squash-merged to dev as e30a4dc (CI 10/10); worktree feature-mbco-refit and branch removed (tip 8932b17 == PR head; merge commit is an ancestor of dev). A returned number now changes when the guard fires (0 -> 0.4745 in the reprex); NEWS says so. Evidence: suite 853 expectations/0 fail/10 skip, strict check 0E/0W/1 NOTE (Date); 100-seed R=200 study: refit within 1e-6 of exact in 99/100, semi stops at the first failed replicate in 6/100. Open: #35 (wrong branch, own plan; options W1-W5 in planning/PROPOSAL-mbco-b-e-35-2026-10-14.md); issue #34 left open pending your call; CRAN hold unchanged.
+- 2026-10-14 10:25 MDT: PR #51 (constraint-violation guard for OpenMx `mbco()`, issue #34) squash-merged to dev as 8e904bd (CI 10/10); worktree feature-mbco-tolerance and branch removed (tip fd99372 == PR head; merge commit is an ancestor of dev). Suite 761 expectations/0 fail/10 skip; strict check 0E/0W/1 NOTE (Date). No returned number changes. Open: B (bootstrap tolerance) and E (refit h0) need their own plan; #35 (wrong branch) remains; CRAN hold unchanged.
+- 2026-10-14 08:50 MDT: PR #50 (docs for ml_omitted_confounder) squash-merged to dev as 865e004 (CI 10/10); worktree feature-docs-mloc and branch removed (tip b05d60d == PR head; merge commit is an ancestor of dev). A first combined merge+cleanup command was blocked by branch-guard on `git branch -D` before anything ran; redone with `git branch -d`. Open: PLAN-34 (issue #34) T0; CRAN hold unchanged; site deploys from main only, so the new article is not live.
+- 2026-10-14 08:45 MDT: docs pass (user's /refine request): PR #50 (feature/docs-mloc, b05d60d, worktree ~/.git-worktrees/rmediation/feature-docs-mloc) adds the omitted-confounder-sensitivity vignette, a README section/table row, a pkgdown Articles entry and 3 WORDLIST words. Audit: NEWS, CLAUDE.md, AGENTS.md, .STATUS, man page, reference index and the 3 older vignettes were already current; DESCRIPTION left alone (1.7.1 candidate is on release/1.7.1). Local pkgdown build OK (scratch dir, not deployed; site deploys from main only), strict check 0E/0W/1 NOTE (Date field), spelling clean. Not merged, CI pending at open.
+- 2026-10-14 08:20 MDT: PR #49 (vectorize ml_omitted_confounder) squash-merged to dev as 6fd419f (CI 10/10); worktree feature-mloc-vectorize and branch removed (tip c0f84e8 == PR head; merge commit is an ancestor of dev). Open: PLAN-34 (issue #34) awaiting a go-ahead for T0; CRAN hold unchanged.
+- 2026-10-14 08:20 MDT: (1) planning/PLAN-34-mbco-feasibility-tolerance-2026-10-14.md written for issue #34 (reproduced on OpenMx 2.22.11: default tolerance leaves |ab| up to 0.049 and understates the LRT in 12 of 12 seeds; 1e-8, global or model-level, matches the exact LRT within 1.9e-9; recommends guard + bootstrap-refit tolerance + docs, no new argument; open: constraint evaluation prototype, bootstrap convergence run). No code, no branch. (2) PR #49 (feature/mloc-vectorize, c0f84e8, worktree ~/.git-worktrees/rmediation/feature-mloc-vectorize) vectorizes ml_omitted_confounder(): 0.9 s -> 0.02 s per level, results unchanged; suite 696 pass/0 fail/10 skip, strict check 0E/0W/1 NOTE; not merged, CI pending. User dropped the wait-for-medfit recommendation; the CRAN hold itself is unchanged.
+- 2026-10-14 08:05 MDT: PR #48 (ml_omitted_confounder, #33) squash-merged to dev as 09f5b8c (CI 10/10); feature worktree and local/remote branch removed (tip b340cd7 == PR head, merge commit is an ancestor of dev). Issue #33 still open. Reaches CRAN with the next release (hold unchanged).
+- 2026-10-14 (feature #33): PR #48 opened to dev (feature/ml-omitted-confounder, b340cd7, worktree ~/.git-worktrees/rmediation/feature-ml-omitted-confounder): ml_omitted_confounder() + MLOmittedConfounder class. Full suite 693 pass/0 fail/10 skip (medfit 0.7.0 installed); R CMD check --as-cran --run-donttest 0E/0W/1 NOTE (old Date field, same on dev); not merged, CI pending at open. Independent review (SPEC-33 addendum) found 2 blockers, both fixed in the spec and tests. Unverified: the paper itself is paywalled and unread. Supplement kept at planning/tofighi-kelley-2016-supplement-hmbr_a_1105736_sm2316.pdf (CC BY 4.0). Ships with the next CRAN release (hold unchanged).
+- 2026-10-13 23:30 MDT (tested, scratch lib, medfit origin/dev with fixed_x, DESCRIPTION still 0.8.0; n=500 sim, one dataset): the SEMFit route works with `fixed_x`. `mbco(h0,h1,type="asymp")` gave identical chi-square 55.1414, df 1, p 1.122e-13 with fixed_x = FALSE, TRUE and "x"; mismatched sets error from medfit's `anova()` ("different `fixed_x` sets ... cannot be compared"), surfaced by mbco. No RMediation change needed. Script: scratchpad only, not saved in repo.
+- 2026-10-13 23:23 MDT (observed in medfit .STATUS/git, not tested here): medfit dev now has `fixed_x` (PR #175 `1023520`; FALSE|TRUE|names, default FALSE, conditional logLik, AIC/BIC across fixed sets refused, bundled into 0.9.0) and observed mean structure (PR #174 `8681083`). Open medfit PRs #176-179 are docs/small (#178: mbco_sem refits keep fixed_x). Remaining for the hold: latent means + dropping "experimental" (target 0.11.0, criteria undefined), no medfit CRAN date (0.3.2). Untested: RMediation SEMFit route with matching vs mismatched fixed_x sets.
+- 2026-10-13 13:37 MDT, medfit session relays the medfit author's answer: "experimental" target drop = medfit 0.11.0 (latent means); criteria NOT defined, so a target not a guarantee; medfit stays GitHub-only (no CRAN commitment); fixed_x placement and label-counting undecided, proposal not accepted. Hold still has no firm date.
+- 2026-10-13 19:26Z (observed): medfit PR #171 (G8 anova() nesting fix) merged to medfit dev as 5ebdecf. fixed_x still unstarted/undecided; medfit CRAN still 0.3.2. Hold unchanged.
+- medfit session reply 2026-10-13 (information only; the medfit author has not decided): (1) placement undecided; early placement is not free because fixed_x touches `.sem_complete`, `.sem_df`, the logLik method and `anova()`, the same code 0.9.0 T2/T3/T5 rewrite (df rule p(p+1)/2 + p, anova across mean-structure status), so building it first would force those tasks to be redone; after 0.9.0 T3/T5 or as a 0.9.x on top of 0.9.0 avoids that. The G8 `anova()` nesting fix is Data-Wise/medfit PR #171 (unmerged, CI running); 'refuse anova() across different fixed sets' would sit on top of its nesting check. (2) semantics not reviewed; two traps match known medfit facts (fixed exogenous moments must be excluded from the df rule; `.sem_complete` pairing drops free exogenous covariances when any `~~` statement touches a variable); explicit-statement error and conditional logLik are open for the author. (3) nothing decided on dropping the 'experimental' label; fixed_x alone would not settle it. Revised expectation: place after 0.9.0 T3/T5 or as 0.9.x, not before; the hold's exit remains driven by medfit's release plan.
+- fixed.x exploration 2026-10-13 (independent, scratch scripts only; lavaan + installed medfit 0.7.0; one simulated dataset n=400, complete data, normal ML): lavaan `fixed.x` TRUE vs FALSE give identical structural estimates and SEs (a, b, cp, ab; max diff 0; 7 vs 10 free params); medfit native `fit_sem()` matches lavaan `fixed.x = FALSE` (same estimates, SEs and 10 free params; ab 0.1551911, SE 0.02927037). Verdict: done as medfit defines it for covariance-only models (engine always frees exogenous moments, tests/vignettes/docs state it; identity test `test-sem-model.R:197` exists, not re-run). NOT done: no `fixed.x` argument (cannot reproduce the `fixed.x = TRUE` table/npar/logLik); exogenous-means handling under mean structure untested (0.9.0 not started); missing data and robust SEs not tested. Open for user: does "done" mean the documented difference (then only mean structure and the experimental label remain) or a real `fixed.x` argument (a request to the medfit author).
+- medfit session reply 2026-10-13 (information only; repo-recorded intent, not commitments): (1) no CRAN end condition or date; 0.5.0-0.8.0 are GitHub/r-universe only (0.8.0 GRILL: "Not in this release: CRAN submission"); no release named as first CRAN submission; 0.9.0-0.11.0 plans only, none started. (2) nothing defines "SEM no longer experimental"; no release plans to drop the label; 0.9.0 (observed intercepts) and 0.10.0 (`:` product, four-way) leave it experimental; 0.11.0 (latent means) is the earliest candidate, undecided. `fixed.x` is NOT a standalone item: PLAN-native-mean-structure item 4 records the engine freeing exogenous means vs lavaan's default `fixed.x = TRUE` as a documented difference, uses `fixed.x = FALSE` in oracles, and adds no `fixed.x` argument (one would be a new request to the medfit author). (3) `anova(h1, h0)` on SEMFit is intended to stay compatible through 0.9.0-0.11.0 (gated to 1e-12 against 0.8.0 fixtures; plan still under adversarial review, so intent not guarantee). **Consequence: the "fixed.x completed" and "non-experimental" clauses of the maturity definition are not yet checkable; user must decide what they mean (documented difference vs a new `fixed.x` argument; which release drops the experimental label).**
+- 2026-10-13: asked again whether to ship the integrator fix alone; user chose to KEEP HOLDING it with the rest (no CRAN upload; mitigations stay: v1.7.0 pre-release, pkgdown note, README requirement line).
+- User: hold CRAN submission until both rmediation and medfit are mature. Supersedes the "only the explicit go-ahead is outstanding" wording below; the release candidate `release/1.7.1` (`fd140a3`) stays ready and unsubmitted. **Definition of mature (user, 2026-10-13 10:44 MDT): the SEM features are no longer experimental AND `fixed.x` and mean structure are completed.** **Refined 2026-10-13 (grill `planning/GRILL-medfit-fixed_x-2026-10-13.md`): "`fixed.x` completed" = Option C, a `fixed_x` argument with per-variable selection, shipped in medfit (default FALSE, conditional logLik, errors on conflicting statements); proposal `planning/PROPOSAL-medfit-fixed_x-2026-10-13.md`, not yet sent to the medfit author.** Status check same day (read-only, medfit `NEWS.md`/`.STATUS`): native SEM engine and `SEMFit` still marked experimental; mean structure planned, not started (0.9.0 observed intercepts, 0.10.0 `:` product + four-way, 0.11.0 latent means); `fixed.x` is in medfit's plans, not NEWS: native-SEM PLAN Q3 (exogenous variances/covariances free, lavaan oracles use `fixed.x = FALSE`, pinned by a `fixed.x` TRUE-vs-FALSE identity test at S11) and PLAN-native-mean-structure item 4 (engine frees exogenous means; lavaan default `fixed.x = TRUE` fixes them at the sample mean; oracles `fixed.x = FALSE`) - CONFIRMED by user 2026-10-13 10:47 MDT as what "fixed.x" means; the maturity definition is now complete. Re-run checks against whatever is current at submission time.
+
+## Session 2026-10-12 (release policy grill)
+- Decided (ledger `planning/GRILL-semfit-dependency-policy-2026-10-12.md`): SEMFit route held out of the CRAN release; fix ships decoupled as 1.7.1 from `release/1.7.1` (hand-removal of PR #41 route hunks; plain revert conflicts in 5 files); gauss default hold lifted; public `v1.7.0` tag untouched. medfit 0.8.0 has no CRAN submission planned (medfit `.STATUS`).
+- Built `release/1.7.1` (`25fca7a`, local only, not pushed; worktree `~/.git-worktrees/rmediation/release-1.7.1`): SEMFit route hand-removed, DESCRIPTION/NEWS at 1.7.1. Full suite 593 expectations / 0 failed / 0 skipped / 2 existing OpenMx warnings; strict `R CMD check --as-cran --run-donttest` 0 errors / 0 warnings / 1 NOTE (Date field over a month old - update at submission). Also regenerated stale `man/dot-ci_core.Rd` (dev has the same stale Rd from #45). Still owed before submission: `cran-comments.md` says 1.7.0 and needs a 1.7.1 rewrite plus fresh r-hub/win-builder runs; Date field.
+- Follow-up (same night): `release/1.7.1` now `bc97590` (cran-comments rewritten for 1.7.1, Date 2026-10-12, strict check 0/0/0, 593 expectations). Draft PR #46 -> main ("DO NOT MERGE"): 7/7 checks pass, mergeable. PR #47 (prod3 edge-case tests, 21 expectations, 3 planted defects caught) squash-merged to dev as `ab830dc` and cherry-picked to the release branch. r-hub run 38350109531 (on `051fcbc`) finished 2026-10-13: linux `Status: OK`, windows `Status: OK`, macos-arm64 job success (no status line in log). win-builder devel/release/oldrelease all `Status: OK` (emails 2026-10-13 07:36-07:49 MDT: R-devel r90659, 4.6.1, 4.5.3; two earlier emails from the 2026-10-12 night uploads also OK, so those upload errors had partly succeeded). `cran-comments.md` on `release/1.7.1` is fully filled in (win-builder commit follows `aac8a48`). All platform evidence is in. **2026-10-13 10:39 MDT: user said DO NOT SUBMIT to CRAN (a resubmission would impose a ban); hold stays in force. No upload happened: both `devtools::submit_cran()` attempts aborted at the first confirm prompt, and the interactive R tab was closed idle. CRAN still serves 1.6.1.** Do not start the submit flow again without an explicit, fresh instruction.
+- Clean-up done 2026-10-12: 7 merged feature worktrees and 8 local branches removed (each verified: tip == merged PR head, merge commit in dev, clean tree); stale remote-tracking refs pruned. Remaining worktrees: `release-1.7.1` (live) and the unrelated detached `~/.worktree/RMediation/eloquent-pasteur-bbc3e7` (left untouched).
+- Next: fill r-hub + win-builder results into `cran-comments.md` on `release/1.7.1`; then wait for explicit go-ahead before any submission or dev->main. medfit 0.8.0 CRAN timing unknown (route ships in a later minor; Suggests >= 0.8.0 then).
+- Holds unchanged: no CRAN submission or dev->main without explicit go-ahead.
+
+## Session close 2026-10-12 (coverage campaign)
+- Completed: PRs #41-45 are integrated on dev; latest PR #45 is merged as `60be189`. Formula CI MCError scaling and H0/all dispatch are corrected, with numerical oracles and mutation evidence recorded in tasks/plan.md and NEWS.md.
+- Verification: inspected saved full-suite log (652 passed / 0 failed / 2 existing warnings / 1 intentional skip), strict-check log (0 errors / 0 warnings / 1 NOTE; vignettes/manual excluded), and saved line coverage 75.40805%. These checks were not rerun at close. PR #45 merge and live remote dev `0b20a1d` verified; prior review observed all ten green checks.
+- Current work / next: task 3 covariance mapping/validation, confidence-level and MC-size guards, and optional extraction errors. Overall 95% coverage remains open; later product-distribution and graphics tasks remain pending.
+- Blockers / holds: no observed blocker to the next coverage slice. CRAN submission, dev-to-main and integrator holds remain active; full release validation and representative plot inspection remain unverified.
+- Git: handoff committed on dev as `7f0b591` (`docs: save coverage campaign handoff`). User authorized the status follow-up and regular push to origin/dev; remote synchronization is verified after push. Retained feature worktrees are preserved; no main integration or release is authorized.
+
+## Session 2026-10-12 (CI numerical contracts)
+- Feature `feature/ci-edge-cases`: hand-gradient and exact MC moment oracles, exact-zero/tiny-gradient tests, rank-deficient PSD linear quantity, explicit H0 matrix/vector null dispatch. Fixed two demonstrated defects: formula CI MCError now SE/sqrt(n.mc), and type=all preserves H0/mu0/Sigma0 in its MC component.
+- Full suite 652 passed / 0 failed / 2 existing warnings / 1 intentional skip. Covariance-drop and gradient-cutoff mutants rejected (5 and 1 failures). Fresh line coverage 75.40805%; expression 76.93498%. ci.R 82.4%, confintMC.R 44.21053%; graphics coverage remains open.
+- New tests lint clean; spelling passed. Strict dependency/incoming check 0 errors / 0 warnings / 1 NOTE (old Date/prebuilt vignette index), vignettes/manual excluded. PR #45 reviewed and squash-merged into dev as `60be189919a5dd1966982e6a2ec504a848147d12` (reviewed head `a1ccce4`); all ten checks passed, with no blocking review findings. Task 3 remains open for mapping, covariance/control validation and extraction errors. 95% target, release/dev-to-main and integrator holds unchanged.
+
+## Session 2026-10-12 (pair guard reviewed and merged; Checkpoint A)
+- PR #44 reviewed and squash-merged into dev as `26e86032bb688eaade66e30084c62e2e8363d79e`; reviewed head `4b03b00`. All ten PR checks passed, including installed OpenMx namespace orders on macOS, Windows and Linux. No blocking review findings; pair assertions reconfirmed 35 passed / 0 failed.
+- Task 2 and Checkpoint A complete: full suite 634 passed / 0 failed / 2 existing warnings / 1 intentional skip; zero-df mutant rejected. Fresh line coverage 75.02726%; expression 76.70279%. The 95% target remains open.
+- Next: task 3 CI numerical/validation/covariance mapping edge cases. Release, dev-to-main and integrator holds remain unchanged.
+
+## Session 2026-10-12 (observed OpenMx pair guard)
+- Feature `feature/mbco-pair-guards`: equal/reversed real fitted pairs exposed df 0/-1 and invalid inference. Shared observed-comparison gate now requires positive df and finite nonnegative statistic before bootstrap; necessary checks do not establish nesting.
+- Full suite 634 passed / 0 failed / 2 existing warnings / 1 intentional version skip. Line coverage 75.02726%, expression 76.70279%. Zero-df guard mutant rejected; restored pair tests passed 35 assertions. Both installed OpenMx orders and eight controlled medfit load-order gates passed; release-R CI now includes the OpenMx gate.
+- New-file lint and spelling clean. Strict dependency/incoming check 0 errors / 0 warnings / 1 NOTE (old Date/prebuilt vignette index), vignettes/manual excluded. Task 2 implemented; Checkpoint A PR review/CI pending. Next CI numerical/covariance cases. 95% target and release/integrator holds unchanged.
+
+## Session 2026-10-12 (bootstrap worker PR reviewed and merged)
+- PR #43 squash-merged into dev as `466e9dd80b2046abf7151b5634ce59b70dd76a88`; reviewed head `0089c9a`. All ten PR checks passed, including four R-CMD-check platforms, four optional-medfit compatibility jobs, coverage and Codecov.
+- Local review found no blocking issues. Inverting the convergence acceptance guard caused 1 failed assertion and 2 test errors; restored source passed all 36 worker-contract assertions. Prior full suite: 599 passed, 0 failed, 2 existing warnings, 1 intentional version skip.
+- Next: null-equals-full/reversed OpenMx pairs and installed load orders, then Checkpoint A and CI numerical/covariance edge cases. Coverage 74.82133%; 95% remains pending. CRAN, dev-to-main and integrator holds remain unchanged.
+
+## Session 2026-10-12 (bootstrap worker contracts)
+- Feature `feature/mbco-worker-contracts`: restore OpenMx global options on success/error, reject failed semiparametric refits and nonfinite statistics, explicit covariance errors and parametric result validity checks. Real degenerate-resample refit failure and both seeded bootstrap routes are exercised.
+- Full suite: 599 passed / 0 failed / 2 existing OpenMx warnings / 1 intentional version skip. Fresh line coverage 74.82133%, expression 76.53936%; 95% still pending. New test file lint clean; runtime legacy lint remains.
+- Strict dependency `--as-cran --run-donttest` check with incoming remote checks: 0 errors / 0 warnings / 1 NOTE (old Date and no prebuilt vignette index). Vignettes/manual excluded; this is not full release validation. Spelling allowlist adds nonfinite; no new URLs.
+- Narrow diff reviewed locally; PR/CI and merge pending. Task 2 still needs null-equals-full/reversed OpenMx pairs and installed load orders. Release/integrator holds unchanged.
+
+## Session 2026-10-12 (coverage slice reviewed and merged)
+- PR #42 merged into dev as `610676de40ad435088908ca18c127432edaa0103`; reviewed head `ef7e31f`. All ten PR checks passed, including Codecov and inventory upload.
+- Review fixed a false-positive validation-test risk: an unfitted model could error after validation removal. Tests now mock a successful worker and assert no fitting occurs for invalid inputs.
+- Final local suite: 563 passed / 0 failed / 2 existing OpenMx warnings / 1 intentional version skip; focused routing tests 52 passed, lint clean.
+- Next: actual bootstrap failure, singular-resampling and RNG/global-option contracts from task 2. Overall 95% target and release holds remain.
+
+## Session 2026-10-12 (coverage inventory and public MBCO tests)
+- Feature `feature/coverage-mbco`: reproducible report and CI inventory upload; public dispatch/controls, optimizer fallback, result mapping and real fitted-RAM bootstrap smoke tests. Runtime and dependency code unchanged.
+- Line coverage 73.00613% -> 74.45622%; OpenMx dispatcher 48% -> 100%. Wrong-df and optimizer-fallback mutants are rejected. No exclusions added; 95% remains the overall target.
+- Task 1 implemented; task 2 remains open for actual nonconvergence/singular-resampling and RNG/global-option policy. Next gate: feature PR review/CI, followed by that remaining worker-contract slice. Release holds remain.
+
+## Session 2026-10-12 (coverage and edge-case plan)
+- Plan and checklist: `tasks/plan.md`, `tasks/todo.md`; measured baseline in `tasks/coverage-baseline.csv`. Planning files are Rbuildignored.
+- Fresh line coverage on dev `4bda219`: 73.00613%, 1,793 instrumented lines, 484 uncovered, with scratch medfit 0.8.0 and OpenMx. Target raised by the user to >=95% overall and >=95% changed numerical/dispatch modules; at unchanged denominator, 395 additional covered lines are needed (at most 89 uncovered).
+- Priority: MBCO public dispatch/failures, CI numerical/validation cases, distribution boundaries, then graphics and reachable legacy contracts. Independent oracles and planted defects are required; no coverage exclusions or release-hold changes.
+- Next: implement the coverage inventory and bounded MBCO edge-case slice through a feature PR. No implementation performed in this planning step.
+
+## Session 2026-10-12 (SEMFit PR reviewed and merged)
+- PR #41 merged into dev as `d29685fe8840ac4d28877a1c1519b9e4a966227e`; reviewed head `2eca828`. No actionable review findings.
+- All ten PR checks passed: four platform checks, four optional-version gates, coverage and Codecov patch. The first Codecov run measured zero patch coverage because CRAN medfit skipped SEMFit tests; coverage now pins tagged medfit 0.8.0. Local overall coverage: 73.01%.
+- Dev checkout fast-forwarded to the merge. CRAN, dev-to-main and default-integrator holds remain unchanged.
+- Next: reconcile ecosystem planning with the completed RMediation adapter; release requires separate authorization.
+
+## Session 2026-10-12 (authorized additive SEMFit-pair implementation)
+- Status/plan PR #40 merged into dev as `d755a44`; subsequent "Do next" authorized
+  the reviewed implementation. Feature branch: `feature/semfit-mbco`.
+- Added optional `(SEMFit, SEMFit)` asymptotic `mbco()` through `stats::anova()`;
+  actual df difference, no refit or OpenMx requirement. Reversed/mixed pairs,
+  bootstrap types, unused fitting controls and invalid boundary p-values error.
+  Existing OpenMx code, DESCRIPTION dependencies and package version are unchanged.
+- Full suite with scratch medfit 0.8.0: 511 passed / 0 failed / 2 existing OpenMx
+  warnings / 1 intentional old-version skip. New adapter/mutation tests: 61 passed.
+  Eight installed-package gates passed: absent, 0.3.2, 0.7.0, 0.8.0 medfit,
+  both namespace load orders, no OpenMx. Global medfit remains 0.7.0.
+- Strict full check: 0 errors / 0 warnings / 1 NOTE (unchanged August Date).
+  Dependency-only/Suggests-only check with vignette rebuild fails because it
+  excludes existing rmarkdown Suggests. Its code/examples flavor passes with
+  vignettes disabled (0 errors / 0 warnings / 1 NOTE: omitted index + old Date);
+  the full check rebuilt vignettes. This limitation is retained, not called green.
+- New-file lint 0 findings; 20 URLs passed; spelling terms reviewed. Updated
+  mbco help executed and visually inspected: statistic 0.0831, df 1, p 0.7731.
+- Added explicit absent/CRAN/0.7.0/0.8.0 CI compatibility gates without OpenMx.
+  Implementation detail and evidence: `planning/PLAN-semfit-mbco-2026-10-12.md`.
+- Next: feature PR review and CI, then authorized dev integration only. CRAN,
+  dev-to-main and default-integrator holds remain unchanged. The historical
+  authorization statements below describe the earlier documentation-only step.
+
+## Session 2026-10-12 (medfit prerequisites cleared; additive plan reviewed)
+- medfit 0.8.0 is released on GitHub/r-universe at tag `v0.8.0`, SHA
+  `37171ecb8234ef224bce7e18bbc21a412b79bfef`. Its `anova()` and W3
+  zero-product branch splitting clear the development prerequisite block.
+- The RMediation task acknowledged the handoff. This session is authorized for
+  status reconciliation and plan review only; implementation is not started.
+  Reviewed plan: `planning/PLAN-semfit-mbco-2026-10-12.md`.
+- Source/API probe using local medfit 0.8.0: on `memory_exp`, product-null
+  `a1*b1 == 0` selects `b1 == 0`; `anova(full, null)` gives statistic
+  0.08309957, df difference 1, p-value 0.7731. The installed medfit remains
+  0.7.0 and rejects nonlinear constraints; verification used `pkgload::load_all()`
+  without installing over it.
+- Plan corrections: use two fitted SEMFits and `stats::anova()`, not the
+  superseded single-fit `mbco_sem()` route; preserve optional medfit registration;
+  handle boundary warnings explicitly; retain the existing OpenMx paths.
+- All release holds remain: RMediation 1.7.0 is a GitHub prerelease, main/CRAN
+  remain 1.6.1, and the maintainer's CRAN hold/default-integrator decision stays.
+  CRAN medfit 0.3.2 cannot supply the new route. No dependency/version changes,
+  submission, or dev-to-main merge are authorized by this documentation update.
+- Documentation verification: full suite 450 passed, 0 failed, 0 skipped,
+  2 OpenMx modified-model warnings in the existing factor/character rejection
+  test (`test-mbco-parametric-semi.R`); diff check clean. No runtime edits.
+- Next: review the corrected plan's proposed API policy, then authorize the
+  bounded implementation separately. Historical blocked statements below refer
+  to the state on 2026-10-11 and are superseded by this entry.
+
+## Session 2026-10-11 (PR #36 merged: mbco() RAM-model fix + OpenMx oracle)
+- **medfit route is BLOCKED, not started.** A `mbco()` method on a pair of medfit
+  `SEMFit`s needs medfit's `anova()` for `SEMFit` and its nonlinear-constraint
+  branch split (W3) merged in medfit dev first (medfit grill G10). Handoff:
+  `medfit/planning/specs/HANDOFF-rmediation-mbco-on-mbco_sem-2026-10-11.md`
+  (read-only from here). Nothing added to DESCRIPTION; the OpenMx path is
+  unchanged apart from the class check below.
+- **Unblocked part done:** known-answer fixture on `memory_exp`
+  (`tests/testthat/helper-memory-exp-ram.R`, `test-mbco-memory-exp-oracle.R`):
+  `mxCompare` diffLL 221.045546 (`a1 == 0`), 0.083100 (`b1 == 0`), minimum
+  0.083100, df 1, tol 1e-6. Control: the `?mbco` example as written gives
+  0.060332 (shifted labels). medfit compares its own result against these.
+- **Bug found and fixed (PR #36, squash `771577a`):** `mbco()` rejected every
+  fitted OpenMx RAM model ("h0 must be an MxModel") because the check compared
+  `class(h0)` to `"MxModel"`; it now uses `methods::is()`. The `?mbco` example
+  had shifted labels (`endVar` began with `"x"`) and passed a tibble to
+  `mxData()`; both fixed, and it now tests `a*b = 0` as the smaller of two
+  linear nulls. Verified for `type = "asymp"` only; `"parametric"` and `"semi"`
+  have not been run on fitted RAM models. Suite: 452 expectations, 0 failed.
+- **#35 stays open:** a single nonlinear null can converge to the wrong branch
+  (`a1 = 0`, 221.05 vs the correct 0.0831). Documented in `?mbco` Details; the
+  real fix is the medfit route above.
+- **CI:** RMediation PR runs are 1-3 min and have no `skip_on_cran()` calls, so
+  the NOT_CRAN tiering used in medrobust (#57 merged, #58 open) is not needed here.
+- **Not applied:** `devtools::document()` with roxygen 8.1.0 reformats NAMESPACE
+  and bumps DESCRIPTION's roxygen version; kept out of #36 as a separate cleanup.
+
+## Session 2026-08-22 (PR #30 merged: coverage gap + mbco CI fix)
+- Used rforge impact analysis to scope test-coverage work by real ecosystem
+  usage: only `missingmed` depends on RMediation (via `mbco()` and `tidy()`
+  directly), so zero-coverage files were prioritized by that, not by file size.
+- Added 8 new test files (mbco_parametric/.mbco_semi, tidy() dispatch, pMC/qMC,
+  utils_validation, utils_stats). Coverage: 55.45% -> 71.70%. Tests: 345 -> 424,
+  0 fail.
+- PR #30 CI went red (5/5 checks) on `mbco_parametric`'s bootstrap test:
+  `Error: Cannot bootstrap null model 'H0'` on macOS/Windows/ubuntu-release +
+  the coverage job. Root cause (found by reading further up the CI log than
+  the try-error's generic message surfaces): `mxCompare(..., boot = TRUE)`
+  calls `OpenMx::mxGenerateData()`, which needs `mvtnorm` — an OpenMx
+  `Suggests`, not a hard dependency, so CI's dependency installer (which
+  resolves RMediation's own DESCRIPTION) never pulled it in. It worked
+  locally only because `mvtnorm` was already present as a transitive
+  dependency of something else installed. Fix: added `mvtnorm` to
+  RMediation's own `Suggests` + `skip_if_not_installed("mvtnorm")` on the
+  affected test.
+  - A first fix attempt (pin `OpenMx` to 1 thread, grow fixture `n` to 500)
+    was wrong on both counts: it didn't touch the actual bug, and its
+    unguarded top-level `OpenMx::mxOption()` call broke `ubuntu-latest
+    (devel)` (which doesn't have OpenMx installed) — a regression on a
+    previously-passing platform. Reverted.
+  - Separately (a genuine improvement, kept even though it wasn't the actual
+    CI cause): `H0`/`H1` are now built from scratch instead of one being
+    derived by mutating the other's already-run `MxModel` object, which
+    removes OpenMx's "modified since it was run" warning.
+- All 6 checks green (5 R-CMD-check platforms + test-coverage + codecov),
+  424/424 tests, `R CMD check --as-cran` 0/0/0 in the worktree. Squash-merged
+  to `dev` (commit 9874187). Worktree + feature branch cleaned up.
+- Re-verified on `dev` post-merge: `R CMD check --as-cran` 0 errors/0 warnings
+  (1 local-only NOTE — HTML Tidy version, not CRAN-relevant), 424/424 tests,
+  coverage 71.70% confirmed via `covr::package_coverage()`.
+- No `R/` source files changed — test-only + one new `Suggests` entry. CRAN
+  hold from 2026-08-17 is untouched by this session; nothing here requires or
+  justifies lifting it.
+
+## Session 2026-08-22 (cross-repo cross-check: manuscript's own hcubature/gauss investigation)
+- The companion "product of three" manuscript (same author, private repo) has its own reference
+  implementation of this same integrator and ran a far more rigorous investigation of the
+  hcubature failure mode than `SPEC-27-prod3-integrator.md` did — Wolfram-arbitrated, 1000
+  random correlation matrices, Fisher-exact condition-number association test, blast-radius
+  audit — predating SPEC-27 (2026-08-01/02 vs SPEC-27's 2026-08-16) and not consulted while
+  writing it. A session working from the manuscript side drafted, then superseded, a plan to
+  flip the manuscript's own default to match RMediation before checking this.
+- Cross-referenced into `SPEC-27-prod3-integrator.md` (§"Cross-check against the companion
+  manuscript"): two refinements, neither overturning the v1.7.0 design decision itself. (1) κ is
+  associated with the defect but not a magnitude predictor across matrices generally — this
+  spec's own single-ρ-family table (strictly increasing error, κ=4→24139) doesn't generalize;
+  the manuscript's sweep found a confirmed-defective matrix at κ=9106 with *smaller* error
+  (6.28e-5) than this spec's κ=2411 row (0.196). (2) **`gauss` is not universally safe even on
+  well-conditioned input** — a fixed-node GL rule was itself wrong (1.24e-5) at a well-conditioned
+  point (κ=4.9) where `hcubature` was accurate. **Issue #31 — RESOLVED 2026-08-22 14:57 MDT,
+  closed:** the shipped escalation gate catches that exact draw (256↔512 gap 9.1e-6 > tol →
+  continues to 1024 → 3.9e-8 from hcubature at 1e-10), and over all 120 manuscript Stage-C draws
+  the default's max error is 3.9e-8 (0 draws > 1e-6) vs 8.8e-6 (1 draw) for fixed GL-256; 0 cap
+  warnings. Bears on the CRAN hold: the `method="gauss"` default's safety margin held on the
+  manuscript's own sample. Side fix `1240c8e`: the node-cap warning no longer asserts
+  ill-conditioning (a κ=4.9 matrix hits the cap at tol=1e-8 simply because 2048 nodes cannot
+  deliver it) and now reports the last-two-rules gap instead. Details in SPEC-27 and the issue.
+- **Downstream dependency on the CRAN hold (author decision D0a, 2026-08-22 14:01 MDT):** the
+  manuscript's cross-reference sentence (approved wording in the manuscript repo's
+  `docs/specs/SPEC-rmediation-default-crossref-2026-08-22.md`, destined for its §5.4) is
+  **deliberately not inserted** until this package's `method="gauss"` default is either shipped to
+  CRAN or reverted. Whichever way the hold resolves, tell the manuscript side: ship → paste the
+  approved text; revert → close that spec with no insertion.
+- **D3a applied — `NEWS.md` 1.7.0 entry gained one bullet** stating the measurement conditions
+  behind the "24% / 92%" figures (q = 0.5, μ = (0.2, 0.1, 0), unit variances, ρ_XZ = ρ_YZ = 0.5,
+  ρ_XY ∈ {0.5, 0.99, 0.999, 0.9999}, reference = GL-1024 agreeing with GL-512 to ≤3e-7 and within
+  3 SE of 1e7-draw MC) and that the error is not monotone in the condition number across
+  arbitrary matrices. ⚠️ The first draft of this bullet said "μ = 0, Z independent" — wrong; SPEC-27
+  never states its Σ/μ, so it was re-derived by reproducing SPEC-27's own table values
+  (gauss 0.806715023 vs 0.80671500; hcubature 0.610967066 vs 0.6109671) from the regression
+  test's `mk()`/`mu` in `tests/testthat/test-product-normal3.R:50-51`. Purpose: a referee
+  reading the package changelog beside the manuscript's 9.2e-4 (q = 0, 1000 random matrices,
+  exact anchor) can reconcile the two without either document importing the other's evidence.
+  Docs-only; the tag `v1.7.0` predates this bullet, so the GitHub pre-release notes do not carry
+  it — the CRAN tarball built from `dev` will.
+- Code change this session (later, 14:51 MDT): `1240c8e` reworded the node-cap warning in
+  `R/prod3_core.R` (string only, no numeric path touched; see the #31 bullet above). CI green on
+  `1240c8e` and `4e5a8e7` (R-CMD-check + test-coverage); `cran-comments.md` post-dispatch addendum
+  extended to list it. The CRAN hold itself is untouched. Manuscript-side detail: `docs/REPORT-phase1-prevalence-2026-08-02.md`,
+  `docs/REPORT-phase4-blast-radius-2026-08-02.md` Stage D (manuscript repo, private).
+
+## Session 2026-08-21 (win-builder results reconciled)
+- All three win-builder results had in fact arrived on 2026-08-17; `.STATUS` and
+  `cran-comments.md` had both gone stale claiming R-release/R-oldrelease were
+  still pending. Confirmed via Gmail: R-devel r90413 OK, R-release 4.6.1 OK,
+  R-oldrelease 4.5.3 OK. Logs were still live past the advertised ~72h.
+- Two mid-day 2026-08-17 runs returned `1 NOTE`: the URL check hit HTTP 503 on
+  https://github.com/data-wise/rmediation/issues — a transient GitHub outage,
+  not a package defect. Later runs on both R versions cleared it. Recorded in
+  cran-comments.md in case CRAN's incoming check hits the same transient.
+- No code changed. CRAN hold still in force; `main` still 1.6.1.
+
+## Session 2026-08-16 (issue #27 prod3 integrator + #26 Shiny links, v1.7.0)
+- Issue #26 (docs, on `dev`, commit a5b0178): README "Try It Online" section +
+  pkgdown `home:` link to https://data-wise.github.io/mediation-apps/ (both 200).
+- Issue #27 (code, `feature/prod3-illconditioned`, PR #28): reproduced the bug
+  against installed 1.6.1 (24.29% error at rho=0.999, matching the report to 4dp),
+  then validated the proposed remedy before implementing it — which changed it:
+  - Axis partitioning ALONE is insufficient (1.96e-01 -> 5.87e-02, still 7.3% off).
+    Gauss-Legendre is the fix; partitioning is its prerequisite. Unpartitioned
+    Gauss returns 2.11 — not a probability.
+  - Bug is wider than reported: every q, worst 92% relative at q=-2. confint()/
+    ci()/dist_quantile() inherit it because they invert this CDF.
+  - References pinned to GL self-consistency (1e-14 across n=512/1024/2048), not
+    Monte Carlo — MC at 1e7 has 3SE=3.7e-04, too noisy, and two seeds disagreed
+    by more than the errors being measured.
+  - Truncation bound derived from a tail-mass argument, not tuned: at bound=4
+    successive rules agree to 1.7e-14 while being 3.2e-05 wrong — the same
+    failure signature as the bug being fixed.
+  - Second silent legacy failure found: hcubature returns exactly 0 at
+    standardized means beyond ~8 (true value ~0.46). Unrelated to conditioning.
+- Root cause of why it shipped: test-product-normal3.R:91 was named "handles
+  near-singular covariance", ran rho=0.99, and asserted only expect_no_error()
+  plus 0<=p<=1. That case was already wrong by 1.8e-03.
+- Also closed issue #17 (machine `status:` header — already present).
+- Released v1.7.0 on GitHub (tag on `dev`, pre-release) so the fix ships ahead of
+  the CRAN cadence window; `main` deliberately left at 1.6.1 = the CRAN version.
+- Two `/code-review` rounds after the fix landed:
+  - Round 1 flagged the signed-cell partition at `|m| > bound` as broken. Verified
+    against Monte Carlo instead of accepted: it is correct by construction (the
+    cells telescope to the intended box), and the suggested clamp would have
+    introduced a real bug. Comment + regression test added so it is not
+    "fixed" later. Verifying it turned up the large-mean hcubature collapse.
+  - Round 2 (PR #29) found a genuine defect of mine: `@param diagnostics`
+    promised `"error"` is NA for hcubature while the code always passed that
+    integrator's own estimate through. Resolved by keeping the value and
+    documenting it as untrustworthy + not comparable across methods.
+  - Also fixed 8 British spellings (6 mine) and scoped the nodes/NA claim.
+- `R CMD check --as-cran` on dev initially raised 2 NOTEs the worktree never saw
+  (SPEC-*.md at top level, `.token-optimizer` dir). Both .Rbuildignore'd in
+  982cecf — would have hit at CRAN submission.
+- Docs: SPEC-26, SPEC-27 (design + evidence), SPEC-28 (review triage) on dev.
+
 
 ## Session 2026-06-30 (goodpractice + naming cleanup, v1.6.1, on dev)
 - Part 1 (goodpractice advisories): added @examples to all exported functions/
@@ -67,7 +388,7 @@ next: Re-run win-builder + r-hub for 1.6.1 (results in cran-comments.md are stal
   - Dev cycle: 307 pass / 0 warn / 0 fail; R CMD check --as-cran 0E/0W/0N
 
 ## Active worktrees
-(none)
+(none — both 2026-08-16 worktrees removed after PRs #28 and #29 merged)
 
 ## Recent (2026-06-29 — prod3 hardening, issue #20, commit f7226f1)
 - Two independent reviews (algorithm-correctness + rforge) confirmed the core is
@@ -170,3 +491,6 @@ Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
 - mediationverse PR #5 (dev → main, medfit CRAN badge): merged ✓
 - pkgdown rebuilt on both RMediation and mediationverse — sites live ✓
 - All worktrees and stale local branches removed ✓
+
+Validation: full suite 562 passed / 0 failed / 2 existing OpenMx warnings / 1 intentional version skip; changed-file lint and spelling passed.
+- 2026-10-30: `mbco(type = "parametric")` replicate loop is package-controlled (`.mbco_replicate_statistic()` in `R/mbco-compare.R`, shared with `.mbco_semi()`): convergence check, `.mbco_refit_h0()`, `RMediation_bootstrap_infeasible` for an unrepaired replicate; `mxCompare(boot = TRUE)` no longer used. Closes the gap noted for PR #89 / Codex review of #84. Tests: `tests/testthat/test-mbco-parametric-replicates.R` (mutation-checked). Release and CRAN stay in #88.
