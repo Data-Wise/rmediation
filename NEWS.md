@@ -159,7 +159,8 @@
   for both bootstrap types (see the `type = "parametric"` entry under Bug fixes).
 - `?mbco` now states the bootstrap p-value rule for both bootstrap types: the proportion of
   replicate statistics strictly above the observed one, with no `(1 + k)/(R + 1)` correction
-  (unchanged from earlier versions, and the same as OpenMx's `mxCompare(boot = TRUE)`).
+  (the same strict `>` rule as OpenMx's `mxCompare(boot = TRUE)`; the denominator is all R
+  because a failed replicate now stops the call instead of being dropped).
 - OpenMx `mbco()` now warns (class `RMediation_constraint_branch`) when a
   feasible, converged `h0` is not the constrained optimum of an equality
   constraint: fixing one of the parameters the constraint depends on at 0 gives a
