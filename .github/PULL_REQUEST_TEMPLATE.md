@@ -12,7 +12,8 @@
      the known-answer and planted-defect items must name a tests/testthat/ file that is in this PR's diff;
      `n/a: <reason>` needs a reason of at least 8 characters. Delete this block when no risk file changed.
      For a change with no logic effect (for example a rename), replace it with one line:
-     Risk-tier: exempt: <reason> -->
+     Risk-tier: exempt: <reason>
+     A release PR (dev into main, or release/*) skips the checklist but needs one body line: Ships: #101, #102 -->
 
 - [ ] Independent oracle:
 - [ ] Known answer: tests/testthat/<file>.R
