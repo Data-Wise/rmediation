@@ -286,6 +286,12 @@ The default screen keeps only admissible (positive-definite) grid points; use
 | `ProductNormal()` | S7 class for two-variable product distributions |
 | `ProductNormal3()` | S7 class for three-variable sequential indirect effects |
 
+## Learn More
+
+- [Quick Reference](https://data-wise.github.io/rmediation/articles/refcard.html): which function answers which question, and the classed conditions it can signal.
+- [Cookbook](https://data-wise.github.io/rmediation/articles/cookbook.html): short recipes that run as written.
+- [Technical Notes](https://data-wise.github.io/rmediation/articles/technical-notes.html): why the integrator, the exact CDF, point masses, the densities and the MBCO checks behave as they do.
+
 ## Part of the Mediationverse
 
 **RMediation** is part of the [**mediationverse**](https://data-wise.github.io/mediationverse/)—a suite of R packages for comprehensive mediation analysis:
