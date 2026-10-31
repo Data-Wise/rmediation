@@ -49,15 +49,20 @@ sampling. These checks do not establish substantive model nesting.
 OpenMx bootstrap methods restore global options on success and error.
 Set a seed before calling for reproducibility; bootstrap sampling consumes the
 current RNG stream. The semiparametric method requires positive-definite sample
-and null covariances and stops at the first failed refit or nonfinite replicate
-statistic. It does not retry or discard failed replicates. The parametric method
+and null covariances. The parametric method
 simulates each replicate from the fitted \code{h0} with \code{\link[OpenMx:mxGenerateData]{OpenMx::mxGenerateData()}} (the
 \code{mvtnorm} package is required) and fits \code{h0} and \code{h1} to it in a loop the package
-runs itself, under the same stopping rules as the semiparametric method; it needs a
-model with a single raw data set. For both bootstrap types the p-value is the
-proportion of the R replicate statistics strictly above the observed one,
-\code{mean(null > observed)}, with no \code{(1 + k)/(R + 1)} correction, so it can be exactly 0
-when no replicate exceeds the observed statistic.
+runs itself, under the same rules as the semiparametric method; it needs a
+model with a single raw data set. For both bootstrap types a replicate whose
+fits did not converge is left out of the null distribution, and the \code{dropped} slot
+of the result counts them. If more than 5\% of the \code{R} replicates are dropped, the
+call stops with an error of class \code{RMediation_bootstrap_too_many_dropped} (with
+fewer than 20 replicates no replicate may be dropped). Nothing else is dropped: a
+replicate with an unrepairable constraint violation (class
+\code{RMediation_bootstrap_infeasible}), a non-finite statistic, or an h1 fit worse than
+its h0 fit stops the call. The p-value is the proportion of the kept replicates,
+\code{R - dropped} of them, whose statistic is strictly above the observed one, \code{mean(null > observed)} over the kept replicates. There is no \code{(1 + k)/(R + 1)} correction, so it can
+be exactly 0 when no kept replicate exceeds the observed statistic.
 
 \strong{Testing an OpenMx product null (\eqn{a b = 0}).} The null \eqn{ab = 0} holds when
 \eqn{a = 0} or \eqn{b = 0}. A single nonlinear constraint such as

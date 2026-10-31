@@ -53,9 +53,14 @@ test_that("failed semiparametric refits do not become bootstrap p-values", {
     model@output$status$code <- 6L
     model
   }, .package = "OpenMx")
+  # Every replicate fails, so more than 5% are dropped and the call stops (issue #92).
   expect_error(
     .mbco_semi(f$null_b1, f$full, R = 2L, optim = "SLSQP"),
-    "replicate 1.*did not converge"
+    class = "RMediation_bootstrap_too_many_dropped"
+  )
+  expect_error(
+    .mbco_semi(f$null_b1, f$full, R = 2L, optim = "SLSQP"),
+    "2 of 2 bootstrap replicates did not converge"
   )
   expect_identical(getOption("mxOptions"), saved)
 })
@@ -159,7 +164,7 @@ test_that("an actual degenerate resample aborts and restores options", {
   })
   expect_error(
     .mbco_semi(f$null_b1, f$full, R = 1L, optim = "SLSQP"),
-    "Bootstrap replicate 1 did not converge"
+    "1 of 1 bootstrap replicates did not converge"
   )
   expect_identical(getOption("mxOptions"), saved)
 })

@@ -97,6 +97,7 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
     df = as.numeric(res_list$df),
     p_value = as.numeric(res_list$p),
     type = type,
-    refit = refit$refit
+    refit = refit$refit,
+    dropped = res_list$dropped
   )
 }

@@ -57,7 +57,7 @@ test_that("mbco_parametric returns a valid chi-square test structure", {
   )
 
   expect_type(res, "list")
-  expect_named(res, c("chisq", "df", "p"))
+  expect_named(res, c("chisq", "df", "p", "dropped"))
   expect_gte(res$chisq, 0)
   expect_equal(res$df, 1)
   expect_gte(res$p, 0)
@@ -76,7 +76,7 @@ test_that(".mbco_semi returns a valid chi-square test structure", {
   )
 
   expect_type(res, "list")
-  expect_named(res, c("chisq", "df", "p"))
+  expect_named(res, c("chisq", "df", "p", "dropped"))
   expect_gte(res$chisq, 0)
   expect_equal(res$df, 1)
   expect_gte(res$p, 0)
