@@ -283,8 +283,10 @@ S7::S4_register(MLOmittedConfounder)
 #' simulates each replicate from the fitted `h0` with [OpenMx::mxGenerateData()] (the
 #' `mvtnorm` package is required) and fits `h0` and `h1` to it in a loop the package
 #' runs itself, under the same stopping rules as the semiparametric method; it needs a
-#' model with a single raw data set. The p-value is the proportion of replicate
-#' statistics that exceed the observed one.
+#' model with a single raw data set. For both bootstrap types the p-value is the
+#' proportion of the R replicate statistics strictly above the observed one,
+#' `mean(null > observed)`, with no `(1 + k)/(R + 1)` correction, so it can be exactly 0
+#' when no replicate exceeds the observed statistic.
 #'
 #' **Testing an OpenMx product null (\eqn{a b = 0}).** The null \eqn{ab = 0} holds when
 #' \eqn{a = 0} or \eqn{b = 0}. A single nonlinear constraint such as
@@ -335,7 +337,7 @@ S7::S4_register(MLOmittedConfounder)
 #'
 #' **When h0 came back identical to h1.** A refit whose `statistic_before` is about 0
 #' (|statistic| < 1e-6, h0 and h1 have the same -2LL although a constraint of `h0` was violated)
-#' also raises a warning of class `RMediation_constraint_dropped`, right after
+#' also raises a warning of class `RMediation_constraint_not_enforced`, right after
 #' `RMediation_h0_refit`. It means the constraint may not have been enforced. Two
 #' causes give this symptom. OpenMx (2.19.1 and later) silently drops an equality constraint
 #' whose Jacobian row is zero at the starting values, so `b1 * b2 == 0` started at

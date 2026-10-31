@@ -2,7 +2,7 @@
 # constraint whose Jacobian row is zero at the starting values (OpenMx/OpenMx#433), so h0 comes
 # back as the unconstrained fit. A fitted h0 keeps no starting values, so mbco() cannot tell that
 # cause from a violation within the feasibility tolerance; it signals
-# RMediation_constraint_dropped when the refit ran and h0's fit was identical to h1's.
+# RMediation_constraint_not_enforced when the refit ran and h0's fit was identical to h1's.
 
 src <- readLines(test_path("test-mbco-constraint-guard.R"))
 eval(parse(text = src[3:39])) # .guard_med_model(), .guard_fits()
@@ -54,11 +54,11 @@ test_that("zero-start h0 (seed 20261103): class raised, statistic repaired to 0.
   f <- .cd_fits()
   .cd_skip_if_enforced(f)
   out <- .cd_collect(mbco(f$h0, f$h1))
-  expect_true("RMediation_constraint_dropped" %in% out$classes)
+  expect_true("RMediation_constraint_not_enforced" %in% out$classes)
   expect_true("RMediation_h0_refit" %in% out$classes)
   expect_lt(
     match("RMediation_h0_refit", out$classes),
-    match("RMediation_constraint_dropped", out$classes)
+    match("RMediation_constraint_not_enforced", out$classes)
   )
   # the repaired statistic is positive and equals the exact product-null statistic
   expect_gt(out$value@statistic, 0.01)
@@ -73,7 +73,7 @@ test_that("the warning is honest: 'may', both possible causes, the OpenMx issue,
   skip_if_not_installed("OpenMx")
   f <- .cd_fits()
   .cd_skip_if_enforced(f)
-  msg <- .cd_collect(mbco(f$h0, f$h1))$messages[["RMediation_constraint_dropped"]]
+  msg <- .cd_collect(mbco(f$h0, f$h1))$messages[["RMediation_constraint_not_enforced"]]
   expect_match(msg, "may not have been enforced", fixed = TRUE)
   expect_match(msg, "OpenMx/OpenMx#433", fixed = TRUE)
   expect_match(msg, "feasibility tolerance", fixed = TRUE)
@@ -87,7 +87,7 @@ test_that("competing history: a tolerance violation has the same symptom and cla
   f <- .guard_fits(1)
   out <- .cd_collect(mbco(f$h0, f$h1))
   expect_true("RMediation_h0_refit" %in% out$classes)
-  expect_true("RMediation_constraint_dropped" %in% out$classes)
+  expect_true("RMediation_constraint_not_enforced" %in% out$classes)
   expect_equal(out$value@statistic, 0.4745, tolerance = 1e-3)
 })
 
@@ -95,7 +95,7 @@ test_that("a clean h0 raises neither the refit nor the dropped warning", {
   skip_if_not_installed("OpenMx")
   f <- .guard_fits(1, tol = 1e-8)
   out <- .cd_collect(mbco(f$h0, f$h1))
-  expect_false("RMediation_constraint_dropped" %in% out$classes)
+  expect_false("RMediation_constraint_not_enforced" %in% out$classes)
   expect_length(out$classes, 0L)
 })
 
@@ -111,16 +111,16 @@ test_that("a refit with statistic_before > 0 (h0 differed from h1) does not rais
   )
   out <- .cd_collect(mbco(f$h0, f$h1))
   expect_true("RMediation_h0_refit" %in% out$classes)
-  expect_false("RMediation_constraint_dropped" %in% out$classes)
+  expect_false("RMediation_constraint_not_enforced" %in% out$classes)
 })
 
 test_that("a missing or non-finite statistic_before is ignored, never an error", {
   skip_if_not_installed("OpenMx")
   for (bad in list(NA_real_, NaN, NULL)) {
     refit <- list(model = NULL, refit = list(statistic_before = bad))
-    expect_no_warning(expect_null(RMediation:::.mbco_report_dropped(refit)))
+    expect_no_warning(expect_null(RMediation:::.mbco_report_not_enforced(refit)))
   }
-  expect_no_warning(RMediation:::.mbco_report_dropped(NULL))
+  expect_no_warning(RMediation:::.mbco_report_not_enforced(NULL))
 })
 
 test_that("the existing refit warning, result and slot are unchanged by the new check", {
@@ -139,9 +139,10 @@ test_that("planted defect: a no-op check is caught by the known-answer assertion
   f <- .cd_fits()
   .cd_skip_if_enforced(f)
   testthat::local_mocked_bindings(
-    .mbco_report_dropped = function(refit) invisible(NULL), # the defect: the check never signals
+    # the defect: the check never signals
+    .mbco_report_not_enforced = function(refit) invisible(NULL),
     .package = "RMediation"
   )
   out <- .cd_collect(mbco(f$h0, f$h1))
-  expect_failure(expect_true("RMediation_constraint_dropped" %in% out$classes))
+  expect_failure(expect_true("RMediation_constraint_not_enforced" %in% out$classes))
 })

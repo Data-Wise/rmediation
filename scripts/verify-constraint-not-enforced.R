@@ -4,7 +4,7 @@
 # Known answer: seed 20261103, dataset 1 of the script in OpenMx/OpenMx#433 (x -> m1 -> y, labels
 # b1 and b2, ind == 0, all starts 0). Exit status 1 when any check fails.
 #
-# Run from the package root:  Rscript scripts/verify-constraint-dropped.R
+# Run from the package root:  Rscript scripts/verify-constraint-not-enforced.R
 
 suppressMessages({
   library(OpenMx)
@@ -72,8 +72,8 @@ for (opt in optimizers) {
   pn <- mbco_product_null(f$h1, c("b1", "b2"))
   cat("mbco_product_null(h1, c('b1','b2')): statistic", format(round(pn@statistic, 4)),
       "| branch", pn@branch, "\n")
-  check("RMediation_constraint_dropped raised after RMediation_h0_refit",
-        identical(out$classes[1:2], c("RMediation_h0_refit", "RMediation_constraint_dropped")))
+  check("RMediation_constraint_not_enforced raised after RMediation_h0_refit",
+        identical(out$classes[1:2], c("RMediation_h0_refit", "RMediation_constraint_not_enforced")))
   check("repaired statistic equals mbco_product_null() within 1e-4",
         abs(out$value@statistic - pn@statistic) < 1e-4)
   check("repaired statistic is 0.0878 within 1e-3 (pinned, OpenMx 2.22.11)",
@@ -81,13 +81,13 @@ for (opt in optimizers) {
 
   planted <- testthat::with_mocked_bindings(
     collect(mbco(f$h0, f$h1)),
-    .mbco_report_dropped = function(refit) invisible(NULL),
+    .mbco_report_not_enforced = function(refit) invisible(NULL),
     .package = "RMediation"
   )
   cat("planted defect (check removed): warning classes:",
       paste(planted$classes, collapse = ", "), "\n")
   check("planted defect: the class is absent, so the known-answer check above would fail",
-        !"RMediation_constraint_dropped" %in% planted$classes)
+        !"RMediation_constraint_not_enforced" %in% planted$classes)
 }
 
 cat("\n", if (ok_all) "ALL CHECKS PASSED" else "SOME CHECKS FAILED", "\n", sep = "")

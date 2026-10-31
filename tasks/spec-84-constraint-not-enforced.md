@@ -1,4 +1,4 @@
-# Spec: `RMediation_constraint_dropped` warning (issue #84, R1-R3)
+# Spec: `RMediation_constraint_not_enforced` warning (issue #84, R1-R3)
 
 Gate note: the spec gate is satisfied by the user's decision on 2026-10-30 (option A, relayed by
 the session that started this work) after the Codex review in `tasks/codex-review-84.md`.
@@ -25,7 +25,7 @@ the cause. Add a classed warning so users and tests can recognize the symptom.
 
 - **Trigger:** `.mbco_refit_h0()` ran and succeeded (`refit$model` not `NULL`) and
   `abs(refit$refit$statistic_before) < 1e-6`.
-- **Signal:** warning of class `RMediation_constraint_dropped` (via `.mbco_signal()`), emitted
+- **Signal:** warning of class `RMediation_constraint_not_enforced` (via `.mbco_signal()`), emitted
   right after `RMediation_h0_refit`, from the user's h0 state (the refit record already holds it).
 - **Message (honest, neutral):** says the h0 fit is identical to h1's although a constraint was
   violated, so the constraint may not have been enforced; names OpenMx/OpenMx#433 (zero Jacobian
@@ -40,19 +40,19 @@ the cause. Add a classed warning so users and tests can recognize the symptom.
 ## Commands
 
 ```
-Test one file:  Rscript -e 'devtools::load_all(); testthat::test_file("tests/testthat/test-mbco-constraint-dropped.R")'
+Test one file:  Rscript -e 'devtools::load_all(); testthat::test_file("tests/testthat/test-mbco-constraint-not-enforced.R")'
 Full suite:     Rscript -e 'devtools::test()'
 Lint:           Rscript -e 'lintr::lint_package()'
 Document:       Rscript -e 'devtools::document()'
-Harness:        Rscript scripts/verify-constraint-dropped.R
+Harness:        Rscript scripts/verify-constraint-not-enforced.R
 ```
 
 ## Structure
 
-- `R/mbco-compare.R`: helper `.mbco_report_dropped(refit)` next to `.mbco_signal()`.
+- `R/mbco-compare.R`: helper `.mbco_report_not_enforced(refit)` next to `.mbco_signal()`.
 - `R/mbco.R`: one call after the refit warning.
 - `R/00_classes.R` (`?mbco` roxygen) and `man/mbco.Rd`; `NEWS.md`; `.STATUS`.
-- `tests/testthat/test-mbco-constraint-dropped.R`; `scripts/verify-constraint-dropped.R` (not in
+- `tests/testthat/test-mbco-constraint-not-enforced.R`; `scripts/verify-constraint-not-enforced.R` (not in
   the package build: `^scripts$` is in `.Rbuildignore`).
 
 ## Testing strategy

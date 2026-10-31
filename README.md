@@ -216,7 +216,7 @@ nonlinear constraint. A single constraint can land on the wrong branch, and Open
 can silently drop an equality constraint whose Jacobian is zero at the starting
 values ([OpenMx/OpenMx#433](https://github.com/OpenMx/OpenMx/issues/433)). When
 `mbco()` finds that `h0` came back identical to `h1` although its constraint was
-violated, it refits `h0` and warns with class `RMediation_constraint_dropped`;
+violated, it refits `h0` and warns with class `RMediation_constraint_not_enforced`;
 the warning cannot tell this cause from a violation within the feasibility
 tolerance.
 

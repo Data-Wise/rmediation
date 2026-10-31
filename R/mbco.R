@@ -52,7 +52,7 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
         format(refit$refit$tolerance), format(round(refit$refit$statistic_before, 4)),
         format(round(refit$refit$statistic_after, 4))
       ))
-      .mbco_report_dropped(refit)
+      .mbco_report_not_enforced(refit)
     }
   }
 
