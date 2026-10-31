@@ -11,7 +11,7 @@ confintAsymp <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "asymp", 
   q.a <- qnorm(alpha / 2, 0, 1)
   CI <- c(quantMean + q.a * quantSE, quantMean - q.a * quantSE)
   res <- list(CI, quantMean, quantSE)
-  names(res) <- c(paste((1 - alpha / 2) * 100, "% ", "CI", sep = ""), "Estimate", "SE")
+  names(res) <- c(paste((1 - alpha) * 100, "% ", "CI", sep = ""), "Estimate", "SE")
   attr(res, "quant") <- q1
   outer <- FALSE # outer position
   mcex <- .8

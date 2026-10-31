@@ -52,16 +52,16 @@ Traditional methods (e.g., Sobel test) assume the indirect effect *ab* follows a
 install.packages("RMediation")
 ```
 
-### From GitHub (release 1.8.1, pre-release)
+### From GitHub (release 1.9.0, pre-release)
 
-CRAN serves the stable 1.6.1. Release 1.8.1 is published on GitHub only, as a pre-release; it is not on CRAN.
+CRAN serves the stable 1.6.1. Release 1.9.0 is published on GitHub only, as a pre-release; it is not on CRAN.
 
 ```r
 # Using pak (recommended)
-pak::pak("Data-Wise/rmediation@v1.8.1")
+pak::pak("Data-Wise/rmediation@v1.9.0")
 
 # Or using remotes
-remotes::install_github("Data-Wise/rmediation", ref = "v1.8.1")
+remotes::install_github("Data-Wise/rmediation", ref = "v1.9.0")
 ```
 
 For the development branch, use `@dev` or `ref = "dev"` instead.
@@ -280,9 +280,13 @@ The default screen keeps only admissible (positive-definite) grid points; use
 | `mbco()` | Asymptotic and OpenMx bootstrap MBCO hypothesis tests |
 | `mbco_product_null()` | MBCO test of a product null (`a*b = 0`, serial products) as an intersection-union test over single-path nulls, avoiding the wrong-branch failure of one nonlinear constraint |
 | `ml_omitted_confounder()` | Sensitivity of two-level (1-1-1) indirect effects to an omitted confounder (Tofighi & Kelley, 2016) |
+| `ci_mediation_data()`, `ci_serial_mediation_data()` | CI for a medfit `MediationData` or `SerialMediationData` object (also reached through `ci()`) |
 | `pprodnormal()` | CDF of product of two normals |
 | `qprodnormal()` | Quantiles of product of two normals |
+| `dprodnormal()` | Exact density of the product of two normals |
 | `pprodnormal3()` | Exact CDF of product of three normals (`a1*a2*b`) |
+| `dprodnormal3()` | Exact density of the product of three normals |
+| `pMC()`, `qMC()` | Monte Carlo CDF and quantile for any function of coefficient estimates |
 | `ProductNormal()` | S7 class for two-variable product distributions |
 | `ProductNormal3()` | S7 class for three-variable sequential indirect effects |
 
@@ -290,6 +294,7 @@ The default screen keeps only admissible (positive-definite) grid points; use
 
 - [Quick Reference](https://data-wise.github.io/rmediation/articles/refcard.html): which function answers which question, and the classed conditions it can signal.
 - [Cookbook](https://data-wise.github.io/rmediation/articles/cookbook.html): short recipes that run as written.
+- [Status and Roadmap](https://data-wise.github.io/rmediation/articles/roadmap.html): what is settled, the CRAN hold and its criteria, and what could come next.
 - [Technical Notes](https://data-wise.github.io/rmediation/articles/technical-notes.html): why the integrator, the exact CDF, point masses, the densities and the MBCO checks behave as they do.
 
 ## Part of the Mediationverse

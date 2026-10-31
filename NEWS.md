@@ -1,3 +1,28 @@
+# RMediation 1.9.0 (2026-10-31)
+
+The `ci(type = "asymp")` interval label changes (see Behavior changes); two silent-wrong-value density bugs are fixed.
+
+## Behavior changes
+
+- `ci(type = "asymp")` now names its interval by its confidence level, `100 * (1 - alpha)`, as `medci()` does. It used
+  to use `100 * (1 - alpha / 2)`, so the default 95% interval was labeled `97.5% CI` (and `alpha = 0.10` gave
+  `95% CI`). The interval itself was always correct. Code that indexes the result by the old name, such as
+  `res$"97.5% CI"`, must use `res[[1]]` or the new name (`"95% CI"` at the default `alpha`) (#123).
+
+## Bug fixes
+
+- `dprodnormal()` and `dprodnormal3()` no longer return `0`, `NA` or a silently low density when a factor's mean is
+  very large relative to its standard error (`mu / se` above about 3000 for two factors, about 1000 for some
+  three-factor cases). The integrand is a narrow spike there and the fixed integration window missed it. The window is
+  now split at the spike (found from the roots of the conditional mean), with a scaled absolute tolerance for the
+  far subintervals. Values for well-conditioned inputs are unchanged (#117).
+
+## Internal
+
+- Eight tests-only PRs add independent-oracle and planted-defect coverage for the risk files: `medci()`/`ci()` endpoints
+  (#115), point masses and `|rho| = 1` (#116), `pMC()`/`qMC()` closed forms (#118), `qprodnormal()` (#119, #126),
+  `confintAsymp()`/`confintMC()` (#120), `.prod3_bound()` (#121) and MBCO size and a real-OpenMx check (#122).
+
 # RMediation 1.8.1 (2026-10-31)
 
 No change to returned values or to the API.

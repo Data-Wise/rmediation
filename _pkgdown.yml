@@ -69,6 +69,8 @@ navbar:
         href: articles/cookbook.html
       - text: Technical Notes
         href: articles/technical-notes.html
+      - text: Status and Roadmap
+        href: articles/roadmap.html
     ecosystem:
       text: Ecosystem
       href: https://data-wise.github.io/mediationverse/articles/ecosystem.html
@@ -78,7 +80,9 @@ navbar:
       menu:
       - text: "📊 Package Status Dashboard"
         href: https://github.com/data-wise/mediationverse/blob/main/STATUS.md
-      - text: "🗺️ Development Roadmap"
+      - text: "🗺️ RMediation Status and Roadmap"
+        href: articles/roadmap.html
+      - text: "🗺️ Mediationverse Roadmap"
         href: https://data-wise.github.io/mediationverse/articles/roadmap.html
       - text: "🤝 Contributing Guide"
         href: https://data-wise.github.io/mediationverse/articles/contributing.html
