@@ -280,9 +280,13 @@ The default screen keeps only admissible (positive-definite) grid points; use
 | `mbco()` | Asymptotic and OpenMx bootstrap MBCO hypothesis tests |
 | `mbco_product_null()` | MBCO test of a product null (`a*b = 0`, serial products) as an intersection-union test over single-path nulls, avoiding the wrong-branch failure of one nonlinear constraint |
 | `ml_omitted_confounder()` | Sensitivity of two-level (1-1-1) indirect effects to an omitted confounder (Tofighi & Kelley, 2016) |
+| `ci_mediation_data()`, `ci_serial_mediation_data()` | CI for a medfit `MediationData` or `SerialMediationData` object (also reached through `ci()`) |
 | `pprodnormal()` | CDF of product of two normals |
 | `qprodnormal()` | Quantiles of product of two normals |
+| `dprodnormal()` | Exact density of the product of two normals |
 | `pprodnormal3()` | Exact CDF of product of three normals (`a1*a2*b`) |
+| `dprodnormal3()` | Exact density of the product of three normals |
+| `pMC()`, `qMC()` | Monte Carlo CDF and quantile for any function of coefficient estimates |
 | `ProductNormal()` | S7 class for two-variable product distributions |
 | `ProductNormal3()` | S7 class for three-variable sequential indirect effects |
 
