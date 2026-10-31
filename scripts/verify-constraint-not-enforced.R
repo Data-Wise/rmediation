@@ -2,7 +2,8 @@
 # Runs the known-answer and the planted-defect checks for every optimizer available locally and
 # prints the OpenMx and RMediation versions, the optimizer, the statistic and the warning classes.
 # Known answer: seed 20261103, dataset 1 of the script in OpenMx/OpenMx#433 (x -> m1 -> y, labels
-# b1 and b2, ind == 0, all starts 0). Exit status 1 when any check fails.
+# b1 and b2, ind == 0, all starts 0). Exit status 1 when any check fails, and also when no
+# optimizer reproduced the #433 behavior: a run that checked nothing is a failure, not a pass.
 #
 # Run from the package root:  Rscript scripts/verify-constraint-not-enforced.R
 
@@ -45,8 +46,10 @@ collect <- function(expr) {
 
 m2ll <- function(m) as.numeric(m$output$Minus2LogLikelihood)
 ok_all <- TRUE
+n_checks <- 0L
 check <- function(label, ok) {
   cat(sprintf("  [%s] %s\n", if (ok) "PASS" else "FAIL", label))
+  n_checks <<- n_checks + 1L
   if (!ok) ok_all <<- FALSE
 }
 
@@ -56,6 +59,8 @@ cat("Input: set.seed(20261103); data.frame(x = rnorm(100), m1 = rnorm(100), y = 
 cat("Model: x -> m1 -> y, labels b1 and b2, constraint ind == 0 with ind = b1 * b2, all starts 0\n")
 
 optimizers <- c(if (imxHasNPSOL()) "NPSOL", "CSOLNP", "SLSQP")
+exercised <- character()
+skipped <- character()
 for (opt in optimizers) {
   cat("\n== optimizer:", opt, "==\n")
   f <- fit_pair(opt)
@@ -63,8 +68,10 @@ for (opt in optimizers) {
               m2ll(f$h0), m2ll(f$h1), prod(omxGetParameters(f$h0)[c("b1", "b2")])))
   if (abs(m2ll(f$h0) - m2ll(f$h1)) > 1e-6) {
     cat("  SKIP: this optimizer enforced the constraint at the zero start (no #433 behavior)\n")
+    skipped <- c(skipped, opt)
     next
   }
+  exercised <- c(exercised, opt)
   out <- collect(mbco(f$h0, f$h1))
   cat("mbco(h0, h1): statistic", format(round(out$value@statistic, 4)),
       "| statistic_before", format(round(out$value@refit$statistic_before, 4)), "\n")
@@ -90,5 +97,12 @@ for (opt in optimizers) {
         !"RMediation_constraint_not_enforced" %in% planted$classes)
 }
 
-cat("\n", if (ok_all) "ALL CHECKS PASSED" else "SOME CHECKS FAILED", "\n", sep = "")
+cat("\nOptimizers exercised:", if (length(exercised)) paste(exercised, collapse = ", ") else "none",
+    "| skipped:", if (length(skipped)) paste(skipped, collapse = ", ") else "none", "\n")
+# Every optimizer skipping means nothing was verified; that must not read as a pass.
+check("at least one optimizer reproduced the #433 behavior (a run that checks nothing fails)",
+      length(exercised) > 0L)
+
+cat("\n", if (ok_all) sprintf("ALL CHECKS PASSED (%d checks)", n_checks) else "SOME CHECKS FAILED",
+    "\n", sep = "")
 quit(status = if (ok_all) 0L else 1L)
