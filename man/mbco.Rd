@@ -108,7 +108,7 @@ replicate: a replicate whose \code{h0} or \code{h1} fit does not converge stops 
 first one (6 of 100 runs in a simulation with \code{R = 200}); a replicate null fit that
 violates its constraint is refit as above, and one that cannot be repaired stops the call
 with an error of class \code{RMediation_bootstrap_infeasible} instead of entering the null
-distribution. (Before 1.7.1 \code{type = "parametric"} delegated its bootstrap to
+distribution. (Before 1.8.0 \code{type = "parametric"} delegated its bootstrap to
 \code{OpenMx::mxCompare(boot = TRUE)}, which does neither.)
 
 \strong{When h0 came back identical to h1.} A refit whose \code{statistic_before} is about 0

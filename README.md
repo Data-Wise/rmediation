@@ -52,15 +52,19 @@ Traditional methods (e.g., Sobel test) assume the indirect effect *ab* follows a
 install.packages("RMediation")
 ```
 
-### From GitHub (Development)
+### From GitHub (release 1.8.0, pre-release)
+
+CRAN serves the stable 1.6.1. Release 1.8.0 is published on GitHub only, as a pre-release; it is not on CRAN.
 
 ```r
 # Using pak (recommended)
-pak::pak("Data-Wise/rmediation@dev")
+pak::pak("Data-Wise/rmediation@v1.8.0")
 
 # Or using remotes
-remotes::install_github("Data-Wise/rmediation", ref = "dev")
+remotes::install_github("Data-Wise/rmediation", ref = "v1.8.0")
 ```
+
+For the development branch, use `@dev` or `ref = "dev"` instead.
 
 ### From r-universe (development binaries)
 

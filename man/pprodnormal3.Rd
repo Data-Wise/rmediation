@@ -80,7 +80,7 @@ adaptive cubature (dimension reduction; see Tofighi, 2026).
 \note{
 A point mass (zero variances) has the right-continuous CDF: for a
 product identically equal to \code{c}, the result is \code{1} for \code{q >= c} and \code{0}
-below. Before 1.7.1 an atom at exactly \code{0} returned \code{0.5} at \code{q == 0}.
+below. Before 1.8.0 an atom at exactly \code{0} returned \code{0.5} at \code{q == 0}.
 
 Before version 1.7.0 the default integrator was \code{"hcubature"}, which
 returns materially wrong values on ill-conditioned covariance matrices --
