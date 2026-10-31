@@ -6,6 +6,7 @@
 
 expensive <- c("R-CMD-check.yaml", "semfit-mbco.yaml", "test-coverage.yaml", "pkgdown.yaml")
 required_context <- "ubuntu-latest (release)" # the required status check on `main`
+max_timeout <- 60L # minutes; slowest observed leg is about 8 minutes of wall time
 
 `%||%` <- function(a, b) if (is.null(a)) b else a
 
@@ -34,6 +35,28 @@ for (f in expensive) {
   }
   if (!"workflow_dispatch" %in% names(on)) {
     bad(sprintf("%s: no workflow_dispatch escape hatch", f))
+  }
+  # A hung leg (an OpenMx source build, a stuck download) otherwise runs to GitHub's 6-hour default.
+  wf_all <- yaml::read_yaml(file.path(".github/workflows", f))
+  for (jn in names(wf_all$jobs)) {
+    tm <- suppressWarnings(as.numeric(wf_all$jobs[[jn]][["timeout-minutes"]]))
+    if (length(tm) == 0L || is.na(tm) || tm > max_timeout) {
+      bad(sprintf("%s: job `%s` needs timeout-minutes of at most %d", f, jn, max_timeout))
+    }
+  }
+}
+
+# Workflows that run on PRs to main cancel superseded PR runs, but never a push or dispatch run: the post-merge
+# push to main is the run that is verified before tagging. So `cancel-in-progress` must be an expression that is
+# true only for pull_request events, not the literal `true`.
+for (f in c("R-CMD-check.yaml", "semfit-mbco.yaml")) {
+  if (!file.exists(file.path(".github/workflows", f))) next
+  cc <- yaml::read_yaml(file.path(".github/workflows", f))$concurrency
+  cip <- if (is.list(cc)) as.character(cc[["cancel-in-progress"]] %||% "") else ""
+  if (!is.list(cc) || is.null(cc$group)) {
+    bad(sprintf("%s: no top-level concurrency group (superseded PR runs keep running)", f))
+  } else if (!grepl("pull_request", cip, fixed = TRUE)) {
+    bad(sprintf("%s: concurrency cancel-in-progress must be limited to pull_request events (got '%s')", f, cip))
   }
 }
 
