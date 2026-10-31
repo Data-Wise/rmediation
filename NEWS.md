@@ -1,3 +1,12 @@
+# RMediation (development version)
+
+## Behavior changes
+
+- `ci(type = "asymp")` now names its interval by its confidence level, `100 * (1 - alpha)`, as `medci()` does. It used
+  to use `100 * (1 - alpha / 2)`, so the default 95% interval was labeled `97.5% CI` (and `alpha = 0.10` gave
+  `95% CI`). The interval itself was always correct. Code that indexes the result by the old name, such as
+  `res$"97.5% CI"`, must use `res[[1]]` or the new name (`"95% CI"` at the default `alpha`) (#123).
+
 # RMediation 1.8.1 (2026-10-31)
 
 No change to returned values or to the API.
