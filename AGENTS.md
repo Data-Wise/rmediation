@@ -163,13 +163,13 @@ refits, requires medfit >= 0.8.0 (version-gated; older medfit gets a clear
 error), and does not need OpenMx. The OpenMx paths are unchanged.
 
 **Nothing is submitted to CRAN, by user decision.** CRAN serves 1.6.1. The GitHub
-release is 1.8.0, cut from `dev` with the SEMFit route included (experimental); the earlier 1.7.1 candidate on
-`release/1.7.1` (draft PR #46, route removed) is superseded and not merged. A later CRAN candidate must remove or finish
+release is 1.8.0, cut from `dev` with the SEMFit route included; the earlier 1.7.1 candidate on
+`release/1.7.1` (draft PR #46, route removed) is superseded and closed. A later CRAN candidate must remove or finish
 the route, so its version will be later than 1.8.0. Never start `devtools::submit_cran()` without an explicit
-instruction. The hold lifts only when the SEM features are no longer
-experimental and `fixed.x` (medfit `fixed_x`, merged to medfit dev 2026-10-13, PR #175,
-unreleased) and mean structure (observed means merged, PR #174; latent means target 0.11.0,
-which is also the target for dropping "experimental", criteria undefined) are completed in medfit. Then Suggests rises to `medfit >= 0.8.0`. Decisions and
+instruction. The route is no longer labeled experimental (maintainer decision 2026-10-31: medfit dropped the label
+in 0.11.0). The hold lifts only when a medfit release with `fixed_x` and observed mean structure is on CRAN; medfit is
+GitHub-only for now (0.16.0; CRAN has 0.3.2). Criteria: `.STATUS`, 2026-10-31 entries. Then Suggests rises to
+`medfit >= 0.8.0`. Decisions and
 reasons: `planning/GRILL-semfit-dependency-policy-2026-10-12.md` (gitignored but
 force-tracked), `.STATUS`.
 

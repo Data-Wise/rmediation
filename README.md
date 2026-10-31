@@ -230,7 +230,7 @@ violated, it refits `h0` and warns with class `RMediation_constraint_not_enforce
 the warning cannot tell this cause from a violation within the feasibility
 tolerance.
 
-**Experimental.** Two medfit `SEMFit` objects support asymptotic comparisons with **medfit >=
+Two medfit `SEMFit` objects support asymptotic comparisons with **medfit >=
 0.8.0** (GitHub/r-universe), without OpenMx:
 
 ```r
