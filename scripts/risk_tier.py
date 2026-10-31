@@ -6,8 +6,9 @@ A test cannot see a diff, so this job does. When the PR changes a file listed in
 ticked and carries content, or says `n/a: <reason>`. The known-answer and planted-defect items must name a
 `tests/testthat/` file that is part of the PR's diff. Standard library only: no R install, a few seconds.
 
-Exempt: no risk file changed, a release PR (head `release/*`, or `dev` into `main`), or a body line
-`Risk-tier: exempt: <reason>`. Fail closed: a missing or unreadable body fails when a risk file changed.
+Exempt: no risk file changed, or a body line `Risk-tier: exempt: <reason>`. A release PR (head `release/*`, or
+`dev` into `main`) skips the checklist but must carry a body line `Ships: #N, #M, ...` naming the PRs it ships.
+Fail closed: a missing or unreadable body fails when a risk file changed.
 
 Usage: python3 scripts/risk_tier.py --changed FILE --body FILE --head-ref REF --base-ref REF \
            [--risk-files .github/risk-files.txt]
@@ -30,6 +31,7 @@ TEST_ITEMS = ("Known answer", "Planted defect")
 MIN_REASON = 8
 TEST_PATH = re.compile(r"tests/testthat/[A-Za-z0-9_./-]+\.[Rr]\b")
 CHECKBOX = re.compile(r"^\s*[-*]\s*\[([ xX])\]\s*(.+?)\s*$")
+SHIPS = re.compile(r"^\s*Ships\s*:.*#\d+")
 EXEMPT = re.compile(r"^\s*Risk-tier:\s*exempt(?::\s*(.*?))?\s*$", re.IGNORECASE)
 
 
@@ -73,10 +75,14 @@ def check(changed, body, head_ref, base_ref, globs):
     touched = risk_files(changed, globs)
     if not touched:
         return []
-    if head_ref.startswith("release/") or (head_ref == "dev" and base_ref in ("main", "master")):
-        return []
-
     header = "Risk files changed: " + ", ".join(touched)
+    if head_ref.startswith("release/") or (head_ref == "dev" and base_ref in ("main", "master")):
+        # Each constituent PR already carried the checklist on dev; the release PR must say which PRs it ships.
+        if body and any(SHIPS.match(l.rstrip("\r")) for l in body.splitlines()):
+            return []
+        return [header,
+                "A release PR must list the PRs it ships, so a risk-file change cannot arrive unchecked. "
+                "Add a body line `Ships: #101, #102, ...` (at least one PR number)."]
     if body is None or not body.strip():
         return [header, "The PR body is empty or unreadable; risk-file changes need evidence.", template()]
 

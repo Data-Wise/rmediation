@@ -45,7 +45,7 @@ Dropped: PR coverage (#86 removed it on purpose).
 | # | Decision |
 |---|---|
 | G1 | An advisory check graduates to required after 3 consecutive clean runs on real PRs; the author flips it. A session hands over `gh-require-check.sh --dry-run` and never applies branch protection. A `.STATUS` line per check: `YYYY-MM-DD <check> run N/3: pass\|fail (PR #nn)`, a fail resets the count. |
-| G2 | risk-tier: the known-answer and planted-defect items must name a `tests/testthat/` file present in `git diff --name-only`; `n/a` needs a reason; docs-only and rename PRs get an explicit exemption; release PRs from `dev` are exempt. |
+| G2 | risk-tier: the known-answer and planted-defect items must name a `tests/testthat/` file present in `git diff --name-only`; `n/a` needs a reason; docs-only and rename PRs get an explicit exemption; release PRs from `dev` skip the checklist but must list the PRs they ship (G11). |
 | G3 | The #84 gate fails when every optimizer skips (done in #95). Message: "OpenMx may have fixed #433; update or retire this gate". |
 | G4 | Lint is cosmetic only (about 57 findings: line length and indentation); `return_linter`, `commented_code_linter`, `object_usage_linter`, `seq_linter` stay off until triaged; neutrality shown by `git diff -w` and unchanged test counts. |
 | G5 | PR coverage is dropped. |
@@ -53,6 +53,8 @@ Dropped: PR coverage (#86 removed it on purpose).
 | G7 | The #84 gate runs without a path filter (a filter that misses a file skips it silently). |
 | G8 | Author directive: coverage and expensive checks only for `main` and releases; everything else local (rforge, `check-local.sh`). |
 | G9 | One cheap exception on `dev` PRs: the risk-tier script (no R install, about 10 s). |
+| G11 | 2026-10-31, author decision: a release PR (`dev` into `main`, or `release/*`) that changes a risk file must carry a body line `Ships: #N, #M` (at least one PR number), else the check fails closed; no aggregate re-check, since each constituent PR passed the checklist on `dev`. |
+| G1a | 2026-10-31, author decision: a check run counts toward G1's three clean runs when it is a `main` PR run or a `workflow_dispatch` run on `dev`; record both in `.STATUS` (`YYYY-MM-DD <check> run N/3: pass\|fail (PR #nn or dispatch)`). |
 | G10 | The docs generator check lives in `check-local.sh` (local gate), chosen over a git hook, the harness and `dev` CI. Measured on clean `origin/dev` (roxygen2 8.1.1): `man/` 0 differences; `NAMESPACE` one reordered line; `DESCRIPTION` version bump only. Planted defects (hand-edited Rd; edited roxygen comment without regenerating) both fail. |
 
 ## Boundaries

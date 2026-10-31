@@ -137,7 +137,7 @@ the release. It runs for `main`, releases and dispatch, with no path filter and 
 runs it first. Plan and decisions:
 `planning/PLAN-mechanical-checks-2026-10-30.md`. One cheap check does run on PRs to `dev`: `risk-tier` (a stdlib Python
 script, no R install). A PR that changes a file listed in `.github/risk-files.txt` must carry the evidence checklist from
-`.github/PULL_REQUEST_TEMPLATE.md` in its body; release PRs from `dev` are exempt. It is advisory, not a required check.
+`.github/PULL_REQUEST_TEMPLATE.md` in its body; a release PR from `dev` skips the checklist but must carry a `Ships: #N, #M` body line naming the PRs it ships. It is advisory, not a required check.
 
 ---
 
