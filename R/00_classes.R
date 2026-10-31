@@ -345,9 +345,9 @@ S7::S4_register(MLOmittedConfounder)
 #' either one as the cause. The reported statistic is the refit one. For a product null,
 #' skip the problem: [mbco_product_null()] fits exact single-path nulls and never
 #' relies on a nonlinear constraint. The refit and this warning apply to the observed
-#' statistic for every `type`. `type = "semi"` repeats the refit on every bootstrap replicate;
-#' `type = "parametric"` does not (OpenMx's `mxCompare(boot = TRUE)` refits nothing), so a
-#' replicate null fit that violates its constraint is not detected there.
+#' statistic for every `type`. Both bootstrap types (`"semi"` and `"parametric"`) repeat the
+#' refit on every bootstrap replicate, and a replicate null fit that cannot be repaired stops
+#' the call (see above).
 #'
 #' **Wrong-branch check (OpenMx).** A feasible, converged fit of a product null
 #' such as `a*b == 0` can still sit on the larger-statistic branch (for example

@@ -155,8 +155,8 @@
   within the feasibility tolerance looks the same; a fitted `h0` keeps no starting
   values, so the warning cannot say which. The statistic and the `refit` slot are
   unchanged (the seeded example goes from 0 to 0.0878); for a product null use
-  `mbco_product_null()`. Known gap: `type = "parametric"` does not refit its
-  bootstrap replicates, so a violated replicate null fit is not detected there.
+  `mbco_product_null()`. Bootstrap replicates are refit and checked the same way
+  for both bootstrap types (see the `type = "parametric"` entry under Bug fixes).
 - OpenMx `mbco()` now warns (class `RMediation_constraint_branch`) when a
   feasible, converged `h0` is not the constrained optimum of an equality
   constraint: fixing one of the parameters the constraint depends on at 0 gives a
