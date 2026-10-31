@@ -1,5 +1,7 @@
 # Spec: `RMediation_constraint_not_enforced` warning (issue #84, R1-R3)
 
+> Note: the class in this document was renamed `RMediation_constraint_dropped` -> `RMediation_constraint_not_enforced` in PR #93; the text below uses the new name throughout.
+
 Gate note: the spec gate is satisfied by the user's decision on 2026-10-30 (option A, relayed by
 the session that started this work) after the Codex review in `tasks/codex-review-84.md`.
 

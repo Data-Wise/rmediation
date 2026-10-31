@@ -1,5 +1,7 @@
 # Plan: `RMediation_constraint_not_enforced` (issue #84, R1-R3)
 
+> Note: the class in this document was renamed `RMediation_constraint_dropped` -> `RMediation_constraint_not_enforced` in PR #93; the text below uses the new name throughout.
+
 Spec: `tasks/spec-84-constraint-not-enforced.md`. Review: `tasks/codex-review-84.md`.
 Separate file: `tasks/plan.md` / `tasks/todo.md` belong to other work and are untouched.
 
