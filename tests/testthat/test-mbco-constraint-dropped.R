@@ -1,4 +1,4 @@
-# Issue #84 (tasks/spec-84-constraint-dropped.md): OpenMx can silently drop an equality
+# Issue #84 (spec: tasks/spec-84-constraint-dropped.md). OpenMx can silently drop an equality
 # constraint whose Jacobian row is zero at the starting values (OpenMx/OpenMx#433), so h0 comes
 # back as the unconstrained fit. A fitted h0 keeps no starting values, so mbco() cannot tell that
 # cause from a violation within the feasibility tolerance; it signals
@@ -49,17 +49,21 @@ eval(parse(text = src[3:39])) # .guard_med_model(), .guard_fits()
   )
 }
 
-test_that("zero-start h0 (known answer, seed 20261103): class raised, statistic repaired to 0.0878", {
+test_that("zero-start h0 (seed 20261103): class raised, statistic repaired to 0.0878", {
   skip_if_not_installed("OpenMx")
   f <- .cd_fits()
   .cd_skip_if_enforced(f)
   out <- .cd_collect(mbco(f$h0, f$h1))
   expect_true("RMediation_constraint_dropped" %in% out$classes)
   expect_true("RMediation_h0_refit" %in% out$classes)
-  expect_lt(match("RMediation_h0_refit", out$classes), match("RMediation_constraint_dropped", out$classes))
+  expect_lt(
+    match("RMediation_h0_refit", out$classes),
+    match("RMediation_constraint_dropped", out$classes)
+  )
   # the repaired statistic is positive and equals the exact product-null statistic
   expect_gt(out$value@statistic, 0.01)
-  expect_equal(out$value@statistic, mbco_product_null(f$h1, c("b1", "b2"))@statistic, tolerance = 1e-4)
+  exact <- mbco_product_null(f$h1, c("b1", "b2"))@statistic
+  expect_equal(out$value@statistic, exact, tolerance = 1e-4)
   # pinned regression (OpenMx 2.22.11, SLSQP and CSOLNP); not a cross-optimizer oracle
   expect_equal(out$value@statistic, 0.0878, tolerance = 1e-3)
   expect_equal(out$value@refit$statistic_before, 0, tolerance = 1e-6)
@@ -78,7 +82,7 @@ test_that("the warning is honest: 'may', both possible causes, the OpenMx issue,
   expect_match(msg, "?mbco", fixed = TRUE)
 })
 
-test_that("competing history: a tolerance violation (h0 started at h1's estimates) has the same symptom and class", {
+test_that("competing history: a tolerance violation has the same symptom and class", {
   skip_if_not_installed("OpenMx")
   f <- .guard_fits(1)
   out <- .cd_collect(mbco(f$h0, f$h1))
@@ -95,16 +99,28 @@ test_that("a clean h0 raises neither the refit nor the dropped warning", {
   expect_length(out$classes, 0L)
 })
 
-test_that("a refit whose h0 fit differed from h1's (statistic_before > 0) does not raise the class", {
+test_that("a refit with statistic_before > 0 (h0 differed from h1) does not raise it", {
   skip_if_not_installed("OpenMx")
   skip_if_not_installed("testthat", "3.2.0")
   f <- .guard_fits(1)
   real <- RMediation:::.mbco_refit_h0(f$h0, f$h1)
   real$refit$statistic_before <- 0.5
-  testthat::local_mocked_bindings(.mbco_refit_h0 = function(h0, h1, ...) real, .package = "RMediation")
+  testthat::local_mocked_bindings(
+    .mbco_refit_h0 = function(h0, h1, ...) real,
+    .package = "RMediation"
+  )
   out <- .cd_collect(mbco(f$h0, f$h1))
   expect_true("RMediation_h0_refit" %in% out$classes)
   expect_false("RMediation_constraint_dropped" %in% out$classes)
+})
+
+test_that("a missing or non-finite statistic_before is ignored, never an error", {
+  skip_if_not_installed("OpenMx")
+  for (bad in list(NA_real_, NaN, NULL)) {
+    refit <- list(model = NULL, refit = list(statistic_before = bad))
+    expect_no_warning(expect_null(RMediation:::.mbco_report_dropped(refit)))
+  }
+  expect_no_warning(RMediation:::.mbco_report_dropped(NULL))
 })
 
 test_that("the existing refit warning, result and slot are unchanged by the new check", {
