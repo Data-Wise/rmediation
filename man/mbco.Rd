@@ -95,6 +95,22 @@ yourself with \code{mxOption(model, "Feasibility tolerance", 1e-8)} or use
 With \code{type = "semi"} the bootstrap still stops at the first replicate that
 fails to converge (6 of 100 runs in a simulation with \code{R = 200}).
 
+\strong{When h0 came back identical to h1.} A refit whose \code{statistic_before} is about 0
+(|statistic| < 1e-6, h0 and h1 have the same -2LL although a constraint of \code{h0} was violated)
+also raises a warning of class \code{RMediation_constraint_dropped}, right after
+\code{RMediation_h0_refit}. It means the constraint may not have been enforced. Two
+causes give this symptom. OpenMx (2.19.1 and later) silently drops an equality constraint
+whose Jacobian row is zero at the starting values, so \code{b1 * b2 == 0} started at
+\code{b1 = b2 = 0} returns the unconstrained fit (\href{https://github.com/OpenMx/OpenMx/issues/433}{OpenMx/OpenMx#433});
+a violation within the feasibility tolerance looks the same. A fitted \code{h0} keeps no
+starting values, so \code{mbco()} cannot tell the causes apart and the warning does not name
+either one as the cause. The reported statistic is the refit one. For a product null,
+skip the problem: \code{\link[=mbco_product_null]{mbco_product_null()}} fits exact single-path nulls and never
+relies on a nonlinear constraint. The refit and this warning apply to the observed
+statistic for every \code{type}. \code{type = "semi"} repeats the refit on every bootstrap replicate;
+\code{type = "parametric"} does not (OpenMx's \code{mxCompare(boot = TRUE)} refits nothing), so a
+replicate null fit that violates its constraint is not detected there.
+
 \strong{Wrong-branch check (OpenMx).} A feasible, converged fit of a product null
 such as \code{a*b == 0} can still sit on the larger-statistic branch (for example
 \code{a = 0} when \code{b = 0} fits far better), which neither the violation guard nor

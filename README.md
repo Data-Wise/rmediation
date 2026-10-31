@@ -211,6 +211,15 @@ summary(pn)
 model (`h1`). OpenMx models support asymptotic and bootstrap tests; see `?mbco`
 for clean-start product-null construction and bootstrap arguments.
 
+For a product null (`a*b = 0`), use `mbco_product_null()` rather than one
+nonlinear constraint. A single constraint can land on the wrong branch, and OpenMx
+can silently drop an equality constraint whose Jacobian is zero at the starting
+values ([OpenMx/OpenMx#433](https://github.com/OpenMx/OpenMx/issues/433)). When
+`mbco()` finds that `h0` came back identical to `h1` although its constraint was
+violated, it refits `h0` and warns with class `RMediation_constraint_dropped`;
+the warning cannot tell this cause from a violation within the feasibility
+tolerance.
+
 Two medfit `SEMFit` objects support asymptotic comparisons with **medfit >=
 0.8.0** (GitHub/r-universe), without OpenMx:
 
