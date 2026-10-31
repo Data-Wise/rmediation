@@ -48,6 +48,7 @@
 ^vignettes/\.quarto$
 ^vignettes/_freeze$
 ^vignettes/_quarto\.yml$
+^vignettes/articles$
 ^doc$
 ^Meta$
 ^data-raw$
