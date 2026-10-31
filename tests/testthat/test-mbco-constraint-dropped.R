@@ -1,4 +1,4 @@
-# Issue #84 (spec: tasks/spec-84-constraint-dropped.md). OpenMx can silently drop an equality
+# Issue #84: OpenMx can silently drop an equality
 # constraint whose Jacobian row is zero at the starting values (OpenMx/OpenMx#433), so h0 comes
 # back as the unconstrained fit. A fitted h0 keeps no starting values, so mbco() cannot tell that
 # cause from a violation within the feasibility tolerance; it signals
