@@ -291,7 +291,7 @@ NULL
 #' @return Probability `P(X1 * X2 * X3 <= q)` as a numeric scalar in `[0, 1]`.
 #' @note A point mass (zero variances) has the right-continuous CDF: for a
 #'   product identically equal to `c`, the result is `1` for `q >= c` and `0`
-#'   below. Before 1.7.1 an atom at exactly `0` returned `0.5` at `q == 0`.
+#'   below. Before 1.8.0 an atom at exactly `0` returned `0.5` at `q == 0`.
 #'
 #'   Before version 1.7.0 the default integrator was `"hcubature"`, which
 #'   returns materially wrong values on ill-conditioned covariance matrices --

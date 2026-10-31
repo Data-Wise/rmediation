@@ -350,7 +350,7 @@ S7::S4_register(MLOmittedConfounder)
 #' first one (6 of 100 runs in a simulation with `R = 200`); a replicate null fit that
 #' violates its constraint is refit as above, and one that cannot be repaired stops the call
 #' with an error of class `RMediation_bootstrap_infeasible` instead of entering the null
-#' distribution. (Before 1.7.1 `type = "parametric"` delegated its bootstrap to
+#' distribution. (Before 1.8.0 `type = "parametric"` delegated its bootstrap to
 #' `OpenMx::mxCompare(boot = TRUE)`, which does neither.)
 #'
 #' **When h0 came back identical to h1.** A refit whose `statistic_before` is about 0

@@ -1,4 +1,4 @@
-# RMediation 1.7.1 (development version)
+# RMediation 1.8.0 (2026-10-30)
 
 * S7 property access now works under the declared R 4.1 minimum.
 

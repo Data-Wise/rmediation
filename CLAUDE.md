@@ -185,9 +185,10 @@ to Imports.
 refits, requires medfit >= 0.8.0 (version-gated; older medfit gets a clear
 error), and does not need OpenMx. The OpenMx paths are unchanged.
 
-**Nothing is submitted to CRAN, by user decision.** CRAN serves 1.6.1. A
-verified 1.7.1 candidate sits on branch `release/1.7.1` (draft PR #46, route
-removed, not merged); never start `devtools::submit_cran()` without an explicit
+**Nothing is submitted to CRAN, by user decision.** CRAN serves 1.6.1. The GitHub
+release is 1.8.0, cut from `dev` with the SEMFit route included (experimental); the earlier 1.7.1 candidate on
+`release/1.7.1` (draft PR #46, route removed) is superseded and not merged. A later CRAN candidate must remove or finish
+the route, so its version will be later than 1.8.0. Never start `devtools::submit_cran()` without an explicit
 instruction. The hold lifts only when the SEM features are no longer
 experimental and `fixed.x` (medfit `fixed_x`, merged to medfit dev 2026-10-13, PR #175,
 unreleased) and mean structure (observed means merged, PR #174; latent means target 0.11.0,
