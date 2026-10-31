@@ -1,7 +1,22 @@
 # Files whose change can silently change numerical results; a PR touching one needs the risk-tier evidence
 # in its body (scripts/risk_tier.py). Globs are matched against repository-relative paths.
-R/mbco*.R
-R/prod3_core.R
-R/dop*.R
+# Every pattern must match at least one file in R/ (scripts/test_risk_tier.py checks for dead patterns).
+# Distribution of the product of normals: CDF, quantile, density (exact, Meeker, Monte Carlo)
 R/pprodnormal*.R
+R/qprodnormal*.R
+R/dprodnormal*.R
+R/prod3_core.R
+R/pMC.R
+R/qMC.R
+# Confidence intervals
 R/ci*.R
+R/medci*.R
+R/confintMC.R
+R/confintAsymp.R
+# MBCO tests
+R/mbco*.R
+# Shared numerical internals (bootstrap resampling, skewness, kurtosis) and sensitivity analysis
+R/utils_stats.R
+R/internal_s7_compute.R
+R/chol_psd.R
+R/ml_omitted_confounder.R

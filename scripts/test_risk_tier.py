@@ -3,6 +3,7 @@
 Run from the package root:  python3 scripts/test_risk_tier.py
 Standard library only, so the check needs no R install and stays cheap on PRs to dev.
 """
+import fnmatch
 import os
 import sys
 import unittest
@@ -123,6 +124,39 @@ class ExemptionTests(unittest.TestCase):
 
     def test_feature_branch_to_dev_is_not_exempt(self):
         self.assertTrue(check(body="", head="feature/x", base="dev"))
+
+
+class RiskFileListTests(unittest.TestCase):
+    """The committed list must cover the numerical core and contain no dead pattern."""
+
+    ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    @classmethod
+    def setUpClass(cls):
+        with open(os.path.join(cls.ROOT, ".github", "risk-files.txt"), encoding="utf-8") as fh:
+            cls.globs = [g.strip() for g in fh if g.strip() and not g.strip().startswith("#")]
+        cls.r_files = sorted("R/" + f for f in os.listdir(os.path.join(cls.ROOT, "R")) if f.endswith(".R"))
+
+    def test_every_pattern_matches_at_least_one_r_file(self):
+        for g in self.globs:
+            hits = [f for f in self.r_files if fnmatch.fnmatch(f, g)]
+            self.assertTrue(hits, f"risk-files.txt pattern '{g}' matches no file in R/ (dead pattern)")
+
+    def test_numerical_core_is_covered(self):
+        core = [
+            "R/mbco.R", "R/mbco-compare.R", "R/mbco_semi.R", "R/mbco_parametric.R", "R/prod3_core.R",
+            "R/pprodnormal.R", "R/qprodnormal.R", "R/qprodnormalMeeker.R", "R/dprodnormal.R", "R/dprodnormal3.R",
+            "R/medci.R", "R/medciMC.R", "R/medciMeeker.R", "R/medciAsymp.R", "R/ci.R", "R/ci_medfit.R",
+            "R/confintMC.R", "R/confintAsymp.R", "R/pMC.R", "R/qMC.R", "R/internal_s7_compute.R",
+            "R/chol_psd.R", "R/ml_omitted_confounder.R", "R/utils_stats.R",
+        ]
+        for f in core:
+            self.assertTrue(os.path.exists(os.path.join(self.ROOT, f)), f"{f} no longer exists; update the test")
+            self.assertEqual(risk_tier.risk_files([f], self.globs), [f], f"{f} is not a risk file")
+
+    def test_documentation_and_class_files_are_not_risk_files(self):
+        for f in ["R/00_classes.R", "R/RMediation-package.R", "R/zzz.R", "R/utils_validation.R"]:
+            self.assertEqual(risk_tier.risk_files([f], self.globs), [], f)
 
 
 class FailureMessageTests(unittest.TestCase):
