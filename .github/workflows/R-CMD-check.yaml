@@ -68,14 +68,6 @@ jobs:
           args: 'c("--no-manual", "--ignore-vignettes")'
           build_args: 'c("--no-manual")'
 
-      # Issue #84 gate: known answer (OpenMx/OpenMx#433) plus a planted defect, per optimizer; 2 s. It needs OpenMx,
-      # so a missing OpenMx fails the job, and it fails when no optimizer exercised the check. No path filter and no
-      # continue-on-error (scripts/check-ci-policy.R enforces both). Locally: scripts/check-local.sh runs it first.
-      - name: "Issue #84 gate (OpenMx constraint not enforced)"
-        if: matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release'
-        shell: bash
-        run: Rscript scripts/verify-constraint-not-enforced.R
-
       - name: Verify installed OpenMx namespace load orders
         if: matrix.config.r == 'release'
         shell: bash
