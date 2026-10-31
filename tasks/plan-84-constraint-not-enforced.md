@@ -1,11 +1,11 @@
-# Plan: `RMediation_constraint_dropped` (issue #84, R1-R3)
+# Plan: `RMediation_constraint_not_enforced` (issue #84, R1-R3)
 
-Spec: `tasks/spec-84-constraint-dropped.md`. Review: `tasks/codex-review-84.md`.
+Spec: `tasks/spec-84-constraint-not-enforced.md`. Review: `tasks/codex-review-84.md`.
 Separate file: `tasks/plan.md` / `tasks/todo.md` belong to other work and are untouched.
 
 Dependency order: T1 (tests, red) -> T2 (helper + wiring, green) -> T3 (docs) -> T3b (website) -> T4 (harness) -> T5 (suite, lint, review, PR).
 
-- [ ] T1 Failing tests (S, 1 file) `tests/testthat/test-mbco-constraint-dropped.R`
+- [ ] T1 Failing tests (S, 1 file) `tests/testthat/test-mbco-constraint-not-enforced.R`
   - Accept: known answer (class, statistic positive = `mbco_product_null()`, 0.0878 pin), message
     wording, tolerance fixture raises the class, clean h0 and `statistic_before > 0` do not,
     planted defect. Fails on dev before T2 (class absent).
@@ -27,8 +27,8 @@ Dependency order: T1 (tests, red) -> T2 (helper + wiring, green) -> T3 (docs) ->
   - Accept: README MBCO section states the symptom, the new warning class and
     `mbco_product_null()`; `pkgdown::check_pkgdown()` clean; `pkgdown::build_reference(topics = "mbco")`
     and `build_news()` render the new text (checked in a scratch dir, not committed: `docs` is ignored).
-  - Verify: `Rscript -e 'pkgdown::check_pkgdown()'`; grep rendered HTML for `RMediation_constraint_dropped`.
-- [ ] T4 Harness (S, 1 file) `scripts/verify-constraint-dropped.R`
+  - Verify: `Rscript -e 'pkgdown::check_pkgdown()'`; grep rendered HTML for `RMediation_constraint_not_enforced`.
+- [ ] T4 Harness (S, 1 file) `scripts/verify-constraint-not-enforced.R`
   - Accept: per available optimizer prints versions, optimizer, statistic, warning classes,
     planted-defect result; non-zero exit when the known answer fails.
   - Verify: run it; output quoted in the PR body.

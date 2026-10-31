@@ -85,12 +85,12 @@
 # silently drop an equality constraint whose Jacobian row is zero at the starting values
 # (OpenMx/OpenMx#433), and a violation within the feasibility tolerance looks the same. A fitted h0
 # keeps no starting values, so the two causes cannot be told apart here; the message says so.
-.mbco_report_dropped <- function(refit, threshold = 1e-6) {
+.mbco_report_not_enforced <- function(refit, threshold = 1e-6) {
   before <- refit$refit$statistic_before
   if (is.null(before) || !is.finite(before) || abs(before) >= threshold) {
     return(invisible(NULL))
   }
-  .mbco_signal("RMediation_constraint_dropped", paste0(
+  .mbco_signal("RMediation_constraint_not_enforced", paste0(
     "The fit of h0 is identical to the fit of h1 (-2LL difference ",
     format(round(before, 4)), ") although a constraint of h0 was violated, ",
     "so the constraint may not have been enforced. OpenMx can silently drop an equality ",
