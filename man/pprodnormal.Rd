@@ -18,7 +18,7 @@ pprodnormal(
 }
 \arguments{
 \item{q}{quantile or value of the product; a numeric vector returns one
-probability per element (for \\code{type="MC"} all elements share one
+probability per element (for \code{type="MC"} all elements share one
 simulated sample)}
 
 \item{mu.x}{mean of \eqn{x}}
