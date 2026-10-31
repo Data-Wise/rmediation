@@ -54,7 +54,7 @@ Dropped: PR coverage (#86 removed it on purpose).
 | G8 | Author directive: coverage and expensive checks only for `main` and releases; everything else local (rforge, `check-local.sh`). |
 | G9 | One cheap exception on `dev` PRs: the risk-tier script (no R install, about 10 s). |
 | G11 | 2026-10-31, author decision: a release PR (`dev` into `main`, or `release/*`) that changes a risk file must carry a body line `Ships: #N, #M` (at least one PR number), else the check fails closed; no aggregate re-check, since each constituent PR passed the checklist on `dev`. |
-| G1a | 2026-10-31, author decision: a check run counts toward G1's three clean runs when it is a `main` PR run or a `workflow_dispatch` run on `dev`; record both in `.STATUS` (`YYYY-MM-DD <check> run N/3: pass\|fail (PR #nn or dispatch)`). |
+| G1a | 2026-10-31, author decision: a check run counts toward G1's three clean runs when it is a `main` PR run or a `workflow_dispatch` run on `dev`; record both in `.STATUS` (`YYYY-MM-DD <check> run N/3: pass\|fail (PR #nn or dispatch)`). **RETIRED the same day (author decision, advised): re-dispatching unchanged code only tests for flakiness, so the three-run graduation is not pursued; every check stays advisory until a real regression slips past them to `main`. Requiring `issue-84-gate` would let an upstream OpenMx change block a release (the T5 mistake).** |
 | G10 | The docs generator check lives in `check-local.sh` (local gate), chosen over a git hook, the harness and `dev` CI. Measured on clean `origin/dev` (roxygen2 8.1.1): `man/` 0 differences; `NAMESPACE` one reordered line; `DESCRIPTION` version bump only. Planted defects (hand-edited Rd; edited roxygen comment without regenerating) both fail. |
 
 ## Boundaries
