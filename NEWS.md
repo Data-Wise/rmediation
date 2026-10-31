@@ -146,6 +146,17 @@
   statistic from a known-invalid fit. A
   constraint that cannot be evaluated now errors. `type = "semi"` still stops at
   the first replicate that fails to converge. See the wrong-branch warning below.
+- OpenMx `mbco()` now also warns, with class `RMediation_constraint_dropped` and right
+  after `RMediation_h0_refit`, when the refit ran and `h0`'s fit was identical to
+  `h1`'s (statistic 0 before the refit) although a constraint of `h0` was violated
+  (issue #84). The constraint may not have been enforced. OpenMx (2.19.1 and later)
+  silently drops an equality constraint whose Jacobian is zero at the starting values
+  (OpenMx/OpenMx#433), for example `b1 * b2 == 0` started at zero, and a violation
+  within the feasibility tolerance looks the same; a fitted `h0` keeps no starting
+  values, so the warning cannot say which. The statistic and the `refit` slot are
+  unchanged (the seeded example goes from 0 to 0.0878); for a product null use
+  `mbco_product_null()`. Known gap: `type = "parametric"` does not refit its
+  bootstrap replicates, so a violated replicate null fit is not detected there.
 - OpenMx `mbco()` now warns (class `RMediation_constraint_branch`) when a
   feasible, converged `h0` is not the constrained optimum of an equality
   constraint: fixing one of the parameters the constraint depends on at 0 gives a

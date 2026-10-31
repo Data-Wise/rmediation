@@ -333,6 +333,22 @@ S7::S4_register(MLOmittedConfounder)
 #' distribution. (Before 1.7.1 `type = "parametric"` delegated its bootstrap to
 #' `OpenMx::mxCompare(boot = TRUE)`, which does neither.)
 #'
+#' **When h0 came back identical to h1.** A refit whose `statistic_before` is about 0
+#' (|statistic| < 1e-6, h0 and h1 have the same -2LL although a constraint of `h0` was violated)
+#' also raises a warning of class `RMediation_constraint_dropped`, right after
+#' `RMediation_h0_refit`. It means the constraint may not have been enforced. Two
+#' causes give this symptom. OpenMx (2.19.1 and later) silently drops an equality constraint
+#' whose Jacobian row is zero at the starting values, so `b1 * b2 == 0` started at
+#' `b1 = b2 = 0` returns the unconstrained fit ([OpenMx/OpenMx#433](https://github.com/OpenMx/OpenMx/issues/433));
+#' a violation within the feasibility tolerance looks the same. A fitted `h0` keeps no
+#' starting values, so `mbco()` cannot tell the causes apart and the warning does not name
+#' either one as the cause. The reported statistic is the refit one. For a product null,
+#' skip the problem: [mbco_product_null()] fits exact single-path nulls and never
+#' relies on a nonlinear constraint. The refit and this warning apply to the observed
+#' statistic for every `type`. `type = "semi"` repeats the refit on every bootstrap replicate;
+#' `type = "parametric"` does not (OpenMx's `mxCompare(boot = TRUE)` refits nothing), so a
+#' replicate null fit that violates its constraint is not detected there.
+#'
 #' **Wrong-branch check (OpenMx).** A feasible, converged fit of a product null
 #' such as `a*b == 0` can still sit on the larger-statistic branch (for example
 #' `a = 0` when `b = 0` fits far better), which neither the violation guard nor
