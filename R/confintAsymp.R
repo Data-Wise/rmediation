@@ -27,15 +27,19 @@ confintAsymp <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "asymp", 
         arrows(CI[1], yci, CI[2], yci, length = 0, angle = 90, code = 3, cex = 1.5, lwd = 2, col = "blue", lty = 2)
         points(quantMean, yci, pch = 19, cex = 1.5, col = "blue")
         # New
-        mtext(paste("LL=", round(CI[1], 3)), side = 3, line = 1, outer = outer, at = max1 - 1 * (max1 - min1) / 9, col = "blue", cex = mcex, adj = 0)
-        mtext(paste("UL=", round(CI[2], 3)), side = 3, line = 2, outer = outer, at = max1 - 1 * (max1 - min1) / 9, col = "blue", cex = mcex, adj = 0)
-        mtext("Asymptotic Normal", side = 3, line = 3, outer = outer, at = max1 - 1 * (max1 - min1) / 9, col = "blue", cex = mcex, adj = 0)
+        mtext(paste("LL=", round(CI[1], 3)), side = 3, line = 1, outer = outer, at = max1 - 1 * (max1 - min1) / 9,
+              col = "blue", cex = mcex, adj = 0)
+        mtext(paste("UL=", round(CI[2], 3)), side = 3, line = 2, outer = outer, at = max1 - 1 * (max1 - min1) / 9,
+              col = "blue", cex = mcex, adj = 0)
+        mtext("Asymptotic Normal", side = 3, line = 3, outer = outer, at = max1 - 1 * (max1 - min1) / 9, col = "blue",
+              cex = mcex, adj = 0)
       }
     }
 
     if (type %in% c("asymp", "Asymp")) {
       f <- Vectorize(function(x) dnorm(x, quantMean, quantSE), "x")
-      curve(f, from = quantMean - 2.58 * quantSE, to = quantMean + 2.58 * quantSE, lwd = 2, xlab = "", ylab = "", axes = FALSE)
+      curve(f, from = quantMean - 2.58 * quantSE, to = quantMean + 2.58 * quantSE, lwd = 2, xlab = "", ylab = "",
+            axes = FALSE)
       range1 <- c(quantMean - 2.58 * quantSE, quantMean + 2.58 * quantSE)
       max1 <- range1[2]
       min1 <- range1[1]
@@ -44,9 +48,12 @@ confintAsymp <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "asymp", 
       mtext(quant, 1, 4.5)
       axis(1, xrange, xrange, line = 2.5)
       axis(2, line = 1.1)
-      mtext(paste("LL=", round(CI[1], 3)), side = 3, line = 1, outer = outer, at = max1 - 4 * (max1 - min1) / 9, col = "black", cex = mcex)
-      mtext(paste("UL=", round(CI[2], 3)), side = 3, line = 2, outer = outer, at = max1 - 4 * (max1 - min1) / 9, col = "black", cex = mcex)
-      mtext("Asymptotic", side = 3, line = 3, outer = outer, at = max1 - 4 * (max1 - min1) / 9, col = "black", cex = mcex)
+      mtext(paste("LL=", round(CI[1], 3)), side = 3, line = 1, outer = outer, at = max1 - 4 * (max1 - min1) / 9,
+            col = "black", cex = mcex)
+      mtext(paste("UL=", round(CI[2], 3)), side = 3, line = 2, outer = outer, at = max1 - 4 * (max1 - min1) / 9,
+            col = "black", cex = mcex)
+      mtext("Asymptotic", side = 3, line = 3, outer = outer, at = max1 - 4 * (max1 - min1) / 9, col = "black",
+            cex = mcex)
 
       if (plotCI) {
         yci <- par("usr")[3] - 1.2 * diff(par("usr")[3:4]) / 25
@@ -78,12 +85,18 @@ Note: Because the SE =", quantSE, ", the plot of the sampling distribution using
       yci <- par("usr")[3] + 2.5 * diff(par("usr")[3:4]) / 25
       # arrows(CI[1],yci,CI[2],yci,length=0,angle=90,code=3,cex=1.5,lwd=2, col="blue",lty=2)
       # points(quantMean,yci,pch=19,cex=1.5, col="blue")
-      #       text(max1+0*(max1-min1)/9,(par("usr")[4]-2.5*par("cxy")[2]),adj=0, paste("LL=",round(CI[1],3)), col="blue")
-      #       text(max1+0*(max1-min1)/9,(par("usr")[4]-3.5*par("cxy")[2]),adj=0, paste("UL=",round(CI[2],3)), col="blue")
-      mtext(paste("LL=", round(CI[1], 3)), side = 3, line = 2, outer = outer, at = max1 - 1 * (max1 - min1) / 9, col = "blue", cex = mcex)
-      mtext(paste("UL=", round(CI[2], 3)), side = 3, line = 3, outer = outer, at = max1 - 1 * (max1 - min1) / 9, col = "blue", cex = mcex)
-      mtext("Asymptotic", side = 3, line = 4, outer = outer, at = max1 - 1 * (max1 - min1) / 9, col = "blue", cex = mcex)
-      cat("Because the SE,", quantSE, ", is near zero, the plot of the sampling distribution using aymptotic normal is not available.\n")
+      #       text(max1+0*(max1-min1)/9,(par("usr")[4]-2.5*par("cxy")[2]),adj=0, paste("LL=",round(CI[1],3)),
+      # col="blue")
+      #       text(max1+0*(max1-min1)/9,(par("usr")[4]-3.5*par("cxy")[2]),adj=0, paste("UL=",round(CI[2],3)),
+      # col="blue")
+      mtext(paste("LL=", round(CI[1], 3)), side = 3, line = 2, outer = outer, at = max1 - 1 * (max1 - min1) / 9,
+            col = "blue", cex = mcex)
+      mtext(paste("UL=", round(CI[2], 3)), side = 3, line = 3, outer = outer, at = max1 - 1 * (max1 - min1) / 9,
+            col = "blue", cex = mcex)
+      mtext("Asymptotic", side = 3, line = 4, outer = outer, at = max1 - 1 * (max1 - min1) / 9, col = "blue",
+            cex = mcex)
+      cat("Because the SE,", quantSE,
+          ", is near zero, the plot of the sampling distribution using aymptotic normal is not available.\n")
     }
   }
 

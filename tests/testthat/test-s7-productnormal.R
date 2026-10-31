@@ -8,7 +8,8 @@ test_that("ProductNormal class creation works", {
   # expect_error(ProductNormal(mu = c(0.5), Sigma = matrix(1)))
   # Note: Validator runs (confirmed by debug) but expect_error fails to catch it in testthat/S7 context.
   # expect_error(ProductNormal(mu = c(0.5, 0.3), Sigma = matrix(1)), "Dimensions of Sigma must match length of mu")
-  # expect_error(ProductNormal(mu = c(0.5, 0.3), Sigma = matrix(c(1, 2, 3, 4), 2)), "Sigma must be positive semi-definite") # Not symmetric/PSD
+  # expect_error(ProductNormal(mu = c(0.5, 0.3), Sigma = matrix(c(1, 2, 3, 4), 2)), "Sigma must be positive
+  # semi-definite") # Not symmetric/PSD
 })
 
 test_that("cdf method works for 2 variables (dispatch to pprodnormal)", {

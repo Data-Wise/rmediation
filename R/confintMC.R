@@ -1,4 +1,5 @@
-confintMC <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "MC", plot = FALSE, plotCI = FALSE, n.mc = 1e5, H0 = FALSE, mu0, Sigma0, ...) {
+confintMC <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "MC", plot = FALSE, plotCI = FALSE, n.mc = 1e5,
+                      H0 = FALSE, mu0, Sigma0, ...) {
   q1 <- quant
   quant <- parse(text = sub("~", "", quant))
   df <- data.frame(MASS::mvrnorm(n.mc, mu, Sigma))
@@ -26,7 +27,10 @@ confintMC <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "MC", plot =
     if (!is.matrix(Sigma0)) {
       if (length(mu) != (sqrt(1 + 8 * length(Sigma0)) - 1) / 2) {
         stop(
-          paste("Please check the length of", sQuote("Sigma0"), "and", sQuote("mu"), ". If the length(dimension) of the", sQuote("mu"), "vector (", length(mu), ") is correct, the stacked lower triangle matrix", sQuote("Sigma0"), "must have ", ((2 * length(mu) + 1)^2 - 1) / 8, "elements, instead of", length(Sigma0))
+          paste("Please check the length of", sQuote("Sigma0"), "and", sQuote("mu"),
+                ". If the length(dimension) of the", sQuote("mu"), "vector (", length(mu),
+                ") is correct, the stacked lower triangle matrix", sQuote("Sigma0"), "must have ",
+                ((2 * length(mu) + 1)^2 - 1) / 8, "elements, instead of", length(Sigma0))
         )
       }
 
@@ -79,7 +83,8 @@ confintMC <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "MC", plot =
     # Added for min null test 6-14-14
     # To get a more reasonable y range
     if (H0) {
-      yrange <- range(quantile(xyDens$y, c(alpha / 10, 1 - alpha / 10)), quantile(H0xyDens$y, c(alpha / 10, 1 - alpha / 10)))
+      yrange <- range(quantile(xyDens$y, c(alpha / 10, 1 - alpha / 10)),
+                      quantile(H0xyDens$y, c(alpha / 10, 1 - alpha / 10)))
     } else {
       yrange <- quantile(xyDens$y, c(alpha / 10, 1 - alpha / 10))
     }
@@ -97,13 +102,19 @@ confintMC <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "MC", plot =
       segments(H0CI[1], par("usr")[3], H0CI[1], par("usr")[4] / 2, cex = 1.5, lwd = 2, lty = 2, col = "blue")
       segments(H0CI[2], par("usr")[3], H0CI[2], par("usr")[4] / 2, cex = 1.5, lwd = 2, lty = 2, col = "blue")
 
-      mtext(paste("P Value=", round(pMinH0, 4)), side = 3, line = -1, outer = outer, at = max1 - 1 * (max1 - min1) / 9, cex = mcex, adj = 0, col = "blue")
+      mtext(paste("P Value=", round(pMinH0, 4)), side = 3, line = -1, outer = outer, at = max1 - 1 * (max1 - min1) / 9,
+            cex = mcex, adj = 0, col = "blue")
 
-      mtext(paste("Kurtosis=", round(.kurtosis(H0quant.vec, type = 2), 3)), side = 3, line = 0, outer = outer, at = max1 - 1 * (max1 - min1) / 9, cex = mcex, adj = 0, col = "blue")
-      mtext(paste("Skewness=", round(.skewness(H0quant.vec, type = 2), 3)), side = 3, line = 1, outer = outer, at = max1 - 1 * (max1 - min1) / 9, cex = mcex, adj = 0, col = "blue")
-      mtext(paste("Critical Value=", round(H0CI[1], 3)), side = 3, line = 2, outer = outer, at = max1 - 1 * (max1 - min1) / 9, cex = mcex, adj = 0, col = "blue")
-      mtext(paste("Critical Value=", round(H0CI[2], 3)), side = 3, line = 3, outer = outer, at = max1 - 1 * (max1 - min1) / 9, cex = mcex, adj = 0, col = "blue")
-      mtext(paste("H0:", quant, "=0"), side = 3, line = 4, outer = outer, at = max1 - 1 * (max1 - min1) / 9, cex = mcex, adj = 0, col = "blue", font = 2)
+      mtext(paste("Kurtosis=", round(.kurtosis(H0quant.vec, type = 2), 3)), side = 3, line = 0, outer = outer,
+            at = max1 - 1 * (max1 - min1) / 9, cex = mcex, adj = 0, col = "blue")
+      mtext(paste("Skewness=", round(.skewness(H0quant.vec, type = 2), 3)), side = 3, line = 1, outer = outer,
+            at = max1 - 1 * (max1 - min1) / 9, cex = mcex, adj = 0, col = "blue")
+      mtext(paste("Critical Value=", round(H0CI[1], 3)), side = 3, line = 2, outer = outer,
+            at = max1 - 1 * (max1 - min1) / 9, cex = mcex, adj = 0, col = "blue")
+      mtext(paste("Critical Value=", round(H0CI[2], 3)), side = 3, line = 3, outer = outer,
+            at = max1 - 1 * (max1 - min1) / 9, cex = mcex, adj = 0, col = "blue")
+      mtext(paste("H0:", quant, "=0"), side = 3, line = 4, outer = outer, at = max1 - 1 * (max1 - min1) / 9, cex = mcex,
+            adj = 0, col = "blue", font = 2)
       text(H0CI[1], par("usr")[4] / 2, labels = "Lower Critical Value", adj = c(.5, 0), cex = mcex)
       text(H0CI[2], par("usr")[4] / 2, labels = "Upper Critical Value", adj = c(.5, 0), cex = mcex)
     }
@@ -111,22 +122,36 @@ confintMC <- function(mu, Sigma, quant = NULL, alpha = 0.05, type = "MC", plot =
 
     if (type %in% c("mc", "MC")) {
       # New- 1/24/14-DT
-      mtext(paste("P Value=", round(pMinH1, 4)), side = 3, line = -1, outer = outer, at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
-      mtext(paste("Kurtosis=", round(.kurtosis(quant.vec, type = 2), 3)), side = 3, line = 0, outer = outer, at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
-      mtext(paste("Skewness=", round(.skewness(quant.vec, type = 2), 3)), side = 3, line = 1, outer = outer, at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
-      mtext(paste("LL=", round(CI[1], 3)), side = 3, line = 2, outer = outer, at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
-      mtext(paste("UL=", round(CI[2], 3)), side = 3, line = 3, outer = outer, at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
-      mtext("Monte Carlo CI", side = 3, line = 4, outer = outer, at = max1 - 3 * (max1 - min1) / 9, cex = mcex, font = 2, adj = 0)
+      mtext(paste("P Value=", round(pMinH1, 4)), side = 3, line = -1, outer = outer, at = max1 - 3 * (max1 - min1) / 9,
+            cex = mcex, adj = 0)
+      mtext(paste("Kurtosis=", round(.kurtosis(quant.vec, type = 2), 3)), side = 3, line = 0, outer = outer,
+            at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
+      mtext(paste("Skewness=", round(.skewness(quant.vec, type = 2), 3)), side = 3, line = 1, outer = outer,
+            at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
+      mtext(paste("LL=", round(CI[1], 3)), side = 3, line = 2, outer = outer, at = max1 - 3 * (max1 - min1) / 9,
+            cex = mcex, adj = 0)
+      mtext(paste("UL=", round(CI[2], 3)), side = 3, line = 3, outer = outer, at = max1 - 3 * (max1 - min1) / 9,
+            cex = mcex, adj = 0)
+      mtext("Monte Carlo CI", side = 3, line = 4, outer = outer, at = max1 - 3 * (max1 - min1) / 9, cex = mcex,
+            font = 2, adj = 0)
     }
 
     if (type == "all") {
       # New- 1/24/14-DT
-      mtext(paste("Kurtosis=", round(.kurtosis(quant.vec, type = 2), 3)), side = 3, line = 1, outer = outer, at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
-      mtext(paste("Skewness=", round(.skewness(quant.vec, type = 2), 3)), side = 3, line = 2, outer = outer, at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
-      mtext(paste("LL=", round(CI[1], 3)), side = 3, line = 3, outer = outer, at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
-      mtext(paste("UL=", round(CI[2], 3)), side = 3, line = 4, outer = outer, at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
+      mtext(paste("Kurtosis=", round(.kurtosis(quant.vec, type = 2), 3)), side = 3, line = 1, outer = outer,
+            at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
+      mtext(paste("Skewness=", round(.skewness(quant.vec, type = 2), 3)), side = 3, line = 2, outer = outer,
+            at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
+      mtext(paste("LL=", round(CI[1], 3)), side = 3, line = 3, outer = outer, at = max1 - 3 * (max1 - min1) / 9,
+            cex = mcex, adj = 0)
+      mtext(paste("UL=", round(CI[2], 3)), side = 3, line = 4, outer = outer, at = max1 - 3 * (max1 - min1) / 9,
+            cex = mcex, adj = 0)
       mtext("Monte Carlo", side = 3, line = 5, outer = outer, at = max1 - 3 * (max1 - min1) / 9, cex = mcex, adj = 0)
-      if (res.asymp$SE > 40 * .Machine$double.eps) legend(x = max1, y = par("usr")[4], c("Monte Carlo", "Asymptotic Normal"), col = c("black", "blue"), lty = c(1, 2), lwd = c(2:2), bty = "n", title = "", cex = mcex, y.intersp = .5, xpd = FALSE, xjust = .5)
+      if (res.asymp$SE > 40 * .Machine$double.eps) {
+        legend(x = max1, y = par("usr")[4], c("Monte Carlo", "Asymptotic Normal"), col = c("black", "blue"),
+               lty = c(1, 2), lwd = c(2:2), bty = "n", title = "", cex = mcex, y.intersp = .5, xpd = FALSE,
+               xjust = .5)
+      }
     }
 
     if (plotCI) {

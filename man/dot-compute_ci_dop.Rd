@@ -18,6 +18,7 @@ List with CI, Estimate, SE
 Computes confidence intervals for the product of two normal random variables
 using the exact distribution method. The point estimate is
 \eqn{\mu_x\mu_y + \sigma_{xy}} and the standard error follows Craig (1936):
-\deqn{SE = \sqrt{\sigma_y^2\mu_x^2 + \sigma_x^2\mu_y^2 + 2\mu_x\mu_y\rho\sigma_x\sigma_y + \sigma_x^2\sigma_y^2 + \sigma_x^2\sigma_y^2\rho^2}}
+\deqn{SE = \sqrt{\sigma_y^2\mu_x^2 + \sigma_x^2\mu_y^2 + 2\mu_x\mu_y\rho\sigma_x\sigma_y + \sigma_x^2\sigma_y^2 +
+\sigma_x^2\sigma_y^2\rho^2}}
 }
 \keyword{internal}
