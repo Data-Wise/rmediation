@@ -110,8 +110,56 @@ dprodnormal <- function(x, mu.x, mu.y, se.x = 1, se.y = 1, rho = 0, log = FALSE)
   za <- abs(z)
   decades <- if (za > 0 && za < 1e-2) 10^seq(floor(log10(za)) - 1, 0) else numeric()
   decades <- c(-decades, decades)
-  breaks <- sort(unique(c(lo, if (lo < 0 && hi > 0) 0, decades[decades > lo & decades < hi], hi)))
+  spike <- .dprod_spike_breaks(z, mu.a, mu.b, rho, s)
+  breaks <- sort(unique(c(lo, if (lo < 0 && hi > 0) 0, decades[decades > lo & decades < hi],
+                          spike[spike > lo & spike < hi], hi)))
+  # A subinterval far from the spike holds an integrand that underflows steeply (1e-197 and falling), which
+  # integrate() reports as "probably divergent" at rel.tol = 1e-10. Such a piece carries no mass relative to the
+  # peak, so on that error retry it with an absolute tolerance scaled to the peak of the integrand.
+  peak <- NULL
   sum(vapply(seq_len(length(breaks) - 1L), function(i) {
-    integrate(g, breaks[i], breaks[i + 1L], subdivisions = 2000L, rel.tol = 1e-10, abs.tol = 1e-300)$value
+    res <- tryCatch(
+      integrate(g, breaks[i], breaks[i + 1L], subdivisions = 2000L, rel.tol = 1e-10, abs.tol = 1e-300),
+      error = function(e) e
+    )
+    if (inherits(res, "error")) {
+      if (!grepl("divergent|roundoff|bad integrand", conditionMessage(res))) {
+        stop(res)
+      }
+      if (is.null(peak)) {
+        gb <- g(breaks[is.finite(breaks) & breaks != 0])
+        peak <<- max(gb[is.finite(gb)], 0)
+      }
+      res <- integrate(g, breaks[i], breaks[i + 1L], subdivisions = 2000L, rel.tol = 1e-10,
+                       abs.tol = max(1e-12 * peak, 1e-300))
+    }
+    res$value
   }, numeric(1)))
+}
+
+# Breakpoints around the spike of the integrand in .dprod_integral(). The second normal factor is
+# dnorm(h(x) / s) with h(x) = z / x - (mu.a + rho (x - mu.b)); it peaks where h(x) = 0, that is at the roots
+# of rho x^2 + (mu.a - rho mu.b) x - z = 0, and is about s / |h'(x)| wide there. When mu.a (or mu.b) is large
+# that width is far smaller than the +/- 10 window, so a quadrature that never samples the spike returns 0
+# (issue #117). Putting breakpoints at each root and at +/- 1, 3, 10 and 30 widths lets integrate() resolve it,
+# as .dop_cdf() does with its quadratic roots.
+.dprod_spike_breaks <- function(z, mu.a, mu.b, rho, s) {
+  cc <- mu.a - rho * mu.b
+  roots <- if (rho == 0) {
+    if (cc == 0) numeric() else z / cc
+  } else {
+    disc <- cc^2 + 4 * rho * z
+    if (disc < 0) {
+      numeric()
+    } else {
+      q <- -0.5 * (cc + (if (cc < 0) -1 else 1) * sqrt(disc))
+      c(q / rho, if (q != 0) -z / q)
+    }
+  }
+  roots <- roots[is.finite(roots) & roots != 0]
+  if (!length(roots)) {
+    return(numeric())
+  }
+  width <- s / pmax(abs(z / roots^2 + rho), .Machine$double.eps)
+  as.vector(outer(c(-30, -10, -3, -1, 0, 1, 3, 10, 30), seq_along(roots), function(k, i) roots[i] + k * width[i]))
 }
