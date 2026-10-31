@@ -44,7 +44,7 @@ OpenMx fix of #433 would have blocked releases). R6 fixes it. Until it lands, th
 
 | Step | What | Where | Gate |
 |---|---|---|---|
-| 1 | **T5b**: move the gate to a separate non-required job; update `check-ci-policy.R` (one gate job, not in the required job, no `continue-on-error`, no path filter) and the `CLAUDE.md`/`.STATUS`/plan text | PR to `dev` | policy check red first; planted defects; ask before merge |
+| 1 | **T5b**: move the gate to a separate non-required job; update `check-ci-policy.R` (one gate job, not in the required job, no `continue-on-error`, no path filter) and the `CLAUDE.md`/`.STATUS`/plan text | PR to `dev` | policy check red first; planted defects; ask before merge. DONE in the T5b PR (branch `feature/gate-job`) |
 | 2 | **Version bump to 1.8.0**: `DESCRIPTION`, NEWS heading, sweep of "1.7.1" strings; README install note and `ref = "v1.8.0"` | PR to `dev` | `check-local.sh`; grep for the old strings returns only history |
 | 3 | **Dry run**: `gh workflow run R-CMD-check -r dev`, then read every leg | dispatch on `dev` | author's approval already given (R5); fix findings on `dev` |
 | 4 | **Release PR** `dev` -> `main`, merge commit (not squash), risk-tier exempt (release PR) | PR to `main` | required `ubuntu-latest (release)` green; read every other leg; Codecov patch coverage counts all work since `main`, so triage it, do not assume |

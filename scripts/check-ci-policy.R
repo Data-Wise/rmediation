@@ -64,27 +64,53 @@ if ("R-CMD-check.yaml" %in% expensive && file.exists(".github/workflows/R-CMD-ch
     bad("R-CMD-check.yaml: job env _R_CHECK_DEPENDS_ONLY_ must be ${{ matrix.config.depends-only }}")
   }
 
-  # The issue #84 gate (scripts/verify-constraint-not-enforced.R) runs as one step of the Ubuntu release leg: it
-  # needs OpenMx, so a missing OpenMx fails the job; it takes about 2 s; it has no path filter (a filter that
-  # misses a file would skip it silently) and no continue-on-error (a failing gate must fail the job).
+  # The issue #84 gate must NOT be a step here: a failing step fails the job, and this job's check
+  # (`ubuntu-latest (release)`) is the one `main` requires, so a gate step would block the release on an
+  # OpenMx behavior change. It lives in its own non-required workflow (issue-84-gate.yaml), checked below.
   steps <- wf$jobs[[1]]$steps
-  is_gate <- vapply(steps, function(x) grepl("verify-constraint-not-enforced.R", x$run %||% "", fixed = TRUE), NA)
-  if (sum(is_gate) != 1L) {
-    bad(sprintf("R-CMD-check.yaml: expected exactly one step running the issue #84 gate, found %d", sum(is_gate)))
-  } else {
-    gate <- steps[is_gate][[1]]
-    cond <- gate[["if"]] %||% ""
-    if (!(grepl("ubuntu-latest", cond, fixed = TRUE) && grepl("release", cond, fixed = TRUE))) {
-      bad("R-CMD-check.yaml: the issue #84 gate step must be limited to the ubuntu-latest release leg")
-    }
-    if (isTRUE(gate[["continue-on-error"]]) || identical(gate[["continue-on-error"]], "true")) {
-      bad("R-CMD-check.yaml: the issue #84 gate step must not set continue-on-error")
+  if (any(vapply(steps, function(x) grepl("verify-constraint-not-enforced.R", x$run %||% "", fixed = TRUE), NA))) {
+    bad("R-CMD-check.yaml: the issue #84 gate must not be a step of the required job; use issue-84-gate.yaml")
+  }
+}
+
+# The issue #84 gate: its own workflow and job, so a red gate is visible but never the required check. It runs for
+# main and releases only (and on dispatch), with no path filter and no continue-on-error, and it needs OpenMx.
+gf <- ".github/workflows/issue-84-gate.yaml"
+if (!file.exists(gf)) {
+  bad("issue-84-gate.yaml: workflow file is missing")
+} else {
+  gwf <- yaml::read_yaml(gf)
+  gon <- gwf[["on"]] %||% gwf[["TRUE"]]
+  for (event in c("push", "pull_request")) {
+    br <- branches(gon, event)
+    if ("dev" %in% br) bad(sprintf("issue-84-gate.yaml: `%s` must not run on dev", event))
+    if (!"main" %in% br) bad(sprintf("issue-84-gate.yaml: `%s` must run on main", event))
+  }
+  if (!"workflow_dispatch" %in% names(gon)) bad("issue-84-gate.yaml: needs workflow_dispatch")
+  for (event in names(gon)) {
+    if (is.list(gon[[event]]) && any(c("paths", "paths-ignore") %in% names(gon[[event]]))) {
+      bad(sprintf("issue-84-gate.yaml: `%s` has a paths filter, which could skip the gate silently", event))
     }
   }
-  for (event in names(on)) {
-    if (is.list(on[[event]]) && any(c("paths", "paths-ignore") %in% names(on[[event]]))) {
-      bad(sprintf("R-CMD-check.yaml: `%s` has a paths filter, which could skip the issue #84 gate silently", event))
+  gjob <- gwf$jobs[[1]]
+  jname <- as.character(gjob$name %||% names(gwf$jobs)[1])
+  if (identical(jname, required_context) || grepl(required_context, jname, fixed = TRUE)) {
+    bad("issue-84-gate.yaml: the job name must differ from main's required check")
+  }
+  gruns <- vapply(gjob$steps, function(x) as.character(x$run %||% ""), "")
+  gate_idx <- grep("verify-constraint-not-enforced.R", gruns, fixed = TRUE)
+  if (length(gate_idx) != 1L) {
+    bad(sprintf("issue-84-gate.yaml: expected exactly one step running the gate, found %d", length(gate_idx)))
+  } else {
+    g <- gjob$steps[[gate_idx]]
+    if (isTRUE(g[["continue-on-error"]]) || identical(g[["continue-on-error"]], "true") ||
+        isTRUE(gjob[["continue-on-error"]]) || identical(gjob[["continue-on-error"]], "true")) {
+      bad("issue-84-gate.yaml: the gate must not set continue-on-error")
     }
+    if (!is.null(g[["if"]])) bad("issue-84-gate.yaml: the gate step must be unconditional")
+  }
+  if (!any(grepl("OpenMx", vapply(gjob$steps, function(x) paste(unlist(x$with), collapse = " "), ""), fixed = TRUE))) {
+    bad("issue-84-gate.yaml: OpenMx must be installed explicitly (a missing OpenMx must fail the job)")
   }
 }
 
@@ -120,5 +146,5 @@ if (length(violations)) {
   cat("CI policy: FAILED\n")
   quit(status = 1L)
 }
-cat("  [PASS] no expensive workflow triggers on dev; main's required check still starts; the R-devel leg runs depends-only; the issue #84 gate step is in place; risk-tier stays cheap\n")
+cat("  [PASS] no expensive workflow triggers on dev; main's required check still starts; the R-devel leg runs depends-only; the issue #84 gate is its own non-required workflow; risk-tier stays cheap\n")
 cat("CI policy: PASSED\n")
