@@ -1,3 +1,20 @@
+# RMediation 1.8.1 (2026-10-31)
+
+No change to returned values or to the API.
+
+## Documentation
+
+- The README examples for `medci()` and `ci()` on a `ProductNormal3` now show the real output of those calls (they
+  showed intervals that the functions do not return), and the Monte Carlo calculator of the online apps is linked.
+- The SEMFit `mbco()` route is no longer described as experimental: medfit dropped that label in 0.11.0.
+- The pkgdown site gains a Quick Reference, a Cookbook (including serial mediation through medfit, the SEMFit route
+  and omitted-confounder sensitivity) and Technical Notes (the exact CDF at `|rho| = 1`, point masses, the densities).
+
+## Internal
+
+- Added `.lintr` (120 columns) and wrapped 61 over-long or mis-indented lines in R sources and tests; the parsed code
+  is unchanged. Rewrapped roxygen lines regenerate seven help pages with the same content.
+
 # RMediation 1.8.0 (2026-10-30)
 
 * S7 property access now works under the declared R 4.1 minimum.
