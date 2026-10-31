@@ -7,9 +7,14 @@ on:
     branches: [main]
   workflow_dispatch:
 permissions: read-all
+concurrency:
+  # Cancel a superseded PR run, never a push or dispatch run (the post-merge push is verified before tagging).
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   semfit:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:

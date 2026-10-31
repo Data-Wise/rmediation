@@ -13,9 +13,15 @@ name: R-CMD-check
 
 permissions: read-all
 
+concurrency:
+  # Cancel a superseded PR run, never a push or dispatch run (the post-merge push is verified before tagging).
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
+    timeout-minutes: 45
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
