@@ -136,3 +136,52 @@ test_that("a non-finite parametric replicate statistic is an error", {
   )
   expect_identical(getOption("mxOptions"), saved)
 })
+
+test_that("a replicate where h1 fits worse than h0 is an error, for both bootstrap types", {
+  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("mvtnorm")
+  f <- .memory_exp_oracle()
+  saved <- getOption("mxOptions")
+  on.exit(options(mxOptions = saved), add = TRUE)
+  .par_boot_mocks(environment(), function(h0, h1, ...) NULL)
+  calls <- 0L
+  testthat::local_mocked_bindings(mxCompare = function(h1, h0, ...) {
+    calls <<- calls + 1L
+    data.frame(diffLL = c(NA_real_, if (calls == 1L) 1 else -0.5), df = c(1, 2))
+  }, .package = "OpenMx")
+  expect_error(
+    mbco_parametric(f$null_b1, f$full, R = 2L, optim = "SLSQP"),
+    "replicate 1.*invalid statistic.*worse"
+  )
+  calls <- 0L
+  expect_error(
+    .mbco_semi(f$null_b1, f$full, R = 2L, optim = "SLSQP"),
+    "replicate 1.*invalid statistic.*worse"
+  )
+  expect_identical(getOption("mxOptions"), saved)
+})
+
+test_that("parametric refuses a model without a single raw data set before any sampling", {
+  skip_if_not_installed("OpenMx")
+  skip_if_not_installed("mvtnorm")
+  f <- .memory_exp_oracle()
+  saved <- getOption("mxOptions")
+  on.exit(options(mxOptions = saved), add = TRUE)
+  # The comparison itself is mocked: the stand-in models only need to reach the data-type check.
+  testthat::local_mocked_bindings(mxCompare = function(...) {
+    data.frame(diffLL = c(NA_real_, 1), df = c(1, 2))
+  }, .package = "OpenMx")
+  cov_h0 <- f$null_b1
+  cov_h0@data@type <- "cov"
+  multi_h1 <- OpenMx::mxModel("container", f$full)
+  for (pair in list(list(cov_h0, f$full), list(f$null_b1, multi_h1))) {
+    set.seed(11)
+    seed <- .Random.seed
+    expect_error(
+      mbco_parametric(pair[[1]], pair[[2]], R = 2L, optim = "SLSQP"),
+      "single raw data set"
+    )
+    expect_identical(.Random.seed, seed)
+  }
+  expect_identical(getOption("mxOptions"), saved)
+})

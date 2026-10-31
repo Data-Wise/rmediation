@@ -170,6 +170,14 @@
   if (length(statistic) != 1L || !is.finite(statistic)) {
     stop("Bootstrap replicate ", x, " has an invalid statistic.", call. = FALSE)
   }
+  # h1 fits worse than h0 only when the optimizer failed on h1; such a draw is not a null-distribution
+  # value and would push the p-value down (OpenMx's own bootstrap excluded it, at -1e-7).
+  if (statistic < -1e-7) {
+    stop("Bootstrap replicate ", x, " has an invalid statistic (", format(statistic),
+      "): the h1 fit is worse than the h0 fit.",
+      call. = FALSE
+    )
+  }
   statistic
 }
 

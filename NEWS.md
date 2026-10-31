@@ -28,9 +28,11 @@
   statistic. The package now simulates each replicate from the fitted `h0` with
   `OpenMx::mxGenerateData()`, fits `h0` and `h1`, refits a violated `h0` constraint, and stops
   with an error of class `RMediation_bootstrap_infeasible` when it cannot be repaired. Behavior
-  changes: a replicate that does not converge or has a non-finite statistic now stops the call
-  (`mxCompare` silently dropped such replicates), and a model with several data sets (a
-  multigroup container) is refused. The observed statistic, df and the result shape are
+  changes: a replicate that does not converge, has a non-finite statistic, or has an h1 fit worse
+  than its h0 fit now stops the call (`mxCompare` dropped such replicates, warning only when fewer
+  than 95% converged; the last check also applies to `type = "semi"`), and a model without a
+  single raw data set (a covariance-data or multigroup model) is refused before sampling. The
+  observed statistic, df and the result shape are
   unchanged; seeded p-values differ because the replicates are drawn by a different loop.
 
 - The DOP CDF (`pprodnormal()`, `qprodnormal()`, `medci()`) is exact at `|rho| = 1`: it now uses
