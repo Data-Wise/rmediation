@@ -1,6 +1,6 @@
 # RMediation Technical Notes
 
-Why three behaviors work the way they do. Each section states the rule,
+Why these behaviors work the way they do. Each section states the rule,
 the reason, and where it is tested.
 
 ## 1. `pprodnormal3()` uses Gauss-Legendre by default
@@ -180,8 +180,13 @@ infinite for zero means, and
 returns `Inf` there.
 
 **Reason.** A closed form exists only for the zero-mean case. The
-integral form is exact up to the integration tolerance, and it is
-checked against a finite difference of the CDF.
+integral form is exact up to the integration tolerance. At ordinary
+scales it agrees with a finite difference of the CDF, as below. At very
+small standard errors a CDF difference is the noisier side (it divides
+the CDF’s own absolute error by a tiny step), so the tests there use an
+independent oracle: direct quadrature of the conditioning integral, or,
+when one factor is nearly constant, the density of the remaining factors
+scaled by that factor’s mean.
 
 ``` r
 
@@ -194,6 +199,18 @@ c(density = dprodnormal(0.1, 0.3, 0.5, 0.2, 0.1),
 #>             3.719755             3.719755
 ```
 
+**Narrow spike.** When a factor’s mean is very large relative to its
+standard error (`mu / se` above about 3000 for two factors, about 1000
+for some three-factor inner integrals), the integrand is a narrow spike.
+Before 1.9.0 a fixed window around the mean missed it, so
+[`dprodnormal()`](https://data-wise.github.io/rmediation/reference/dprodnormal.md)
+and
+[`dprodnormal3()`](https://data-wise.github.io/rmediation/reference/dprodnormal3.md)
+could return `0`, `NA` or a silently low value (#117). The integration
+window is now split at the spike, found from the roots of the
+conditional mean, and subintervals far from it retry with an absolute
+tolerance scaled to the peak. Values at ordinary scales are unchanged.
+
 ## Where each rule is tested
 
 | Rule | Test file |
@@ -204,3 +221,11 @@ c(density = dprodnormal(0.1, 0.3, 0.5, 0.2, 0.1),
 | exact CDF, `\|rho\| = 1` | `tests/testthat/test-dop-meeker-article.R` |
 | zero standard error, point masses | `tests/testthat/test-zero-se-cdf.R`, `tests/testthat/test-prod3-pointmass.R` |
 | densities | `tests/testthat/test-dprodnormal.R`, `tests/testthat/test-dprodnormal3.R` |
+| narrow density spike (large `mu / se`) | `tests/testthat/test-dprod-narrow-spike.R` |
+| density and quantile at `se = 0` and `\|rho\| = 1` | `tests/testthat/test-dq-pointmass-rho1.R` |
+| product quantiles against independent oracles | `tests/testthat/test-qprodnormal-oracle.R` |
+| [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md) and [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) interval endpoints | `tests/testthat/test-medci-ci-oracle.R` |
+| [`pMC()`](https://data-wise.github.io/rmediation/reference/pMC.md) and [`qMC()`](https://data-wise.github.io/rmediation/reference/qMC.md) closed forms | `tests/testthat/test-pMC-qMC-closed-form.R` |
+| `confintAsymp()` and `confintMC()` known answers | `tests/testthat/test-confint-known-answer.R` |
+| three-factor truncation bound (`.prod3_bound()`) | `tests/testthat/test-prod3-bound-defect.R` |
+| MBCO size at small `n` and the real-OpenMx asymptotic check | `tests/testthat/test-mbco-size-small-n.R` |

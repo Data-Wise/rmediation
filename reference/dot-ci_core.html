@@ -31,7 +31,7 @@ will be displayed as well."><meta property="og:image" content="https://data-wise
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,12 +51,14 @@ will be displayed as well."><meta property="og:image" content="https://data-wise
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
+    <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://data-wise.github.io/mediationverse/articles/ecosystem.html">Ecosystem</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-status" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fas fa-chart-line"></span> Status</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-status"><li><a class="external-link dropdown-item" href="https://github.com/data-wise/mediationverse/blob/main/STATUS.md">📊 Package Status Dashboard</a></li>
-    <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/roadmap.html">🗺️ Development Roadmap</a></li>
+    <li><a class="dropdown-item" href="../articles/roadmap.html">🗺️ RMediation Status and Roadmap</a></li>
+    <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/roadmap.html">🗺️ Mediationverse Roadmap</a></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/contributing.html">🤝 Contributing Guide</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md">📋 Ecosystem Coordination</a></li>
@@ -254,10 +256,10 @@ Research Methods</em>, <b>43</b>, 692–700. <a href="https://doi.org/10.3758/s1
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"quant")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ~b1 * b2 * b3 * b4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x580f51306498&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x57d1a63cc5f8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Asymptotic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Asymptotic$`97.5% CI`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Asymptotic$`95% CI`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.04040623  0.41840623</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Asymptotic$Estimate</span>
@@ -269,7 +271,7 @@ Research Methods</em>, <b>43</b>, 692–700. <a href="https://doi.org/10.3758/s1
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"quant")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ~b1 * b2 * b3 * b4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x580f51306498&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x57d1a63cc5f8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># An Example of Conservative Null Sampling Distribution</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="ci.html">ci</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">.3</span>, b2 <span class="op">=</span> <span class="fl">.4</span>, b3 <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.01</span>, <span class="fl">0</span>, <span class="fl">.02</span><span class="op">)</span>,</span></span>
@@ -296,7 +298,7 @@ Research Methods</em>, <b>43</b>, 692–700. <a href="https://doi.org/10.3758/s1
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"quant")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ~b1 * b2 * b3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x580f51306498&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x57d1a63cc5f8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$CI</span>
@@ -342,7 +344,7 @@ Research Methods</em>, <b>43</b>, 692–700. <a href="https://doi.org/10.3758/s1
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"quant")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ~b1 * b2 * b3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x580f51306498&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x57d1a63cc5f8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$CI</span>

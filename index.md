@@ -58,18 +58,18 @@ non-normality:
 install.packages("RMediation")
 ```
 
-### From GitHub (release 1.8.1, pre-release)
+### From GitHub (release 1.9.0, pre-release)
 
-CRAN serves the stable 1.6.1. Release 1.8.1 is published on GitHub only,
+CRAN serves the stable 1.6.1. Release 1.9.0 is published on GitHub only,
 as a pre-release; it is not on CRAN.
 
 ``` r
 
 # Using pak (recommended)
-pak::pak("Data-Wise/rmediation@v1.8.1")
+pak::pak("Data-Wise/rmediation@v1.9.0")
 
 # Or using remotes
-remotes::install_github("Data-Wise/rmediation", ref = "v1.8.1")
+remotes::install_github("Data-Wise/rmediation", ref = "v1.9.0")
 ```
 
 For the development branch, use `@dev` or `ref = "dev"` instead.
@@ -312,9 +312,13 @@ points; use `screen = "none"` to reproduce the published tables.
 | [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md) | Asymptotic and OpenMx bootstrap MBCO hypothesis tests |
 | [`mbco_product_null()`](https://data-wise.github.io/rmediation/reference/mbco_product_null.md) | MBCO test of a product null (`a*b = 0`, serial products) as an intersection-union test over single-path nulls, avoiding the wrong-branch failure of one nonlinear constraint |
 | [`ml_omitted_confounder()`](https://data-wise.github.io/rmediation/reference/ml_omitted_confounder.md) | Sensitivity of two-level (1-1-1) indirect effects to an omitted confounder (Tofighi & Kelley, 2016) |
+| [`ci_mediation_data()`](https://data-wise.github.io/rmediation/reference/ci_mediation_data.md), [`ci_serial_mediation_data()`](https://data-wise.github.io/rmediation/reference/ci_mediation_data.md) | CI for a medfit `MediationData` or `SerialMediationData` object (also reached through [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md)) |
 | [`pprodnormal()`](https://data-wise.github.io/rmediation/reference/pprodnormal.md) | CDF of product of two normals |
 | [`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md) | Quantiles of product of two normals |
+| [`dprodnormal()`](https://data-wise.github.io/rmediation/reference/dprodnormal.md) | Exact density of the product of two normals |
 | [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md) | Exact CDF of product of three normals (`a1*a2*b`) |
+| [`dprodnormal3()`](https://data-wise.github.io/rmediation/reference/dprodnormal3.md) | Exact density of the product of three normals |
+| [`pMC()`](https://data-wise.github.io/rmediation/reference/pMC.md), [`qMC()`](https://data-wise.github.io/rmediation/reference/qMC.md) | Monte Carlo CDF and quantile for any function of coefficient estimates |
 | [`ProductNormal()`](https://data-wise.github.io/rmediation/reference/ProductNormal.md) | S7 class for two-variable product distributions |
 | [`ProductNormal3()`](https://data-wise.github.io/rmediation/reference/ProductNormal3.md) | S7 class for three-variable sequential indirect effects |
 
@@ -326,6 +330,10 @@ points; use `screen = "none"` to reproduce the published tables.
   can signal.
 - [Cookbook](https://data-wise.github.io/rmediation/articles/cookbook.html):
   short recipes that run as written.
+- [Status and
+  Roadmap](https://data-wise.github.io/rmediation/articles/roadmap.html):
+  what is settled, the CRAN hold and its criteria, and what could come
+  next.
 - [Technical
   Notes](https://data-wise.github.io/rmediation/articles/technical-notes.html):
   why the integrator, the exact CDF, point masses, the densities and the

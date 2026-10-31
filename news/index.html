@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,12 +27,14 @@
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
+    <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://data-wise.github.io/mediationverse/articles/ecosystem.html">Ecosystem</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-status" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fas fa-chart-line"></span> Status</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-status"><li><a class="external-link dropdown-item" href="https://github.com/data-wise/mediationverse/blob/main/STATUS.md">📊 Package Status Dashboard</a></li>
-    <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/roadmap.html">🗺️ Development Roadmap</a></li>
+    <li><a class="dropdown-item" href="../articles/roadmap.html">🗺️ RMediation Status and Roadmap</a></li>
+    <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/roadmap.html">🗺️ Mediationverse Roadmap</a></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/contributing.html">🤝 Contributing Guide</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md">📋 Ecosystem Coordination</a></li>
@@ -52,6 +54,24 @@
       <small>Source: <a href="https://github.com/data-wise/rmediation/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.9.0" id="rmediation-190-2026-10-31">RMediation 1.9.0 (2026-10-31)<a class="anchor" aria-label="anchor" href="#rmediation-190-2026-10-31"></a></h2>
+<p>The <code>ci(type = "asymp")</code> interval label changes (see Behavior changes); two silent-wrong-value density bugs are fixed.</p>
+<div class="section level3">
+<h3 id="behavior-changes-1-9-0">Behavior changes<a class="anchor" aria-label="anchor" href="#behavior-changes-1-9-0"></a></h3>
+<ul><li>
+<code>ci(type = "asymp")</code> now names its interval by its confidence level, <code>100 * (1 - alpha)</code>, as <code><a href="../reference/medci.html">medci()</a></code> does. It used to use <code>100 * (1 - alpha / 2)</code>, so the default 95% interval was labeled <code>97.5% CI</code> (and <code>alpha = 0.10</code> gave <code>95% CI</code>). The interval itself was always correct. Code that indexes the result by the old name, such as <code>res$"97.5% CI"</code>, must use <code>res[[1]]</code> or the new name (<code>"95% CI"</code> at the default <code>alpha</code>) (<a href="https://github.com/data-wise/rmediation/issues/123" class="external-link">#123</a>).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-1-9-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-9-0"></a></h3>
+<ul><li>
+<code><a href="../reference/dprodnormal.html">dprodnormal()</a></code> and <code><a href="../reference/dprodnormal3.html">dprodnormal3()</a></code> no longer return <code>0</code>, <code>NA</code> or a silently low density when a factor’s mean is very large relative to its standard error (<code>mu / se</code> above about 3000 for two factors, about 1000 for some three-factor cases). The integrand is a narrow spike there and the fixed integration window missed it. The window is now split at the spike (found from the roots of the conditional mean), with a scaled absolute tolerance for the far subintervals. Values for well-conditioned inputs are unchanged (<a href="https://github.com/data-wise/rmediation/issues/117" class="external-link">#117</a>).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="internal-1-9-0">Internal<a class="anchor" aria-label="anchor" href="#internal-1-9-0"></a></h3>
+<ul><li>Eight tests-only PRs add independent-oracle and planted-defect coverage for the risk files: <code><a href="../reference/medci.html">medci()</a></code>/<code><a href="../reference/ci.html">ci()</a></code> endpoints (<a href="https://github.com/data-wise/rmediation/issues/115" class="external-link">#115</a>), point masses and <code>|rho| = 1</code> (<a href="https://github.com/data-wise/rmediation/issues/116" class="external-link">#116</a>), <code><a href="../reference/pMC.html">pMC()</a></code>/<code><a href="../reference/qMC.html">qMC()</a></code> closed forms (<a href="https://github.com/data-wise/rmediation/issues/118" class="external-link">#118</a>), <code><a href="../reference/qprodnormal.html">qprodnormal()</a></code> (<a href="https://github.com/data-wise/rmediation/issues/119" class="external-link">#119</a>, <a href="https://github.com/data-wise/rmediation/issues/126" class="external-link">#126</a>), <code>confintAsymp()</code>/<code>confintMC()</code> (<a href="https://github.com/data-wise/rmediation/issues/120" class="external-link">#120</a>), <code>.prod3_bound()</code> (<a href="https://github.com/data-wise/rmediation/issues/121" class="external-link">#121</a>) and MBCO size and a real-OpenMx check (<a href="https://github.com/data-wise/rmediation/issues/122" class="external-link">#122</a>).</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.8.1" id="rmediation-181-2026-10-31">RMediation 1.8.1 (2026-10-31)<a class="anchor" aria-label="anchor" href="#rmediation-181-2026-10-31"></a></h2>
 <p>No change to returned values or to the API.</p>

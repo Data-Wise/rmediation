@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,7 @@
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
+    <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="external-link nav-link" href="https://data-wise.github.io/mediationverse/articles/ecosystem.html">Ecosystem</a></li>
@@ -57,7 +58,8 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-status" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fas fa-chart-line"></span> Status</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-status">
 <li><a class="external-link dropdown-item" href="https://github.com/data-wise/mediationverse/blob/main/STATUS.md">📊 Package Status Dashboard</a></li>
-    <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/roadmap.html">🗺️ Development Roadmap</a></li>
+    <li><a class="dropdown-item" href="../articles/roadmap.html">🗺️ RMediation Status and Roadmap</a></li>
+    <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/roadmap.html">🗺️ Mediationverse Roadmap</a></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/contributing.html">🤝 Contributing Guide</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md">📋 Ecosystem Coordination</a></li>
@@ -244,6 +246,14 @@ covariance</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level2">
+<h2 id="changed-in-1-9-0">Changed in 1.9.0<a class="anchor" aria-label="anchor" href="#changed-in-1-9-0"></a>
+</h2>
+<p><code>ci(type = "asymp")</code> now names its interval
+<code>95% CI</code> (it was <code>97.5% CI</code>) at the default
+<code>alpha</code>. Index the result by position (<code>res[[1]]</code>)
+or by the new name; the interval itself did not change (#123).</p>
 </div>
 <div class="section level2">
 <h2 id="conditions-to-know">Conditions to know<a class="anchor" aria-label="anchor" href="#conditions-to-know"></a>

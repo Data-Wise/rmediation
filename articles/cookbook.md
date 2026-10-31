@@ -228,3 +228,73 @@ Each row is the range of the adjusted effect over the grid of confounder
 correlations with the mediator and outcome, at the stated correlation
 with the treatment. See
 [`vignette("omitted-confounder-sensitivity")`](https://data-wise.github.io/rmediation/articles/omitted-confounder-sensitivity.md).
+
+## 12. A Monte Carlo interval for any function of estimates
+
+[`pMC()`](https://data-wise.github.io/rmediation/reference/pMC.md) and
+[`qMC()`](https://data-wise.github.io/rmediation/reference/qMC.md)
+simulate the sampling distribution of a function given the estimates and
+their covariance. Unlike
+[`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md)
+they accept any formula, and `p` must be a single value.
+
+``` r
+
+est <- c(b1 = 0.5, b2 = 0.6)
+vcv <- diag(c(0.08, 0.04)^2)
+set.seed(1)
+pMC(0.2, mu = est, Sigma = vcv, quant = ~ b1 * b2)
+#> [1] 0.02393
+c(lower = qMC(0.025, mu = est, Sigma = vcv, quant = ~ b1 * b2),
+  upper = qMC(0.975, mu = est, Sigma = vcv, quant = ~ b1 * b2))
+#>  lower.2.5% upper.97.5% 
+#>   0.2016349   0.4050232
+```
+
+For a plain product, the exact quantiles of
+[`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md)
+(recipe 3) avoid the simulation error.
+
+## 13. Quantiles of a distribution object, and a medfit object directly
+
+[`dist_quantile()`](https://data-wise.github.io/rmediation/reference/dist_quantile.md)
+returns one quantile of a `ProductNormal` object (a single `p`;
+`type = "MC"` simulates instead).
+
+``` r
+
+pn <- ProductNormal(mu = c(0.5, 0.6), Sigma = diag(c(0.08, 0.04)^2))
+c(lower = dist_quantile(pn, 0.025), upper = dist_quantile(pn, 0.975))
+#>     lower     upper 
+#> 0.2010806 0.4053620
+```
+
+For a medfit serial object,
+[`ci_serial_mediation_data()`](https://data-wise.github.io/rmediation/reference/ci_mediation_data.md)
+is what [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md)
+dispatches to, so the two give the same interval (`mu` is the object
+from recipe 9).
+
+``` r
+
+set.seed(1)
+ci_serial_mediation_data(mu, level = 0.95, type = "MC")$CI
+#>     lower     upper 
+#> 0.2005227 0.2888945
+```
+
+For a two-path `MediationData` object the direct call is
+[`ci_mediation_data()`](https://data-wise.github.io/rmediation/reference/ci_mediation_data.md).
+
+## 14. Tidy a log-likelihood
+
+[`tidy()`](https://data-wise.github.io/rmediation/reference/tidy.md)
+turns a `logLik` into a one-row data frame with the estimate and its
+degrees of freedom.
+
+``` r
+
+tidy(logLik(lm(mpg ~ wt, data = mtcars)))
+#>            term  estimate df
+#> 1 logLikelihood -80.01471  3
+```

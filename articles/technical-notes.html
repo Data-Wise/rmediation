@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,7 @@
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
+    <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="external-link nav-link" href="https://data-wise.github.io/mediationverse/articles/ecosystem.html">Ecosystem</a></li>
@@ -57,7 +58,8 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-status" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fas fa-chart-line"></span> Status</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-status">
 <li><a class="external-link dropdown-item" href="https://github.com/data-wise/mediationverse/blob/main/STATUS.md">📊 Package Status Dashboard</a></li>
-    <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/roadmap.html">🗺️ Development Roadmap</a></li>
+    <li><a class="dropdown-item" href="../articles/roadmap.html">🗺️ RMediation Status and Roadmap</a></li>
+    <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/roadmap.html">🗺️ Mediationverse Roadmap</a></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/contributing.html">🤝 Contributing Guide</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md">📋 Ecosystem Coordination</a></li>
@@ -91,7 +93,7 @@
 
     
     
-<p>Why three behaviors work the way they do. Each section states the
+<p>Why these behaviors work the way they do. Each section states the
 rule, the reason, and where it is tested.</p>
 <div class="section level2">
 <h2 id="pprodnormal3-uses-gauss-legendre-by-default">1. <code>pprodnormal3()</code> uses Gauss-Legendre by default<a class="anchor" aria-label="anchor" href="#pprodnormal3-uses-gauss-legendre-by-default"></a>
@@ -247,8 +249,13 @@ of the two-factor density conditioned on the first factor. At exactly 0
 the density is infinite for zero means, and <code><a href="../reference/dprodnormal.html">dprodnormal()</a></code>
 returns <code>Inf</code> there.</p>
 <p><strong>Reason.</strong> A closed form exists only for the zero-mean
-case. The integral form is exact up to the integration tolerance, and it
-is checked against a finite difference of the CDF.</p>
+case. The integral form is exact up to the integration tolerance. At
+ordinary scales it agrees with a finite difference of the CDF, as below.
+At very small standard errors a CDF difference is the noisier side (it
+divides the CDF’s own absolute error by a tiny step), so the tests there
+use an independent oracle: direct quadrature of the conditioning
+integral, or, when one factor is nearly constant, the density of the
+remaining factors scaled by that factor’s mean.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fl">1e-5</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>density <span class="op">=</span> <span class="fu"><a href="../reference/dprodnormal.html">dprodnormal</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
@@ -257,6 +264,16 @@ is checked against a finite difference of the CDF.</p>
 <span>     <span class="fu"><a href="../reference/pprodnormal.html">pprodnormal</a></span><span class="op">(</span><span class="fl">0.1</span> <span class="op">-</span> <span class="va">h</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="va">h</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;              density numerical_derivative </span></span>
 <span><span class="co">#&gt;             3.719755             3.719755</span></span></code></pre></div>
+<p><strong>Narrow spike.</strong> When a factor’s mean is very large
+relative to its standard error (<code>mu / se</code> above about 3000
+for two factors, about 1000 for some three-factor inner integrals), the
+integrand is a narrow spike. Before 1.9.0 a fixed window around the mean
+missed it, so <code><a href="../reference/dprodnormal.html">dprodnormal()</a></code> and <code><a href="../reference/dprodnormal3.html">dprodnormal3()</a></code>
+could return <code>0</code>, <code>NA</code> or a silently low value
+(#117). The integration window is now split at the spike, found from the
+roots of the conditional mean, and subintervals far from it retry with
+an absolute tolerance scaled to the peak. Values at ordinary scales are
+unchanged.</p>
 </div>
 <div class="section level2">
 <h2 id="where-each-rule-is-tested">Where each rule is tested<a class="anchor" aria-label="anchor" href="#where-each-rule-is-tested"></a>
@@ -301,6 +318,45 @@ is checked against a finite difference of the CDF.</p>
 <code>tests/testthat/test-dprodnormal.R</code>,
 <code>tests/testthat/test-dprodnormal3.R</code>
 </td>
+</tr>
+<tr class="odd">
+<td>narrow density spike (large <code>mu / se</code>)</td>
+<td><code>tests/testthat/test-dprod-narrow-spike.R</code></td>
+</tr>
+<tr class="even">
+<td>density and quantile at <code>se = 0</code> and
+<code>\|rho\| = 1</code>
+</td>
+<td><code>tests/testthat/test-dq-pointmass-rho1.R</code></td>
+</tr>
+<tr class="odd">
+<td>product quantiles against independent oracles</td>
+<td><code>tests/testthat/test-qprodnormal-oracle.R</code></td>
+</tr>
+<tr class="even">
+<td>
+<code><a href="../reference/medci.html">medci()</a></code> and <code><a href="../reference/ci.html">ci()</a></code> interval endpoints</td>
+<td><code>tests/testthat/test-medci-ci-oracle.R</code></td>
+</tr>
+<tr class="odd">
+<td>
+<code><a href="../reference/pMC.html">pMC()</a></code> and <code><a href="../reference/qMC.html">qMC()</a></code> closed forms</td>
+<td><code>tests/testthat/test-pMC-qMC-closed-form.R</code></td>
+</tr>
+<tr class="even">
+<td>
+<code>confintAsymp()</code> and <code>confintMC()</code> known
+answers</td>
+<td><code>tests/testthat/test-confint-known-answer.R</code></td>
+</tr>
+<tr class="odd">
+<td>three-factor truncation bound (<code>.prod3_bound()</code>)</td>
+<td><code>tests/testthat/test-prod3-bound-defect.R</code></td>
+</tr>
+<tr class="even">
+<td>MBCO size at small <code>n</code> and the real-OpenMx asymptotic
+check</td>
+<td><code>tests/testthat/test-mbco-size-small-n.R</code></td>
 </tr>
 </tbody>
 </table>

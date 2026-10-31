@@ -12,6 +12,8 @@
   Mediation](https://data-wise.github.io/rmediation/articles/omitted-confounder-sensitivity.md):
 - [RMediation Quick
   Reference](https://data-wise.github.io/rmediation/articles/refcard.md):
+- [Status and
+  Roadmap](https://data-wise.github.io/rmediation/articles/roadmap.md):
 - [Serial Mediation with
   medfit](https://data-wise.github.io/rmediation/articles/serial-mediation-with-medfit.md):
 - [RMediation Technical

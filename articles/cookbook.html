@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.9.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,7 @@
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
+    <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="external-link nav-link" href="https://data-wise.github.io/mediationverse/articles/ecosystem.html">Ecosystem</a></li>
@@ -57,7 +58,8 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-status" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span class="fa fas fa-chart-line"></span> Status</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-status">
 <li><a class="external-link dropdown-item" href="https://github.com/data-wise/mediationverse/blob/main/STATUS.md">📊 Package Status Dashboard</a></li>
-    <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/roadmap.html">🗺️ Development Roadmap</a></li>
+    <li><a class="dropdown-item" href="../articles/roadmap.html">🗺️ RMediation Status and Roadmap</a></li>
+    <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/roadmap.html">🗺️ Mediationverse Roadmap</a></li>
     <li><a class="external-link dropdown-item" href="https://data-wise.github.io/mediationverse/articles/contributing.html">🤝 Contributing Guide</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="external-link dropdown-item" href="https://github.com/data-wise/medfit/blob/main/planning/ECOSYSTEM.md">📋 Ecosystem Coordination</a></li>
@@ -297,6 +299,59 @@ effect?<a class="anchor" aria-label="anchor" href="#how-much-could-an-omitted-co
 effect over the grid of confounder correlations with the mediator and
 outcome, at the stated correlation with the treatment. See
 <code><a href="../articles/omitted-confounder-sensitivity.html">vignette("omitted-confounder-sensitivity")</a></code>.</p>
+</div>
+<div class="section level2">
+<h2 id="a-monte-carlo-interval-for-any-function-of-estimates">12. A Monte Carlo interval for any function of estimates<a class="anchor" aria-label="anchor" href="#a-monte-carlo-interval-for-any-function-of-estimates"></a>
+</h2>
+<p><code><a href="../reference/pMC.html">pMC()</a></code> and <code><a href="../reference/qMC.html">qMC()</a></code> simulate the sampling
+distribution of a function given the estimates and their covariance.
+Unlike <code><a href="../reference/qprodnormal.html">qprodnormal()</a></code> they accept any formula, and
+<code>p</code> must be a single value.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">est</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">0.5</span>, b2 <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span></span>
+<span><span class="va">vcv</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.08</span>, <span class="fl">0.04</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/pMC.html">pMC</a></span><span class="op">(</span><span class="fl">0.2</span>, mu <span class="op">=</span> <span class="va">est</span>, Sigma <span class="op">=</span> <span class="va">vcv</span>, quant <span class="op">=</span> <span class="op">~</span> <span class="va">b1</span> <span class="op">*</span> <span class="va">b2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.02393</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fu"><a href="../reference/qMC.html">qMC</a></span><span class="op">(</span><span class="fl">0.025</span>, mu <span class="op">=</span> <span class="va">est</span>, Sigma <span class="op">=</span> <span class="va">vcv</span>, quant <span class="op">=</span> <span class="op">~</span> <span class="va">b1</span> <span class="op">*</span> <span class="va">b2</span><span class="op">)</span>,</span>
+<span>  upper <span class="op">=</span> <span class="fu"><a href="../reference/qMC.html">qMC</a></span><span class="op">(</span><span class="fl">0.975</span>, mu <span class="op">=</span> <span class="va">est</span>, Sigma <span class="op">=</span> <span class="va">vcv</span>, quant <span class="op">=</span> <span class="op">~</span> <span class="va">b1</span> <span class="op">*</span> <span class="va">b2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  lower.2.5% upper.97.5% </span></span>
+<span><span class="co">#&gt;   0.2016349   0.4050232</span></span></code></pre></div>
+<p>For a plain product, the exact quantiles of
+<code><a href="../reference/qprodnormal.html">qprodnormal()</a></code> (recipe 3) avoid the simulation error.</p>
+</div>
+<div class="section level2">
+<h2 id="quantiles-of-a-distribution-object-and-a-medfit-object-directly">13. Quantiles of a distribution object, and a medfit object
+directly<a class="anchor" aria-label="anchor" href="#quantiles-of-a-distribution-object-and-a-medfit-object-directly"></a>
+</h2>
+<p><code><a href="../reference/dist_quantile.html">dist_quantile()</a></code> returns one quantile of a
+<code>ProductNormal</code> object (a single <code>p</code>;
+<code>type = "MC"</code> simulates instead).</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ProductNormal.html">ProductNormal</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.6</span><span class="op">)</span>, Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.08</span>, <span class="fl">0.04</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fu"><a href="../reference/dist_quantile.html">dist_quantile</a></span><span class="op">(</span><span class="va">pn</span>, <span class="fl">0.025</span><span class="op">)</span>, upper <span class="op">=</span> <span class="fu"><a href="../reference/dist_quantile.html">dist_quantile</a></span><span class="op">(</span><span class="va">pn</span>, <span class="fl">0.975</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     lower     upper </span></span>
+<span><span class="co">#&gt; 0.2010806 0.4053620</span></span></code></pre></div>
+<p>For a medfit serial object, <code><a href="../reference/ci_mediation_data.html">ci_serial_mediation_data()</a></code>
+is what <code><a href="../reference/ci.html">ci()</a></code> dispatches to, so the two give the same
+interval (<code>mu</code> is the object from recipe 9).</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/ci_mediation_data.html">ci_serial_mediation_data</a></span><span class="op">(</span><span class="va">mu</span>, level <span class="op">=</span> <span class="fl">0.95</span>, type <span class="op">=</span> <span class="st">"MC"</span><span class="op">)</span><span class="op">$</span><span class="va">CI</span></span>
+<span><span class="co">#&gt;     lower     upper </span></span>
+<span><span class="co">#&gt; 0.2005227 0.2888945</span></span></code></pre></div>
+<p>For a two-path <code>MediationData</code> object the direct call is
+<code><a href="../reference/ci_mediation_data.html">ci_mediation_data()</a></code>.</p>
+</div>
+<div class="section level2">
+<h2 id="tidy-a-log-likelihood">14. Tidy a log-likelihood<a class="anchor" aria-label="anchor" href="#tidy-a-log-likelihood"></a>
+</h2>
+<p><code><a href="../reference/tidy.html">tidy()</a></code> turns a <code>logLik</code> into a one-row data
+frame with the estimate and its degrees of freedom.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/tidy.html">tidy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/logLik.html" class="external-link">logLik</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">wt</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;            term  estimate df</span></span>
+<span><span class="co">#&gt; 1 logLikelihood -80.01471  3</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
