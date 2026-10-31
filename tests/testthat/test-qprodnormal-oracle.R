@@ -98,7 +98,9 @@ test_that("qprodnormal(type = 'dop') matches empirical quantiles of a large samp
     emp <- .qq_empirical(a, rho = 0.5, n = 2e6, p = .qq_probs)
     got <- qprodnormal(.qq_probs, a[1], a[2], a[3], a[4], rho = 0.5, type = "dop")
     # Tolerance: 5 order-statistic standard errors.
-    expect_true(all(abs(got - emp$q) < 5 * emp$se))
+    for (i in seq_along(.qq_probs)) {
+      expect_lt(abs(got[i] - emp$q[i]), 5 * emp$se[i], label = paste("p =", .qq_probs[i]))
+    }
   }
 })
 
@@ -127,5 +129,20 @@ test_that("qprodnormalMC matches empirical quantiles at rho = 0.5 within Monte C
   # Two independent samples (n.mc and 2e6): the variances of the two quantiles add, so the
   # standard error of the difference is se * sqrt(1 + 2e6 / n.mc) with se from the 2e6 sample.
   tol <- 5 * emp$se * sqrt(1 + 2e6 / n_mc)
-  expect_true(all(abs(got - emp$q) < tol))
+  for (i in seq_along(.qq_probs)) {
+    expect_lt(abs(got[i] - emp$q[i]), tol[i], label = paste("p =", .qq_probs[i]))
+  }
+})
+
+test_that("qprodnormal(type = 'MC', lower.tail = FALSE) matches the quadrature oracle", {
+  skip_on_cran()
+  set.seed(20261034)
+  n_mc <- 1e6
+  a <- .qq_cases[[1]]
+  for (p in .qq_probs) {
+    expected <- .qq_oracle_q(1 - p, a[1], a[2], a[3], a[4])
+    tol <- 5 * .qq_se(1 - p, expected, n_mc, a[1], a[2], a[3], a[4])
+    got <- qprodnormal(p, a[1], a[2], a[3], a[4], rho = 0, lower.tail = FALSE, type = "MC", n.mc = n_mc)
+    expect_lt(abs(got - expected), tol)
+  }
 })
