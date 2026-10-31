@@ -1,9 +1,11 @@
 name: SEMFit MBCO compatibility
+# Expensive: runs for main and releases only (CI policy); `workflow_dispatch` runs it on demand.
 on:
   push:
-    branches: [dev, main]
+    branches: [main]
   pull_request:
-    branches: [dev, main]
+    branches: [main]
+  workflow_dispatch:
 permissions: read-all
 jobs:
   semfit:
