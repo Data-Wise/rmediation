@@ -28,7 +28,7 @@ The core confidence-interval methods run in the browser through the
 installation required:
 
 - **[Distribution-of-Product CI calculator](https://data-wise.github.io/mediation-apps/medci/)** — a live front end for `medci()`
-- **Monte Carlo / Asymptotic-Delta CI calculator** — built on `ci(type = "mc")` and `ci(type = "asymp")`
+- **[Monte Carlo / Asymptotic-Delta CI calculator](https://data-wise.github.io/mediation-apps/medmc/)** — built on `ci(type = "mc")` and `ci(type = "asymp")`
 
 Useful for quick checks, teaching, and for collaborators who do not use R.
 
@@ -94,8 +94,14 @@ medci(mu.x = 0.5, mu.y = 0.6,
       se.x = 0.08, se.y = 0.04,
       rho = 0, type = "dop")
 
-#> 95% CI for ab: [0.178, 0.422]
-#> Estimate: 0.300, SE: 0.062
+#> $`95% CI`
+#> [1] 0.2010806 0.4053620
+#> 
+#> $Estimate
+#> [1] 0.3
+#> 
+#> $SE
+#> [1] 0.05209837
 ```
 
 ### Sequential Mediators (3+ Variables)
@@ -174,8 +180,8 @@ Sigma <- diag(c(0.01, 0.01, 0.01))  # independent paths
 pn3 <- ProductNormal3(mu = mu, Sigma = Sigma)
 ci(pn3, level = 0.95)
 
-#> 95% CI: [0.024, 0.248]
-#> Estimate: 0.120
+#>      lower      upper 
+#> 0.04797581 0.21980280 
 
 # Direct CDF query
 pprodnormal3(q = 0, mean = mu, cov = Sigma)  # P(a1*a2*b <= 0)
@@ -224,7 +230,7 @@ violated, it refits `h0` and warns with class `RMediation_constraint_not_enforce
 the warning cannot tell this cause from a violation within the feasibility
 tolerance.
 
-Two medfit `SEMFit` objects support asymptotic comparisons with **medfit >=
+**Experimental.** Two medfit `SEMFit` objects support asymptotic comparisons with **medfit >=
 0.8.0** (GitHub/r-universe), without OpenMx:
 
 ```r
