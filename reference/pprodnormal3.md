@@ -37,7 +37,9 @@ p_prod3(...)
 
   3x3 covariance matrix. Must be positive-definite, except that a single
   zero-variance component is permitted (the problem then reduces to the
-  two-variable product-normal case). Perfect correlation between two
+  two-variable product-normal case). Two zero-variance components give
+  the exact scaled-normal CDF, and three give a point mass at
+  `prod(mean)` (CDF 1 at and above it). Perfect correlation between two
   components (`|rho| = 1`) or an indefinite matrix is rejected.
 
 - method:
@@ -64,14 +66,26 @@ p_prod3(...)
 
 - diagnostics:
 
-  Logical. If `TRUE`, the returned value carries an `"error"` attribute
-  (the gap between the last two quadrature rules, a genuine convergence
-  estimate) and a `"nodes"` attribute. Defaults to `FALSE` so the return
-  value stays a bare numeric for existing callers. `"error"` is `NA`
-  when `nodes` is supplied or when `method = "hcubature"`: a single
-  fixed rule produces no successive-rule gap to measure. To check
-  convergence at a fixed rule, evaluate at `nodes` and `2 * nodes` and
-  compare.
+  Logical. If `TRUE`, the returned value carries `"error"` and `"nodes"`
+  attributes. Defaults to `FALSE` so the return value stays a bare
+  numeric for existing callers.
+
+  What `"error"` means depends on `method`, and the two are **not
+  comparable**:
+
+  - `method = "gauss"`: the gap between the last two quadrature rules, a
+    genuine convergence estimate for discretization error. It does not
+    see truncation error, which is instead bounded by construction. It
+    is `NA` when `nodes` is supplied, because a single fixed rule
+    produces no successive-rule gap to measure; to check convergence at
+    a fixed rule, evaluate at `nodes` and `2 * nodes` and compare.
+
+  - `method = "hcubature"`: that integrator's *own* reported error
+    estimate, always present and never `NA` (`nodes` is ignored on this
+    path). Treat it with suspicion. It is satisfied at exactly the
+    configurations where the result is badly wrong (see Note), which is
+    why it cannot be used to detect the failure this method was replaced
+    over.
 
 - ...:
 
@@ -84,9 +98,9 @@ Probability `P(X1 * X2 * X3 <= q)` as a numeric scalar in `[0, 1]`.
 
 ## Note
 
-For a fully degenerate point mass (all variances zero) with zero means,
-`q == 0` returns `0.5` by the mid-distribution convention rather than
-`0` or `1`.
+A point mass (zero variances) has the right-continuous CDF: for a
+product identically equal to `c`, the result is `1` for `q >= c` and `0`
+below. Before 1.8.0 an atom at exactly `0` returned `0.5` at `q == 0`.
 
 Before version 1.7.0 the default integrator was `"hcubature"`, which
 returns materially wrong values on ill-conditioned covariance matrices –

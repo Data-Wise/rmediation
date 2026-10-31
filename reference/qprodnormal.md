@@ -23,7 +23,8 @@ qprodnormal(
 
 - p:
 
-  probability
+  probability; a numeric vector returns one quantile per element (for
+  `type="MC"` all elements share one simulated sample)
 
 - mu.x:
 
@@ -63,16 +64,9 @@ qprodnormal(
 
 ## Value
 
-An object of the type [`list`](https://rdrr.io/r/base/list.html) that
-contains the following values:
-
-- q:
-
-  quantile corresponding to probability `p`
-
-- error:
-
-  estimate of the absolute error
+A numeric vector of quantiles, one per element of `p`, for `type="dop"`
+or `"MC"`; for `type="all"` a list of two such vectors
+(`"Distribution of Product"` and `"Monte Carlo"`).
 
 ## Details
 
@@ -113,10 +107,10 @@ qprodnormal(
   lower.tail = TRUE, type = "all"
 )
 #> $`Distribution of Product`
-#> [1] -0.9898408
+#> [1] -0.9898415
 #> 
 #> $`Monte Carlo`
-#> [1] -0.9920839
+#> [1] -0.9857161
 #> 
 ## upper tail
 qprodnormal(
@@ -124,9 +118,9 @@ qprodnormal(
   lower.tail = FALSE, type = "all"
 )
 #> $`Distribution of Product`
-#> [1] 1.433771
+#> [1] 1.433774
 #> 
 #> $`Monte Carlo`
-#> [1] 1.438237
+#> [1] 1.437121
 #> 
 ```

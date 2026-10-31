@@ -57,21 +57,26 @@ non-normality:
 install.packages("RMediation")
 ```
 
-### From GitHub (Development)
+### From GitHub (release 1.8.0, pre-release)
+
+CRAN serves the stable 1.6.1. Release 1.8.0 is published on GitHub only,
+as a pre-release; it is not on CRAN.
 
 ``` r
 
 # Using pak (recommended)
-pak::pak("Data-Wise/rmediation@dev")
+pak::pak("Data-Wise/rmediation@v1.8.0")
 
 # Or using remotes
-remotes::install_github("Data-Wise/rmediation", ref = "dev")
+remotes::install_github("Data-Wise/rmediation", ref = "v1.8.0")
 ```
+
+For the development branch, use `@dev` or `ref = "dev"` instead.
 
 ### From r-universe (development binaries)
 
 The development version is also published at the [Data-Wise
-r-universe](https://data-wise.r-universe.dev/RMediation) as a pre-built
+r-universe](https://data-wise.r-universe.dev/RMediation) as a prebuilt
 binary (no compiler needed):
 
 ``` r
@@ -198,6 +203,11 @@ ci(pn3, level = 0.95)
 pprodnormal3(q = 0, mean = mu, cov = Sigma)  # P(a1*a2*b <= 0)
 ```
 
+> **Requires RMediation \>= 1.7.0.** Earlier versions return wrong
+> values when the `a1`/`a2` covariance is ill-conditioned — silently,
+> and without a diagnostic. Strongly correlated path estimates are
+> ordinary in mediation models, so this affects realistic input.
+
 ### Using the S7 ProductNormal Class
 
 For programmatic use, create `ProductNormal` objects directly:
@@ -224,18 +234,67 @@ summary(pn)
 
 ### Hypothesis Testing with MBCO
 
-For formal hypothesis testing of indirect effects using bootstrap:
+`mbco(h0, h1)` compares a fitted restricted model (`h0`) with its full
+model (`h1`). OpenMx models support asymptotic and bootstrap tests; see
+[`?mbco`](https://data-wise.github.io/rmediation/reference/mbco.md) for
+clean-start product-null construction and bootstrap arguments.
+
+For a product null (`a*b = 0`), use
+[`mbco_product_null()`](https://data-wise.github.io/rmediation/reference/mbco_product_null.md)
+rather than one nonlinear constraint. A single constraint can land on
+the wrong branch, and OpenMx can silently drop an equality constraint
+whose Jacobian is zero at the starting values
+([OpenMx/OpenMx#433](https://github.com/OpenMx/OpenMx/issues/433)). When
+[`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md)
+finds that `h0` came back identical to `h1` although its constraint was
+violated, it refits `h0` and warns with class
+`RMediation_constraint_not_enforced`; the warning cannot tell this cause
+from a violation within the feasibility tolerance.
+
+Two medfit `SEMFit` objects support asymptotic comparisons with **medfit
+\>= 0.8.0** (GitHub/r-universe), without OpenMx:
 
 ``` r
 
-# Requires OpenMx model
-library(OpenMx)
-
-# ... define your OpenMx mediation model ...
-
-# Run MBCO test (H0: indirect effect = 0)
-mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
+d <- as.data.frame(RMediation::memory_exp)
+d$x <- as.numeric(d$x) - 1
+syntax <- paste("repetition ~ a1*x", "imagery ~ a2*x",
+                "recall ~ cp*x + b1*repetition + b2*imagery", sep = "\n")
+full <- medfit::fit_sem(syntax, d)
+null <- medfit::fit_sem(paste(syntax, "a1*b1 == 0", sep = "\n"), d)
+RMediation::mbco(null, full) # statistic 0.0831, df 1, p = 0.7731
 ```
+
+medfit fits each product-zero branch from clean starts and selects the
+smallest discrepancy. RMediation compares the fitted pair without
+refitting, retains medfit’s compatibility checks, and refuses ordinary
+chi-square p-values for active tested bounds. Bootstrap types and OpenMx
+fitting controls are not supported for SEMFit pairs. The analyst remains
+responsible for substantive nesting and a valid reference distribution
+for other nonlinear restrictions.
+
+## Sensitivity to an Omitted Confounder
+
+[`ml_omitted_confounder()`](https://data-wise.github.io/rmediation/reference/ml_omitted_confounder.md)
+shows how an unmeasured, standardized confounder of the mediator-outcome
+relation, described by its correlations with the treatment, mediator and
+outcome, would change the between- and within-cluster indirect effects
+of a two-level (1-1-1) model. See
+[`vignette("omitted-confounder-sensitivity")`](https://data-wise.github.io/rmediation/articles/omitted-confounder-sensitivity.md).
+
+``` r
+
+R <- matrix(c(1, .3, .2, .3, 1, .4, .2, .4, 1), 3)
+res <- ml_omitted_confounder(
+  between = list(a = 0.3, b = 0.4, cor = R, sd = c(1, 1, 1)),
+  r_za = c(0, 0.1)
+)
+res
+plot(res, r_za = 0.1)
+```
+
+The default screen keeps only admissible (positive-definite) grid
+points; use `screen = "none"` to reproduce the published tables.
 
 ## Key Functions
 
@@ -243,7 +302,9 @@ mbco(model, effect = "ab", n.boot = 1000, type = "parametric")
 |----|----|
 | [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md) | CI for product of two normal variables |
 | [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) | CI for any function of parameters (formulas, lavaan, ProductNormal, ProductNormal3) |
-| [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md) | Bootstrap hypothesis tests via MBCO |
+| [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md) | Asymptotic and OpenMx bootstrap MBCO hypothesis tests |
+| [`mbco_product_null()`](https://data-wise.github.io/rmediation/reference/mbco_product_null.md) | MBCO test of a product null (`a*b = 0`, serial products) as an intersection-union test over single-path nulls, avoiding the wrong-branch failure of one nonlinear constraint |
+| [`ml_omitted_confounder()`](https://data-wise.github.io/rmediation/reference/ml_omitted_confounder.md) | Sensitivity of two-level (1-1-1) indirect effects to an omitted confounder (Tofighi & Kelley, 2016) |
 | [`pprodnormal()`](https://data-wise.github.io/rmediation/reference/pprodnormal.md) | CDF of product of two normals |
 | [`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md) | Quantiles of product of two normals |
 | [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md) | Exact CDF of product of three normals (`a1*a2*b`) |

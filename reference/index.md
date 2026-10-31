@@ -14,6 +14,10 @@ and hypothesis testing.
   : Confidence Interval for MediationData Objects
 - [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md) :
   Model-based Constrained Optimization (MBCO) Chi-squared Test
+- [`mbco_product_null()`](https://data-wise.github.io/rmediation/reference/mbco_product_null.md)
+  : MBCO test of a product null (a zero-product indirect effect)
+- [`ml_omitted_confounder()`](https://data-wise.github.io/rmediation/reference/ml_omitted_confounder.md)
+  : Sensitivity of a Multilevel Indirect Effect to an Omitted Confounder
 
 ## Distribution Functions
 
@@ -24,6 +28,10 @@ variables.
   : Percentile for the Distribution of Product of Two Normal Variables
 - [`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md)
   : Quantile for the Distribution of Product of Two Normal Variables
+- [`dprodnormal()`](https://data-wise.github.io/rmediation/reference/dprodnormal.md)
+  : Density of the Product of Two Normal Random Variables
+- [`dprodnormal3()`](https://data-wise.github.io/rmediation/reference/dprodnormal3.md)
+  : Density of the Product of Three Normal Variables
 - [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)
   [`p_prod3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)
   : Cumulative Distribution Function for the Product of Three Normal

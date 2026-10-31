@@ -36,7 +36,7 @@ str(result)
 
 # Or access specific components
 cat("Confidence Interval:", result$`95% CI`, "\n")
-#> Confidence Interval: 0.2010806 0.4053619
+#> Confidence Interval: 0.2010806 0.405362
 cat("Estimate:", result$Estimate, "\n")
 #> Estimate: 0.3
 cat("Standard Error:", result$SE, "\n")
@@ -64,7 +64,7 @@ str(result2)
 #>   ..- attr(*, "names")= chr [1:2] "2.5 %" "97.5 %"
 #>  $ Estimate: num 0.189
 #>  $ SE      : num 0.125
-#>  $ MCError : num 1.25e-06
+#>  $ MCError : num 0.000395
 #>  $ p       : num 0.0121
 #>  - attr(*, "quant")=Class 'formula'  language ~b1 * b2 * b3 * b4
 #>   .. ..- attr(*, ".Environment")=<environment: R_GlobalEnv>
@@ -143,7 +143,7 @@ str(comparison)
 #>   ..$ 95% CI  : num [1:2] 0.201 0.405
 #>   ..$ Estimate: num 0.3
 #>   ..$ SE      : num 0.0521
-#>   ..$ MC.Error: num 5.21e-07
+#>   ..$ MC.Error: num 0.000165
 #>  $ Asymptotic Normal      :List of 3
 #>   ..$ 95% CI  : num [1:2] 0.198 0.402
 #>   ..$ Estimate: num 0.3

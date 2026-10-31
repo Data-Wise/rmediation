@@ -62,7 +62,7 @@ for (method_name in names(results)) {
 #>  $ 95% CI  : num [1:2] 0.2 0.404
 #>  $ Estimate: num 0.3
 #>  $ SE      : num 0.0521
-#>  $ MC.Error: num 5.21e-07
+#>  $ MC.Error: num 0.000165
 #> 
 #>  Asymptotic Normal :
 #> List of 3
@@ -179,7 +179,7 @@ str(result_mc)
 #>  $ 95% CI  : num [1:2] 0.201 0.405
 #>  $ Estimate: num 0.3
 #>  $ SE      : num 0.0519
-#>  $ MC.Error: num 5.19e-07
+#>  $ MC.Error: num 0.000164
 ```
 
 ### Asymptotic Normal

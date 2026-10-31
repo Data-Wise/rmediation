@@ -1,6 +1,9 @@
 # Internal: Compute quantile using Meeker & Escobar (1994) algorithm
 
-Internal: Compute quantile using Meeker & Escobar (1994) algorithm
+Delegates to `qprodnormalMeeker()` so the S7 core and
+[`medci()`](https://data-wise.github.io/rmediation/reference/medci.md)
+share one integral (this function used to carry its own copy, which kept
+the issue \#60 defect).
 
 ## Usage
 

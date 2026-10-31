@@ -30,5 +30,5 @@ returned by the dispatched method.
 ``` r
 pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
 dist_quantile(pn, p = 0.025)
-#> [1] -0.1842996
+#> [1] -0.1842979
 ```

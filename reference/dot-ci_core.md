@@ -89,7 +89,7 @@ will be displayed as well.
 
   Monte Carlo sample size (default: 1e5). Larger values provide more
   precision but take longer to compute. For most applications, 1e5
-  provides adequate precision (MC error \< 0.05% of SE).
+  reduces the sampling error of the simulated mean to about 0.32% of SE.
 
 - H0:
 
@@ -135,7 +135,8 @@ When `type` is `"MC"` or `"asymp"`, `ci` returns a
 
 - MC Error:
 
-  When `type="MC"`, error of the Monte Carlo estimate.
+  When `type="MC"`, sampling standard error of the simulated mean, SE /
+  sqrt(n.mc).
 
 When `type="all"`, `ci` returns a
 [list](https://rdrr.io/r/base/list.html) of two objects, each of which a
@@ -179,14 +180,14 @@ ci(
 #> [1] 0.1250655
 #> 
 #> $MC$MCError
-#> [1] 1.250655e-06
+#> [1] 0.0003954918
 #> 
 #> $MC$p
 #> [1] 0.01212
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3 * b4
-#> <environment: 0x5588725f71d0>
+#> <environment: 0x607e6be187d0>
 #> 
 #> $Asymptotic
 #> $Asymptotic$`97.5% CI`
@@ -201,7 +202,7 @@ ci(
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3 * b4
-#> <environment: 0x5588725f71d0>
+#> <environment: 0x607e6be187d0>
 #> 
 # An Example of Conservative Null Sampling Distribution
 ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
@@ -221,14 +222,14 @@ ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
 #> [1] 0.02396192
 #> 
 #> [[1]]$MCError
-#> [1] 2.396192e-07
+#> [1] 7.577425e-05
 #> 
 #> [[1]]$p
 #> [1] 0.0362
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3
-#> <environment: 0x5588725f71d0>
+#> <environment: 0x607e6be187d0>
 #> 
 #> [[2]]
 #> [[2]]$CI
@@ -267,14 +268,14 @@ ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
 #> [1] 0.0239247
 #> 
 #> [[1]]$MCError
-#> [1] 2.39247e-07
+#> [1] 7.565656e-05
 #> 
 #> [[1]]$p
 #> [1] 0.0351
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3
-#> <environment: 0x5588725f71d0>
+#> <environment: 0x607e6be187d0>
 #> 
 #> [[2]]
 #> [[2]]$CI
