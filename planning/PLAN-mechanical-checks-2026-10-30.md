@@ -32,7 +32,7 @@ PR, not at the feature PR.
 | # | Task | Where it runs | Status |
 |---|---|---|---|
 | T-1 | CI policy: main-only triggers, `check-ci-policy.R`, `check-docs.R`, `check-local.sh` gate and `--depends-only` | local + main CI | this PR |
-| T3 | DEPENDS_ONLY: `_R_CHECK_DEPENDS_ONLY_=true` on the existing ubuntu-devel hard-deps leg | main CI, `check-local.sh --depends-only` | planned |
+| T3 | DEPENDS_ONLY: `_R_CHECK_DEPENDS_ONLY_=true` on the existing ubuntu-devel hard-deps leg (per-leg `depends-only` matrix value, enforced by `check-ci-policy.R`) | main CI, `check-local.sh --depends-only` | done in the T3 PR. Advisory by placement: the leg runs only on `main` PRs and is not a required check, so G1's 3-clean-runs rule needs three `main` PRs |
 | T5 | #84 gate in main CI as a step in the existing ubuntu release leg (2 s, no path filter) | main CI, `check-local.sh` | planned |
 | T4 | risk-tier: PR-body checklist script; items cite a test file present in the diff; cheap exception on `dev` PRs | PRs to `dev` and `main` | planned |
 | T1-T2 | lint: `.lintr` (120 columns), cosmetic cleanup only, advisory; runs on dispatch/push, never on `dev` PRs | dispatch | deferred until T3/T5/T4 each have 3 clean runs |

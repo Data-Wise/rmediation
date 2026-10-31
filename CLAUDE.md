@@ -129,7 +129,9 @@ Code coverage and expensive GitHub checks (the R-CMD-check matrix, `semfit-mbco`
 for merge to `main`, for releases and on `workflow_dispatch`. PRs to `dev` and pushes to `dev` start none of them; they
 are gated locally with `scripts/check-local.sh` (workflow triggers, docs currency, the issue #84 gate, tests, then
 `R CMD check`) and rforge (`/rforge:r:cycle`). `main` requires the status check `ubuntu-latest (release)`: keep that
-trigger and job name. Plan and decisions: `planning/PLAN-mechanical-checks-2026-10-30.md`.
+trigger and job name. The R-devel leg of R-CMD-check runs with `_R_CHECK_DEPENDS_ONLY_=true` (hard dependencies only), so an
+unguarded use of a Suggests package in an example or test fails there; `scripts/check-local.sh --depends-only` is the local
+equivalent. Plan and decisions: `planning/PLAN-mechanical-checks-2026-10-30.md`.
 
 ---
 
