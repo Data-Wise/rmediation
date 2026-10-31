@@ -26,7 +26,7 @@ eval(parse(text = src[3:39])) # .guard_med_model(), .guard_fits()
   base <- OpenMx::mxModel(.memory_exp_ram("pbw"), OpenMx::mxAlgebra(a1 * b1, name = "ind1"))
   full <- .mx_fit(base)
   h0 <- OpenMx::mxModel(if (from == "unfitted") base else full, name = "nl",
-    OpenMx::mxConstraint(ind1 == 0, name = "c"))
+                        OpenMx::mxConstraint(ind1 == 0, name = "c"))
   h0 <- suppressWarnings(OpenMx::mxRun(OpenMx::mxOption(h0, "Feasibility tolerance", 1e-8), silent = TRUE))
   list(full = full, h0 = h0)
 }

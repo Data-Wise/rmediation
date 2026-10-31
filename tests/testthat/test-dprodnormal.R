@@ -36,7 +36,9 @@ test_that("the density integrates to 1", {
   for (args in list(c(0.5, 0.3, 0.2, 0.4, 0.3), c(0, 0, 1, 1, 0.5), c(2, -1, 0.5, 0.5, -0.6))) {
     f <- function(z) dprodnormal(z, args[1], args[2], args[3], args[4], args[5])
     pts <- c(-Inf, 0, Inf)
-    tot <- sum(vapply(1:2, function(i) stats::integrate(f, pts[i], pts[i + 1], rel.tol = 1e-8, subdivisions = 1000L)$value, 0))
+    tot <- sum(vapply(1:2, function(i) {
+      stats::integrate(f, pts[i], pts[i + 1], rel.tol = 1e-8, subdivisions = 1000L)$value
+    }, 0))
     expect_equal(tot, 1, tolerance = 1e-6)
   }
 })

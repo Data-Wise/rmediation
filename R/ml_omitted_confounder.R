@@ -153,7 +153,7 @@ ml_admissible <- function(r, R) {
   if (is.list(r_za)) {
     nms <- names(r_za)
     if (is.null(nms) || anyNA(nms) || !all(nms %in% c("between", "within")) ||
-      anyDuplicated(nms)) {
+          anyDuplicated(nms)) {
       stop("A list `r_za` must have unique names from \"between\" and \"within\".",
         call. = FALSE
       )
@@ -204,7 +204,7 @@ ml_admissible <- function(r, R) {
     }
     if (!is.null(rownames(m)) || !is.null(colnames(m))) {
       if (!identical(rownames(m), var_order) ||
-        !identical(colnames(m), var_order)) {
+            !identical(colnames(m), var_order)) {
         stop("Dimnames of `", name, "$", label,
           "` must equal `var_order` or be absent.",
           call. = FALSE

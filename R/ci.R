@@ -182,7 +182,8 @@
     pEstM1 <- lavaan::coef(fm1)
     name1 <- all.vars(quant)
     if (!all(name1 %in% names(pEstM1))) {
-      stop(paste("The parameters names in formula", sQuote("quant"), "must match the parameters names provided in lavaan object."))
+      stop(paste("The parameters names in formula", sQuote("quant"),
+                 "must match the parameters names provided in lavaan object."))
     }
     mu <- pEstM1[name1]
     covM1 <- (lavaan::vcov(fm1))

@@ -6,7 +6,8 @@
 #' Computes confidence intervals for the product of two normal random variables
 #' using the exact distribution method. The point estimate is
 #' \eqn{\mu_x\mu_y + \sigma_{xy}} and the standard error follows Craig (1936):
-#' \deqn{SE = \sqrt{\sigma_y^2\mu_x^2 + \sigma_x^2\mu_y^2 + 2\mu_x\mu_y\rho\sigma_x\sigma_y + \sigma_x^2\sigma_y^2 + \sigma_x^2\sigma_y^2\rho^2}}
+#' \deqn{SE = \sqrt{\sigma_y^2\mu_x^2 + \sigma_x^2\mu_y^2 + 2\mu_x\mu_y\rho\sigma_x\sigma_y + \sigma_x^2\sigma_y^2 +
+#' \sigma_x^2\sigma_y^2\rho^2}}
 #'
 #' @param object ProductNormal object
 #' @param alpha Significance level (default: 0.05)
@@ -101,7 +102,8 @@
 #'
 #' Computes asymptotic confidence intervals using normal approximation (Sobel test).
 #' The standard error is computed using Craig's (1936) formula:
-#' \deqn{SE = \sqrt{\sigma_y^2\mu_x^2 + \sigma_x^2\mu_y^2 + 2\mu_x\mu_y\rho\sigma_x\sigma_y + \sigma_x^2\sigma_y^2 + \sigma_x^2\sigma_y^2\rho^2}}
+#' \deqn{SE = \sqrt{\sigma_y^2\mu_x^2 + \sigma_x^2\mu_y^2 + 2\mu_x\mu_y\rho\sigma_x\sigma_y + \sigma_x^2\sigma_y^2 +
+#' \sigma_x^2\sigma_y^2\rho^2}}
 #' and the CI is \eqn{Estimate \pm z_{1-\alpha/2} \times SE}, where \eqn{z_{1-\alpha/2}}
 #' is the standard normal quantile.
 #'
