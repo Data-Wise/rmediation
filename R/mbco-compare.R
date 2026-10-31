@@ -151,6 +151,58 @@
   )
 }
 
+# One bootstrap replicate shared by type = "semi" and type = "parametric": fit h0 and h1 to
+# `data`, require both to converge, repair a violated h0 constraint as the observed h0 is repaired,
+# and return the replicate statistic. A converged replicate null can still violate its constraint,
+# and an infeasible fit understates the statistic; a replicate that cannot be repaired is an error
+# (class RMediation_bootstrap_infeasible), never a draw from the null distribution.
+.mbco_replicate_statistic <- function(h0, h1, data, x) {
+  h0 <- OpenMx::mxRun(
+    OpenMx::mxModel(h0, OpenMx::mxData(data, type = "raw")),
+    silent = TRUE,
+    suppressWarnings = TRUE
+  )
+  h1 <- OpenMx::mxRun(
+    OpenMx::mxModel(h1, OpenMx::mxData(data, type = "raw")),
+    silent = TRUE,
+    suppressWarnings = TRUE
+  )
+  for (fit in list(h0, h1)) {
+    if (!.mbco_status_ok(fit)) {
+      stop("Bootstrap replicate ", x, " did not converge.", call. = FALSE)
+    }
+  }
+  repaired <- .mbco_refit_h0(h0, h1)
+  if (!is.null(repaired)) {
+    if (is.null(repaired$model)) {
+      stop(structure(
+        class = c("RMediation_bootstrap_infeasible", "error", "condition"),
+        list(
+          message = paste0(
+            "Bootstrap replicate ", x, " has a violated h0 constraint and ",
+            repaired$failure, ", so its statistic would be understated."
+          ),
+          call = NULL
+        )
+      ))
+    }
+    h0 <- repaired$model
+  }
+  statistic <- OpenMx::mxCompare(h1, h0)$diffLL[2]
+  if (length(statistic) != 1L || !is.finite(statistic)) {
+    stop("Bootstrap replicate ", x, " has an invalid statistic.", call. = FALSE)
+  }
+  # h1 fits worse than h0 only when the optimizer failed on h1; such a draw is not a null-distribution
+  # value and would push the p-value down (OpenMx's own bootstrap excluded it, at -1e-7).
+  if (statistic < -1e-7) {
+    stop("Bootstrap replicate ", x, " has an invalid statistic (", format(statistic),
+      "): the h1 fit is worse than the h0 fit.",
+      call. = FALSE
+    )
+  }
+  statistic
+}
+
 # Validate the observed comparison before any bootstrap sampling.
 # OpenMx optimizer status accepted as "converged" everywhere in this package: 0 (converged) and 1
 # (the final iterate meets the optimality conditions to the accuracy requested, though the

@@ -44,51 +44,7 @@
   df_trans <- as.matrix(df) %*% US_inv %*% USigma0
   df_trans <- data.frame(df_trans)
   compare_boot <- function(x, df) {
-    df <- .resample_bootstrap(df)
-    df <- data.frame(df)
-    h0 <-
-      OpenMx::mxRun(
-        OpenMx::mxModel(h0, OpenMx::mxData(df, type = "raw")),
-        silent = TRUE,
-        suppressWarnings = TRUE
-      )
-    h1 <-
-      OpenMx::mxRun(
-        OpenMx::mxModel(h1, OpenMx::mxData(df, type = "raw")),
-        silent = TRUE,
-        suppressWarnings = TRUE
-      )
-    for (fit in list(h0, h1)) {
-      if (!.mbco_status_ok(fit)) {
-        stop("Bootstrap replicate ", x, " did not converge.", call. = FALSE)
-      }
-    }
-    # A converged replicate null can still violate its constraint, and an infeasible fit
-    # understates the statistic. Repair it as the observed h0 is repaired; a replicate that
-    # cannot be repaired is an error, never a draw from the null distribution.
-    repaired <- .mbco_refit_h0(h0, h1)
-    if (!is.null(repaired)) {
-      if (is.null(repaired$model)) {
-        stop(structure(
-          class = c("RMediation_bootstrap_infeasible", "error", "condition"),
-          list(
-            message = paste0(
-              "Bootstrap replicate ", x, " has a violated h0 constraint and ",
-              repaired$failure, ", so its statistic would be understated."
-            ),
-            call = NULL
-          )
-        ))
-      }
-      h0 <- repaired$model
-    }
-    statistic <- OpenMx::mxCompare(h1, h0)$diffLL[2]
-    if (length(statistic) != 1L || !is.finite(statistic)) {
-      stop("Bootstrap replicate ", x, " has an invalid statistic.",
-        call. = FALSE
-      )
-    }
-    statistic
+    .mbco_replicate_statistic(h0, h1, data.frame(.resample_bootstrap(df)), x)
   }
 
   null_samp <- vapply(seq.int(R), compare_boot,

@@ -279,8 +279,12 @@ S7::S4_register(MLOmittedConfounder)
 #' Set a seed before calling for reproducibility; bootstrap sampling consumes the
 #' current RNG stream. The semiparametric method requires positive-definite sample
 #' and null covariances and stops at the first failed refit or nonfinite replicate
-#' statistic. It does not retry or discard failed replicates. Parametric results
-#' require a finite nonnegative statistic, positive df, and a p-value in `[0, 1]`.
+#' statistic. It does not retry or discard failed replicates. The parametric method
+#' simulates each replicate from the fitted `h0` with [OpenMx::mxGenerateData()] (the
+#' `mvtnorm` package is required) and fits `h0` and `h1` to it in a loop the package
+#' runs itself, under the same stopping rules as the semiparametric method; it needs a
+#' model with a single raw data set. The p-value is the proportion of replicate
+#' statistics that exceed the observed one.
 #'
 #' **Testing an OpenMx product null (\eqn{a b = 0}).** The null \eqn{ab = 0} holds when
 #' \eqn{a = 0} or \eqn{b = 0}. A single nonlinear constraint such as
@@ -321,8 +325,13 @@ S7::S4_register(MLOmittedConfounder)
 #' yourself with `mxOption(model, "Feasibility tolerance", 1e-8)` or use
 #' [mbco_product_null()] for a product null. `h1` is checked and warned about
 #' (`RMediation_constraint_violation`) but never refit.
-#' With `type = "semi"` the bootstrap still stops at the first replicate that
-#' fails to converge (6 of 100 runs in a simulation with `R = 200`).
+#' Both bootstrap types (`"semi"` and `"parametric"`) apply the same checks to every
+#' replicate: a replicate whose `h0` or `h1` fit does not converge stops the call at the
+#' first one (6 of 100 runs in a simulation with `R = 200`); a replicate null fit that
+#' violates its constraint is refit as above, and one that cannot be repaired stops the call
+#' with an error of class `RMediation_bootstrap_infeasible` instead of entering the null
+#' distribution. (Before 1.7.1 `type = "parametric"` delegated its bootstrap to
+#' `OpenMx::mxCompare(boot = TRUE)`, which does neither.)
 #'
 #' **When h0 came back identical to h1.** A refit whose `statistic_before` is about 0
 #' (|statistic| < 1e-6, h0 and h1 have the same -2LL although a constraint of `h0` was violated)
@@ -336,9 +345,9 @@ S7::S4_register(MLOmittedConfounder)
 #' either one as the cause. The reported statistic is the refit one. For a product null,
 #' skip the problem: [mbco_product_null()] fits exact single-path nulls and never
 #' relies on a nonlinear constraint. The refit and this warning apply to the observed
-#' statistic for every `type`. `type = "semi"` repeats the refit on every bootstrap replicate;
-#' `type = "parametric"` does not (OpenMx's `mxCompare(boot = TRUE)` refits nothing), so a
-#' replicate null fit that violates its constraint is not detected there.
+#' statistic for every `type`. Both bootstrap types (`"semi"` and `"parametric"`) repeat the
+#' refit on every bootstrap replicate, and a replicate null fit that cannot be repaired stops
+#' the call (see above).
 #'
 #' **Wrong-branch check (OpenMx).** A feasible, converged fit of a product null
 #' such as `a*b == 0` can still sit on the larger-statistic branch (for example

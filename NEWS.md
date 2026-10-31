@@ -21,6 +21,20 @@
 
 ## Bug fixes
 
+- `mbco(type = "parametric")` now checks every bootstrap replicate like `type = "semi"` does.
+  It used to hand the bootstrap to `OpenMx::mxCompare(boot = TRUE)`, so a replicate null fit
+  that violated its constraint (for example OpenMx/OpenMx#433 dropping a zero-Jacobian
+  equality at a replicate's start) entered the null distribution unchecked and understated its
+  statistic. The package now simulates each replicate from the fitted `h0` with
+  `OpenMx::mxGenerateData()`, fits `h0` and `h1`, refits a violated `h0` constraint, and stops
+  with an error of class `RMediation_bootstrap_infeasible` when it cannot be repaired. Behavior
+  changes: a replicate that does not converge, has a non-finite statistic, or has an h1 fit worse
+  than its h0 fit now stops the call (`mxCompare` dropped such replicates, warning only when fewer
+  than 95% converged; the last check also applies to `type = "semi"`), and a model without a
+  single raw data set (a covariance-data or multigroup model) is refused before sampling. The
+  observed statistic, df and the result shape are
+  unchanged; seeded p-values differ because the replicates are drawn by a different loop.
+
 - The DOP CDF (`pprodnormal()`, `qprodnormal()`, `medci()`) is exact at `|rho| = 1`: it now uses
   Meeker & Escobar's (1994) quadratic-root solution instead of integrating a step function, which
   was wrong by up to 4e-5 and could stop with "the integral is probably divergent". For
@@ -141,8 +155,8 @@
   within the feasibility tolerance looks the same; a fitted `h0` keeps no starting
   values, so the warning cannot say which. The statistic and the `refit` slot are
   unchanged (the seeded example goes from 0 to 0.0878); for a product null use
-  `mbco_product_null()`. Known gap: `type = "parametric"` does not refit its
-  bootstrap replicates, so a violated replicate null fit is not detected there.
+  `mbco_product_null()`. Bootstrap replicates are refit and checked the same way
+  for both bootstrap types (see the `type = "parametric"` entry under Bug fixes).
 - OpenMx `mbco()` now warns (class `RMediation_constraint_branch`) when a
   feasible, converged `h0` is not the constrained optimum of an equality
   constraint: fixing one of the parameters the constraint depends on at 0 gives a

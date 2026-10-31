@@ -83,28 +83,22 @@ test_that("bootstrap sampling is seed reproducible and consumes RNG", {
 })
 
 
-test_that("parametric invalid results are refused with option cleanup", {
+test_that("parametric never delegates its bootstrap to mxCompare(boot = TRUE)", {
   skip_if_not_installed("OpenMx")
+  skip_if_not_installed("mvtnorm")
   f <- .memory_exp_oracle()
   saved <- getOption("mxOptions")
   on.exit(options(mxOptions = saved), add = TRUE)
-  cases <- list(
-    list(diffLL = c(NA, 1), df = c(1, 2), p = c(NA, NA)),
-    list(diffLL = c(NA, -1), df = c(1, 2), p = c(NA, .5)),
-    list(diffLL = c(NA, 1), df = c(1, 1), p = c(NA, .5)),
-    list(diffLL = c(NA, 1), df = c(1, 2), p = c(NA, 1.1)),
-    list(diffLL = c(NA, 1), df = c(1, 2))
-  )
-  for (result in cases) {
-    local_mocked_bindings(mxCompare = function(..., boot = FALSE) {
-      if (boot) result else list(diffLL = c(NA, 1), df = c(1, 2))
-    }, .package = "OpenMx")
-    expect_error(
-      mbco_parametric(f$null_b1, f$full, optim = "SLSQP"),
-      "invalid results"
-    )
-    expect_identical(getOption("mxOptions"), saved)
-  }
+  boot_calls <- 0L
+  real <- OpenMx::mxCompare
+  local_mocked_bindings(mxCompare = function(..., boot = FALSE) {
+    if (boot) boot_calls <<- boot_calls + 1L
+    real(..., boot = FALSE)
+  }, .package = "OpenMx")
+  res <- mbco_parametric(f$null_b1, f$full, R = 2L, optim = "SLSQP")
+  expect_identical(boot_calls, 0L)
+  expect_true(is.finite(res$p) && res$p >= 0 && res$p <= 1)
+  expect_identical(getOption("mxOptions"), saved)
 })
 
 test_that("invalid null covariance and refit errors restore options", {
