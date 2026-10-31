@@ -45,6 +45,22 @@ if ("R-CMD-check.yaml" %in% expensive && file.exists(".github/workflows/R-CMD-ch
   cfg <- wf$jobs[[1]]$strategy$matrix$config
   has_leg <- any(vapply(cfg, function(x) identical(x$os, "ubuntu-latest") && identical(as.character(x$r), "release"), NA))
   if (!has_leg) bad(sprintf("R-CMD-check.yaml: no matrix leg produces the required context '%s'", required_context))
+
+  # The R-devel leg installs hard dependencies only and runs with _R_CHECK_DEPENDS_ONLY_=true, so an unguarded
+  # use of a Suggests package in an example or test fails there. The job env must read the per-leg value.
+  dep <- function(x) if (is.null(x[["depends-only"]])) NA_character_ else as.character(x[["depends-only"]])
+  devel <- Filter(function(x) identical(as.character(x$r), "devel"), cfg)
+  if (!length(devel)) {
+    bad("R-CMD-check.yaml: no R-devel leg to run the depends-only check on")
+  } else if (!all(vapply(devel, function(x) identical(dep(x), "true"), NA))) {
+    bad("R-CMD-check.yaml: the R-devel leg must set depends-only: 'true'")
+  }
+  if (!all(vapply(cfg, function(x) dep(x) %in% c("true", "false"), NA))) {
+    bad("R-CMD-check.yaml: every matrix leg must set depends-only to 'true' or 'false'")
+  }
+  if (!identical(wf$jobs[[1]]$env[["_R_CHECK_DEPENDS_ONLY_"]], "${{ matrix.config.depends-only }}")) {
+    bad("R-CMD-check.yaml: job env _R_CHECK_DEPENDS_ONLY_ must be ${{ matrix.config.depends-only }}")
+  }
 }
 
 cat(sprintf("CI policy: %d workflow(s) checked\n", length(expensive)))
@@ -53,5 +69,5 @@ if (length(violations)) {
   cat("CI policy: FAILED\n")
   quit(status = 1L)
 }
-cat("  [PASS] no expensive workflow triggers on dev; main's required check still starts\n")
+cat("  [PASS] no expensive workflow triggers on dev; main's required check still starts; the R-devel leg runs depends-only\n")
 cat("CI policy: PASSED\n")
