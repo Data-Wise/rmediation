@@ -61,7 +61,8 @@ dprodnormal <- function(x, mu.x, mu.y, se.x = 1, se.y = 1, rho = 0, log = FALSE)
   checkmate::assert_flag(log)
   .assert_positive_se(se.x, se.y)
   if (abs(rho) >= 1) {
-    stop("The density needs -1 < rho < 1 (rho = ", format(rho), "): at |rho| = 1 XY is a function of one variable and has no bivariate-normal density.", call. = FALSE)
+    stop("The density needs -1 < rho < 1 (rho = ", format(rho),
+         "): at |rho| = 1 XY is a function of one variable and has no bivariate-normal density.", call. = FALSE)
   }
 
   mu.a <- mu.x / se.x

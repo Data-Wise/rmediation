@@ -56,3 +56,4 @@
 ^scripts$
 
 ^tasks$
+^\.lintr$

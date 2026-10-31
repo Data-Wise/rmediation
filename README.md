@@ -28,7 +28,7 @@ The core confidence-interval methods run in the browser through the
 installation required:
 
 - **[Distribution-of-Product CI calculator](https://data-wise.github.io/mediation-apps/medci/)** — a live front end for `medci()`
-- **Monte Carlo / Asymptotic-Delta CI calculator** — built on `ci(type = "mc")` and `ci(type = "asymp")`
+- **[Monte Carlo / Asymptotic-Delta CI calculator](https://data-wise.github.io/mediation-apps/medmc/)** — built on `ci(type = "mc")` and `ci(type = "asymp")`
 
 Useful for quick checks, teaching, and for collaborators who do not use R.
 
@@ -52,16 +52,16 @@ Traditional methods (e.g., Sobel test) assume the indirect effect *ab* follows a
 install.packages("RMediation")
 ```
 
-### From GitHub (release 1.8.0, pre-release)
+### From GitHub (release 1.8.1, pre-release)
 
-CRAN serves the stable 1.6.1. Release 1.8.0 is published on GitHub only, as a pre-release; it is not on CRAN.
+CRAN serves the stable 1.6.1. Release 1.8.1 is published on GitHub only, as a pre-release; it is not on CRAN.
 
 ```r
 # Using pak (recommended)
-pak::pak("Data-Wise/rmediation@v1.8.0")
+pak::pak("Data-Wise/rmediation@v1.8.1")
 
 # Or using remotes
-remotes::install_github("Data-Wise/rmediation", ref = "v1.8.0")
+remotes::install_github("Data-Wise/rmediation", ref = "v1.8.1")
 ```
 
 For the development branch, use `@dev` or `ref = "dev"` instead.
@@ -94,8 +94,14 @@ medci(mu.x = 0.5, mu.y = 0.6,
       se.x = 0.08, se.y = 0.04,
       rho = 0, type = "dop")
 
-#> 95% CI for ab: [0.178, 0.422]
-#> Estimate: 0.300, SE: 0.062
+#> $`95% CI`
+#> [1] 0.2010806 0.4053620
+#> 
+#> $Estimate
+#> [1] 0.3
+#> 
+#> $SE
+#> [1] 0.05209837
 ```
 
 ### Sequential Mediators (3+ Variables)
@@ -174,8 +180,8 @@ Sigma <- diag(c(0.01, 0.01, 0.01))  # independent paths
 pn3 <- ProductNormal3(mu = mu, Sigma = Sigma)
 ci(pn3, level = 0.95)
 
-#> 95% CI: [0.024, 0.248]
-#> Estimate: 0.120
+#>      lower      upper 
+#> 0.04797581 0.21980280 
 
 # Direct CDF query
 pprodnormal3(q = 0, mean = mu, cov = Sigma)  # P(a1*a2*b <= 0)
@@ -279,6 +285,12 @@ The default screen keeps only admissible (positive-definite) grid points; use
 | `pprodnormal3()` | Exact CDF of product of three normals (`a1*a2*b`) |
 | `ProductNormal()` | S7 class for two-variable product distributions |
 | `ProductNormal3()` | S7 class for three-variable sequential indirect effects |
+
+## Learn More
+
+- [Quick Reference](https://data-wise.github.io/rmediation/articles/refcard.html): which function answers which question, and the classed conditions it can signal.
+- [Cookbook](https://data-wise.github.io/rmediation/articles/cookbook.html): short recipes that run as written.
+- [Technical Notes](https://data-wise.github.io/rmediation/articles/technical-notes.html): why the integrator, the exact CDF, point masses, the densities and the MBCO checks behave as they do.
 
 ## Part of the Mediationverse
 

@@ -108,11 +108,23 @@ class CitedTestFileTests(unittest.TestCase):
 
 
 class ExemptionTests(unittest.TestCase):
-    def test_release_branch_is_exempt(self):
-        self.assertEqual(check(body="", head="release/1.7.1", base="main"), [])
+    def test_release_branch_with_ships_list_passes(self):
+        self.assertEqual(check(body="Ships: #101, #102 and #103", head="release/1.7.1", base="main"), [])
 
-    def test_dev_to_main_is_exempt(self):
-        self.assertEqual(check(body="", head="dev", base="main"), [])
+    def test_dev_to_main_with_ships_list_passes(self):
+        self.assertEqual(check(body="Release v1.8.0\nShips: #106 #107", head="dev", base="main"), [])
+
+    def test_release_without_ships_list_fails_closed(self):
+        for head, base in (("dev", "main"), ("release/1.7.1", "main")):
+            for body in ("", "Release v1.8.0, all green", "Ships: everything", "Ships:"):
+                with self.subTest(head=head, body=body):
+                    self.assertIn("Ships", " ".join(check(body=body, head=head, base=base)))
+
+    def test_release_with_no_risk_file_needs_no_list(self):
+        self.assertEqual(check(changed=["NEWS.md"], body="", head="dev", base="main"), [])
+
+    def test_ships_line_does_not_exempt_a_feature_pr(self):
+        self.assertNotEqual(check(body="Ships: #1", head="feature/x", base="dev"), [])
 
     def test_exempt_line_with_reason_passes(self):
         body = "Risk-tier: exempt: rename of R/mbco.R, no logic change"

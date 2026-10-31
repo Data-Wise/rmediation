@@ -92,7 +92,7 @@ ProductNormal3 <- S7::new_class("ProductNormal3",
       stop("Sigma must be positive semi-definite")
     }
     if (length(self@method) != 1 ||
-      !(self@method %in% c("gauss", "hcubature"))) {
+          !(self@method %in% c("gauss", "hcubature"))) {
       stop("method must be 'gauss' or 'hcubature'")
     }
     NULL
@@ -258,7 +258,8 @@ S7::S4_register(MLOmittedConfounder)
 
 #' Model-based Constrained Optimization (MBCO) Chi-squared Test
 #'
-#' This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a function of indirect effects.
+#' This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a
+#' function of indirect effects.
 #'
 #' @details
 #' **Two medfit SEMFits (medfit >= 0.8.0).** Supply the already-fitted
@@ -390,7 +391,9 @@ S7::S4_register(MLOmittedConfounder)
 #' @param h0 A fitted restricted \code{OpenMx} model or medfit \code{SEMFit} under the null hypothesis.
 #' @param h1 A fitted full model of the same class as \code{h0}, under the alternative hypothesis.
 #' @param ... Additional arguments.
-#' @return An object of class \code{MBCOResult} containing \item{statistic}{asymptotic chi-squared test statistic value} \item{df}{chi-squared df} \item{p_value}{chi-squared p-value computed based on the method specified by the argument \code{type}} \item{type}{The type of test performed}
+#' @return An object of class \code{MBCOResult} containing \item{statistic}{asymptotic chi-squared test statistic value}
+#' \item{df}{chi-squared df} \item{p_value}{chi-squared p-value computed based on the method specified by the argument
+#' \code{type}} \item{type}{The type of test performed}
 #' @author Davood Tofighi \email{dtofighi@@gmail.com}
 #' @importFrom checkmate assert_class assert_count assert_number assert_choice
 #' @export

@@ -14,10 +14,13 @@ mbco(h0, h1, ...)
 \item{...}{Additional arguments.}
 }
 \value{
-An object of class \code{MBCOResult} containing \item{statistic}{asymptotic chi-squared test statistic value} \item{df}{chi-squared df} \item{p_value}{chi-squared p-value computed based on the method specified by the argument \code{type}} \item{type}{The type of test performed}
+An object of class \code{MBCOResult} containing \item{statistic}{asymptotic chi-squared test statistic value}
+\item{df}{chi-squared df} \item{p_value}{chi-squared p-value computed based on the method specified by the argument
+\code{type}} \item{type}{The type of test performed}
 }
 \description{
-This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a function of indirect effects.
+This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a
+function of indirect effects.
 }
 \details{
 \strong{Two medfit SEMFits (medfit >= 0.8.0).} Supply the already-fitted

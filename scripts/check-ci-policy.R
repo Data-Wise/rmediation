@@ -4,7 +4,7 @@
 # Run from the package root:  Rscript scripts/check-ci-policy.R
 # Needs the `yaml` package. A missing workflow file or a workflow with no `on:` block is a violation, not a skip.
 
-expensive <- c("R-CMD-check.yaml", "semfit-mbco.yaml", "test-coverage.yaml", "pkgdown.yaml")
+expensive <- c("R-CMD-check.yaml", "semfit-mbco.yaml", "test-coverage.yaml", "pkgdown.yaml", "lint.yaml")
 required_context <- "ubuntu-latest (release)" # the required status check on `main`
 max_timeout <- 60L # minutes; slowest observed leg is about 8 minutes of wall time
 

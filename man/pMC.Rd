@@ -9,13 +9,20 @@ pMC(q, mu, Sigma, quant, lower.tail = TRUE, n.mc = 1e+05, ...)
 \arguments{
 \item{q}{quantile}
 
-\item{mu}{a \link{vector} of means (e.g., coefficient estimates) for the normal random variables. A user can assign a name to each mean value, e.g., \code{mu=c(b1=.1,b2=3)}; otherwise, the coefficient names are assigned automatically as follows: \code{b1,b2,...}.}
+\item{mu}{a \link{vector} of means (e.g., coefficient estimates) for the normal random variables. A user can assign a
+name to each mean value, e.g., \code{mu=c(b1=.1,b2=3)}; otherwise, the coefficient names are assigned automatically
+as follows: \code{b1,b2,...}.}
 
-\item{Sigma}{either a covariance matrix or a \link{vector} that stacks all the columns of the lower triangle variance--covariance matrix one underneath the other.}
+\item{Sigma}{either a covariance matrix or a \link{vector} that stacks all the columns of the lower triangle
+variance--covariance matrix one underneath the other.}
 
-\item{quant}{quantity of interest, which is a nonlinear/linear function of the model parameters. Argument \code{quant} is a \link{formula} that \strong{must} start with the symbol "tilde" (\code{~}): e.g., \code{~b1*b2*b3*b4}. The names of coefficients must conform to the names provided in the argument \code{mu} or to the default names, i.e., \code{b1,b2,...}.}
+\item{quant}{quantity of interest, which is a nonlinear/linear function of the model parameters. Argument
+\code{quant} is a \link{formula} that \strong{must} start with the symbol "tilde" (\code{~}): e.g.,
+\code{~b1*b2*b3*b4}. The names of coefficients must conform to the names provided in the argument \code{mu} or to the
+default names, i.e., \code{b1,b2,...}.}
 
-\item{lower.tail}{logical; if \code{TRUE} (default), the probability is \eqn{P[quant < q]}; otherwise, \eqn{P[quant > q]}}
+\item{lower.tail}{logical; if \code{TRUE} (default), the probability is \eqn{P[quant < q]}; otherwise, \eqn{P[quant >
+q]}}
 
 \item{n.mc}{Monte Carlo sample size (default: 1e5). Larger values provide
 more precision but take longer to compute.}
@@ -35,7 +42,8 @@ pMC(.2,
 )
 }
 \references{
-Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis confidence intervals. \emph{Behavior Research Methods}, \bold{43}, 692--700. doi:10.3758/s13428-011-0076-x
+Tofighi, D. and MacKinnon, D. P. (2011). RMediation: An R package for mediation analysis confidence
+intervals. \emph{Behavior Research Methods}, \bold{43}, 692--700. doi:10.3758/s13428-011-0076-x
 }
 \author{
 Davood Tofighi \email{dtofighi@gmail.com}

@@ -2,7 +2,8 @@
 # evidence checklist in its body (scripts/risk_tier.py; template in .github/PULL_REQUEST_TEMPLATE.md). A test cannot
 # see a diff or a PR body, so a job does. Cheap by design: a standard-library Python script, no R install, a few
 # seconds, so it may run on PRs to dev while the expensive checks run for main and releases only
-# (scripts/check-ci-policy.R enforces that this stays cheap). Release PRs from dev are exempt.
+# (scripts/check-ci-policy.R enforces that this stays cheap). Release PRs from dev skip the checklist but must list
+# the PRs they ship (a body line `Ships: #N, #M`).
 # Advisory: not a required status check. Make it required only after three clean runs, by the repository owner.
 on:
   pull_request:

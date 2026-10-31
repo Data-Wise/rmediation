@@ -23,7 +23,8 @@ pprodnormalMeeker <- function(q, mu.x, mu.y, se.x, se.y, rho = 0, lower.tail = T
 # integrate() over (-Inf, Inf) misses the unit-sd peak of dnorm(x - mu.b) when |mu.b| is large
 # (standardized mean >= ~20 returned ~1e-7 where the answer is ~0.5) and is wrong by up to 4e-6
 # absolute in far tails. So integrate over +/- 10 sd of the peak (mass left out < 2e-23), split at
-# the jump of sign(x) when 0 lies inside (and at the roots of Meeker & Escobar's quadratic), and tighten the tolerance: the integrand is step-like
+# the jump of sign(x) when 0 lies inside (and at the roots of Meeker & Escobar's quadratic), and tighten the tolerance:
+# the integrand is step-like
 # near x = 0, where the default tolerance missed up to 2.7e-3. The absolute tolerance is
 # negligible so far-tail probabilities are resolved relatively; the +/-10 sd window leaves out
 # at most 1.5e-23 of mass, which is the floor on resolvable probabilities. Issue #60,
