@@ -1,8 +1,10 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+# Expensive: runs for main and releases only (CI policy); `workflow_dispatch` runs it on demand.
 on:
   push:
-    branches: [main, master, dev]
+    branches: [main, master]
+  workflow_dispatch:
 
 name: test-coverage
 

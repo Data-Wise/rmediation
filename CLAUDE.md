@@ -123,6 +123,16 @@ explanatory comments and regression tests, so read those before "fixing" either:
 
 ---
 
+## CI Policy
+
+Code coverage and expensive GitHub checks (the R-CMD-check matrix, `semfit-mbco`, `test-coverage`, `pkgdown`) run only
+for merge to `main`, for releases and on `workflow_dispatch`. PRs to `dev` and pushes to `dev` start none of them; they
+are gated locally with `scripts/check-local.sh` (workflow triggers, docs currency, the issue #84 gate, tests, then
+`R CMD check`) and rforge (`/rforge:r:cycle`). `main` requires the status check `ubuntu-latest (release)`: keep that
+trigger and job name. Plan and decisions: `planning/PLAN-mechanical-checks-2026-10-30.md`.
+
+---
+
 ## Ecosystem Coordination
 
 RMediation is an **application package** in the mediationverse ecosystem.

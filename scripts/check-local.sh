@@ -2,22 +2,44 @@
 # Fast local gate for an R package: quick tests, then R CMD check on a built tarball.
 #
 # Runs with NOT_CRAN=false, so skip_on_cran() simulation tests are skipped -- the same
-# tier the pull-request CI job runs. GitHub CI stays the authority (full matrix and the
-# slow tests run there on push to main/dev); this catches the cheap failures first.
+# tier the pull-request CI job runs. GitHub CI stays the authority for main and releases (full
+# matrix and the slow tests run there); this is the gate for PRs to dev.
 #
 # The tests already ran above, so R CMD check skips re-running them (--no-tests); it still
 # checks the test dependencies statically. CI runs the installed-package tests.
 # Vignettes are neither built nor checked here (--no-build-vignettes / --ignore-vignettes),
 # so a quarto/knitr toolchain is not needed; CI and the pre-submission pass cover them.
 #
-# Usage:  scripts/check-local.sh [--tests-only]
+# CI policy: GitHub runs the expensive checks (full matrix, coverage, medfit compatibility) for main and
+# releases only; PRs to dev are gated here. This script therefore also runs scripts/check-ci-policy.R (workflow
+# triggers), scripts/check-docs.R (roxygen output matches man/ and NAMESPACE) and
+# scripts/verify-constraint-not-enforced.R (issue #84 gate, about 2 s) first, so the cheap checks fail fast
+# before the tests.
+#
+# Usage:  scripts/check-local.sh [--tests-only] [--no-gate] [--depends-only]
+#   --tests-only    the cheap checks and the tests only, no R CMD check
+#   --no-gate       skip the issue #84 verify script (needs OpenMx; a missing OpenMx otherwise fails)
+#   --no-docs       skip the docs-currency check (needs roxygen2)
+#   --depends-only  R CMD check with _R_CHECK_DEPENDS_ONLY_=true, so unguarded Suggests use fails. The check
+#                   runs with --no-tests, so this exercises package load and examples only.
 # Background:  scripts/check-local.sh >/dev/null 2>&1 &   then   tail -f "$LOG"
 # Exit status: 0 = pass (notes allowed), 1 = test failure or check ERROR/WARNING.
 
 set -u
 
 tests_only=0
-[ "${1:-}" = "--tests-only" ] && tests_only=1
+run_gate=1
+run_docs=1
+depends_only=0
+for arg in "$@"; do
+  case "$arg" in
+    --tests-only) tests_only=1 ;;
+    --no-gate) run_gate=0 ;;
+    --no-docs) run_docs=0 ;;
+    --depends-only) depends_only=1 ;;
+    *) echo "check-local: unknown argument: $arg" >&2; exit 2 ;;
+  esac
+done
 
 root=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 pkg=$(sed -n 's/^Package: *//p' "$root/DESCRIPTION")
@@ -33,6 +55,28 @@ export _R_CHECK_FORCE_SUGGESTS_=false
 
 : > "$LOG"
 echo "check-local: $pkg (NOT_CRAN=false), log: $LOG"
+
+echo "== CI policy ==" >> "$LOG"
+if ! ( cd "$root" && Rscript scripts/check-ci-policy.R ) >> "$LOG" 2>&1; then
+  echo "check-local: FAIL (CI policy) -- see $LOG"
+  exit 1
+fi
+
+if [ "$run_docs" -eq 1 ]; then
+  echo "== docs currency ==" >> "$LOG"
+  if ! ( cd "$root" && Rscript scripts/check-docs.R ) >> "$LOG" 2>&1; then
+    echo "check-local: FAIL (docs currency: run devtools::document()) -- see $LOG"
+    exit 1
+  fi
+fi
+
+if [ "$run_gate" -eq 1 ]; then
+  echo "== issue #84 gate ==" >> "$LOG"
+  if ! ( cd "$root" && Rscript scripts/verify-constraint-not-enforced.R ) >> "$LOG" 2>&1; then
+    echo "check-local: FAIL (issue #84 gate) -- see $LOG"
+    exit 1
+  fi
+fi
 
 t0=$(date +%s)
 echo "== tests ==" >> "$LOG"
@@ -55,7 +99,11 @@ tarball=""
 for f in "$work"/"$pkg"_*.tar.gz; do [ -f "$f" ] && tarball=$f && break; done
 [ -n "$tarball" ] || { echo "check-local: FAIL (build) -- see $LOG"; exit 1; }
 
-R CMD check --no-manual --ignore-vignettes --no-tests --output="$work" "$tarball" >> "$LOG" 2>&1
+if [ "$depends_only" -eq 1 ]; then
+  _R_CHECK_DEPENDS_ONLY_=true R CMD check --no-manual --ignore-vignettes --no-tests --output="$work" "$tarball" >> "$LOG" 2>&1
+else
+  R CMD check --no-manual --ignore-vignettes --no-tests --output="$work" "$tarball" >> "$LOG" 2>&1
+fi
 check_log="$work/$pkg.Rcheck/00check.log"
 t2=$(date +%s)
 status=$(grep '^Status:' "$check_log" 2>/dev/null | head -n 1)
