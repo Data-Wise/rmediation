@@ -80,6 +80,28 @@
   ))
 }
 
+# Issue #84: after a successful refit, say so when h0's fit was identical to h1's (-2LL difference
+# about 0) although a constraint was violated: the constraint may not have been enforced. OpenMx can
+# silently drop an equality constraint whose Jacobian row is zero at the starting values
+# (OpenMx/OpenMx#433), and a violation within the feasibility tolerance looks the same. A fitted h0
+# keeps no starting values, so the two causes cannot be told apart here; the message says so.
+.mbco_report_dropped <- function(refit, threshold = 1e-6) {
+  before <- refit$refit$statistic_before
+  if (is.null(before) || !is.finite(before) || abs(before) >= threshold) {
+    return(invisible(NULL))
+  }
+  .mbco_signal("RMediation_constraint_dropped", paste0(
+    "The fit of h0 is identical to the fit of h1 (-2LL difference ",
+    format(round(before, 4)), ") although a constraint of h0 was violated, ",
+    "so the constraint may not have been enforced. OpenMx can silently drop an equality ",
+    "constraint whose Jacobian is zero at the starting values (OpenMx/OpenMx#433), for example ",
+    "b1 * b2 == 0 started at zero; a violation within the feasibility tolerance looks the same. ",
+    "A fitted h0 keeps no starting values, so mbco() cannot tell these causes apart. The reported ",
+    "statistic comes from the refit. For a product null use mbco_product_null() (see ?mbco)."
+  ))
+  invisible(NULL)
+}
+
 # A violated h0 that cannot be repaired is an error, never a number (grill 2026-10-14).
 .mbco_stop_refit_failed <- function(h0, failure, threshold = 1e-6) {
   v <- .mbco_constraint_violation(h0)
