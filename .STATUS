@@ -483,3 +483,4 @@ Carlo, MBCO. S7 is the computational core; legacy functions are thin wrappers.
 - All worktrees and stale local branches removed ✓
 
 Validation: full suite 562 passed / 0 failed / 2 existing OpenMx warnings / 1 intentional version skip; changed-file lint and spelling passed.
+- 2026-10-30: `mbco(type = "parametric")` replicate loop is package-controlled (`.mbco_replicate_statistic()` in `R/mbco-compare.R`, shared with `.mbco_semi()`): convergence check, `.mbco_refit_h0()`, `RMediation_bootstrap_infeasible` for an unrepaired replicate; `mxCompare(boot = TRUE)` no longer used. Closes the gap noted for PR #89 / Codex review of #84. Tests: `tests/testthat/test-mbco-parametric-replicates.R` (mutation-checked). Release and CRAN stay in #88.

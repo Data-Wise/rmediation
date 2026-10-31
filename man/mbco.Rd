@@ -50,8 +50,12 @@ OpenMx bootstrap methods restore global options on success and error.
 Set a seed before calling for reproducibility; bootstrap sampling consumes the
 current RNG stream. The semiparametric method requires positive-definite sample
 and null covariances and stops at the first failed refit or nonfinite replicate
-statistic. It does not retry or discard failed replicates. Parametric results
-require a finite nonnegative statistic, positive df, and a p-value in \verb{[0, 1]}.
+statistic. It does not retry or discard failed replicates. The parametric method
+simulates each replicate from the fitted \code{h0} with \code{\link[OpenMx:mxGenerateData]{OpenMx::mxGenerateData()}} (the
+\code{mvtnorm} package is required) and fits \code{h0} and \code{h1} to it in a loop the package
+runs itself, under the same stopping rules as the semiparametric method; it needs a
+model with a single raw data set. The p-value is the proportion of replicate
+statistics that exceed the observed one.
 
 \strong{Testing an OpenMx product null (\eqn{a b = 0}).} The null \eqn{ab = 0} holds when
 \eqn{a = 0} or \eqn{b = 0}. A single nonlinear constraint such as
@@ -92,8 +96,13 @@ every \code{type}: no statistic is returned from a fit known to be invalid. Refi
 yourself with \code{mxOption(model, "Feasibility tolerance", 1e-8)} or use
 \code{\link[=mbco_product_null]{mbco_product_null()}} for a product null. \code{h1} is checked and warned about
 (\code{RMediation_constraint_violation}) but never refit.
-With \code{type = "semi"} the bootstrap still stops at the first replicate that
-fails to converge (6 of 100 runs in a simulation with \code{R = 200}).
+Both bootstrap types (\code{"semi"} and \code{"parametric"}) apply the same checks to every
+replicate: a replicate whose \code{h0} or \code{h1} fit does not converge stops the call at the
+first one (6 of 100 runs in a simulation with \code{R = 200}); a replicate null fit that
+violates its constraint is refit as above, and one that cannot be repaired stops the call
+with an error of class \code{RMediation_bootstrap_infeasible} instead of entering the null
+distribution. (Before 1.7.1 \code{type = "parametric"} delegated its bootstrap to
+\code{OpenMx::mxCompare(boot = TRUE)}, which does neither.)
 
 \strong{Wrong-branch check (OpenMx).} A feasible, converged fit of a product null
 such as \code{a*b == 0} can still sit on the larger-statistic branch (for example

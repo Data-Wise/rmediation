@@ -21,6 +21,18 @@
 
 ## Bug fixes
 
+- `mbco(type = "parametric")` now checks every bootstrap replicate like `type = "semi"` does.
+  It used to hand the bootstrap to `OpenMx::mxCompare(boot = TRUE)`, so a replicate null fit
+  that violated its constraint (for example OpenMx/OpenMx#433 dropping a zero-Jacobian
+  equality at a replicate's start) entered the null distribution unchecked and understated its
+  statistic. The package now simulates each replicate from the fitted `h0` with
+  `OpenMx::mxGenerateData()`, fits `h0` and `h1`, refits a violated `h0` constraint, and stops
+  with an error of class `RMediation_bootstrap_infeasible` when it cannot be repaired. Behavior
+  changes: a replicate that does not converge or has a non-finite statistic now stops the call
+  (`mxCompare` silently dropped such replicates), and a model with several data sets (a
+  multigroup container) is refused. The observed statistic, df and the result shape are
+  unchanged; seeded p-values differ because the replicates are drawn by a different loop.
+
 - The DOP CDF (`pprodnormal()`, `qprodnormal()`, `medci()`) is exact at `|rho| = 1`: it now uses
   Meeker & Escobar's (1994) quadratic-root solution instead of integrating a step function, which
   was wrong by up to 4e-5 and could stop with "the integral is probably divergent". For
