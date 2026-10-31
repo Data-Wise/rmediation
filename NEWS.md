@@ -1,4 +1,6 @@
-# RMediation (development version)
+# RMediation 1.9.0 (2026-10-31)
+
+The `ci(type = "asymp")` interval label changes (see Behavior changes); two silent-wrong-value density bugs are fixed.
 
 ## Behavior changes
 
@@ -14,6 +16,12 @@
   three-factor cases). The integrand is a narrow spike there and the fixed integration window missed it. The window is
   now split at the spike (found from the roots of the conditional mean), with a scaled absolute tolerance for the
   far subintervals. Values for well-conditioned inputs are unchanged (#117).
+
+## Internal
+
+- Eight tests-only PRs add independent-oracle and planted-defect coverage for the risk files: `medci()`/`ci()` endpoints
+  (#115), point masses and `|rho| = 1` (#116), `pMC()`/`qMC()` closed forms (#118), `qprodnormal()` (#119, #126),
+  `confintAsymp()`/`confintMC()` (#120), `.prod3_bound()` (#121) and MBCO size and a real-OpenMx check (#122).
 
 # RMediation 1.8.1 (2026-10-31)
 
