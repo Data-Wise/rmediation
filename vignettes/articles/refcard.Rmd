@@ -39,6 +39,10 @@ One page: which function answers which question. Each row links to the full help
 | `"semi"` | semiparametric bootstrap, `R` replicates | `R` fit pairs |
 | `"parametric"` | parametric bootstrap, `R` replicates | `R` fit pairs |
 
+## Changed in 1.9.0
+
+`ci(type = "asymp")` now names its interval `95% CI` (it was `97.5% CI`) at the default `alpha`. Index the result by position (`res[[1]]`) or by the new name; the interval itself did not change (#123).
+
 ## Conditions to know
 
 | Class | Kind | Meaning |

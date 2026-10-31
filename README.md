@@ -294,6 +294,7 @@ The default screen keeps only admissible (positive-definite) grid points; use
 
 - [Quick Reference](https://data-wise.github.io/rmediation/articles/refcard.html): which function answers which question, and the classed conditions it can signal.
 - [Cookbook](https://data-wise.github.io/rmediation/articles/cookbook.html): short recipes that run as written.
+- [Status and Roadmap](https://data-wise.github.io/rmediation/articles/roadmap.html): what is settled, the CRAN hold and its criteria, and what could come next.
 - [Technical Notes](https://data-wise.github.io/rmediation/articles/technical-notes.html): why the integrator, the exact CDF, point masses, the densities and the MBCO checks behave as they do.
 
 ## Part of the Mediationverse
