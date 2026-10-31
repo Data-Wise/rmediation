@@ -13,11 +13,11 @@ test_that("Legacy ci(mu, Sigma, ...) works with positional arguments", {
 
   # Legacy ci returns a matrix/list for type="asymp"
   expect_true(is.list(res) || is.matrix(res))
-  # Check if it contains "97.5%" in names or colnames
+  # The default interval is 95% (issue #123: it used to be labeled "97.5% CI")
   if (is.matrix(res)) {
-    expect_true("97.5% CI" %in% colnames(res))
+    expect_true("95% CI" %in% colnames(res))
   } else {
-    expect_true("97.5% CI" %in% names(res))
+    expect_true("95% CI" %in% names(res))
   }
 })
 
