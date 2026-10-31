@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -230,6 +230,73 @@ null with the largest p-value.</p>
 converged and <code>NULL</code> for <code>type = "asymp"</code>. If more
 than 5% fail, the call stops with class
 <code>RMediation_bootstrap_too_many_dropped</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="a-ci-for-a-serial-indirect-effect-from-lm-fits-medfit">9. A CI for a serial indirect effect from lm fits (medfit)<a class="anchor" aria-label="anchor" href="#a-ci-for-a-serial-indirect-effect-from-lm-fits-medfit"></a>
+</h2>
+<p>medfit extracts the path estimates and their covariance;
+<code><a href="../reference/ci.html">ci()</a></code> turns them into an interval. medfit is optional
+(<code>Suggests</code>).</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">7</span><span class="op">)</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">800</span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
+<span><span class="va">M1</span> <span class="op">&lt;-</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">X</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
+<span><span class="va">M2</span> <span class="op">&lt;-</span> <span class="fl">0.6</span> <span class="op">*</span> <span class="va">M1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
+<span><span class="va">Y</span> <span class="op">&lt;-</span> <span class="fl">0.7</span> <span class="op">*</span> <span class="va">M2</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="op">*</span> <span class="va">X</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">M1</span>, <span class="va">M2</span>, <span class="va">Y</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fu">medfit</span><span class="fu">::</span><span class="fu"><a href="https://data-wise.github.io/medfit/reference/extract_mediation.html" class="external-link">extract_mediation</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">M1</span> <span class="op">~</span> <span class="va">X</span>, <span class="va">dat</span><span class="op">)</span>, model_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Y</span> <span class="op">~</span> <span class="va">M2</span> <span class="op">+</span> <span class="va">X</span>, <span class="va">dat</span><span class="op">)</span>,</span>
+<span>  treatment <span class="op">=</span> <span class="st">"X"</span>, mediator <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M1"</span>, <span class="st">"M2"</span><span class="op">)</span>,</span>
+<span>  mediator_models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">M2</span> <span class="op">~</span> <span class="va">M1</span>, <span class="va">dat</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/ci.html">ci</a></span><span class="op">(</span><span class="va">mu</span>, level <span class="op">=</span> <span class="fl">0.95</span>, type <span class="op">=</span> <span class="st">"MC"</span><span class="op">)</span><span class="op">$</span><span class="va">CI</span></span>
+<span><span class="co">#&gt;     lower     upper </span></span>
+<span><span class="co">#&gt; 0.2005227 0.2888945</span></span></code></pre></div>
+<p>The true indirect effect is <code>0.5 * 0.6 * 0.7 = 0.21</code>. See
+<code><a href="../articles/serial-mediation-with-medfit.html">vignette("serial-mediation-with-medfit")</a></code> for the lavaan
+route.</p>
+</div>
+<div class="section level2">
+<h2 id="test-a-product-null-with-two-medfit-sem-fits">10. Test a product null with two medfit SEM fits<a class="anchor" aria-label="anchor" href="#test-a-product-null-with-two-medfit-sem-fits"></a>
+</h2>
+<p><code><a href="../reference/mbco.html">mbco()</a></code> compares two fitted <code>SEMFit</code> objects
+asymptotically, with no OpenMx. It calls <code><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova()</a></code> and never
+refits. This route needs medfit 0.9.0 or later, so the chunk is shown,
+not run, on the site.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">memory_exp</span><span class="op">)</span></span>
+<span><span class="va">d</span><span class="op">$</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">x</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span></span>
+<span><span class="va">syntax</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"repetition ~ a1*x"</span>, <span class="st">"imagery ~ a2*x"</span>,</span>
+<span>                <span class="st">"recall ~ cp*x + b1*repetition + b2*imagery"</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span></span>
+<span><span class="va">full</span> <span class="op">&lt;-</span> <span class="fu">medfit</span><span class="fu">::</span><span class="fu">fit_sem</span><span class="op">(</span><span class="va">syntax</span>, <span class="va">d</span>, fixed_x <span class="op">=</span> <span class="cn">FALSE</span>, meanstructure <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="va">null</span> <span class="op">&lt;-</span> <span class="fu">medfit</span><span class="fu">::</span><span class="fu">fit_sem</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">syntax</span>, <span class="st">"a1*b1 == 0"</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span>, <span class="va">d</span>,</span>
+<span>                        fixed_x <span class="op">=</span> <span class="cn">FALSE</span>, meanstructure <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/mbco.html">mbco</a></span><span class="op">(</span><span class="va">null</span>, <span class="va">full</span><span class="op">)</span> <span class="co"># statistic 0.0831, df 1 (the figure in the `?mbco` example)</span></span></code></pre></div>
+<p>Bootstrap types and OpenMx fitting controls are not supported for
+<code>SEMFit</code> pairs.</p>
+</div>
+<div class="section level2">
+<h2 id="how-much-could-an-omitted-confounder-change-a-two-level-indirect-effect">11. How much could an omitted confounder change a two-level indirect
+effect?<a class="anchor" aria-label="anchor" href="#how-much-could-an-omitted-confounder-change-a-two-level-indirect-effect"></a>
+</h2>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">R</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">.3</span>, <span class="fl">.2</span>, <span class="fl">.3</span>, <span class="fl">1</span>, <span class="fl">.4</span>, <span class="fl">.2</span>, <span class="fl">.4</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ml_omitted_confounder.html">ml_omitted_confounder</a></span><span class="op">(</span></span>
+<span>  between <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">0.3</span>, b <span class="op">=</span> <span class="fl">0.4</span>, cor <span class="op">=</span> <span class="va">R</span>, sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  r_za <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">res</span><span class="op">@</span><span class="va">ranges</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"level"</span>, <span class="st">"r_za"</span>, <span class="st">"min"</span>, <span class="st">"max"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;     level r_za        min       max</span></span>
+<span><span class="co">#&gt; 1 between  0.0 0.04882118 0.2760939</span></span>
+<span><span class="co">#&gt; 2 between  0.1 0.04410733 0.3463230</span></span></code></pre></div>
+<p>The unadjusted between-cluster indirect effect is
+<code>0.3 * 0.4 = 0.12</code>. Each row is the range of the adjusted
+effect over the grid of confounder correlations with the mediator and
+outcome, at the stated correlation with the treatment. See
+<code><a href="../articles/omitted-confounder-sensitivity.html">vignette("omitted-confounder-sensitivity")</a></code>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

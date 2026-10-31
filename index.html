@@ -33,7 +33,7 @@
 
     <a class="navbar-brand me-2" href="index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -114,7 +114,7 @@
 <strong><a href="https://data-wise.github.io/mediation-apps/medci/" class="external-link">Distribution-of-Product CI calculator</a></strong> — a live front end for <code><a href="reference/medci.html">medci()</a></code>
 </li>
 <li>
-<strong>Monte Carlo / Asymptotic-Delta CI calculator</strong> — built on <code>ci(type = "mc")</code> and <code>ci(type = "asymp")</code>
+<strong><a href="https://data-wise.github.io/mediation-apps/medmc/" class="external-link">Monte Carlo / Asymptotic-Delta CI calculator</a></strong> — built on <code>ci(type = "mc")</code> and <code>ci(type = "asymp")</code>
 </li>
 </ul>
 <p>Useful for quick checks, teaching, and for collaborators who do not use R.</p>
@@ -166,15 +166,15 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"RMediation"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="from-github-release-180-pre-release">From GitHub (release 1.8.0, pre-release)<a class="anchor" aria-label="anchor" href="#from-github-release-180-pre-release"></a>
+<h3 id="from-github-release-181-pre-release">From GitHub (release 1.8.1, pre-release)<a class="anchor" aria-label="anchor" href="#from-github-release-181-pre-release"></a>
 </h3>
-<p>CRAN serves the stable 1.6.1. Release 1.8.0 is published on GitHub only, as a pre-release; it is not on CRAN.</p>
+<p>CRAN serves the stable 1.6.1. Release 1.8.1 is published on GitHub only, as a pre-release; it is not on CRAN.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Using pak (recommended)</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Data-Wise/rmediation@v1.8.0"</span><span class="op">)</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Data-Wise/rmediation@v1.8.1"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Or using remotes</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Data-Wise/rmediation"</span>, ref <span class="op">=</span> <span class="st">"v1.8.0"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Data-Wise/rmediation"</span>, ref <span class="op">=</span> <span class="st">"v1.8.1"</span><span class="op">)</span></span></code></pre></div>
 <p>For the development branch, use <code>@dev</code> or <code>ref = "dev"</code> instead.</p>
 </div>
 <div class="section level3">
@@ -204,8 +204,14 @@
 <span>      se.x <span class="op">=</span> <span class="fl">0.08</span>, se.y <span class="op">=</span> <span class="fl">0.04</span>,</span>
 <span>      rho <span class="op">=</span> <span class="fl">0</span>, type <span class="op">=</span> <span class="st">"dop"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#&gt; 95% CI for ab: [0.178, 0.422]</span></span>
-<span><span class="co">#&gt; Estimate: 0.300, SE: 0.062</span></span></code></pre></div>
+<span><span class="co">#&gt; $`95% CI`</span></span>
+<span><span class="co">#&gt; [1] 0.2010806 0.4053620</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $Estimate</span></span>
+<span><span class="co">#&gt; [1] 0.3</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $SE</span></span>
+<span><span class="co">#&gt; [1] 0.05209837</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="sequential-mediators-3-variables">Sequential Mediators (3+ Variables)<a class="anchor" aria-label="anchor" href="#sequential-mediators-3-variables"></a>
@@ -275,8 +281,8 @@
 <span><span class="va">pn3</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ProductNormal3.html">ProductNormal3</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="va">mu</span>, Sigma <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span><span class="va">pn3</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#&gt; 95% CI: [0.024, 0.248]</span></span>
-<span><span class="co">#&gt; Estimate: 0.120</span></span>
+<span><span class="co">#&gt;      lower      upper </span></span>
+<span><span class="co">#&gt; 0.04797581 0.21980280 </span></span>
 <span></span>
 <span><span class="co"># Direct CDF query</span></span>
 <span><span class="fu"><a href="reference/pprodnormal3.html">pprodnormal3</a></span><span class="op">(</span>q <span class="op">=</span> <span class="fl">0</span>, mean <span class="op">=</span> <span class="va">mu</span>, cov <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span>  <span class="co"># P(a1*a2*b &lt;= 0)</span></span></code></pre></div>
@@ -392,6 +398,18 @@
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level2">
+<h2 id="learn-more">Learn More<a class="anchor" aria-label="anchor" href="#learn-more"></a>
+</h2>
+<ul>
+<li>
+<a href="https://data-wise.github.io/rmediation/articles/refcard.html">Quick Reference</a>: which function answers which question, and the classed conditions it can signal.</li>
+<li>
+<a href="https://data-wise.github.io/rmediation/articles/cookbook.html">Cookbook</a>: short recipes that run as written.</li>
+<li>
+<a href="https://data-wise.github.io/rmediation/articles/technical-notes.html">Technical Notes</a>: why the integrator, the exact CDF, point masses, the densities and the MBCO checks behave as they do.</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="part-of-the-mediationverse">Part of the Mediationverse<a class="anchor" aria-label="anchor" href="#part-of-the-mediationverse"></a>

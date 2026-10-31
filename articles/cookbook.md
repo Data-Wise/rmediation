@@ -153,3 +153,78 @@ res@dropped # replicates that did not converge and were dropped (at most 5% of R
 `@dropped` is `0` when every replicate converged and `NULL` for
 `type = "asymp"`. If more than 5% fail, the call stops with class
 `RMediation_bootstrap_too_many_dropped`.
+
+## 9. A CI for a serial indirect effect from lm fits (medfit)
+
+medfit extracts the path estimates and their covariance;
+[`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) turns
+them into an interval. medfit is optional (`Suggests`).
+
+``` r
+
+set.seed(7)
+n <- 800
+X <- rnorm(n)
+M1 <- 0.5 * X + rnorm(n)
+M2 <- 0.6 * M1 + rnorm(n)
+Y <- 0.7 * M2 + 0.2 * X + rnorm(n)
+dat <- data.frame(X, M1, M2, Y)
+
+mu <- medfit::extract_mediation(
+  lm(M1 ~ X, dat), model_y = lm(Y ~ M2 + X, dat),
+  treatment = "X", mediator = c("M1", "M2"),
+  mediator_models = list(lm(M2 ~ M1, dat))
+)
+set.seed(1)
+ci(mu, level = 0.95, type = "MC")$CI
+#>     lower     upper 
+#> 0.2005227 0.2888945
+```
+
+The true indirect effect is `0.5 * 0.6 * 0.7 = 0.21`. See
+[`vignette("serial-mediation-with-medfit")`](https://data-wise.github.io/rmediation/articles/serial-mediation-with-medfit.md)
+for the lavaan route.
+
+## 10. Test a product null with two medfit SEM fits
+
+[`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md)
+compares two fitted `SEMFit` objects asymptotically, with no OpenMx. It
+calls [`anova()`](https://rdrr.io/r/stats/anova.html) and never refits.
+This route needs medfit 0.9.0 or later, so the chunk is shown, not run,
+on the site.
+
+``` r
+
+d <- as.data.frame(memory_exp)
+d$x <- as.numeric(d$x) - 1
+syntax <- paste("repetition ~ a1*x", "imagery ~ a2*x",
+                "recall ~ cp*x + b1*repetition + b2*imagery", sep = "\n")
+full <- medfit::fit_sem(syntax, d, fixed_x = FALSE, meanstructure = NULL)
+null <- medfit::fit_sem(paste(syntax, "a1*b1 == 0", sep = "\n"), d,
+                        fixed_x = FALSE, meanstructure = NULL)
+mbco(null, full) # statistic 0.0831, df 1 (the figure in the `?mbco` example)
+```
+
+Bootstrap types and OpenMx fitting controls are not supported for
+`SEMFit` pairs.
+
+## 11. How much could an omitted confounder change a two-level indirect effect?
+
+``` r
+
+R <- matrix(c(1, .3, .2, .3, 1, .4, .2, .4, 1), 3)
+res <- ml_omitted_confounder(
+  between = list(a = 0.3, b = 0.4, cor = R, sd = c(1, 1, 1)),
+  r_za = c(0, 0.1)
+)
+res@ranges[, c("level", "r_za", "min", "max")]
+#>     level r_za        min       max
+#> 1 between  0.0 0.04882118 0.2760939
+#> 2 between  0.1 0.04410733 0.3463230
+```
+
+The unadjusted between-cluster indirect effect is `0.3 * 0.4 = 0.12`.
+Each row is the range of the adjusted effect over the grid of confounder
+correlations with the mediator and outcome, at the stated correlation
+with the treatment. See
+[`vignette("omitted-confounder-sensitivity")`](https://data-wise.github.io/rmediation/articles/omitted-confounder-sensitivity.md).

@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -178,6 +178,87 @@ would give <code>0.24</code>, and <code>&gt;=</code> would count the
 ties and give <code>34 / 96</code>. The package tests pin this case.</p>
 </div>
 <div class="section level2">
+<h2 id="the-exact-cdf-of-a-product-of-two-normals-and-its-perfectly-correlated-case">4. The exact CDF of a product of two normals, and its perfectly
+correlated case<a class="anchor" aria-label="anchor" href="#the-exact-cdf-of-a-product-of-two-normals-and-its-perfectly-correlated-case"></a>
+</h2>
+<p><strong>Rule.</strong> <code><a href="../reference/pprodnormal.html">pprodnormal()</a></code> and
+<code><a href="../reference/qprodnormal.html">qprodnormal()</a></code> with <code>type = "dop"</code> compute the
+CDF of <code>a*b</code> by one-dimensional integration of the bivariate
+normal (Meeker and Escobar, 1994). When <code>|rho| = 1</code> the two
+factors are linear in one standard normal variable, so <code>a*b</code>
+is a quadratic in it and the CDF has a closed form from the roots of
+that quadratic. The package uses the closed form, not a step
+integral.</p>
+<p><strong>Reason.</strong> A step integral at <code>|rho| = 1</code>
+was off by up to 4.3e-5 and once stopped with “probably divergent”. The
+closed form is exact, and every one of the 495 evaluations in the
+article’s test domain now succeeds.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">2e6</span><span class="op">)</span></span>
+<span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fl">0.3</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="op">*</span> <span class="va">z</span>   <span class="co"># mu.x = 0.3, se.x = 0.2</span></span>
+<span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fl">0.5</span> <span class="op">+</span> <span class="fl">0.1</span> <span class="op">*</span> <span class="va">z</span>   <span class="co"># mu.y = 0.5, se.y = 0.1, perfectly correlated with a</span></span>
+<span><span class="va">q</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.15</span>, <span class="fl">0.30</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span>  exact      <span class="op">=</span> <span class="fu"><a href="../reference/pprodnormal.html">pprodnormal</a></span><span class="op">(</span><span class="va">q</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>, rho <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  simulation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="va">q</span>, <span class="kw">function</span><span class="op">(</span><span class="va">v</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">a</span> <span class="op">*</span> <span class="va">b</span> <span class="op">&lt;=</span> <span class="va">v</span><span class="op">)</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;                 [,1]     [,2]      [,3]</span></span>
+<span><span class="co">#&gt; exact      0.1863292 0.500000 0.8413447</span></span>
+<span><span class="co">#&gt; simulation 0.1863300 0.499953 0.8412675</span></span></code></pre></div>
+<p>The exact row and the simulated row agree to Monte Carlo error (about
+3 decimals at this sample size).</p>
+</div>
+<div class="section level2">
+<h2 id="point-masses-a-zero-standard-error">5. Point masses: a zero standard error<a class="anchor" aria-label="anchor" href="#point-masses-a-zero-standard-error"></a>
+</h2>
+<p><strong>Rule.</strong> A factor with zero standard error is a
+constant, so the product is either a constant or a scaled normal.
+<code><a href="../reference/pprodnormal.html">pprodnormal()</a></code> returns the exact answer there, and the CDF
+of a point mass is right-continuous: at an atom at <code>q</code>,
+<code>P(X &lt;= q) = 1</code>.</p>
+<p><strong>Reason.</strong> A CDF is right-continuous by definition.
+Earlier versions returned <code>0.5</code> at an atom at 0, which is the
+midpoint convention, not a CDF. The change is in NEWS as a behavior
+change.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>at_atom <span class="op">=</span> <span class="fu"><a href="../reference/pprodnormal.html">pprodnormal</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  just_below <span class="op">=</span> <span class="fu"><a href="../reference/pprodnormal.html">pprodnormal</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1e-9</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    at_atom just_below </span></span>
+<span><span class="co">#&gt;          1          0</span></span>
+<span></span>
+<span><span class="co"># One fixed factor: the product is normal(mu.x * mu.y, (mu.x * se.y)^2)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>pprodnormal <span class="op">=</span> <span class="fu"><a href="../reference/pprodnormal.html">pprodnormal</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>  normal      <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">pnorm</a></span><span class="op">(</span><span class="fl">0.1</span>, mean <span class="op">=</span> <span class="fl">0.3</span> <span class="op">*</span> <span class="fl">0.5</span>, sd <span class="op">=</span> <span class="fl">0.3</span> <span class="op">*</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; pprodnormal      normal </span></span>
+<span><span class="co">#&gt;  0.04779035  0.04779035</span></span></code></pre></div>
+<p><code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code> follows the same rule with two or three
+zero-variance components (issue #64).</p>
+</div>
+<div class="section level2">
+<h2 id="the-densities">6. The densities<a class="anchor" aria-label="anchor" href="#the-densities"></a>
+</h2>
+<p><strong>Rule.</strong> <code><a href="../reference/dprodnormal.html">dprodnormal()</a></code> is the exact
+density of the product of two normals, and <code><a href="../reference/dprodnormal3.html">dprodnormal3()</a></code>
+of three. For two normals with zero means the density is a Bessel
+<code>K0</code> expression; otherwise it is a one-dimensional integral
+(Rohatgi; Glen). The three-factor density is a one-dimensional integral
+of the two-factor density conditioned on the first factor. At exactly 0
+the density is infinite for zero means, and <code><a href="../reference/dprodnormal.html">dprodnormal()</a></code>
+returns <code>Inf</code> there.</p>
+<p><strong>Reason.</strong> A closed form exists only for the zero-mean
+case. The integral form is exact up to the integration tolerance, and it
+is checked against a finite difference of the CDF.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fl">1e-5</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>density <span class="op">=</span> <span class="fu"><a href="../reference/dprodnormal.html">dprodnormal</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>  numerical_derivative <span class="op">=</span></span>
+<span>    <span class="op">(</span><span class="fu"><a href="../reference/pprodnormal.html">pprodnormal</a></span><span class="op">(</span><span class="fl">0.1</span> <span class="op">+</span> <span class="va">h</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span><span class="op">)</span> <span class="op">-</span></span>
+<span>     <span class="fu"><a href="../reference/pprodnormal.html">pprodnormal</a></span><span class="op">(</span><span class="fl">0.1</span> <span class="op">-</span> <span class="va">h</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="va">h</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;              density numerical_derivative </span></span>
+<span><span class="co">#&gt;             3.719755             3.719755</span></span></code></pre></div>
+</div>
+<div class="section level2">
 <h2 id="where-each-rule-is-tested">Where each rule is tested<a class="anchor" aria-label="anchor" href="#where-each-rule-is-tested"></a>
 </h2>
 <table class="table">
@@ -201,6 +282,25 @@ ties and give <code>34 / 96</code>. The package tests pin this case.</p>
 <tr class="odd">
 <td><code>scripts/verify-constraint-not-enforced.R</code></td>
 <td>known answer plus planted defect, per optimizer</td>
+</tr>
+<tr class="even">
+<td>exact CDF, <code>\|rho\| = 1</code>
+</td>
+<td><code>tests/testthat/test-dop-meeker-article.R</code></td>
+</tr>
+<tr class="odd">
+<td>zero standard error, point masses</td>
+<td>
+<code>tests/testthat/test-zero-se-cdf.R</code>,
+<code>tests/testthat/test-prod3-pointmass.R</code>
+</td>
+</tr>
+<tr class="even">
+<td>densities</td>
+<td>
+<code>tests/testthat/test-dprodnormal.R</code>,
+<code>tests/testthat/test-dprodnormal3.R</code>
+</td>
 </tr>
 </tbody>
 </table>

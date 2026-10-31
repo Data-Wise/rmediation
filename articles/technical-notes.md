@@ -98,6 +98,102 @@ it would bias the p-value downward.
 would count the ties and give `34 / 96`. The package tests pin this
 case.
 
+## 4. The exact CDF of a product of two normals, and its perfectly correlated case
+
+**Rule.**
+[`pprodnormal()`](https://data-wise.github.io/rmediation/reference/pprodnormal.md)
+and
+[`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md)
+with `type = "dop"` compute the CDF of `a*b` by one-dimensional
+integration of the bivariate normal (Meeker and Escobar, 1994). When
+`|rho| = 1` the two factors are linear in one standard normal variable,
+so `a*b` is a quadratic in it and the CDF has a closed form from the
+roots of that quadratic. The package uses the closed form, not a step
+integral.
+
+**Reason.** A step integral at `|rho| = 1` was off by up to 4.3e-5 and
+once stopped with “probably divergent”. The closed form is exact, and
+every one of the 495 evaluations in the article’s test domain now
+succeeds.
+
+``` r
+
+set.seed(1)
+z <- rnorm(2e6)
+a <- 0.3 + 0.2 * z   # mu.x = 0.3, se.x = 0.2
+b <- 0.5 + 0.1 * z   # mu.y = 0.5, se.y = 0.1, perfectly correlated with a
+q <- c(0.05, 0.15, 0.30)
+rbind(
+  exact      = pprodnormal(q, 0.3, 0.5, 0.2, 0.1, rho = 1),
+  simulation = vapply(q, function(v) mean(a * b <= v), 0)
+)
+#>                 [,1]     [,2]      [,3]
+#> exact      0.1863292 0.500000 0.8413447
+#> simulation 0.1863300 0.499953 0.8412675
+```
+
+The exact row and the simulated row agree to Monte Carlo error (about 3
+decimals at this sample size).
+
+## 5. Point masses: a zero standard error
+
+**Rule.** A factor with zero standard error is a constant, so the
+product is either a constant or a scaled normal.
+[`pprodnormal()`](https://data-wise.github.io/rmediation/reference/pprodnormal.md)
+returns the exact answer there, and the CDF of a point mass is
+right-continuous: at an atom at `q`, `P(X <= q) = 1`.
+
+**Reason.** A CDF is right-continuous by definition. Earlier versions
+returned `0.5` at an atom at 0, which is the midpoint convention, not a
+CDF. The change is in NEWS as a behavior change.
+
+``` r
+
+c(at_atom = pprodnormal(0, 0, 0, 0, 0),
+  just_below = pprodnormal(-1e-9, 0, 0, 0, 0))
+#>    at_atom just_below 
+#>          1          0
+
+# One fixed factor: the product is normal(mu.x * mu.y, (mu.x * se.y)^2)
+c(pprodnormal = pprodnormal(0.1, 0.3, 0.5, 0, 0.1),
+  normal      = pnorm(0.1, mean = 0.3 * 0.5, sd = 0.3 * 0.1))
+#> pprodnormal      normal 
+#>  0.04779035  0.04779035
+```
+
+[`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)
+follows the same rule with two or three zero-variance components (issue
+\#64).
+
+## 6. The densities
+
+**Rule.**
+[`dprodnormal()`](https://data-wise.github.io/rmediation/reference/dprodnormal.md)
+is the exact density of the product of two normals, and
+[`dprodnormal3()`](https://data-wise.github.io/rmediation/reference/dprodnormal3.md)
+of three. For two normals with zero means the density is a Bessel `K0`
+expression; otherwise it is a one-dimensional integral (Rohatgi; Glen).
+The three-factor density is a one-dimensional integral of the two-factor
+density conditioned on the first factor. At exactly 0 the density is
+infinite for zero means, and
+[`dprodnormal()`](https://data-wise.github.io/rmediation/reference/dprodnormal.md)
+returns `Inf` there.
+
+**Reason.** A closed form exists only for the zero-mean case. The
+integral form is exact up to the integration tolerance, and it is
+checked against a finite difference of the CDF.
+
+``` r
+
+h <- 1e-5
+c(density = dprodnormal(0.1, 0.3, 0.5, 0.2, 0.1),
+  numerical_derivative =
+    (pprodnormal(0.1 + h, 0.3, 0.5, 0.2, 0.1) -
+     pprodnormal(0.1 - h, 0.3, 0.5, 0.2, 0.1)) / (2 * h))
+#>              density numerical_derivative 
+#>             3.719755             3.719755
+```
+
 ## Where each rule is tested
 
 | Rule | Test file |
@@ -105,3 +201,6 @@ case.
 | bootstrap p-value and bounded drops | `tests/testthat/test-mbco-bounded-replicates.R` |
 | not-enforced warning | `tests/testthat/test-mbco-constraint-not-enforced.R` |
 | `scripts/verify-constraint-not-enforced.R` | known answer plus planted defect, per optimizer |
+| exact CDF, `\|rho\| = 1` | `tests/testthat/test-dop-meeker-article.R` |
+| zero standard error, point masses | `tests/testthat/test-zero-se-cdf.R`, `tests/testthat/test-prod3-pointmass.R` |
+| densities | `tests/testthat/test-dprodnormal.R`, `tests/testthat/test-dprodnormal3.R` |

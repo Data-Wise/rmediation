@@ -14,7 +14,7 @@ full help page.
 | the CDF or density of `a1*a2*b` | [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md), [`dprodnormal3()`](https://data-wise.github.io/rmediation/reference/dprodnormal3.md) | three normals; pass `mean` and `cov` |
 | test `H0: a*b = 0` with OpenMx | `mbco_product_null(h1, paths = c("a", "b"))` | exact: fixes one path at 0 per branch |
 | test any equality constraint with OpenMx | `mbco(h0, h1, type = ...)` | see the warnings below |
-| test with two medfit `SEMFit` fits | `mbco(h0, h1, type = "asymp")` | needs medfit \>= 0.8.0; experimental |
+| test with two medfit `SEMFit` fits | `mbco(h0, h1, type = "asymp")` | needs medfit \>= 0.8.0 |
 | sensitivity to an omitted confounder | [`ml_omitted_confounder()`](https://data-wise.github.io/rmediation/reference/ml_omitted_confounder.md) | 1-1-1 multilevel mediation |
 
 ## `medci()` methods

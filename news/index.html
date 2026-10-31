@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,6 +52,20 @@
       <small>Source: <a href="https://github.com/data-wise/rmediation/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.8.1" id="rmediation-181-2026-10-31">RMediation 1.8.1 (2026-10-31)<a class="anchor" aria-label="anchor" href="#rmediation-181-2026-10-31"></a></h2>
+<p>No change to returned values or to the API.</p>
+<div class="section level3">
+<h3 id="documentation-1-8-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-1-8-1"></a></h3>
+<ul><li>The README examples for <code><a href="../reference/medci.html">medci()</a></code> and <code><a href="../reference/ci.html">ci()</a></code> on a <code>ProductNormal3</code> now show the real output of those calls (they showed intervals that the functions do not return), and the Monte Carlo calculator of the online apps is linked.</li>
+<li>The SEMFit <code><a href="../reference/mbco.html">mbco()</a></code> route is no longer described as experimental: medfit dropped that label in 0.11.0.</li>
+<li>The pkgdown site gains a Quick Reference, a Cookbook (including serial mediation through medfit, the SEMFit route and omitted-confounder sensitivity) and Technical Notes (the exact CDF at <code>|rho| = 1</code>, point masses, the densities).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="internal-1-8-1">Internal<a class="anchor" aria-label="anchor" href="#internal-1-8-1"></a></h3>
+<ul><li>Added <code>.lintr</code> (120 columns) and wrapped 61 over-long or mis-indented lines in R sources and tests; the parsed code is unchanged. Rewrapped roxygen lines regenerate seven help pages with the same content.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.8.0" id="rmediation-180-2026-10-30">RMediation 1.8.0 (2026-10-30)<a class="anchor" aria-label="anchor" href="#rmediation-180-2026-10-30"></a></h2>
 <ul><li>S7 property access now works under the declared R 4.1 minimum.</li>

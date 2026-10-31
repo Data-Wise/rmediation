@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.8.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,8 @@
      the known-answer and planted-defect items must name a tests/testthat/ file that is in this PR's diff;
      `n/a: <reason>` needs a reason of at least 8 characters. Delete this block when no risk file changed.
      For a change with no logic effect (for example a rename), replace it with one line:
-     Risk-tier: exempt: <reason> -->
+     Risk-tier: exempt: <reason>
+     A release PR (dev into main, or release/*) skips the checklist but needs one body line: Ships: #101, #102 -->
 <ul class="task-list"><li><label><input type="checkbox">Independent oracle:</label></li>
 <li><label><input type="checkbox">Known answer: tests/testthat/<file>.R</file></label></li>
 <li><label><input type="checkbox">Planted defect: tests/testthat/<file>.R</file></label></li>
