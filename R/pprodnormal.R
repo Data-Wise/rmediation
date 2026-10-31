@@ -4,7 +4,7 @@
 #' of two normal random variables and the mediated effect
 #'
 #' @param q quantile or value of the product; a numeric vector returns one
-#'   probability per element (for \\code{type="MC"} all elements share one
+#'   probability per element (for \code{type="MC"} all elements share one
 #'   simulated sample)
 #' @param mu.x  mean of \eqn{x}
 #' @param mu.y mean of \eqn{y}
