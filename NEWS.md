@@ -1,3 +1,17 @@
+# RMediation (development version)
+
+No change to returned values or to the API.
+
+## Internal
+
+- New tests pin the shape of what downstream code reads by position and by name: the element names and order of
+  `medci()` for each `type`, the leading argument names of `medci()` and `pprodnormal3()`, and the dimensions and
+  columns of `memory_exp` (#132); and the results of `ci()` (for a `ProductNormal`, for numeric estimates with
+  `type = "MC"` and `type = "asymp"`) and `ci_mediation_data()`, including the interval labels and the
+  `MC.Error` / `MCError` spellings (#134). A change to any of these now fails a test.
+- The OpenMx warning "was modified since it was run", expected by one `.mbco_semi()` test, is muffled so the suite
+  runs warning-free (#133).
+
 # RMediation 1.9.0 (2026-10-31)
 
 The `ci(type = "asymp")` interval label changes (see Behavior changes); two silent-wrong-value density bugs are fixed.
