@@ -1,6 +1,6 @@
 # PLAN: path to the GitHub release (2026-10-30)
 
-Status: ACTIVE. Decisions R1-R6 come from a grill with the maintainer on 2026-10-30. Nothing here is implemented.
+Status: DONE (updated 2026-11-04). Decisions R1-R6 come from a grill with the maintainer on 2026-10-30. The plan was executed: the release shipped as v1.8.0, followed by v1.8.1 and v1.9.0 (see `.STATUS`); issue #88 was closed on 2026-11-04. Kept as the decision record.
 Related: issue #88 (release the OpenMx#433 defenses), draft PR #46 (superseded, see R2), #84 and #92 (left open for
 their author), `planning/PLAN-mechanical-checks-2026-10-30.md` (the CI policy and the checks this release depends on).
 
