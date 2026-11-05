@@ -99,8 +99,19 @@ test_that(".mbco_semi rejects a factor/character manifest variable", {
   )
   h1_bad <- OpenMx::mxModel(models$h1, OpenMx::mxData(bad_data, type = "raw"))
 
-  expect_error(
-    .mbco_semi(h0 = models$h0, h1 = h1_bad, R = 5L, optim = .mbco_test_optim()),
-    "factor or character"
+  # OpenMx warns "MxModel 'H1' was modified since it was run" because h1_bad
+  # is deliberately an already-run model with swapped data. That is the setup
+  # described above, not a defect, so muffle only that message; any other
+  # warning still surfaces.
+  withCallingHandlers(
+    expect_error(
+      .mbco_semi(h0 = models$h0, h1 = h1_bad, R = 5L, optim = .mbco_test_optim()),
+      "factor or character"
+    ),
+    warning = function(w) {
+      if (grepl("was modified since it was run", conditionMessage(w), fixed = TRUE)) {
+        invokeRestart("muffleWarning")
+      }
+    }
   )
 })
