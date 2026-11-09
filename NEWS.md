@@ -1,3 +1,13 @@
+# RMediation (development version)
+
+## Bug fixes
+
+- `ci()` on a `lavaan` fit no longer stops on a defined parameter that repeats a coefficient inside a product of
+  three or more factors (`ab := a*b*a`, `cube := a*a*a`, or a nested `abx := ab*a`). The exact three-factor interval
+  does not apply because the repeated factors are perfectly correlated, and it used to fail with a "perfect
+  correlation" error. Such a parameter now gets a Monte Carlo interval, with a warning when you set `type` to anything
+  other than `"MC"`. Two factors (`a*a`) and three distinct factors are unchanged.
+
 # RMediation 1.10.0 (2026-11-08)
 
 No change to returned values for any call that worked before; the only API addition is the optional `@provenance` on `MBCOResult`.
