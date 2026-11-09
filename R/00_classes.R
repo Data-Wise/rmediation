@@ -184,8 +184,8 @@ ci <- S7::new_generic("ci", "object")
     }
   }
   rr <- pv[["R"]]
-  if (!is.null(rr) && !(is.numeric(rr) && length(rr) == 1L && !is.na(rr) &&
-    rr >= 0 && rr == round(rr))) {
+  rr_ok <- is.numeric(rr) && length(rr) == 1L && !is.na(rr) && rr >= 0 && rr == round(rr)
+  if (!is.null(rr) && !rr_ok) {
     return("@provenance$R must be NULL or a single non-negative whole number")
   }
   rk <- pv[["rng_kind"]]
