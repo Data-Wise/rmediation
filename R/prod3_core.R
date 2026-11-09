@@ -19,7 +19,8 @@ NULL
 #' linear solve is performed per integrand evaluation.
 #'
 #' @noRd
-.prod3_integrand_2d <- function(arg, q_std, m, beta, cond_sd, Rxy_inv, det_Rxy) {
+.prod3_integrand_2d <- function(arg, q_std, m, beta, cond_sd, Rxy_inv, det_Rxy,
+                                lower_tail = TRUE) {
   x <- arg[1L]
   y <- arg[2L]
 
@@ -34,16 +35,18 @@ NULL
     } else {
       g <- 0.5
     }
+    if (!lower_tail) g <- 1 - g
     return(g * .prod3_bivariate_density(x, y, m, Rxy_inv, det_Rxy))
   }
 
   cond_mean <- m[3L] + beta[1L] * (x - m[1L]) + beta[2L] * (y - m[2L])
   z <- (q_std / (x * y) - cond_mean) / cond_sd
 
-  if (x * y > 0) {
-    g <- stats::pnorm(z)
+  if (lower_tail) {
+    g <- if (x * y > 0) stats::pnorm(z) else 1 - stats::pnorm(z)
   } else {
-    g <- 1 - stats::pnorm(z)
+    # The complement, evaluated directly: 1 - pnorm() would cancel in the far upper tail.
+    g <- if (x * y > 0) stats::pnorm(z, lower.tail = FALSE) else stats::pnorm(z)
   }
 
   g * .prod3_bivariate_density(x, y, m, Rxy_inv, det_Rxy)
@@ -58,7 +61,7 @@ NULL
 #'
 #' @noRd
 .prod3_integrand_vec <- function(x, y, q_std, m, beta, cond_sd,
-                                 Rxy_inv, det_Rxy) {
+                                 Rxy_inv, det_Rxy, lower_tail = TRUE) {
   dx <- x - m[1L]
   dy <- y - m[2L]
   quad <- Rxy_inv[1L, 1L] * dx^2 +
@@ -69,12 +72,18 @@ NULL
   xy <- x * y
   cond_mean <- m[3L] + beta[1L] * dx + beta[2L] * dy
   z <- (q_std / xy - cond_mean) / cond_sd
-  g <- ifelse(xy > 0, stats::pnorm(z), 1 - stats::pnorm(z))
+  g <- if (lower_tail) {
+    ifelse(xy > 0, stats::pnorm(z), 1 - stats::pnorm(z))
+  } else {
+    # The complement, evaluated directly: 1 - pnorm() would cancel in the far upper tail.
+    ifelse(xy > 0, stats::pnorm(z, lower.tail = FALSE), stats::pnorm(z))
+  }
 
   # Axes are discontinuity lines of measure zero (see .prod3_integrand_2d()).
   on_axis <- abs(x) < 1e-12 | abs(y) < 1e-12
   if (any(on_axis)) {
-    g[on_axis] <- if (q_std > 0) 1 else if (q_std < 0) 0 else 0.5
+    g_axis <- if (q_std > 0) 1 else if (q_std < 0) 0 else 0.5
+    g[on_axis] <- if (lower_tail) g_axis else 1 - g_axis
   }
 
   g * dens
@@ -154,7 +163,8 @@ NULL
         xx, yy,
         q_std = pars$q_std, m = pars$m, beta = pars$beta,
         cond_sd = pars$cond_sd, Rxy_inv = pars$Rxy_inv,
-        det_Rxy = pars$det_Rxy
+        det_Rxy = pars$det_Rxy,
+        lower_tail = is.null(pars$lower_tail) || pars$lower_tail
       ))
     }
   }
@@ -230,13 +240,13 @@ NULL
 }
 
 #' @noRd
-.p_prod3_degenerate <- function(q, fixed_val, other_idx, mean, sds, cov) {
+.p_prod3_degenerate <- function(q, fixed_val, other_idx, mean, sds, cov, lower.tail = TRUE) {
   pprodnormal(q / fixed_val,
     mu.x = mean[other_idx[1L]], mu.y = mean[other_idx[2L]],
     se.x = sds[other_idx[1L]], se.y = sds[other_idx[2L]],
     rho = cov[other_idx[1L], other_idx[2L]] /
       max(sds[other_idx[1L]] * sds[other_idx[2L]], .Machine$double.eps),
-    lower.tail = fixed_val > 0
+    lower.tail = (fixed_val > 0) == lower.tail
   )
 }
 
@@ -286,6 +296,11 @@ NULL
 #'     with suspicion. It is satisfied at exactly the configurations where the
 #'     result is badly wrong (see Note), which is why it cannot be used to
 #'     detect the failure this method was replaced over.
+#' @param lower.tail Logical; if `TRUE` (default) probabilities are `P(X1 * X2 * X3 <= q)`, otherwise
+#'   `P(X1 * X2 * X3 > q)`. The upper tail is integrated directly, not computed as `1 - p`, so it
+#'   stays accurate far out where `1 - p` would be lost to rounding. The accuracy is still the absolute
+#'   tolerance `tol`, so for a tail probability of size `p` use `tol` well below `p` (for example `tol = 1e-14`
+#'   for a probability near 1e-10).
 #' @param ... Additional arguments (unused; present for the `p_prod3`
 #'   deprecated alias).
 #'
@@ -315,18 +330,22 @@ NULL
 #' @examples
 #' Sigma <- diag(3)
 #' pprodnormal3(q = 0, mean = c(0, 0, 0), cov = Sigma)
+#' # the upper tail, integrated directly (far out, 1 - p would be lost to rounding)
+#' pprodnormal3(30, mean = c(1, 1, 1), cov = diag(3), tol = 1e-10, lower.tail = FALSE)
 #' # several quantiles at once
 #' pprodnormal3(q = c(-1, 0, 1), mean = c(0, 0, 0), cov = Sigma)
 pprodnormal3 <- function(q, mean, cov, method = c("gauss", "hcubature"),
-                         tol = 1e-6, nodes = NULL, diagnostics = FALSE) {
+                         tol = 1e-6, nodes = NULL, diagnostics = FALSE, lower.tail = TRUE) {
+  checkmate::assert_flag(lower.tail)
   # One q: the scalar path, unchanged (same value, messages and attributes as before).
   if (length(q) == 1L) {
-    return(.pprodnormal3_one(q, mean, cov, method, tol, nodes, diagnostics))
+    return(.pprodnormal3_one(q, mean, cov, method, tol, nodes, diagnostics, lower.tail))
   }
   checkmate::assert_numeric(q, finite = TRUE, any.missing = FALSE, min.len = 1L)
   res <- lapply(
     q, .pprodnormal3_one,
-    mean = mean, cov = cov, method = method, tol = tol, nodes = nodes, diagnostics = diagnostics
+    mean = mean, cov = cov, method = method, tol = tol, nodes = nodes, diagnostics = diagnostics,
+    lower.tail = lower.tail
   )
   out <- vapply(res, as.numeric, numeric(1))
   names(out) <- names(q)
@@ -345,7 +364,7 @@ pprodnormal3 <- function(q, mean, cov, method = c("gauss", "hcubature"),
 #' One quantile of the three-factor product CDF (the scalar worker behind pprodnormal3())
 #' @noRd
 .pprodnormal3_one <- function(q, mean, cov, method = c("gauss", "hcubature"),
-                              tol = 1e-6, nodes = NULL, diagnostics = FALSE) {
+                              tol = 1e-6, nodes = NULL, diagnostics = FALSE, lower.tail = TRUE) {
   checkmate::assert_number(q, finite = TRUE)
   checkmate::assert_numeric(mean, finite = TRUE, len = 3)
   checkmate::assert_matrix(cov, mode = "numeric", nrows = 3, ncols = 3)
@@ -373,39 +392,43 @@ pprodnormal3 <- function(q, mean, cov, method = c("gauss", "hcubature"),
   # Point masses use the right-continuous CDF, P(XYZ <= q) = 1 at q = c, as the contract states.
   # (Versions up to 1.7.0 returned the mid-distribution value 0.5 for an atom at exactly 0.)
   if (sum(fixed) == 3L) {
-    return(as.numeric(q >= prod(mean)))
+    return(as.numeric((q >= prod(mean)) == lower.tail))
   }
   if (sum(fixed) == 2L) {
     k <- which(!fixed)
     cc <- prod(mean[fixed])
     if (cc == 0) {
-      return(as.numeric(q >= 0))
+      return(as.numeric((q >= 0) == lower.tail))
     }
-    p <- stats::pnorm((q / cc - mean[k]) / sds[k])
-    return(if (cc > 0) p else 1 - p)
+    z <- (q / cc - mean[k]) / sds[k]
+    if (lower.tail) {
+      p <- stats::pnorm(z)
+      return(if (cc > 0) p else 1 - p)
+    }
+    return(stats::pnorm(z, lower.tail = cc < 0))
   }
 
   # Degenerate cases: reduce to the two-variable product-normal problem ----
   if (sds[1L] < .Machine$double.eps) {
     x1 <- mean[1L]
     if (abs(x1) < .Machine$double.eps) {
-      return(as.numeric(q >= 0))
+      return(as.numeric((q >= 0) == lower.tail))
     }
-    return(.p_prod3_degenerate(q, x1, c(2L, 3L), mean, sds, cov))
+    return(.p_prod3_degenerate(q, x1, c(2L, 3L), mean, sds, cov, lower.tail))
   }
   if (sds[2L] < .Machine$double.eps) {
     x2 <- mean[2L]
     if (abs(x2) < .Machine$double.eps) {
-      return(as.numeric(q >= 0))
+      return(as.numeric((q >= 0) == lower.tail))
     }
-    return(.p_prod3_degenerate(q, x2, c(1L, 3L), mean, sds, cov))
+    return(.p_prod3_degenerate(q, x2, c(1L, 3L), mean, sds, cov, lower.tail))
   }
   if (sds[3L] < .Machine$double.eps) {
     x3 <- mean[3L]
     if (abs(x3) < .Machine$double.eps) {
-      return(as.numeric(q >= 0))
+      return(as.numeric((q >= 0) == lower.tail))
     }
-    return(.p_prod3_degenerate(q, x3, c(1L, 2L), mean, sds, cov))
+    return(.p_prod3_degenerate(q, x3, c(1L, 2L), mean, sds, cov, lower.tail))
   }
 
   # Full positive-definiteness check. The single zero-variance degenerate cases
@@ -448,7 +471,7 @@ pprodnormal3 <- function(q, mean, cov, method = c("gauss", "hcubature"),
 
   pars <- list(
     q_std = q_std, m = m, beta = beta, cond_sd = cond_sd,
-    Rxy_inv = Rxy_inv, det_Rxy = det_Rxy
+    Rxy_inv = Rxy_inv, det_Rxy = det_Rxy, lower_tail = lower.tail
   )
 
   if (method == "gauss") {
@@ -459,7 +482,7 @@ pprodnormal3 <- function(q, mean, cov, method = c("gauss", "hcubature"),
   integrand <- function(arg) {
     .prod3_integrand_2d(arg,
       q_std = q_std, m = m, beta = beta, cond_sd = cond_sd,
-      Rxy_inv = Rxy_inv, det_Rxy = det_Rxy
+      Rxy_inv = Rxy_inv, det_Rxy = det_Rxy, lower_tail = lower.tail
     )
   }
 
