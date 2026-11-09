@@ -3,7 +3,7 @@ message: "If you use this software, please cite it as below."
 type: software
 title: "RMediation: Mediation Analysis Confidence Intervals"
 version: 1.10.0
-date-released: "2026-11-08"
+date-released: "2026-11-09"
 authors:
   - family-names: Tofighi
     given-names: Davood
