@@ -27,7 +27,7 @@ test_that("the cdf and quantile methods accept the rounded rho too", {
   expect_no_warning(p <- cdf(object, .3))
   # the object cdf and pprodnormal() agree to the integrator tolerance, not to machine precision
   expect_equal(p, pprodnormal(.3, .4, .4, sqrt(v), sqrt(v), rho = 1), tolerance = 1e-5)
-  # dist_quantile() on a ProductNormal takes one probability per call
+  # one probability per call here; a vector p is covered in test-dist-quantile-vector-p.R
   for (pr in c(.025, .975)) {
     expect_no_warning(q <- dist_quantile(object, pr))
     expect_equal(q, qprodnormal(pr, .4, .4, sqrt(v), sqrt(v), rho = 1), tolerance = 1e-6)
