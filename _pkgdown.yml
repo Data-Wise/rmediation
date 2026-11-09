@@ -73,6 +73,8 @@ navbar:
         href: articles/technical-notes.html
       - text: Reporting RMediation in a Paper
         href: articles/reporting.html
+      - text: What Changed Since CRAN 1.6.1
+        href: articles/changes-since-cran.html
       - text: Status and Roadmap
         href: articles/roadmap.html
     ecosystem:
