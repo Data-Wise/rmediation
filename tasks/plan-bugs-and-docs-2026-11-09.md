@@ -1,6 +1,6 @@
 # Implementation Plan: bugs and website docs after 1.10.0 (2026-11-09)
 
-Status: APPROVED 2026-11-09 (the user accepted the recommendation on all 7 open questions below). Implementation starts with T1; nothing is implemented when this file is written. Source: a read-only review on `dev` at `cc96a18`
+Status: COMPLETE 2026-11-09 (T1-T9 merged: #156, #157, #158, #159, #160, #161, #162, #163, #164; T9 became a cookbook section, decision 5). Was: APPROVED 2026-11-09 (the user accepted the recommendation on all 7 open questions below). Implementation starts with T1; nothing is implemented when this file is written. Source: a read-only review on `dev` at `cc96a18`
 (v1.10.0 is the latest GitHub release; CRAN serves 1.6.1; CRAN hold unchanged). There are no open issues or PRs, so the
 bug list comes from probes and the parked items in `.STATUS`, not from a tracker. Existing `tasks/plan.md` is untouched.
 
@@ -86,55 +86,55 @@ Phase 3 articles:   T6 (N1)   T7 (N2)   T8 (N3)     T7 waits for T1; T6 waits fo
 
 ### Phase 1: bugs
 
-- [ ] **T1: repeated factor in a product of three or more (B1).** Red tests first: `ab := a*b*a` and a four-factor
+- [x] **T1: repeated factor in a product of three or more (B1).** Red tests first: `ab := a*b*a` and a four-factor
   repeat return a result (not an error), with a warning naming the repeat; distinct-factor behavior unchanged. Fix in
   the `.product_factors()` use in `R/external_methods.R`: if factors repeat and k >= 3, take the Monte Carlo route.
   Acceptance: no error for any repeat pattern; the `type = "MC"` result agrees with a direct simulation within MC error;
   NEWS bug-fix entry. Verify: the new tests fail on current `dev` and pass after; full suite 0 failed;
   `check-local.sh` PASS; a planted defect (restore the error) makes the new test fail. Files: `R/external_methods.R`,
   `tests/testthat/test-external-methods-lavaan.R`, `NEWS.md`. Scope: S.
-- [ ] **T2: vectorize `pprodnormal3()` (B2, needs decision 1).** Acceptance: `pprodnormal3(c(-1,0,1,2), ...)` equals
+- [x] **T2: vectorize `pprodnormal3()` (B2, needs decision 1).** Acceptance: `pprodnormal3(c(-1,0,1,2), ...)` equals
   `sapply` of the scalar calls; length 1 unchanged; NA and non-finite `q` still rejected with the existing message;
   `diagnostics` behavior documented for vectors. Verify: known-answer against scalar calls, boundary (`q = 0`, `q < 0`),
   planted defect (return only the first element). Files: the file defining `pprodnormal3()`, its test file, `man/`,
   `NEWS.md`. Scope: S.
-- [ ] **T3: `DESCRIPTION` hygiene (B3, B4).** Set `Date:`; remove `Author:`/`Maintainer:` only after `R CMD check` shows
+- [x] **T3: `DESCRIPTION` hygiene (B3, B4).** Set `Date:`; remove `Author:`/`Maintainer:` only after `R CMD check` shows
   they are generated from `Authors@R` without a NOTE. Acceptance: `R CMD check` Status OK, `citation("RMediation")` and
   `CITATION.cff` unchanged apart from the date. Files: `DESCRIPTION`. Scope: XS.
 
 ### Checkpoint: bugs
 
-- [ ] Full suite 0 failed; `scripts/check-local.sh` PASS; `lintr::lint_package()` 0 findings; consumer smoke test
+- [x] Full suite 0 failed; `scripts/check-local.sh` PASS; `lintr::lint_package()` 0 findings; consumer smoke test
   (missingmed, medsim) unchanged.
 
 ### Phase 2: reconcile
 
-- [ ] **T4: refcard, roadmap, reporting, README (D1-D4).** Add `Changed in 1.10.0` and rows for `:=` and `@provenance`;
+- [x] **T4: refcard, roadmap, reporting, README (D1-D4).** Add `Changed in 1.10.0` and rows for `:=` and `@provenance`;
   set the Reporting examples to the current tag (and say once how to substitute it); fix the Roadmap sentence; add one
   README line for `@provenance`. Acceptance: every page's version, release-status and CRAN statements agree with
   `NEWS.md` and `.STATUS`. Verify: grep for stale version strings; build the four pages. Files: the four pages above.
   Scope: S.
-- [ ] **T5: agent files (D5, needs decision 4).** Sync `AGENTS.md` with `CLAUDE.md` (same content, different header and
+- [x] **T5: agent files (D5, needs decision 4).** Sync `AGENTS.md` with `CLAUDE.md` (same content, different header and
   addressee); delete or regenerate `GEMINI.md`; bump `CLAUDE.md` "Last Updated". Acceptance: `diff` shows only the
   header differences. Scope: S.
 
 ### Checkpoint: reconcile
 
-- [ ] `pkgdown::check_pkgdown()` clean; the edited pages build against a scratch install; navbar unchanged.
+- [x] `pkgdown::check_pkgdown()` clean; the edited pages build against a scratch install; navbar unchanged.
 
 ### Phase 3: new articles (each one PR, navbar entry in `_pkgdown.yml`)
 
-- [ ] **T6: N1, what changed since CRAN 1.6.1.** Each behavior change: version, before/after, who is affected, with a
+- [x] **T6: N1, what changed since CRAN 1.6.1.** Each behavior change: version, before/after, who is affected, with a
   runnable example where one exists. Source of truth: NEWS 1.7.0-1.10.0, checked by running the examples.
-- [ ] **T7: N2, defined parameters in `ci(<lavaan>)`.** The route table, output shapes, serial-mediation examples
+- [x] **T7: N2, defined parameters in `ci(<lavaan>)`.** The route table, output shapes, serial-mediation examples
   (`a1*d*b`, nested `:=`), the constant and sign note, and the repeated-factor rule from T1.
-- [ ] **T8: N3, MBCO on `SEMFit` models.** Needs medfit >= 0.8.0, which is GitHub-only; chunks guarded with
+- [x] **T8: N3, MBCO on `SEMFit` models.** Needs medfit >= 0.8.0, which is GitHub-only; chunks guarded with
   `eval = requireNamespace("medfit", quietly = TRUE)` and a version check so the site builds without it.
-- [ ] **T9 (optional): N4, troubleshooting** (decision 5).
+- [x] **T9 (optional): N4, troubleshooting** (decision 5).
 
 ### Checkpoint: complete
 
-- [ ] All acceptance criteria met; `.STATUS` updated; no stale "pre-release" or version strings; ready for a
+- [x] All acceptance criteria met; `.STATUS` updated; no stale "pre-release" or version strings; ready for a
   `dev`→`main` release when you choose (decision 6).
 
 ## Risks and mitigations
@@ -161,3 +161,9 @@ Phase 3 articles:   T6 (N1)   T7 (N2)   T8 (N3)     T7 waits for T1; T6 waits fo
 6. **Release timing.** Do the work first, then decide: T1 and T2 are code changes, so a release would be 1.10.1 or 1.11.0
    (your call). Do not cut a docs-only release for the wording fixes.
 7. **Parked items P1-P3:** leave parked; each gets its own plan when you pick it up.
+
+## Outcome notes (2026-11-09)
+
+- T7 scope change: the lavaan article also documents the exact three-factor route and the `Estimate`/`SE`/`MCError` shape of the formula route.
+- Finding not in the original plan: the formula-route `ci()` result carries a `p` element (`0` by default) that `?ci` does not document. Undecided whether to document or drop it; parked with P1-P3.
+- Nothing was released. T1 and T2 changed code, so the next release is 1.10.1 or 1.11.0 (decision 6, the user's call); the hold is unchanged.
