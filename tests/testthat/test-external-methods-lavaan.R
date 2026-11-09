@@ -3,9 +3,9 @@
 # 135 in the 2026-11-08 covr run). Each test can fail: values are compared
 # against an independently computed result or a known answer.
 #
-# The non-product `:=` fallback is pinned as it behaves today: it runs a
-# Monte Carlo interval whatever `type` the caller asked for, silently. If that
-# should warn or honor `type`, change the code and this test together.
+# The non-product `:=` fallback runs a Monte Carlo interval whatever `type`
+# the caller asked for; it now warns when `type` was given explicitly. A `:=`
+# that cannot be resolved loses only its own entry, with a warning.
 
 .lav_fit <- function(extra = "") {
   skip_if_not_installed("lavaan")
@@ -67,36 +67,48 @@ test_that("ci(lavaan, quant =) honors an explicit alpha over level", {
   expect_equal(unname(by_alpha[[1]]), unname(by_level[[1]]))
 })
 
-test_that("non-product `:=` falls back to Monte Carlo whatever `type` is", {
+test_that("non-product `:=` uses Monte Carlo and warns when `type` was chosen", {
   fit <- .lav_fit("tot := a*b + c\n a_only := a")
   for (tp in c("dop", "asymp")) {
     set.seed(11)
-    res <- ci(fit, type = tp, n.mc = 2000)
-    # product case honors `type`: three components, no MC error
+    # one warning per non-product label (`tot`, `a_only`)
+    pat <- sprintf("using a Monte Carlo interval instead of type = \"%s\"", tp)
+    expect_warning(
+      expect_warning(res <- ci(fit, type = tp, n.mc = 2000), pat),
+      pat
+    )
+    # the product case honors `type`: no MC error
     expect_false("MCError" %in% names(res$ab))
     # non-product cases run .ci_core(type = "MC"): MC error is present
     expect_true("MCError" %in% names(res$tot))
     expect_true("MCError" %in% names(res$a_only))
     expect_length(res$tot[[1]], 2L)
   }
+  # explicit type = "MC" and the untouched default stay quiet
+  set.seed(11)
+  expect_no_warning(ci(fit, type = "MC", n.mc = 2000))
+  set.seed(11)
+  expect_no_warning(ci(fit, n.mc = 2000))
+
   # the MC estimate is close to the plug-in value a*b + c
   est <- lavaan::parameterEstimates(fit)
-  pe <- est$est[est$label == "tot" | est$lhs == "tot"][1]
+  pe <- est$est[est$lhs == "tot" & est$op == ":="]
   set.seed(11)
   expect_equal(ci(fit, n.mc = 20000)$tot$Estimate, pe, tolerance = 0.02)
 })
 
-test_that("a `:=` built from another `:=` aborts the whole ci() call", {
+test_that("a `:=` built from another `:=` warns and keeps the other results", {
   # `ab*c` parses as a product, but `ab` is not an estimated coefficient, so
-  # it reaches the Monte Carlo fallback, which cannot resolve `ab`. Today that
-  # error discards every result, including the valid `ab` interval. Pinned as
-  # observed (see PR notes); if the fallback learns to resolve defined
-  # parameters, flip this to an expectation on res$abc.
+  # it reaches the Monte Carlo fallback, which cannot resolve `ab`. Only that
+  # label is lost; the valid `ab` interval is still returned.
   fit <- .lav_fit("abc := ab*c")
-  expect_error(
-    ci(fit, n.mc = 2000),
-    "must match the parameters names provided in lavaan object"
+  expect_warning(
+    res <- ci(fit, n.mc = 2000),
+    "No interval for defined parameter 'abc'"
   )
+  expect_named(res, c("ab", "abc"))
+  expect_null(res$abc)
+  expect_length(res$ab$CI, 2L)
 })
 
 test_that("cdf(numeric) is the empirical CDF", {
