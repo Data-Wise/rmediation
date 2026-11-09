@@ -152,11 +152,15 @@ str(comparison)
 
 ## Integration with Structural Equation Modeling
 
-RMediation integrates seamlessly with popular SEM packages:
+[`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) accepts
+a fitted `lavaan` model and returns one interval for each defined
+parameter (`:=`), named by its label:
 
 ``` r
 
 library(lavaan)
+#> This is lavaan 0.7-3
+#> lavaan is FREE software! Please report any bugs.
 
 # Define a simple mediation model
 model <- "
@@ -180,12 +184,51 @@ M <- 0.5 * X + rnorm(n)
 Y <- 0.3 * M + 0.2 * X + rnorm(n)
 df <- data.frame(X, M, Y)
 
-# This would be fitted with your data
 fit <- sem(model, data = df)
 
-# Automatically compute CI for defined parameters
-ci(fit) # This would auto-detect 'ab' parameter
+# One interval per defined parameter
+set.seed(1)
+res <- ci(fit)
+names(res)
+#> [1] "ab"    "total"
+
+# A product of two coefficients: the distribution of the product (type = "dop")
+res$ab
+#> $CI
+#> [1] 0.1527905 0.2348190
+#> 
+#> $Estimate
+#> [1] 0.1925895
+#> 
+#> $SE
+#> [1] 0.02093011
+
+# Not a product (a sum): a Monte Carlo interval
+res$total[c("Estimate", "SE")]
+#> $Estimate
+#> [1] 0.3573144
+#> 
+#> $SE
+#> [1] 0.03295348
 ```
+
+How each definition is handled:
+
+- A product of **two** coefficients (`ab := a*b`) gets the interval you
+  ask for with `type`.
+- A product of exactly **three** (`a*b*c`, a serial indirect effect)
+  gets the exact three-factor interval, whatever `type` is. Four or more
+  get a Monte Carlo interval.
+- Anything else, such as the sum `total := c + (a*b)`, gets a Monte
+  Carlo interval. When you set `type` yourself, a warning says so.
+- A definition may use another one (`abc := ab*c`). One that cannot be
+  resolved gets a warning and a `NULL` entry, and the other intervals
+  are still returned.
+
+The result names differ between these cases, so index them by name. The
+[Technical
+Notes](https://data-wise.github.io/rmediation/articles/technical-notes.html)
+give the details.
 
 ## Validation and Error Handling
 

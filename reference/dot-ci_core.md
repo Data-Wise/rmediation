@@ -187,7 +187,7 @@ ci(
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3 * b4
-#> <environment: 0x57d1a63cc5f8>
+#> <environment: 0x559fa8d7bd30>
 #> 
 #> $Asymptotic
 #> $Asymptotic$`95% CI`
@@ -202,7 +202,7 @@ ci(
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3 * b4
-#> <environment: 0x57d1a63cc5f8>
+#> <environment: 0x559fa8d7bd30>
 #> 
 # An Example of Conservative Null Sampling Distribution
 ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
@@ -229,7 +229,7 @@ ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3
-#> <environment: 0x57d1a63cc5f8>
+#> <environment: 0x559fa8d7bd30>
 #> 
 #> [[2]]
 #> [[2]]$CI
@@ -275,7 +275,7 @@ ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3
-#> <environment: 0x57d1a63cc5f8>
+#> <environment: 0x559fa8d7bd30>
 #> 
 #> [[2]]
 #> [[2]]$CI

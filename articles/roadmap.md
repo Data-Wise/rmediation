@@ -12,7 +12,7 @@ dashboard](https://github.com/data-wise/mediationverse/blob/main/STATUS.md).
 
 - **CRAN** serves 1.6.1.
 - **GitHub** carries the later releases (published as pre-releases); the
-  development version is 1.9.0. Install with
+  development version is 1.10.0. Install with
   `pak::pak("Data-Wise/rmediation")`; the
   [README](https://github.com/Data-Wise/rmediation#installation) lists
   the tagged install commands.
@@ -45,18 +45,45 @@ experimental, because medfit dropped that label in 0.11.0.
   Notes](https://data-wise.github.io/rmediation/articles/technical-notes.md)).
 - [`mbco_product_null()`](https://data-wise.github.io/rmediation/reference/mbco_product_null.md)
   tests `a*b = 0` exactly, one single-path null per branch.
+- An
+  [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md)
+  result carries `@provenance` (package and R versions, test type,
+  bootstrap size, [`RNGkind()`](https://rdrr.io/r/base/Random.html) and
+  run time). The seed is not recorded; call
+  [`set.seed()`](https://rdrr.io/r/base/Random.html) and report it. In
+  1.10.0; see
+  [News](https://data-wise.github.io/rmediation/news/index.md).
+- [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) on a
+  `lavaan` fit resolves a `:=` that uses another `:=`. A product of
+  three coefficients gets the exact three-factor interval; four or more
+  get a Monte Carlo interval, with a warning when you set `type`. In
+  1.10.0; see
+  [News](https://data-wise.github.io/rmediation/news/index.md).
 - `ci(type = "asymp")` labels its interval by the confidence level, and
   the densities are correct for very small standard errors (both in
   1.9.0; see
   [News](https://data-wise.github.io/rmediation/news/index.md)).
+- The element names and order of what
+  [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md)
+  and [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md)
+  return, the leading argument names of
+  [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md)
+  and
+  [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md),
+  and the shape of `memory_exp` are pinned by tests, because downstream
+  code indexes results by position and by name. Changing one of these
+  needs a deprecation period first.
 
 ## Candidates for what comes next
 
 These are open items, not promises and not dated.
 
-- A CRAN submission, once the criteria above are met.
-- Issue [\#88](https://github.com/Data-Wise/rmediation/issues/88):
-  releasing the defenses for OpenMx#433, tracked in the repository.
+- A CRAN submission, once the criteria above are met. Issue
+  [\#88](https://github.com/Data-Wise/rmediation/issues/88), on
+  releasing the defenses for OpenMx#433, was closed on 2026-11-04; the
+  CRAN decision itself is unchanged.
+- Recording the RMediation version in the packages and manuscripts that
+  call it, once a breaking change or a submission makes that necessary.
 - Keeping the documentation in step with the code; see the
   [Cookbook](https://data-wise.github.io/rmediation/articles/cookbook.md)
   and the [Quick

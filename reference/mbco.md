@@ -46,6 +46,15 @@ An object of class `MBCOResult` containing
 
   The type of test performed
 
+- provenance:
+
+  what produced the result: the RMediation, OpenMx (if loaded), medfit
+  (if loaded) and R versions, `type`, the bootstrap size `R`,
+  [`RNGkind()`](https://rdrr.io/r/base/Random.html) and the run time.
+  The random seed is not recorded, because it cannot be recovered after
+  the fact; call [`set.seed()`](https://rdrr.io/r/base/Random.html)
+  yourself and report it
+
 ## Details
 
 **Two medfit SEMFits (medfit \>= 0.8.0).** Supply the already-fitted

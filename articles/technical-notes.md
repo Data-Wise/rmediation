@@ -211,6 +211,66 @@ window is now split at the spike, found from the roots of the
 conditional mean, and subintervals far from it retry with an absolute
 tolerance scaled to the peak. Values at ordinary scales are unchanged.
 
+## 7. Defined parameters in `ci()` for a `lavaan` fit
+
+**Rule.** `ci(fit)` returns one entry per `:=`. Each definition is
+expanded first: a reference to another `:=` is replaced by that
+definition’s expression, so `abc := ab*c` with `ab := a*b` becomes
+`a*b*c`. The expanded expression is then classified:
+
+| Definition | Interval | Result names | `type` |
+|----|----|----|----|
+| a product of two coefficients (`a*b`) | distribution of the product, Monte Carlo, asymptotic or prodclin, as asked | `CI`, `Estimate`, `SE` (and `MC.Error` for Monte Carlo) | honored |
+| a product of exactly three (`a*b*c`) | exact, as `ci(ProductNormal3(...))` | `lower`, `upper` | ignored; a warning when you set `"asymp"`, `"prodclin"` or `"all"` |
+| a product of four or more | Monte Carlo | `CI`, `Estimate`, `SE`, `MC.Error` | a warning when you set it and it is not `"MC"` |
+| anything else (`a*b + c`, a constant, a function) | Monte Carlo on the formula | (unnamed interval), `Estimate`, `SE`, `MCError`, `p` | a warning when you set it and it is not `"MC"` |
+
+**Reason.** Exactly three coefficients have an exact CDF
+([`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)),
+so they get an exact interval. Four or more and general formulas have
+none, so they get Monte Carlo. The result names differ because the
+entries come from different code paths (the product classes and the
+general formula path). They are pinned as they are, because downstream
+code reads them: index by name, not by position, and never assume one
+shape across `:=` labels.
+
+``` r
+
+set.seed(2)
+n <- 400
+d <- data.frame(x = rnorm(n))
+d$m1 <- 0.5 * d$x + rnorm(n)
+d$m2 <- 0.5 * d$m1 + rnorm(n)
+d$m3 <- 0.5 * d$m2 + rnorm(n)
+d$y <- 0.5 * d$m3 + rnorm(n)
+fit <- lavaan::sem(paste(
+  "m1 ~ a*x", "m2 ~ b*m1", "m3 ~ c*m2", "y ~ d*m3",
+  "two := a*b", "three := a*b*c", "four := a*b*c*d", "chain := two*c", "total := a*b + c",
+  sep = "\n"
+), data = d)
+r <- ci(fit, n.mc = 2000)
+vapply(r, function(z) paste(names(z), collapse = ", "), character(1))
+#>                          two                        three 
+#>           "CI, Estimate, SE"               "lower, upper" 
+#>                         four                        chain 
+#> "CI, Estimate, SE, MC.Error"               "lower, upper" 
+#>                        total 
+#> ", Estimate, SE, MCError, p"
+```
+
+`chain := two*c` is a nested definition: it expands to `a*b*c`, so it
+gets the same exact three-factor interval as `three`.
+
+**Definitions that cannot be resolved.** A definition that cannot be
+expanded (a cycle, or text that does not parse) gets a warning and a
+`NULL` entry under its label, and every other interval is still
+returned.
+
+**Substitution is by symbol, not by text.** A definition labeled `ab`
+does not change a name such as `tab`, and a label that is also a
+function name (for example `log`) is not substituted inside a call like
+`log(a)`.
+
 ## Where each rule is tested
 
 | Rule | Test file |
@@ -227,5 +287,6 @@ tolerance scaled to the peak. Values at ordinary scales are unchanged.
 | [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md) and [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) interval endpoints | `tests/testthat/test-medci-ci-oracle.R` |
 | [`pMC()`](https://data-wise.github.io/rmediation/reference/pMC.md) and [`qMC()`](https://data-wise.github.io/rmediation/reference/qMC.md) closed forms | `tests/testthat/test-pMC-qMC-closed-form.R` |
 | `confintAsymp()` and `confintMC()` known answers | `tests/testthat/test-confint-known-answer.R` |
+| defined parameters in `ci(<lavaan>)`: nested `:=`, three or more factors, unresolvable definitions | `tests/testthat/test-external-methods-lavaan.R`, `tests/testthat/test-expand-defined.R` |
 | three-factor truncation bound (`.prod3_bound()`) | `tests/testthat/test-prod3-bound-defect.R` |
 | MBCO size at small `n` and the real-OpenMx asymptotic check | `tests/testthat/test-mbco-size-small-n.R` |

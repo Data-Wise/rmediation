@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.9.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,11 +22,13 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/getting-started.html">Getting Started</a></li>
     <li><a class="dropdown-item" href="../articles/methods-comparison.html">CI Methods Comparison</a></li>
     <li><a class="dropdown-item" href="../articles/serial-mediation-with-medfit.html">Serial Mediation with medfit</a></li>
+    <li><a class="dropdown-item" href="../articles/mbco.html">Testing an Indirect Effect with MBCO</a></li>
     <li><a class="dropdown-item" href="../articles/omitted-confounder-sensitivity.html">Omitted-Confounder Sensitivity</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
+    <li><a class="dropdown-item" href="../articles/reporting.html">Reporting RMediation in a Paper</a></li>
     <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://data-wise.github.io/mediationverse/articles/ecosystem.html">Ecosystem</a></li>
@@ -54,6 +56,28 @@
       <small>Source: <a href="https://github.com/data-wise/rmediation/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.10.0" id="rmediation-1100-2026-11-08">RMediation 1.10.0 (2026-11-08)<a class="anchor" aria-label="anchor" href="#rmediation-1100-2026-11-08"></a></h2>
+<p>No change to returned values for any call that worked before; the only API addition is the optional <code>@provenance</code> on <code>MBCOResult</code>.</p>
+<div class="section level3">
+<h3 id="new-features-1-10-0">New features<a class="anchor" aria-label="anchor" href="#new-features-1-10-0"></a></h3>
+<ul><li>An <code><a href="../reference/mbco.html">mbco()</a></code> result now records what produced it in a new <code>@provenance</code> property: the RMediation, OpenMx, medfit (when loaded) and R versions, the test <code>type</code>, the bootstrap size <code>R</code>, <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code> and the run time. <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> show it in a trailing block, after every line they printed before. The random seed is not recorded (it cannot be recovered afterward), so call <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> and report it. <code><a href="https://rdrr.io/r/base/names.html" class="external-link">names()</a></code> of an <code>MBCOResult</code> gains one name, <code>"provenance"</code>, appended after the nine existing ones; those keep their order. Results built by hand keep <code>@provenance</code> <code>NULL</code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-1-10-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-10-0"></a></h3>
+<ul><li>
+<code><a href="../reference/ci.html">ci()</a></code> on a <code>lavaan</code> fit now resolves a defined parameter (<code>:=</code>) that uses another one, for example <code>abc := ab*c</code> where <code>ab := a*b</code>; before, the whole call stopped with an error. A definition that cannot be resolved (a cycle, or text that does not parse) gets a warning and a <code>NULL</code> entry, and the other intervals are returned.</li>
+<li>
+<code><a href="../reference/ci.html">ci()</a></code> on a <code>lavaan</code> fit no longer stops on a product of three or more coefficients (<code>abc := a*b*c</code>, a serial indirect effect) under <code>type = "dop"</code>, <code>"asymp"</code>, <code>"prodclin"</code> or <code>"all"</code>. Exactly three coefficients get the exact interval of <code>ci(ProductNormal3(...))</code>, whatever <code>type</code> is, returned as a named <code>c(lower, upper)</code> (a warning says so when you set <code>type</code> to <code>"asymp"</code>, <code>"prodclin"</code> or <code>"all"</code>). Four or more coefficients get a Monte Carlo interval, with a warning when you set <code>type</code>. <code>type = "MC"</code> is unchanged.</li>
+<li>
+<code><a href="../reference/ci.html">ci()</a></code> on a <code>lavaan</code> fit now warns when <code>type</code> was given explicitly but a defined parameter is not a product of estimated coefficients (for example <code>a*b + c</code>). Such a parameter always gets a Monte Carlo interval; the call used to say nothing.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="internal-1-10-0">Internal<a class="anchor" aria-label="anchor" href="#internal-1-10-0"></a></h3>
+<ul><li>New tests pin the shape of what downstream code reads by position and by name: the element names and order of <code><a href="../reference/medci.html">medci()</a></code> for each <code>type</code>, the leading argument names of <code><a href="../reference/medci.html">medci()</a></code> and <code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code>, and the dimensions and columns of <code>memory_exp</code> (<a href="https://github.com/data-wise/rmediation/issues/132" class="external-link">#132</a>); and the results of <code><a href="../reference/ci.html">ci()</a></code> (for a <code>ProductNormal</code>, for numeric estimates with <code>type = "MC"</code> and <code>type = "asymp"</code>) and <code><a href="../reference/ci_mediation_data.html">ci_mediation_data()</a></code>, including the interval labels and the <code>MC.Error</code> / <code>MCError</code> spellings (<a href="https://github.com/data-wise/rmediation/issues/134" class="external-link">#134</a>). A change to any of these now fails a test.</li>
+<li>The OpenMx warning “was modified since it was run”, expected by one <code>.mbco_semi()</code> test, is muffled so the suite runs warning-free (<a href="https://github.com/data-wise/rmediation/issues/133" class="external-link">#133</a>).</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.9.0" id="rmediation-190-2026-10-31">RMediation 1.9.0 (2026-10-31)<a class="anchor" aria-label="anchor" href="#rmediation-190-2026-10-31"></a></h2>
 <p>The <code>ci(type = "asymp")</code> interval label changes (see Behavior changes); two silent-wrong-value density bugs are fixed.</p>

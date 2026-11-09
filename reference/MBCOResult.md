@@ -13,7 +13,8 @@ MBCOResult(
   type = character(0),
   refit = NULL,
   branch = NULL,
-  dropped = NULL
+  dropped = NULL,
+  provenance = NULL
 )
 ```
 
@@ -59,6 +60,18 @@ MBCOResult(
   fits did not converge and were left out of the null distribution (`0`
   when none were). The p-value is taken over the remaining `R - dropped`
   replicates.
+
+- provenance:
+
+  `NULL` (default), or a list recording what produced the result:
+  `rmediation`, `openmx` and `medfit` (package versions; `NULL` for a
+  package not loaded), `r` (the R version), `type`, `R` (bootstrap
+  replicates, `NULL` without a bootstrap), `rng_kind` (from
+  [`RNGkind()`](https://rdrr.io/r/base/Random.html)) and `time`.
+  [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md)
+  fills it. The seed is not recorded: it cannot be recovered after the
+  fact, so call [`set.seed()`](https://rdrr.io/r/base/Random.html)
+  yourself and report it.
 
 ## Examples
 

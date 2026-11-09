@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.9.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,11 +45,13 @@
 <li><a class="dropdown-item" href="../articles/getting-started.html">Getting Started</a></li>
     <li><a class="dropdown-item" href="../articles/methods-comparison.html">CI Methods Comparison</a></li>
     <li><a class="dropdown-item" href="../articles/serial-mediation-with-medfit.html">Serial Mediation with medfit</a></li>
+    <li><a class="dropdown-item" href="../articles/mbco.html">Testing an Indirect Effect with MBCO</a></li>
     <li><a class="dropdown-item" href="../articles/omitted-confounder-sensitivity.html">Omitted-Confounder Sensitivity</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
+    <li><a class="dropdown-item" href="../articles/reporting.html">Reporting RMediation in a Paper</a></li>
     <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul>
 </li>
@@ -210,7 +212,13 @@ path at zero per branch. This is exact; a single constraint
 <span><span class="co">#&gt; Degrees of freedom: 1 </span></span>
 <span><span class="co">#&gt; P-value: 0.7731 </span></span>
 <span><span class="co">#&gt; Significance: ns (not significant)</span></span>
-<span><span class="co">#&gt; Note: product null; binding single-path null: b1 = 0.</span></span></code></pre></div>
+<span><span class="co">#&gt; Note: product null; binding single-path null: b1 = 0.</span></span>
+<span><span class="co">#&gt; Provenance:</span></span>
+<span><span class="co">#&gt;   Packages: RMediation 1.10.0, OpenMx 2.22.11, medfit 0.3.2, R 4.6.2 </span></span>
+<span><span class="co">#&gt;   Test: type = asymp</span></span>
+<span><span class="co">#&gt;   RNG: Mersenne-Twister / Inversion / Rejection </span></span>
+<span><span class="co">#&gt;   Run at: 2026-11-09 05:14:09 UTC </span></span>
+<span><span class="co">#&gt;   Seed: not recorded (call set.seed() yourself and report it)</span></span></code></pre></div>
 <p>The note under the result names the binding branch, the single-path
 null with the largest p-value.</p>
 </div>
@@ -232,6 +240,12 @@ null with the largest p-value.</p>
 converged and <code>NULL</code> for <code>type = "asymp"</code>. If more
 than 5% fail, the call stops with class
 <code>RMediation_bootstrap_too_many_dropped</code>.</p>
+<p><code>res@provenance</code> records what produced the result: the
+RMediation, OpenMx and R versions, the test type, <code>R</code>,
+<code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code> and the run time. It does not record the seed,
+because the seed cannot be recovered afterward. Call
+<code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> before <code><a href="../reference/mbco.html">mbco()</a></code> and report the seed
+with the result.</p>
 </div>
 <div class="section level2">
 <h2 id="a-ci-for-a-serial-indirect-effect-from-lm-fits-medfit">9. A CI for a serial indirect effect from lm fits (medfit)<a class="anchor" aria-label="anchor" href="#a-ci-for-a-serial-indirect-effect-from-lm-fits-medfit"></a>

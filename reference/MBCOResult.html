@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.9.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,11 +22,13 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/getting-started.html">Getting Started</a></li>
     <li><a class="dropdown-item" href="../articles/methods-comparison.html">CI Methods Comparison</a></li>
     <li><a class="dropdown-item" href="../articles/serial-mediation-with-medfit.html">Serial Mediation with medfit</a></li>
+    <li><a class="dropdown-item" href="../articles/mbco.html">Testing an Indirect Effect with MBCO</a></li>
     <li><a class="dropdown-item" href="../articles/omitted-confounder-sensitivity.html">Omitted-Confounder Sensitivity</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
+    <li><a class="dropdown-item" href="../articles/reporting.html">Reporting RMediation in a Paper</a></li>
     <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://data-wise.github.io/mediationverse/articles/ecosystem.html">Ecosystem</a></li>
@@ -68,7 +70,8 @@
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  refit <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  branch <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  dropped <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  dropped <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  provenance <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -109,6 +112,15 @@ the reported result when the result comes from <code><a href="mbco_product_null.
 non-negative whole number: the count of bootstrap replicates whose fits did not
 converge and were left out of the null distribution (<code>0</code> when none were). The
 p-value is taken over the remaining <code>R - dropped</code> replicates.</p></dd>
+
+
+<dt id="arg-provenance">provenance<a class="anchor" aria-label="anchor" href="#arg-provenance"></a></dt>
+<dd><p><code>NULL</code> (default), or a list recording what produced the result:
+<code>rmediation</code>, <code>openmx</code> and <code>medfit</code> (package versions; <code>NULL</code> for a package not
+loaded), <code>r</code> (the R version), <code>type</code>, <code>R</code> (bootstrap replicates, <code>NULL</code> without a
+bootstrap), <code>rng_kind</code> (from <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code>) and <code>time</code>. <code><a href="mbco.html">mbco()</a></code> fills it. The seed is
+not recorded: it cannot be recovered after the fact, so call <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> yourself
+and report it.</p></dd>
 
 </dl></div>
 

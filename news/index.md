@@ -1,5 +1,74 @@
 # Changelog
 
+## RMediation 1.10.0 (2026-11-08)
+
+No change to returned values for any call that worked before; the only
+API addition is the optional `@provenance` on `MBCOResult`.
+
+### New features
+
+- An
+  [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md)
+  result now records what produced it in a new `@provenance` property:
+  the RMediation, OpenMx, medfit (when loaded) and R versions, the test
+  `type`, the bootstrap size `R`,
+  [`RNGkind()`](https://rdrr.io/r/base/Random.html) and the run time.
+  [`print()`](https://rdrr.io/r/base/print.html) and
+  [`summary()`](https://rdrr.io/r/base/summary.html) show it in a
+  trailing block, after every line they printed before. The random seed
+  is not recorded (it cannot be recovered afterward), so call
+  [`set.seed()`](https://rdrr.io/r/base/Random.html) and report it.
+  [`names()`](https://rdrr.io/r/base/names.html) of an `MBCOResult`
+  gains one name, `"provenance"`, appended after the nine existing ones;
+  those keep their order. Results built by hand keep `@provenance`
+  `NULL`.
+
+### Bug fixes
+
+- [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) on a
+  `lavaan` fit now resolves a defined parameter (`:=`) that uses another
+  one, for example `abc := ab*c` where `ab := a*b`; before, the whole
+  call stopped with an error. A definition that cannot be resolved (a
+  cycle, or text that does not parse) gets a warning and a `NULL` entry,
+  and the other intervals are returned.
+- [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) on a
+  `lavaan` fit no longer stops on a product of three or more
+  coefficients (`abc := a*b*c`, a serial indirect effect) under
+  `type = "dop"`, `"asymp"`, `"prodclin"` or `"all"`. Exactly three
+  coefficients get the exact interval of `ci(ProductNormal3(...))`,
+  whatever `type` is, returned as a named `c(lower, upper)` (a warning
+  says so when you set `type` to `"asymp"`, `"prodclin"` or `"all"`).
+  Four or more coefficients get a Monte Carlo interval, with a warning
+  when you set `type`. `type = "MC"` is unchanged.
+- [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) on a
+  `lavaan` fit now warns when `type` was given explicitly but a defined
+  parameter is not a product of estimated coefficients (for example
+  `a*b + c`). Such a parameter always gets a Monte Carlo interval; the
+  call used to say nothing.
+
+### Internal
+
+- New tests pin the shape of what downstream code reads by position and
+  by name: the element names and order of
+  [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md)
+  for each `type`, the leading argument names of
+  [`medci()`](https://data-wise.github.io/rmediation/reference/medci.md)
+  and
+  [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md),
+  and the dimensions and columns of `memory_exp`
+  ([\#132](https://github.com/data-wise/rmediation/issues/132)); and the
+  results of
+  [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) (for
+  a `ProductNormal`, for numeric estimates with `type = "MC"` and
+  `type = "asymp"`) and
+  [`ci_mediation_data()`](https://data-wise.github.io/rmediation/reference/ci_mediation_data.md),
+  including the interval labels and the `MC.Error` / `MCError` spellings
+  ([\#134](https://github.com/data-wise/rmediation/issues/134)). A
+  change to any of these now fails a test.
+- The OpenMx warning “was modified since it was run”, expected by one
+  `.mbco_semi()` test, is muffled so the suite runs warning-free
+  ([\#133](https://github.com/data-wise/rmediation/issues/133)).
+
 ## RMediation 1.9.0 (2026-10-31)
 
 The `ci(type = "asymp")` interval label changes (see Behavior changes);

@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.9.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.10.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,11 +45,13 @@
 <li><a class="dropdown-item" href="../articles/getting-started.html">Getting Started</a></li>
     <li><a class="dropdown-item" href="../articles/methods-comparison.html">CI Methods Comparison</a></li>
     <li><a class="dropdown-item" href="../articles/serial-mediation-with-medfit.html">Serial Mediation with medfit</a></li>
+    <li><a class="dropdown-item" href="../articles/mbco.html">Testing an Indirect Effect with MBCO</a></li>
     <li><a class="dropdown-item" href="../articles/omitted-confounder-sensitivity.html">Omitted-Confounder Sensitivity</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
+    <li><a class="dropdown-item" href="../articles/reporting.html">Reporting RMediation in a Paper</a></li>
     <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul>
 </li>
@@ -106,7 +108,7 @@ status dashboard</a>.</p>
 <strong>CRAN</strong> serves 1.6.1.</li>
 <li>
 <strong>GitHub</strong> carries the later releases (published as
-pre-releases); the development version is 1.9.0. Install with
+pre-releases); the development version is 1.10.0. Install with
 <code>pak::pak("Data-Wise/rmediation")</code>; the <a href="https://github.com/Data-Wise/rmediation#installation" class="external-link">README</a>
 lists the tagged install commands.</li>
 <li>The <a href="../news/index.html">News</a> page lists every change by
@@ -144,10 +146,26 @@ ill-conditioned covariance (see the <a href="technical-notes.html">Technical Not
 <li>
 <code><a href="../reference/mbco_product_null.html">mbco_product_null()</a></code> tests <code>a*b = 0</code> exactly,
 one single-path null per branch.</li>
+<li>An <code><a href="../reference/mbco.html">mbco()</a></code> result carries <code>@provenance</code>
+(package and R versions, test type, bootstrap size,
+<code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code> and run time). The seed is not recorded; call
+<code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> and report it. In 1.10.0; see <a href="../news/index.html">News</a>.</li>
+<li>
+<code><a href="../reference/ci.html">ci()</a></code> on a <code>lavaan</code> fit resolves a
+<code>:=</code> that uses another <code>:=</code>. A product of three
+coefficients gets the exact three-factor interval; four or more get a
+Monte Carlo interval, with a warning when you set <code>type</code>. In
+1.10.0; see <a href="../news/index.html">News</a>.</li>
 <li>
 <code>ci(type = "asymp")</code> labels its interval by the
 confidence level, and the densities are correct for very small standard
 errors (both in 1.9.0; see <a href="../news/index.html">News</a>).</li>
+<li>The element names and order of what <code><a href="../reference/medci.html">medci()</a></code> and
+<code><a href="../reference/ci.html">ci()</a></code> return, the leading argument names of
+<code><a href="../reference/medci.html">medci()</a></code> and <code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code>, and the shape of
+<code>memory_exp</code> are pinned by tests, because downstream code
+indexes results by position and by name. Changing one of these needs a
+deprecation period first.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -155,9 +173,12 @@ errors (both in 1.9.0; see <a href="../news/index.html">News</a>).</li>
 </h2>
 <p>These are open items, not promises and not dated.</p>
 <ul>
-<li>A CRAN submission, once the criteria above are met.</li>
-<li>Issue <a href="https://github.com/Data-Wise/rmediation/issues/88" class="external-link">#88</a>:
-releasing the defenses for OpenMx#433, tracked in the repository.</li>
+<li>A CRAN submission, once the criteria above are met. Issue <a href="https://github.com/Data-Wise/rmediation/issues/88" class="external-link">#88</a>, on
+releasing the defenses for OpenMx#433, was closed on 2026-11-04; the
+CRAN decision itself is unchanged.</li>
+<li>Recording the RMediation version in the packages and manuscripts
+that call it, once a breaking change or a submission makes that
+necessary.</li>
 <li>Keeping the documentation in step with the code; see the <a href="cookbook.html">Cookbook</a> and the <a href="refcard.html">Quick
 Reference</a>.</li>
 </ul>

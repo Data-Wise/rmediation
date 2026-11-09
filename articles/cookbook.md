@@ -129,6 +129,12 @@ mbco_product_null(full, paths = c("a1", "b1"), type = "asymp")
 #> P-value: 0.7731 
 #> Significance: ns (not significant)
 #> Note: product null; binding single-path null: b1 = 0.
+#> Provenance:
+#>   Packages: RMediation 1.10.0, OpenMx 2.22.11, medfit 0.3.2, R 4.6.2 
+#>   Test: type = asymp
+#>   RNG: Mersenne-Twister / Inversion / Rejection 
+#>   Run at: 2026-11-09 05:14:09 UTC 
+#>   Seed: not recorded (call set.seed() yourself and report it)
 ```
 
 The note under the result names the binding branch, the single-path null
@@ -153,6 +159,15 @@ res@dropped # replicates that did not converge and were dropped (at most 5% of R
 `@dropped` is `0` when every replicate converged and `NULL` for
 `type = "asymp"`. If more than 5% fail, the call stops with class
 `RMediation_bootstrap_too_many_dropped`.
+
+`res@provenance` records what produced the result: the RMediation,
+OpenMx and R versions, the test type, `R`,
+[`RNGkind()`](https://rdrr.io/r/base/Random.html) and the run time. It
+does not record the seed, because the seed cannot be recovered
+afterward. Call [`set.seed()`](https://rdrr.io/r/base/Random.html)
+before
+[`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md) and
+report the seed with the result.
 
 ## 9. A CI for a serial indirect effect from lm fits (medfit)
 

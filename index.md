@@ -58,18 +58,18 @@ non-normality:
 install.packages("RMediation")
 ```
 
-### From GitHub (release 1.9.0, pre-release)
+### From GitHub (release 1.10.0, pre-release)
 
-CRAN serves the stable 1.6.1. Release 1.9.0 is published on GitHub only,
-as a pre-release; it is not on CRAN.
+CRAN serves the stable 1.6.1. Release 1.10.0 is published on GitHub
+only, as a pre-release; it is not on CRAN.
 
 ``` r
 
 # Using pak (recommended)
-pak::pak("Data-Wise/rmediation@v1.9.0")
+pak::pak("Data-Wise/rmediation@v1.10.0")
 
 # Or using remotes
-remotes::install_github("Data-Wise/rmediation", ref = "v1.9.0")
+remotes::install_github("Data-Wise/rmediation", ref = "v1.10.0")
 ```
 
 For the development branch, use `@dev` or `ref = "dev"` instead.
@@ -158,6 +158,15 @@ fit <- sem(model, data = mydata)
 # Compute CI for indirect effect (auto-detects 'ab := a*b')
 ci(fit, type = "dop")
 ```
+
+`ci(fit)` returns one interval per `:=`. A product of two coefficients
+(`a*b`) gets the interval you ask for with `type`. A product of three
+coefficients (`a*b*c`) gets the exact three-factor interval, whatever
+`type` is. A product of four or more coefficients, or any other formula
+such as `a*b + c`, gets a Monte Carlo interval, with a warning when you
+set `type` yourself. A definition can use another one (`abc := ab*c`);
+one that cannot be resolved gets a warning and a `NULL` entry, and the
+other intervals are still returned.
 
 ### Serial Mediation via medfit
 
