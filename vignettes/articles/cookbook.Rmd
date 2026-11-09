@@ -109,6 +109,8 @@ res@dropped # replicates that did not converge and were dropped (at most 5% of R
 
 `@dropped` is `0` when every replicate converged and `NULL` for `type = "asymp"`. If more than 5% fail, the call stops with class `RMediation_bootstrap_too_many_dropped`.
 
+`res@provenance` records what produced the result: the RMediation, OpenMx and R versions, the test type, `R`, `RNGkind()` and the run time. It does not record the seed, because the seed cannot be recovered afterward. Call `set.seed()` before `mbco()` and report the seed with the result.
+
 ## 9. A CI for a serial indirect effect from lm fits (medfit)
 
 medfit extracts the path estimates and their covariance; `ci()` turns them into an interval. medfit is optional (`Suggests`).
