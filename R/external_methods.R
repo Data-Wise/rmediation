@@ -230,7 +230,10 @@ S7::method(ci, S7::class_any) <- function(object, level = 0.95, type = "dop", n.
         Sigma = as.matrix(vcov_mat[vars, vars])
       )
       k <- length(vars)
-      if (k == 3L && type != "MC") {
+      # A coefficient repeated among three or more factors (a*b*a is a^2 * b) makes the factors
+      # perfectly correlated, so the exact three-factor interval does not apply.
+      repeated <- k >= 3L && anyDuplicated(vars) > 0L
+      if (k == 3L && type != "MC" && !repeated) {
         # Exactly three factors have an exact interval of their own (pprodnormal3()).
         # It does not depend on `type`, so say so when the caller asked for the
         # asymptotic or prodclin interval, or for all of them. Its result is the named
@@ -249,18 +252,30 @@ S7::method(ci, S7::class_any) <- function(object, level = 0.95, type = "dop", n.
           level = 1 - alpha
         )
       } else {
-        # Four or more factors have no exact interval: Monte Carlo, with a warning when
-        # the caller chose another `type` explicitly. `type = "MC"` is used as asked.
+        # Four or more factors, or a repeated coefficient among three, have no exact interval:
+        # Monte Carlo, with a warning when the caller chose another `type` explicitly.
+        # `type = "MC"` is used as asked.
         ptype <- type
-        if (k >= 4L && type != "MC") {
+        if ((k >= 4L || repeated) && type != "MC") {
           if (type_given) {
-            warning(sprintf(
-              paste0(
-                "Defined parameter '%s' is a product of %d coefficients; ",
-                "using a Monte Carlo interval instead of type = \"%s\"."
-              ),
-              label, k, type
-            ), call. = FALSE)
+            msg <- if (repeated) {
+              sprintf(
+                paste0(
+                  "Defined parameter '%s' repeats a coefficient; ",
+                  "using a Monte Carlo interval instead of type = \"%s\"."
+                ),
+                label, type
+              )
+            } else {
+              sprintf(
+                paste0(
+                  "Defined parameter '%s' is a product of %d coefficients; ",
+                  "using a Monte Carlo interval instead of type = \"%s\"."
+                ),
+                label, k, type
+              )
+            }
+            warning(msg, call. = FALSE)
           }
           ptype <- "MC"
         }
