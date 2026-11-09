@@ -3,12 +3,11 @@
 # 135 in the 2026-11-08 covr run). Each test can fail: values are compared
 # against an independently computed result or a known answer.
 #
-# The non-product `:=` fallback runs a Monte Carlo interval whatever `type`
-# the caller asked for; it warns when `type` was given explicitly. A `:=` that
-# refers to another `:=` is expanded first; products of three or more
-# coefficients take Monte Carlo (the exact and asymptotic intervals exist for two
-# factors only). A `:=` that cannot be resolved loses only its own entry, with a
-# warning.
+# The non-product `:=` fallback runs a Monte Carlo interval whatever `type` the caller asked
+# for; it warns when `type` was given explicitly. A `:=` that refers to another `:=` is
+# expanded first. A product of exactly three coefficients gets the exact interval of
+# ci(<ProductNormal3>) (named lower/upper, independent of `type`); four or more get Monte
+# Carlo. A `:=` that cannot be resolved loses only its own entry, with a warning.
 
 .lav_fit <- function(extra = "") {
   skip_if_not_installed("lavaan")
@@ -19,6 +18,21 @@
   d$y <- 0.4 * d$m + 0.2 * d$x + rnorm(n)
   lavaan::sem(
     paste0("m ~ a*x\n y ~ b*m + c*x\n ab := a*b\n", extra),
+    data = d
+  )
+}
+
+.lav_fit4 <- function(extra = "") {
+  skip_if_not_installed("lavaan")
+  set.seed(2)
+  n <- 400
+  d <- data.frame(x = rnorm(n))
+  d$m1 <- 0.5 * d$x + rnorm(n)
+  d$m2 <- 0.5 * d$m1 + rnorm(n)
+  d$m3 <- 0.5 * d$m2 + rnorm(n)
+  d$y <- 0.5 * d$m3 + rnorm(n)
+  lavaan::sem(
+    paste0("m1 ~ a*x\n m2 ~ b*m1\n m3 ~ c*m2\n y ~ d*m3\n", extra),
     data = d
   )
 }
@@ -109,22 +123,50 @@ test_that("a `:=` built from another `:=` is resolved, nested equals flat for ev
     set.seed(5)
     rf <- suppressWarnings(ci(flat, type = tp, n.mc = 2000))
     expect_false(is.null(rn$abc), info = tp)
-    expect_length(rn$abc[[1]], 2L)
     expect_equal(rn$abc, rf$abc, info = tp) # same classification, same interval
   }
 })
 
-test_that("three or more factors warn when type is explicit and stay quiet otherwise", {
+test_that("a product of three coefficients gets the exact three-factor interval", {
   fit <- .lav_fit("flat := a*b*c")
+  est <- lavaan::coef(fit)[c("a", "b", "c")]
+  vc <- lavaan::vcov(fit)[c("a", "b", "c"), c("a", "b", "c")]
+  # independent oracle: the exact interval called directly on the same estimates
+  oracle <- ci(ProductNormal3(mu = as.numeric(est), Sigma = as.matrix(vc)), level = 0.95)
+  expect_no_warning(res <- ci(fit, type = "dop"))
+  expect_equal(res$flat, oracle)
+  expect_named(res$flat, c("lower", "upper"))
+  expect_no_warning(ci(fit)) # default type: nothing was asked for
+  # a different `level` changes the interval
+  oracle90 <- ci(ProductNormal3(mu = as.numeric(est), Sigma = as.matrix(vc)), level = 0.90)
+  expect_equal(ci(fit, level = 0.90)$flat, oracle90)
+  # the exact interval does not depend on type: asymp, prodclin and all say so
+  for (tp in c("asymp", "prodclin", "all")) {
+    expect_warning(
+      res_tp <- ci(fit, type = tp),
+      sprintf("exact three-factor interval instead of type = \"%s\"", tp)
+    )
+    expect_equal(res_tp$flat, oracle, info = tp)
+  }
+  # type = "MC" is used as asked (same result as before three factors had an exact path)
+  set.seed(4)
+  expect_no_warning(mc <- ci(fit, type = "MC", n.mc = 2000))
+  expect_true("MC.Error" %in% names(mc$flat))
+})
+
+test_that("four or more factors take Monte Carlo, with a warning when type is explicit", {
+  fit <- .lav_fit4("p4 := a*b*c*d")
   expect_warning(
-    ci(fit, type = "dop", n.mc = 2000),
-    "product of 3 coefficients; using a Monte Carlo interval instead of type = \"dop\""
+    res <- ci(fit, type = "dop", n.mc = 2000),
+    "product of 4 coefficients; using a Monte Carlo interval instead of type = \"dop\""
   )
-  expect_no_warning(ci(fit, n.mc = 2000)) # default type: nothing was asked for
-  expect_no_warning(ci(fit, type = "MC", n.mc = 2000))
-  # a flat three-factor product no longer stops the call under dop (it did before)
-  res <- suppressWarnings(ci(fit, type = "dop", n.mc = 2000))
-  expect_true("MC.Error" %in% names(res$flat))
+  expect_true("MC.Error" %in% names(res$p4))
+  set.seed(6)
+  expect_no_warning(def <- ci(fit, n.mc = 2000)) # default type: nothing was asked for
+  expect_true("MC.Error" %in% names(def$p4))
+  set.seed(6)
+  expect_no_warning(mc <- ci(fit, type = "MC", n.mc = 2000))
+  expect_equal(mc$p4, def$p4)
 })
 
 test_that("a nested alias of a two-factor product honors `type` like the flat product", {

@@ -224,21 +224,38 @@ S7::method(ci, S7::class_any) <- function(object, level = 0.95, type = "dop", n.
         mu = as.numeric(coefs[vars]),
         Sigma = as.matrix(vcov_mat[vars, vars])
       )
-      # The exact (dop), asymptotic and prodclin intervals exist for two factors only
-      # (ci() on a ProductNormal stops for three or more). Such a product gets the Monte
-      # Carlo interval, and a warning when the caller chose `type` explicitly.
-      ptype <- type
-      if (length(vars) >= 3L && type != "MC") {
-        if (type_given) {
+      k <- length(vars)
+      if (k == 3L && type != "MC") {
+        # Exactly three factors have an exact interval of their own (pprodnormal3()).
+        # It does not depend on `type`, so say so when the caller asked for the
+        # asymptotic or prodclin interval, or for all of them. Its result is the named
+        # c(lower, upper) that ci(<ProductNormal3>) returns.
+        if (type_given && type != "dop") {
           warning(sprintf(
-            "Defined parameter '%s' is a product of %d coefficients; using a Monte Carlo interval instead of type = \"%s\".",
-            label, length(vars), type
+            "Defined parameter '%s' is a product of 3 coefficients; using the exact three-factor interval instead of type = \"%s\".",
+            label, type
           ), call. = FALSE)
         }
-        ptype <- "MC"
+        results[[label]] <- ci(
+          ProductNormal3(mu = as.numeric(coefs[vars]), Sigma = as.matrix(vcov_mat[vars, vars])),
+          level = 1 - alpha
+        )
+      } else {
+        # Four or more factors have no exact interval: Monte Carlo, with a warning when
+        # the caller chose another `type` explicitly. `type = "MC"` is used as asked.
+        ptype <- type
+        if (k >= 4L && type != "MC") {
+          if (type_given) {
+            warning(sprintf(
+              "Defined parameter '%s' is a product of %d coefficients; using a Monte Carlo interval instead of type = \"%s\".",
+              label, k, type
+            ), call. = FALSE)
+          }
+          ptype <- "MC"
+        }
+        # ci(ProductNormal) takes `level`, so convert back from alpha.
+        results[[label]] <- ci(pn, level = 1 - alpha, type = ptype, n.mc = n.mc)
       }
-      # ci(ProductNormal) takes `level`, so convert back from alpha.
-      results[[label]] <- ci(pn, level = 1 - alpha, type = ptype, n.mc = n.mc)
     } else {
       results[label] <- list(mc_fallback(label, e))
     }
