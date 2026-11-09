@@ -60,6 +60,8 @@ navbar:
         href: articles/methods-comparison.html
       - text: Serial Mediation with medfit
         href: articles/serial-mediation-with-medfit.html
+      - text: Testing an Indirect Effect with MBCO
+        href: articles/mbco.html
       - text: Omitted-Confounder Sensitivity
         href: articles/omitted-confounder-sensitivity.html
       - text: "---------"
