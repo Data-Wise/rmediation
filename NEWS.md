@@ -1,3 +1,14 @@
+# RMediation (development version)
+
+## Bug fixes
+
+- `cdf()` for a `ProductNormal3` with `lower.tail = FALSE` now integrates the upper tail directly instead of computing `1 - p`, so
+  a far upper tail is resolved: at unit means, `q = 100` and `tol = 1e-10` it returns 7.84e-11 where `1 - p` gave a value
+  about 4% too large (50 times too large at the default `tol`) (#177). The two tails of the object now agree to the
+  integration tolerance, not exactly.
+- `dist_quantile()` and `confint()` for a `ProductNormal3` now use the object's `method` (`"gauss"` or `"hcubature"`), as
+  `cdf()` already did; before, they always used `"gauss"` (#177).
+
 # RMediation 1.11.0 (2026-11-09)
 
 ## New features
