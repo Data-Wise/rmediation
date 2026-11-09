@@ -18,7 +18,8 @@ pprodnormal3(
 p_prod3(...)
 }
 \arguments{
-\item{q}{Numeric scalar quantile.}
+\item{q}{Numeric vector of quantiles (finite, no missing values). A single value takes
+the scalar path unchanged.}
 
 \item{mean}{Numeric vector of means of length 3.}
 
@@ -68,7 +69,11 @@ detect the failure this method was replaced over.
 deprecated alias).}
 }
 \value{
-Probability \code{P(X1 * X2 * X3 <= q)} as a numeric scalar in \verb{[0, 1]}.
+Probability \code{P(X1 * X2 * X3 <= q)} in \verb{[0, 1]}: a numeric scalar for a single
+\code{q}, and a numeric vector of the same length (and names) as \code{q} otherwise, in the order
+given. With \code{diagnostics = TRUE} and more than one \code{q}, the \code{"error"} and \code{"nodes"}
+attributes are vectors with one entry per \code{q} (\code{NA} where there is nothing to report,
+for example a point mass).
 }
 \description{
 Computes \code{P(X1 * X2 * X3 <= q)} where \verb{(X1, X2, X3)} follows a trivariate
@@ -100,6 +105,8 @@ compatibility; use \code{pprodnormal3()} in new code.
 \examples{
 Sigma <- diag(3)
 pprodnormal3(q = 0, mean = c(0, 0, 0), cov = Sigma)
+# several quantiles at once
+pprodnormal3(q = c(-1, 0, 1), mean = c(0, 0, 0), cov = Sigma)
 }
 \seealso{
 \code{\link[=pprodnormal]{pprodnormal()}} and \code{\link[=qprodnormal]{qprodnormal()}} for the two-variable product-
