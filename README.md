@@ -52,9 +52,9 @@ Traditional methods (e.g., Sobel test) assume the indirect effect *ab* follows a
 install.packages("RMediation")
 ```
 
-### From GitHub (release 1.10.0, pre-release)
+### From GitHub (release 1.10.0)
 
-CRAN serves the stable 1.6.1. Release 1.10.0 is published on GitHub only, as a pre-release; it is not on CRAN.
+CRAN serves the stable 1.6.1. Release 1.10.0 is published on GitHub only, as the latest GitHub release; it is not on CRAN.
 
 ```r
 # Using pak (recommended)

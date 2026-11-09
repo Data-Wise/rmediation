@@ -11,7 +11,7 @@ A result from RMediation is reproducible only if a reader knows which version pr
 
 ## 1. Pin the version
 
-CRAN serves RMediation 1.6.1. Later releases are on GitHub only, as pre-releases, and are not on CRAN. Report which you used, and install the exact tag so a reader can too:
+CRAN serves RMediation 1.6.1. Later releases are on GitHub only and are not on CRAN. Report which you used, and install the exact tag so a reader can too:
 
 ```r
 pak::pak("Data-Wise/rmediation@v1.9.0")
