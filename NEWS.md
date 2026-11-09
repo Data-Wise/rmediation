@@ -1,4 +1,4 @@
-# RMediation (development version)
+# RMediation 1.11.0 (2026-11-09)
 
 ## New features
 
