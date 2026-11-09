@@ -98,6 +98,26 @@ S7::method(mbco, list(S7::class_any, S7::class_any)) <- function(
     p_value = as.numeric(res_list$p),
     type = type,
     refit = refit$refit,
-    dropped = res_list$dropped
+    dropped = res_list$dropped,
+    provenance = .mbco_provenance(type, if (type == "asymp") NULL else R)
+  )
+}
+
+# What produced an MBCO result. A package that is not loaded is recorded as NULL
+# rather than guessed. The seed is not recorded: it cannot be recovered from the
+# RNG state, so the caller reports it (see ?MBCOResult).
+.mbco_provenance <- function(type, R = NULL) {
+  ver <- function(pkg) {
+    if (isNamespaceLoaded(pkg)) as.character(utils::packageVersion(pkg)) else NULL
+  }
+  list(
+    rmediation = as.character(utils::packageVersion("RMediation")),
+    openmx = ver("OpenMx"),
+    medfit = ver("medfit"),
+    r = as.character(getRversion()),
+    type = type,
+    R = if (is.null(R)) NULL else as.integer(R),
+    rng_kind = RNGkind(),
+    time = format(Sys.time(), "%Y-%m-%d %H:%M:%S %Z")
   )
 }

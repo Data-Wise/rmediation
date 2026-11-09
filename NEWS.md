@@ -1,6 +1,15 @@
 # RMediation (development version)
 
-No change to returned values for any call that worked before; the API is unchanged.
+No change to returned values for any call that worked before; the only API addition is the optional `@provenance` on `MBCOResult`.
+
+## New features
+
+- An `mbco()` result now records what produced it in a new `@provenance` property: the RMediation, OpenMx, medfit
+  (when loaded) and R versions, the test `type`, the bootstrap size `R`, `RNGkind()` and the run time. `print()` and
+  `summary()` show it in a trailing block, after every line they printed before. The random seed is not recorded
+  (it cannot be recovered afterward), so call `set.seed()` and report it. `names()` of an `MBCOResult` gains one
+  name, `"provenance"`, appended after the nine existing ones; those keep their order. Results built by hand
+  keep `@provenance` `NULL`.
 
 ## Bug fixes
 
