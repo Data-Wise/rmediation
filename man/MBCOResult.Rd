@@ -11,7 +11,8 @@ MBCOResult(
   type = character(0),
   refit = NULL,
   branch = NULL,
-  dropped = NULL
+  dropped = NULL,
+  provenance = NULL
 )
 }
 \arguments{
@@ -35,6 +36,13 @@ the reported result when the result comes from \code{\link[=mbco_product_null]{m
 non-negative whole number: the count of bootstrap replicates whose fits did not
 converge and were left out of the null distribution (\code{0} when none were). The
 p-value is taken over the remaining \code{R - dropped} replicates.}
+
+\item{provenance}{\code{NULL} (default), or a list recording what produced the result:
+\code{rmediation}, \code{openmx} and \code{medfit} (package versions; \code{NULL} for a package not
+loaded), \code{r} (the R version), \code{type}, \code{R} (bootstrap replicates, \code{NULL} without a
+bootstrap), \code{rng_kind} (from \code{\link[=RNGkind]{RNGkind()}}) and \code{time}. \code{\link[=mbco]{mbco()}} fills it. The seed is
+not recorded: it cannot be recovered after the fact, so call \code{\link[=set.seed]{set.seed()}} yourself
+and report it.}
 }
 \description{
 A class representing the results of a Model-Based Constrained Optimization (MBCO) test.

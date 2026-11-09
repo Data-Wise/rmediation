@@ -157,6 +157,44 @@ ci <- S7::new_generic("ci", "object")
 # Note: print, summary, and show generics are NOT exported.
 # S7 methods will register directly with base generics to avoid masking.
 
+# Names a provenance list must carry; values may be NULL where noted in
+# .mbco_provenance_problem(). Kept in one place so the constructor in mbco() and
+# the validator agree.
+.mbco_provenance_keys <- c(
+  "rmediation", "openmx", "medfit", "r", "type", "R", "rng_kind", "time"
+)
+
+# Returns NULL when `pv` is a valid provenance list, else a one-line problem.
+.mbco_provenance_problem <- function(pv) {
+  if (!setequal(names(pv), .mbco_provenance_keys) || anyDuplicated(names(pv))) {
+    return(paste0(
+      "@provenance must be NULL or a list named exactly: ",
+      paste(.mbco_provenance_keys, collapse = ", ")
+    ))
+  }
+  one_string <- function(v) is.character(v) && length(v) == 1L && !is.na(v) && nzchar(v)
+  for (k in c("rmediation", "r", "type", "time")) {
+    if (!one_string(pv[[k]])) {
+      return(sprintf("@provenance$%s must be a single non-empty string", k))
+    }
+  }
+  for (k in c("openmx", "medfit")) {
+    if (!is.null(pv[[k]]) && !one_string(pv[[k]])) {
+      return(sprintf("@provenance$%s must be NULL or a single non-empty string", k))
+    }
+  }
+  rr <- pv[["R"]]
+  if (!is.null(rr) && !(is.numeric(rr) && length(rr) == 1L && !is.na(rr) &&
+    rr >= 0 && rr == round(rr))) {
+    return("@provenance$R must be NULL or a single non-negative whole number")
+  }
+  rk <- pv[["rng_kind"]]
+  if (!(is.character(rk) && length(rk) >= 1L && !anyNA(rk))) {
+    return("@provenance$rng_kind must be a character vector (see RNGkind())")
+  }
+  NULL
+}
+
 #' MBCO Result Class
 #'
 #' A class representing the results of a Model-Based Constrained Optimization (MBCO) test.
@@ -175,6 +213,12 @@ ci <- S7::new_generic("ci", "object")
 #'   non-negative whole number: the count of bootstrap replicates whose fits did not
 #'   converge and were left out of the null distribution (`0` when none were). The
 #'   p-value is taken over the remaining `R - dropped` replicates.
+#' @param provenance `NULL` (default), or a list recording what produced the result:
+#'   `rmediation`, `openmx` and `medfit` (package versions; `NULL` for a package not
+#'   loaded), `r` (the R version), `type`, `R` (bootstrap replicates, `NULL` without a
+#'   bootstrap), `rng_kind` (from [RNGkind()]) and `time`. [mbco()] fills it. The seed is
+#'   not recorded: it cannot be recovered after the fact, so call [set.seed()] yourself
+#'   and report it.
 #' @export
 #' @examples
 #' res <- MBCOResult(statistic = 4.2, df = 1, p_value = 0.04, type = "asymp")
@@ -196,6 +240,10 @@ MBCOResult <- S7::new_class("MBCOResult",
     dropped = S7::new_property(
       NULL | S7::class_integer,
       default = quote(NULL)
+    ),
+    provenance = S7::new_property(
+      NULL | S7::class_list,
+      default = quote(NULL)
     )
   ),
   validator = function(self) {
@@ -206,6 +254,13 @@ MBCOResult <- S7::new_class("MBCOResult",
     b <- self@branch
     if (!is.null(b) && !(length(b) == 1L && !is.na(b) && nzchar(b))) {
       return("@branch must be NULL or a single non-empty string")
+    }
+    pv <- self@provenance
+    if (!is.null(pv)) {
+      msg <- .mbco_provenance_problem(pv)
+      if (!is.null(msg)) {
+        return(msg)
+      }
     }
     r <- self@refit
     if (is.null(r)) {
