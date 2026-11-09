@@ -7,7 +7,7 @@ What is settled for RMediation, what is on hold, and what could come next. This 
 ## Where each release lives
 
 - **CRAN** serves 1.6.1.
-- **GitHub** carries the later releases (published as pre-releases); the development version is 1.10.0. Install with `pak::pak("Data-Wise/rmediation")`; the [README](https://github.com/Data-Wise/rmediation#installation) lists the tagged install commands.
+- **GitHub** carries the later releases (1.10.0 is the latest full release; 1.9.0 and earlier are pre-releases); the development version is 1.10.0. Install with `pak::pak("Data-Wise/rmediation")`; the [README](https://github.com/Data-Wise/rmediation#installation) lists the tagged install commands.
 - The [News](../news/index.html) page lists every change by version.
 
 ## CRAN submission is on hold
