@@ -62,6 +62,8 @@ navbar:
         href: articles/serial-mediation-with-medfit.html
       - text: Testing an Indirect Effect with MBCO
         href: articles/mbco.html
+      - text: Indirect Effects in a lavaan Model
+        href: articles/indirect-effects-lavaan.html
       - text: Omitted-Confounder Sensitivity
         href: articles/omitted-confounder-sensitivity.html
       - text: "---------"
