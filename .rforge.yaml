@@ -5,6 +5,5 @@ site:
     # from build_home_md() (hardcoded handled-list), so these are accepted
     # as intentionally-published rather than relocated.
     - CLAUDE.md
-    - GEMINI.md
     - vignettes/.gitignore
     - vignettes/_quarto.yml
