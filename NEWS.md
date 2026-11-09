@@ -1,4 +1,4 @@
-# RMediation (development version)
+# RMediation 1.10.0 (2026-11-08)
 
 No change to returned values for any call that worked before; the only API addition is the optional `@provenance` on `MBCOResult`.
 
