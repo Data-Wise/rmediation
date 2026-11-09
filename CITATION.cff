@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
 title: "RMediation: Mediation Analysis Confidence Intervals"
-version: 1.9.0
-date-released: "2026-10-31"
+version: 1.10.0
+date-released: "2026-11-08"
 authors:
   - family-names: Tofighi
     given-names: Davood
