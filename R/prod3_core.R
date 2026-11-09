@@ -248,7 +248,8 @@ NULL
 #' `Z | (X, Y)`, and the remaining two-dimensional integral is evaluated with
 #' adaptive cubature (dimension reduction; see Tofighi, 2026).
 #'
-#' @param q Numeric scalar quantile.
+#' @param q Numeric vector of quantiles (finite, no missing values). A single value takes
+#'   the scalar path unchanged.
 #' @param mean Numeric vector of means of length 3.
 #' @param cov 3x3 covariance matrix. Must be positive-definite, except that a
 #'   single zero-variance component is permitted (the problem then reduces to
@@ -288,7 +289,11 @@ NULL
 #' @param ... Additional arguments (unused; present for the `p_prod3`
 #'   deprecated alias).
 #'
-#' @return Probability `P(X1 * X2 * X3 <= q)` as a numeric scalar in `[0, 1]`.
+#' @return Probability `P(X1 * X2 * X3 <= q)` in `[0, 1]`: a numeric scalar for a single
+#'   `q`, and a numeric vector of the same length (and names) as `q` otherwise, in the order
+#'   given. With `diagnostics = TRUE` and more than one `q`, the `"error"` and `"nodes"`
+#'   attributes are vectors with one entry per `q` (`NA` where there is nothing to report,
+#'   for example a point mass).
 #' @note A point mass (zero variances) has the right-continuous CDF: for a
 #'   product identically equal to `c`, the result is `1` for `q >= c` and `0`
 #'   below. Before 1.8.0 an atom at exactly `0` returned `0.5` at `q == 0`.
@@ -310,8 +315,37 @@ NULL
 #' @examples
 #' Sigma <- diag(3)
 #' pprodnormal3(q = 0, mean = c(0, 0, 0), cov = Sigma)
+#' # several quantiles at once
+#' pprodnormal3(q = c(-1, 0, 1), mean = c(0, 0, 0), cov = Sigma)
 pprodnormal3 <- function(q, mean, cov, method = c("gauss", "hcubature"),
                          tol = 1e-6, nodes = NULL, diagnostics = FALSE) {
+  # One q: the scalar path, unchanged (same value, messages and attributes as before).
+  if (length(q) == 1L) {
+    return(.pprodnormal3_one(q, mean, cov, method, tol, nodes, diagnostics))
+  }
+  checkmate::assert_numeric(q, finite = TRUE, any.missing = FALSE, min.len = 1L)
+  res <- lapply(
+    q, .pprodnormal3_one,
+    mean = mean, cov = cov, method = method, tol = tol, nodes = nodes, diagnostics = diagnostics
+  )
+  out <- vapply(res, as.numeric, numeric(1))
+  names(out) <- names(q)
+  if (isTRUE(diagnostics)) {
+    # A point mass returns before any quadrature and carries no diagnostics: NA for those.
+    pick <- function(r, what, na) {
+      v <- attr(r, what, exact = TRUE)
+      if (is.null(v)) na else v
+    }
+    attr(out, "error") <- vapply(res, function(r) as.numeric(pick(r, "error", NA_real_)), numeric(1))
+    attr(out, "nodes") <- vapply(res, function(r) as.integer(pick(r, "nodes", NA_integer_)), integer(1))
+  }
+  out
+}
+
+#' One quantile of the three-factor product CDF (the scalar worker behind pprodnormal3())
+#' @noRd
+.pprodnormal3_one <- function(q, mean, cov, method = c("gauss", "hcubature"),
+                              tol = 1e-6, nodes = NULL, diagnostics = FALSE) {
   checkmate::assert_number(q, finite = TRUE)
   checkmate::assert_numeric(mean, finite = TRUE, len = 3)
   checkmate::assert_matrix(cov, mode = "numeric", nrows = 3, ncols = 3)

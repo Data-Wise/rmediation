@@ -1,5 +1,13 @@
 # RMediation (development version)
 
+## New features
+
+- `pprodnormal3()` now takes a vector of quantiles, like `pprodnormal()`, `dprodnormal()`, `qprodnormal()` and
+  `dprodnormal3()`. The result is a numeric vector of the same length and names as `q`, in the order given; with
+  `diagnostics = TRUE` the `"error"` and `"nodes"` attributes have one entry per `q`. A single `q` behaves exactly as
+  before (same value, same error messages, no attributes unless `diagnostics = TRUE`). A missing, infinite or empty `q`
+  vector is an error.
+
 ## Bug fixes
 
 - `ci()` on a `lavaan` fit no longer stops on a defined parameter that repeats a coefficient inside a product of
