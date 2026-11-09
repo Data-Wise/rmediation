@@ -56,22 +56,24 @@ S7::method(ci, S7::class_numeric) <- function(object, Sigma, quant, alpha = 0.05
 .expand_defined <- function(rhs) {
   labels <- names(rhs)
   parsed <- lapply(rhs, function(r) tryCatch(str2lang(r), error = function(e) NULL))
-  expr <- stats::setNames(vector("list", length(rhs)), labels)
-  problem <- stats::setNames(rep(NA_character_, length(rhs)), labels)
-  state <- stats::setNames(rep("todo", length(rhs)), labels) # todo | active | done
+  # Mutable state lives in an environment, so `resolve()` updates it without `<<-`.
+  st <- new.env(parent = emptyenv())
+  st$expr <- stats::setNames(vector("list", length(rhs)), labels)
+  st$problem <- stats::setNames(rep(NA_character_, length(rhs)), labels)
+  st$state <- stats::setNames(rep("todo", length(rhs)), labels) # todo | active | done
 
   resolve <- function(lab) {
-    if (state[[lab]] == "done") {
+    if (st$state[[lab]] == "done") {
       return(invisible())
     }
-    if (state[[lab]] == "active") {
+    if (st$state[[lab]] == "active") {
       return(invisible()) # caller sees the cycle through the still-unresolved entry
     }
-    state[[lab]] <<- "active"
+    st$state[[lab]] <- "active"
     e <- parsed[[lab]]
     if (is.null(e)) {
-      problem[[lab]] <<- sprintf("cannot parse `%s`", rhs[[lab]])
-      state[[lab]] <<- "done"
+      st$problem[[lab]] <- sprintf("cannot parse `%s`", rhs[[lab]])
+      st$state[[lab]] <- "done"
       return(invisible())
     }
     refs <- intersect(all.vars(e), labels)
@@ -79,25 +81,25 @@ S7::method(ci, S7::class_numeric) <- function(object, Sigma, quant, alpha = 0.05
     env <- list()
     for (r in refs) {
       resolve(r)
-      if (state[[r]] == "active" || is.null(expr[[r]])) {
+      if (st$state[[r]] == "active" || is.null(st$expr[[r]])) {
         bad <- c(bad, r)
       } else {
-        env[[r]] <- expr[[r]]
+        env[[r]] <- st$expr[[r]]
       }
     }
     if (length(bad) > 0L) {
-      problem[[lab]] <<- sprintf(
+      st$problem[[lab]] <- sprintf(
         "depends on defined parameter(s) that cannot be resolved (%s), possibly a cycle",
         paste(bad, collapse = ", ")
       )
     } else {
-      expr[[lab]] <<- if (length(env) > 0L) .subst_symbols(e, env) else e
+      st$expr[[lab]] <- if (length(env) > 0L) .subst_symbols(e, env) else e
     }
-    state[[lab]] <<- "done"
+    st$state[[lab]] <- "done"
     invisible()
   }
   for (lab in labels) resolve(lab)
-  list(expr = expr, problem = problem)
+  list(expr = st$expr, problem = st$problem)
 }
 
 # Factor names when `e` is a pure product of symbols (through `*` and parentheses),
@@ -185,7 +187,10 @@ S7::method(ci, S7::class_any) <- function(object, level = 0.95, type = "dop", n.
   mc_fallback <- function(label, e) {
     if (type_given && type != "MC") {
       warning(sprintf(
-        "Defined parameter '%s' is not a product of estimated coefficients; using a Monte Carlo interval instead of type = \"%s\".",
+        paste0(
+          "Defined parameter '%s' is not a product of estimated coefficients; ",
+          "using a Monte Carlo interval instead of type = \"%s\"."
+        ),
         label, type
       ), call. = FALSE)
     }
@@ -232,7 +237,10 @@ S7::method(ci, S7::class_any) <- function(object, level = 0.95, type = "dop", n.
         # c(lower, upper) that ci(<ProductNormal3>) returns.
         if (type_given && type != "dop") {
           warning(sprintf(
-            "Defined parameter '%s' is a product of 3 coefficients; using the exact three-factor interval instead of type = \"%s\".",
+            paste0(
+              "Defined parameter '%s' is a product of 3 coefficients; ",
+              "using the exact three-factor interval instead of type = \"%s\"."
+            ),
             label, type
           ), call. = FALSE)
         }
@@ -247,7 +255,10 @@ S7::method(ci, S7::class_any) <- function(object, level = 0.95, type = "dop", n.
         if (k >= 4L && type != "MC") {
           if (type_given) {
             warning(sprintf(
-              "Defined parameter '%s' is a product of %d coefficients; using a Monte Carlo interval instead of type = \"%s\".",
+              paste0(
+                "Defined parameter '%s' is a product of %d coefficients; ",
+                "using a Monte Carlo interval instead of type = \"%s\"."
+              ),
               label, k, type
             ), call. = FALSE)
           }
