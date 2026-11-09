@@ -1,0 +1,124 @@
+---
+title: "Indirect Effects in a lavaan Model with ci()"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(RMediation)
+```
+
+`ci(fit)` on a `lavaan` fit gives an interval for every defined parameter (`:=`) in one call. This page walks through a model with several mediators, shows which method each indirect effect gets, and ends with a small helper that puts every result in one table. The rules behind the choices are in [Technical Notes](technical-notes.html), section 7, and the one-page version is in the [Quick Reference](refcard.html).
+
+## 1. A model with two mediators
+
+The data have `x -> m1 -> m2 -> y`, a direct `x -> m2` path, and direct paths from both mediators to `y`. Four indirect effects are of interest: through `m1` alone, through `m2` alone, the serial path through both, and their sum.
+
+```{r fit, eval = requireNamespace("lavaan", quietly = TRUE)}
+set.seed(11)
+n <- 500
+d <- data.frame(x = rnorm(n))
+d$m1 <- 0.5 * d$x + rnorm(n)
+d$m2 <- 0.3 * d$x + 0.4 * d$m1 + rnorm(n)
+d$y <- 0.3 * d$m1 + 0.4 * d$m2 + 0.1 * d$x + rnorm(n)
+
+model <- "
+  m1 ~ a1*x
+  m2 ~ a2*x + d*m1
+  y  ~ b1*m1 + b2*m2 + cp*x
+  via_m1 := a1*b1
+  via_m2 := a2*b2
+  serial := a1*d*b2
+  total  := a1*b1 + a2*b2 + a1*d*b2
+"
+fit <- lavaan::sem(model, d)
+```
+
+## 2. One call, four intervals
+
+```{r ci, eval = requireNamespace("lavaan", quietly = TRUE)}
+set.seed(1)
+res <- ci(fit, n.mc = 20000)
+names(res)
+```
+
+Each definition gets the method that fits its form:
+
+| Definition | Form | Method |
+|---|---|---|
+| `via_m1 := a1*b1`, `via_m2 := a2*b2` | two coefficients | distribution of the product, or the `type` you ask for |
+| `serial := a1*d*b2` | three different coefficients | the exact three-factor interval, whatever `type` is |
+| `total := a1*b1 + a2*b2 + a1*d*b2` | a sum, not a product | Monte Carlo on the formula |
+
+A product of four or more different coefficients also gets Monte Carlo. Because the methods differ, the entries do not have the same shape:
+
+```{r shapes, eval = requireNamespace("lavaan", quietly = TRUE)}
+vapply(res, function(z) paste(names(z), collapse = ", "), character(1))
+```
+
+The exact interval is a bare named vector, `lower` and `upper`; the others are lists with an interval first.
+
+## 3. One table for all of them
+
+This helper reads the interval from either shape, takes each estimate from lavaan itself, and labels the route:
+
+```{r tidy, eval = requireNamespace("lavaan", quietly = TRUE)}
+tidy_ci <- function(res, fit) {
+  est <- lavaan::parameterEstimates(fit)
+  est <- est[est$op == ":=", c("lhs", "est")]
+  rows <- lapply(names(res), function(lab) {
+    r <- res[[lab]]
+    exact <- !is.list(r)
+    bounds <- if (exact) as.numeric(r[c("lower", "upper")]) else as.numeric(r[[1]])
+    route <- if (exact) {
+      "exact, three factors"
+    } else if ("MC.Error" %in% names(r)) {
+      "Monte Carlo, product"
+    } else if ("MCError" %in% names(r)) {
+      "Monte Carlo, formula"
+    } else {
+      "distribution of the product"
+    }
+    data.frame(
+      parameter = lab, estimate = est$est[est$lhs == lab],
+      lower = bounds[1], upper = bounds[2], route = route
+    )
+  })
+  do.call(rbind, rows)
+}
+
+out <- tidy_ci(res, fit)
+out[2:4] <- round(out[2:4], 4)
+out
+```
+
+## 4. Check the exact interval against Monte Carlo
+
+The exact interval for `serial` and a large Monte Carlo run on the same estimates should agree to within simulation error:
+
+```{r compare, eval = requireNamespace("lavaan", quietly = TRUE)}
+set.seed(2)
+mc <- ci(fit, type = "MC", n.mc = 2e5)
+round(rbind(exact = res$serial[c("lower", "upper")], monte_carlo = mc$serial[[1]]), 4)
+```
+
+`type = "MC"` is used as asked for every definition, so `mc$serial` is a Monte Carlo interval here.
+
+## 5. What the warnings mean
+
+You get a warning only when you set `type` yourself and RMediation uses a different method for a definition. With the default `type`, nothing is said.
+
+```{r warn, eval = requireNamespace("lavaan", quietly = TRUE)}
+tryCatch(
+  ci(fit, type = "dop", n.mc = 2000),
+  warning = function(w) conditionMessage(w)
+)
+```
+
+The same applies to a three-coefficient product when you ask for `"asymp"`, `"prodclin"` or `"all"` (the exact interval does not depend on `type`), and to a product of four or more coefficients.
+
+## 6. Cases to know
+
+- **A sum, a constant or a sign** (`a*b + c`, `2*a*b`, `-a*b`, `a*b/2`) is not a plain product of coefficients, so it takes the Monte Carlo route on the formula.
+- **A repeated coefficient** inside a product of three or more (`a*b*a`) cannot use the exact interval, because the factors are perfectly correlated. Releases up to 1.10.0 stop on it for every `type` except `"MC"`; the development version after 1.10.0 uses Monte Carlo and warns when you chose another `type`. A repeated coefficient in a product of two (`a*a`) is fine.
+- **A definition that cannot be resolved** (a cycle, or text that does not parse) gets a warning and a `NULL` entry under its label, and every other interval is still returned.
+- **Seeds.** Monte Carlo results change from run to run. Call `set.seed()` before `ci()` and report it; see [Reporting RMediation in a Paper](reporting.html).
