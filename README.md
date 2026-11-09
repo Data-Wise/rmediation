@@ -52,16 +52,16 @@ Traditional methods (e.g., Sobel test) assume the indirect effect *ab* follows a
 install.packages("RMediation")
 ```
 
-### From GitHub (release 1.10.0)
+### From GitHub (release 1.11.0)
 
-CRAN serves the stable 1.6.1. Release 1.10.0 is published on GitHub only, as the latest GitHub release; it is not on CRAN.
+CRAN serves the stable 1.6.1. Release 1.11.0 is published on GitHub only, as the latest GitHub release; it is not on CRAN.
 
 ```r
 # Using pak (recommended)
-pak::pak("Data-Wise/rmediation@v1.10.0")
+pak::pak("Data-Wise/rmediation@v1.11.0")
 
 # Or using remotes
-remotes::install_github("Data-Wise/rmediation", ref = "v1.10.0")
+remotes::install_github("Data-Wise/rmediation", ref = "v1.11.0")
 ```
 
 For the development branch, use `@dev` or `ref = "dev"` instead.
@@ -147,7 +147,7 @@ ci(fit, type = "dop")
 you ask for with `type`. A product of three coefficients (`a*b*c`) gets the exact three-factor
 interval, whatever `type` is. A product of four or more coefficients, or any other formula such as
 `a*b + c`, gets a Monte Carlo interval, with a warning when you set `type` yourself (so does a
-product of three or more that repeats a coefficient, such as `a*b*a`, in the development version). A definition
+product of three or more that repeats a coefficient, such as `a*b*a`, since 1.11.0). A definition
 can use another one (`abc := ab*c`); one that cannot be resolved gets a warning and a `NULL`
 entry, and the other intervals are still returned.
 
@@ -292,8 +292,8 @@ The default screen keeps only admissible (positive-definite) grid points; use
 | `pprodnormal()` | CDF of product of two normals |
 | `qprodnormal()` | Quantiles of product of two normals |
 | `dprodnormal()` | Exact density of the product of two normals |
-| `pprodnormal3()` | Exact CDF of product of three normals (`a1*a2*b`); takes a vector of `q` and `lower.tail` in the development version |
-| `qprodnormal3()` | Quantiles of the product of three normals (development version); `lower.tail`, vectorized in `p` |
+| `pprodnormal3()` | Exact CDF of product of three normals (`a1*a2*b`); takes a vector of `q` and `lower.tail` (since 1.11.0) |
+| `qprodnormal3()` | Quantiles of the product of three normals (since 1.11.0); `lower.tail`, vectorized in `p` |
 | `dprodnormal3()` | Exact density of the product of three normals |
 | `pMC()`, `qMC()` | Monte Carlo CDF and quantile for any function of coefficient estimates |
 | `ProductNormal()` | S7 class for two-variable product distributions |

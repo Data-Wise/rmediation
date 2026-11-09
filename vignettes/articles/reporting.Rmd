@@ -14,12 +14,12 @@ A result from RMediation is reproducible only if a reader knows which version pr
 CRAN serves RMediation 1.6.1. Later releases are on GitHub only and are not on CRAN. Report which you used, and install the exact tag so a reader can too:
 
 ```r
-pak::pak("Data-Wise/rmediation@v1.10.0")
+pak::pak("Data-Wise/rmediation@v1.11.0")
 # or
-remotes::install_github("Data-Wise/rmediation", ref = "v1.10.0")
+remotes::install_github("Data-Wise/rmediation", ref = "v1.11.0")
 ```
 
-Replace `v1.10.0` with the tag you ran. The [Releases page](https://github.com/Data-Wise/rmediation/releases) lists the tags. Do not cite `dev` or an untagged install: it moves.
+Replace `v1.11.0` with the tag you ran. The [Releases page](https://github.com/Data-Wise/rmediation/releases) lists the tags. Do not cite `dev` or an untagged install: it moves.
 
 Record what R reports for your session:
 

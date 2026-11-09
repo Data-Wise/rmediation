@@ -7,7 +7,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library(RMediation)
 ```
 
-CRAN serves RMediation 1.6.1. Releases 1.7.0 to 1.10.0 are on GitHub only (see [Status and Roadmap](roadmap.html) and [Reporting RMediation in a Paper](reporting.html) for how to install a tag). This page lists what can change a number you already have or break code you already wrote. The [News](../news/index.html) page has every change by version; this page does not repeat the bug fixes that only affect rare inputs.
+CRAN serves RMediation 1.6.1. Releases 1.7.0 to 1.11.0 are on GitHub only (see [Status and Roadmap](roadmap.html) and [Reporting RMediation in a Paper](reporting.html) for how to install a tag). This page lists what can change a number you already have or break code you already wrote. The [News](../news/index.html) page has every change by version; this page does not repeat the bug fixes that only affect rare inputs.
 
 ## 1. Results that changed
 
@@ -66,14 +66,16 @@ res <- suppressWarnings(ci(fit, type = "MC", n.mc = 5000))
 names(res)
 ```
 
-`abx := ab*a` is `a*b*a`, a product that repeats a coefficient. Releases up to 1.10.0 stop on it for every `type` except `"MC"`; the development version after 1.10.0 gives it a Monte Carlo interval with a warning when you chose another `type`.
+`abx := ab*a` is `a*b*a`, a product that repeats a coefficient. Releases up to 1.10.0 stop on it for every `type` except `"MC"`; 1.11.0 gives it a Monte Carlo interval with a warning when you chose another `type`.
 
-## 4. In the development version, after 1.10.0
+## 4. New in 1.11.0
 
-These are on `dev` and in no release yet; see "development version" on the [News](../news/index.html) page.
+See the 1.11.0 entry on the [News](../news/index.html) page.
 
 - A coefficient repeated inside a product of three or more factors gets a Monte Carlo interval instead of an error.
-- `pprodnormal3()` accepts a vector of `q`, like the other distribution functions.
+- `pprodnormal3()` accepts a vector of `q`, like the other distribution functions, and takes `lower.tail`; with `lower.tail = FALSE` it integrates the upper tail directly, so far tails are resolved (use a `tol` well below the probability you want).
+- `qprodnormal3()` is new: the quantile of the product of three normals, both tails. `dist_quantile()` on a `ProductNormal3` uses the same routine and now returns `-Inf` and `Inf` at `p = 0` and `p = 1`.
+- `?ci` now documents the `p` element of the Monte Carlo result (a sign proportion, not a null test).
 
 ## Which version to cite
 

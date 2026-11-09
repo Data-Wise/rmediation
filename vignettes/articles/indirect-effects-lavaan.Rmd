@@ -119,7 +119,7 @@ The same applies to a three-coefficient product when you ask for `"asymp"`, `"pr
 ## 6. Cases to know
 
 - **A sum, a constant or a sign** (`a*b + c`, `2*a*b`, `-a*b`, `a*b/2`) is not a plain product of coefficients, so it takes the Monte Carlo route on the formula.
-- **A repeated coefficient** inside a product of three or more (`a*b*a`) cannot use the exact interval, because the factors are perfectly correlated. Releases up to 1.10.0 stop on it for every `type` except `"MC"`; the development version after 1.10.0 uses Monte Carlo and warns when you chose another `type`. A repeated coefficient in a product of two (`a*a`) is fine.
+- **A repeated coefficient** inside a product of three or more (`a*b*a`) cannot use the exact interval, because the factors are perfectly correlated. Releases up to 1.10.0 stop on it for every `type` except `"MC"`; 1.11.0 uses Monte Carlo and warns when you chose another `type`. A repeated coefficient in a product of two (`a*a`) is fine.
 - **The `p` in a formula-route result.** A Monte Carlo interval on a formula carries a `p` element: twice the smaller share of simulated values above or below 0. It shows where the sampling distribution of the estimate sits relative to 0, it is exactly 0 for any clearly nonzero effect, and it is not a test against a null distribution; do not report it as one (use [`mbco()`](mbco.html) for that). The exact three-factor interval has no `p`.
 - **A definition that cannot be resolved** (a cycle, or text that does not parse) gets a warning and a `NULL` entry under its label, and every other interval is still returned.
 - **Seeds.** Monte Carlo results change from run to run. Call `set.seed()` before `ci()` and report it; see [Reporting RMediation in a Paper](reporting.html).

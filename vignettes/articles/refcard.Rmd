@@ -18,7 +18,7 @@ One page: which function answers which question. Each row links to the full help
 | a CI for each `:=` in a `lavaan` fit | `ci(fit)` | the route depends on the form of the `:=`; see "Defined parameters" below |
 | a CI for a function of several parameters from a mean and covariance | `qMC()`, `pMC()` with `quant = ~ a*b` | Monte Carlo; `p` and `q` are scalars |
 | the CDF, quantile or density of `a*b` | `pprodnormal()`, `qprodnormal()`, `dprodnormal()` | two normals |
-| the CDF, quantile or density of `a1*a2*b` | `pprodnormal3()`, `qprodnormal3()`, `dprodnormal3()` | three normals; pass `mean` and `cov`; in the development version `pprodnormal3()` takes a vector of `q` and `lower.tail`, and `qprodnormal3()` is new |
+| the CDF, quantile or density of `a1*a2*b` | `pprodnormal3()`, `qprodnormal3()`, `dprodnormal3()` | three normals; pass `mean` and `cov`; since 1.11.0 `pprodnormal3()` takes a vector of `q` and `lower.tail`, and `qprodnormal3()` is new |
 | test `H0: a*b = 0` with OpenMx | `mbco_product_null(h1, paths = c("a", "b"))` | exact: fixes one path at 0 per branch |
 | test any equality constraint with OpenMx | `mbco(h0, h1, type = ...)` | see the warnings below |
 | test with two medfit `SEMFit` fits | `mbco(h0, h1, type = "asymp")` | needs medfit >= 0.8.0 |
@@ -50,7 +50,7 @@ One page: which function answers which question. Each row links to the full help
 | three different coefficients (`a*b*c`) | exact three-factor interval; ignores `type` | `lower`, `upper` |
 | four or more coefficients | Monte Carlo | `CI`, `Estimate`, `SE`, `MC.Error` |
 | any other formula (`a*b + c`, `exp(a)*b`) | Monte Carlo | an unnamed interval, then `Estimate`, `SE`, `MCError`, `p` |
-| three or more with a repeated coefficient (`a*b*a`), development version | Monte Carlo | `CI`, `Estimate`, `SE`, `MC.Error` |
+| three or more with a repeated coefficient (`a*b*a`), from 1.11.0 | Monte Carlo | `CI`, `Estimate`, `SE`, `MC.Error` |
 
 A warning says when your explicit `type` was overridden. A definition that cannot be resolved gets a warning and a `NULL` entry; the other intervals are still returned. See [Technical Notes](technical-notes.html), section 7, for the reasoning.
 
