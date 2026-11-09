@@ -8,6 +8,12 @@
   before (same value, same error messages, no attributes unless `diagnostics = TRUE`). A missing, infinite or empty `q`
   vector is an error.
 
+- `pprodnormal3()` gains `lower.tail = TRUE`. With `lower.tail = FALSE` it returns `P(X1 * X2 * X3 > q)` by integrating
+  the complement directly, so far upper tails (for example `q = 100` at unit means, about 8e-11) are resolved
+  instead of lost to `1 - p`. As everywhere in this function the accuracy is the absolute `tol`, so use a `tol` well
+  below the probability you want. Default calls return the same values as before; vectors, names, `diagnostics`,
+  `method = "hcubature"` and every degenerate reduction (zero-variance factors, point masses) support it.
+
 ## Documentation
 
 - `?ci` now documents the `p` element of the Monte Carlo result: a two-sided proportion of simulated values above or

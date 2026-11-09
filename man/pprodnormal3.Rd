@@ -12,7 +12,8 @@ pprodnormal3(
   method = c("gauss", "hcubature"),
   tol = 1e-06,
   nodes = NULL,
-  diagnostics = FALSE
+  diagnostics = FALSE,
+  lower.tail = TRUE
 )
 
 p_prod3(...)
@@ -65,6 +66,12 @@ result is badly wrong (see Note), which is why it cannot be used to
 detect the failure this method was replaced over.
 }}
 
+\item{lower.tail}{Logical; if \code{TRUE} (default) probabilities are \code{P(X1 * X2 * X3 <= q)}, otherwise
+\code{P(X1 * X2 * X3 > q)}. The upper tail is integrated directly, not computed as \code{1 - p}, so it
+stays accurate far out where \code{1 - p} would be lost to rounding. The accuracy is still the absolute
+tolerance \code{tol}, so for a tail probability of size \code{p} use \code{tol} well below \code{p} (for example \code{tol = 1e-14}
+for a probability near 1e-10).}
+
 \item{...}{Additional arguments (unused; present for the \code{p_prod3}
 deprecated alias).}
 }
@@ -105,6 +112,8 @@ compatibility; use \code{pprodnormal3()} in new code.
 \examples{
 Sigma <- diag(3)
 pprodnormal3(q = 0, mean = c(0, 0, 0), cov = Sigma)
+# the upper tail, integrated directly (far out, 1 - p would be lost to rounding)
+pprodnormal3(30, mean = c(1, 1, 1), cov = diag(3), tol = 1e-10, lower.tail = FALSE)
 # several quantiles at once
 pprodnormal3(q = c(-1, 0, 1), mean = c(0, 0, 0), cov = Sigma)
 }
