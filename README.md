@@ -143,6 +143,12 @@ fit <- sem(model, data = mydata)
 ci(fit, type = "dop")
 ```
 
+`ci(fit)` returns one interval per `:=`. A product of two coefficients (`a*b`) gets the interval
+you ask for with `type`. A product of three or more coefficients, or any other formula such as
+`a*b + c`, gets a Monte Carlo interval, with a warning when you set `type` yourself. A definition
+can use another one (`abc := ab*c`); one that cannot be resolved gets a warning and a `NULL`
+entry, and the other intervals are still returned.
+
 ### Serial Mediation via medfit
 
 For serial chains (`X → M1 → M2 → Y`), let [medfit](https://data-wise.github.io/medfit/)
