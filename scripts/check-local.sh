@@ -13,14 +13,16 @@
 # CI policy: GitHub runs the expensive checks (full matrix, coverage, medfit compatibility) for main and
 # releases only; PRs to dev are gated here. This script therefore also runs scripts/check-ci-policy.R (workflow
 # triggers), scripts/test_risk_tier.py (the risk-tier PR-body check's own tests), scripts/check-docs.R
-# (roxygen output matches man/ and NAMESPACE) and
+# (roxygen output matches man/ and NAMESPACE), lintr::lint_package() (the same call as the `lint` workflow,
+# which runs on main only, so a finding would otherwise first show up after a release merge) and
 # scripts/verify-constraint-not-enforced.R (issue #84 gate, about 2 s) first, so the cheap checks fail fast
 # before the tests.
 #
-# Usage:  scripts/check-local.sh [--tests-only] [--no-gate] [--depends-only]
+# Usage:  scripts/check-local.sh [--tests-only] [--no-gate] [--no-docs] [--no-lint] [--depends-only]
 #   --tests-only    the cheap checks and the tests only, no R CMD check
 #   --no-gate       skip the issue #84 verify script (needs OpenMx; a missing OpenMx otherwise fails)
 #   --no-docs       skip the docs-currency check (needs roxygen2)
+#   --no-lint       skip lintr::lint_package() (needs lintr); CI's `lint` workflow still runs on main
 #   --depends-only  R CMD check with _R_CHECK_DEPENDS_ONLY_=true, so unguarded Suggests use fails. The check
 #                   runs with --no-tests, so this exercises package load and examples only.
 # Background:  scripts/check-local.sh >/dev/null 2>&1 &   then   tail -f "$LOG"
@@ -31,12 +33,14 @@ set -u
 tests_only=0
 run_gate=1
 run_docs=1
+run_lint=1
 depends_only=0
 for arg in "$@"; do
   case "$arg" in
     --tests-only) tests_only=1 ;;
     --no-gate) run_gate=0 ;;
     --no-docs) run_docs=0 ;;
+    --no-lint) run_lint=0 ;;
     --depends-only) depends_only=1 ;;
     *) echo "check-local: unknown argument: $arg" >&2; exit 2 ;;
   esac
@@ -73,6 +77,15 @@ if [ "$run_docs" -eq 1 ]; then
   echo "== docs currency ==" >> "$LOG"
   if ! ( cd "$root" && Rscript scripts/check-docs.R ) >> "$LOG" 2>&1; then
     echo "check-local: FAIL (docs currency: run devtools::document()) -- see $LOG"
+    exit 1
+  fi
+fi
+
+if [ "$run_lint" -eq 1 ]; then
+  echo "== lint ==" >> "$LOG"
+  # Same call as .github/workflows/lint.yaml: any finding fails.
+  if ! ( cd "$root" && Rscript -e 'lints <- lintr::lint_package(); print(lints); if (length(lints) > 0L) stop(length(lints), " lint finding(s)", call. = FALSE)' ) >> "$LOG" 2>&1; then
+    echo "check-local: FAIL (lint: fix the findings in the log, or --no-lint) -- see $LOG"
     exit 1
   fi
 fi
