@@ -43,7 +43,8 @@
   MBCOResult(
     statistic = as.numeric(comparison[2L, "Chisq diff"]),
     df = as.numeric(comparison[2L, "Df diff"]),
-    p_value = as.numeric(comparison[2L, "Pr(>Chisq)"]), type = type
+    p_value = as.numeric(comparison[2L, "Pr(>Chisq)"]), type = type,
+    provenance = .mbco_provenance(type)
   )
 }
 

@@ -17,6 +17,9 @@ mbco(h0, h1, ...)
 An object of class \code{MBCOResult} containing \item{statistic}{asymptotic chi-squared test statistic value}
 \item{df}{chi-squared df} \item{p_value}{chi-squared p-value computed based on the method specified by the argument
 \code{type}} \item{type}{The type of test performed}
+\item{provenance}{what produced the result: the RMediation, OpenMx (if loaded), medfit (if loaded) and R
+versions, \code{type}, the bootstrap size \code{R}, \code{RNGkind()} and the run time. The random seed is
+not recorded, because it cannot be recovered after the fact; call \code{set.seed()} yourself and report it}
 }
 \description{
 This function computes asymptotic MBCO chi-squared test for a smooth function of model parameters including a
