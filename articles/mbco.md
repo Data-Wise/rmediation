@@ -89,7 +89,7 @@ res
 #>   Packages: RMediation 1.10.0, OpenMx 2.22.11, medfit 0.3.2, R 4.6.2 
 #>   Test: type = asymp
 #>   RNG: Mersenne-Twister / Inversion / Rejection 
-#>   Run at: 2026-11-09 05:14:23 UTC 
+#>   Run at: 2026-11-09 16:45:08 UTC 
 #>   Seed: not recorded (call set.seed() yourself and report it)
 ```
 
@@ -120,7 +120,7 @@ mbco(h0, full, type = "asymp")
 #>   Packages: RMediation 1.10.0, OpenMx 2.22.11, medfit 0.3.2, R 4.6.2 
 #>   Test: type = asymp
 #>   RNG: Mersenne-Twister / Inversion / Rejection 
-#>   Run at: 2026-11-09 05:14:23 UTC 
+#>   Run at: 2026-11-09 16:45:08 UTC 
 #>   Seed: not recorded (call set.seed() yourself and report it)
 ```
 
