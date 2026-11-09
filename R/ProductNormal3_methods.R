@@ -42,10 +42,45 @@ S7::method(cdf, ProductNormal3) <- function(object, q, lower.tail = TRUE, tol = 
 }
 
 #' @noRd
-.prod3_quantile <- function(p, mean, cov, lower, upper, tol = 1e-4) {
-  f <- function(q) pprodnormal3(q, mean = mean, cov = cov, tol = tol) - p # nolint: object_usage_linter.
+.prod3_quantile <- function(p, mean, cov, lower, upper, tol = 1e-4, lower.tail = TRUE) {
+  f <- function(q) {
+    pprodnormal3(q, mean = mean, cov = cov, tol = tol, lower.tail = lower.tail) - p # nolint: object_usage_linter.
+  }
   res <- stats::uniroot(f, interval = c(lower, upper), tol = tol, extendInt = "yes")
   res$root
+}
+
+# Delta-method centre and scale used to bracket the root; shared by dist_quantile() and qprodnormal3().
+#' @noRd
+.prod3_delta_scale <- function(mean, cov) {
+  grad <- c(mean[2L] * mean[3L], mean[1L] * mean[3L], mean[1L] * mean[2L])
+  var_delta <- as.numeric(t(grad) %*% cov %*% grad)
+  sd_delta <- sqrt(max(var_delta, 0))
+  sds <- sqrt(pmax(diag(cov), 0))
+  if (sd_delta <= .Machine$double.eps) {
+    non_zero_sds <- sds[sds > .Machine$double.eps]
+    sd_delta <- if (length(non_zero_sds) > 0) prod(non_zero_sds) else 1
+  }
+  list(center = prod(mean), sd = sd_delta, point_mass = all(sds <= .Machine$double.eps))
+}
+
+# One quantile: bracket with the delta interval (8 sd wide) and invert the CDF by root-finding.
+#' @noRd
+.qprodnormal3_one <- function(p, mean, cov, lower.tail, tol) {
+  if (p == 0 || p == 1) {
+    return(if ((p == 0) == lower.tail) -Inf else Inf)
+  }
+  sc <- .prod3_delta_scale(mean, cov)
+  if (sc$point_mass) {
+    return(sc$center)
+  }
+  p_lower <- if (lower.tail) p else 1 - p
+  center <- sc$center + sign(p_lower - 0.5) * stats::qnorm(0.975) * sc$sd
+  width <- 8 * sc$sd
+  .prod3_quantile(p,
+    mean = mean, cov = cov, lower = center - width, upper = center + width,
+    tol = tol, lower.tail = lower.tail
+  )
 }
 
 #' @return A numeric vector of quantiles at probabilities \code{p}.
@@ -53,28 +88,9 @@ S7::method(cdf, ProductNormal3) <- function(object, q, lower.tail = TRUE, tol = 
 S7::method(dist_quantile, ProductNormal3) <- function(object, p, tol = 1e-4, ...) {
   checkmate::assert_numeric(p, lower = 0, upper = 1, finite = TRUE)
   checkmate::assert_number(tol, lower = 0)
-
-  mu <- object@mu
-  Sigma <- object@Sigma
-  mean_v <- prod(mu)
-  grad <- c(mu[2L] * mu[3L], mu[1L] * mu[3L], mu[1L] * mu[2L])
-  var_delta <- as.numeric(t(grad) %*% Sigma %*% grad)
-  sd_delta <- sqrt(max(var_delta, 0))
-  sds <- sqrt(pmax(diag(Sigma), 0))
-  if (sd_delta <= .Machine$double.eps) {
-    non_zero_sds <- sds[sds > .Machine$double.eps]
-    sd_delta <- if (length(non_zero_sds) > 0) prod(non_zero_sds) else 1
-  }
-  z <- stats::qnorm(0.975)
-  delta_width <- 8 * sd_delta
-
-  vapply(p, function(pp) {
-    center <- mean_v + sign(pp - 0.5) * z * sd_delta
-    .prod3_quantile(pp,
-      mean = mu, cov = Sigma,
-      lower = center - delta_width, upper = center + delta_width, tol = tol
-    )
-  }, FUN.VALUE = numeric(1))
+  vapply(p, .qprodnormal3_one, FUN.VALUE = numeric(1),
+    mean = object@mu, cov = object@Sigma, lower.tail = TRUE, tol = tol
+  )
 }
 
 #' @noRd

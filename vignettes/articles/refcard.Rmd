@@ -18,7 +18,7 @@ One page: which function answers which question. Each row links to the full help
 | a CI for each `:=` in a `lavaan` fit | `ci(fit)` | the route depends on the form of the `:=`; see "Defined parameters" below |
 | a CI for a function of several parameters from a mean and covariance | `qMC()`, `pMC()` with `quant = ~ a*b` | Monte Carlo; `p` and `q` are scalars |
 | the CDF, quantile or density of `a*b` | `pprodnormal()`, `qprodnormal()`, `dprodnormal()` | two normals |
-| the CDF or density of `a1*a2*b` | `pprodnormal3()`, `dprodnormal3()` | three normals; pass `mean` and `cov`; `pprodnormal3()` takes a vector of `q` in the development version |
+| the CDF, quantile or density of `a1*a2*b` | `pprodnormal3()`, `qprodnormal3()`, `dprodnormal3()` | three normals; pass `mean` and `cov`; in the development version `pprodnormal3()` takes a vector of `q` and `lower.tail`, and `qprodnormal3()` is new |
 | test `H0: a*b = 0` with OpenMx | `mbco_product_null(h1, paths = c("a", "b"))` | exact: fixes one path at 0 per branch |
 | test any equality constraint with OpenMx | `mbco(h0, h1, type = ...)` | see the warnings below |
 | test with two medfit `SEMFit` fits | `mbco(h0, h1, type = "asymp")` | needs medfit >= 0.8.0 |

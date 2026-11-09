@@ -14,6 +14,12 @@
   below the probability you want. Default calls return the same values as before; vectors, names, `diagnostics`,
   `method = "hcubature"` and every degenerate reduction (zero-variance factors, point masses) support it.
 
+- New `qprodnormal3(p, mean, cov, lower.tail = TRUE, tol = 1e-6)`: the quantile of the product of three normals, the
+  counterpart of `qprodnormal()`. It inverts `pprodnormal3()` by root-finding in either tail (so a small upper-tail `p` is
+  resolved), keeps the names of `p`, and returns `-Inf`/`Inf` at `p = 0`/`1`. `dist_quantile()` on a `ProductNormal3`
+  now uses the same routine, so the two agree; at `p = 0` and `p = 1` it returns `-Inf` and `Inf`, and for a point
+  mass (three zero variances) it returns `prod(mu)`.
+
 ## Documentation
 
 - `?ci` now documents the `p` element of the Monte Carlo result: a two-sided proportion of simulated values above or
