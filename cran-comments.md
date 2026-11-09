@@ -1,3 +1,5 @@
+<!-- STALE: this file describes 1.7.0 (Aug 2026). Regenerate it at the next CRAN candidate; no candidate exists while the CRAN hold stands. -->
+
 ## Submission summary
 
 This is an update of **RMediation** (version 1.7.0), an existing CRAN package.
