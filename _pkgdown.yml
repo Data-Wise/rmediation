@@ -71,6 +71,8 @@ navbar:
         href: articles/cookbook.html
       - text: Technical Notes
         href: articles/technical-notes.html
+      - text: Reporting RMediation in a Paper
+        href: articles/reporting.html
       - text: Status and Roadmap
         href: articles/roadmap.html
     ecosystem:
