@@ -1,6 +1,21 @@
 # Internal S7-native compute functions
 # These functions form the computational core and work with ProductNormal objects
 
+# Correlation from a covariance and two standard deviations. For a perfectly correlated pair (the same
+# coefficient twice, `a*a`) Sigma[1, 2] equals both variances, yet sqrt(v) * sqrt(v) is not always v in floating
+# point, so the ratio can be 1 +/- one rounding step. Above 1 the DOP root-finder fails (NaN, then "non-finite
+# function value"); below 1 it takes the slower near-collinear branch. A ratio within 1e-12 of +/-1 is snapped to
+# exactly +/-1 so the closed-form collinear branch is used; anything further out is left alone, so a genuinely
+# invalid correlation is still rejected by the callers' checks.
+#' @noRd
+.cov_to_rho <- function(cov12, se.x, se.y) {
+  rho <- cov12 / (se.x * se.y)
+  if (is.finite(rho) && abs(abs(rho) - 1) <= 1e-12) {
+    rho <- sign(rho)
+  }
+  rho
+}
+
 #' Internal: Compute CI using Distribution of Product (Meeker & Escobar 1994)
 #'
 #' Computes confidence intervals for the product of two normal random variables
@@ -24,7 +39,7 @@
   # Extract parameters
   se.x <- sqrt(Sigma[1, 1])
   se.y <- sqrt(Sigma[2, 2])
-  rho <- Sigma[1, 2] / (se.x * se.y)
+  rho <- .cov_to_rho(Sigma[1, 2], se.x, se.y)
   mu.x <- mu[1]
   mu.y <- mu[2]
 
@@ -122,7 +137,7 @@
   # Extract parameters
   se.x <- sqrt(Sigma[1, 1])
   se.y <- sqrt(Sigma[2, 2])
-  rho <- Sigma[1, 2] / (se.x * se.y)
+  rho <- .cov_to_rho(Sigma[1, 2], se.x, se.y)
   mu.x <- mu[1]
   mu.y <- mu[2]
 
@@ -166,7 +181,7 @@
   # Extract parameters
   se.x <- sqrt(Sigma[1, 1])
   se.y <- sqrt(Sigma[2, 2])
-  rho <- Sigma[1, 2] / (se.x * se.y)
+  rho <- .cov_to_rho(Sigma[1, 2], se.x, se.y)
   mu.x <- mu[1]
   mu.y <- mu[2]
 
@@ -237,7 +252,7 @@
   # Extract parameters
   se.x <- sqrt(Sigma[1, 1])
   se.y <- sqrt(Sigma[2, 2])
-  rho <- Sigma[1, 2] / (se.x * se.y)
+  rho <- .cov_to_rho(Sigma[1, 2], se.x, se.y)
   mu.x <- mu[1]
   mu.y <- mu[2]
 
