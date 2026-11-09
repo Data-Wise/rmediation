@@ -28,6 +28,11 @@
 
 ## Bug fixes
 
+- A perfectly correlated pair (the same coefficient twice, as in `sq := a*a`) could fail with `non-finite function value` under
+  `type = "dop"`. `rho = Sigma[1, 2] / (se.x * se.y)` can come out as 1 plus or minus one rounding step because
+  `sqrt(v)^2` is not always `v`; above 1 the distribution-of-the-product root-finder failed. A `rho` within 1e-12 of 1 or -1
+  is now taken as exactly 1 or -1, so the closed-form collinear branch is used. A genuinely invalid correlation is still
+  rejected.
 - `ci()` on a `lavaan` fit no longer stops on a defined parameter that repeats a coefficient inside a product of
   three or more factors (`ab := a*b*a`, `cube := a*a*a`, or a nested `abx := ab*a`). The exact three-factor interval
   does not apply because the repeated factors are perfectly correlated, and it used to fail with a "perfect

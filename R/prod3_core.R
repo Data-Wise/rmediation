@@ -244,8 +244,10 @@ NULL
   pprodnormal(q / fixed_val,
     mu.x = mean[other_idx[1L]], mu.y = mean[other_idx[2L]],
     se.x = sds[other_idx[1L]], se.y = sds[other_idx[2L]],
-    rho = cov[other_idx[1L], other_idx[2L]] /
-      max(sds[other_idx[1L]] * sds[other_idx[2L]], .Machine$double.eps),
+    rho = .cov_to_rho(
+      cov[other_idx[1L], other_idx[2L]],
+      max(sds[other_idx[1L]] * sds[other_idx[2L]], .Machine$double.eps), 1
+    ),
     lower.tail = (fixed_val > 0) == lower.tail
   )
 }
