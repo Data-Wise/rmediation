@@ -75,7 +75,8 @@ devtools::test()
 
 - `pprodnormal()` / `qprodnormal()`: CDF and quantile for product of two normals
 - `pprodnormal3()`: CDF for the product of **three** normals (serial indirect
-  effects `a1 * a2 * b`); `p_prod3()` is a superseded alias
+  effects `a1 * a2 * b`); takes a vector of `q` (a single `q` runs the scalar path
+  `.pprodnormal3_one()`); `p_prod3()` is a superseded alias
 - `pMC()` / `qMC()`: Monte Carlo-based for arbitrary functions
 - `dprodnormal()` / `dprodnormal3()`: exact densities of the product of two / three normals
   (Bessel K0 for zero-mean K = 2; Rohatgi/Glen integral otherwise; K = 3 is a 1-D integral of
@@ -208,4 +209,4 @@ force-tracked), `.STATUS`.
 
 ---
 
-**Last Updated**: 2026-10-30
+**Last Updated**: 2026-11-09
