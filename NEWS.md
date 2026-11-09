@@ -13,9 +13,14 @@ No change to returned values for any call that worked before; the only API addit
 
 ## Bug fixes
 
-- `ci()` on a `lavaan` fit no longer fails outright when one defined parameter (`:=`) cannot be resolved, for example
-  `abc := ab*c`, where `ab` is itself a `:=`. That parameter now gets a warning and a `NULL` entry, and the other
-  intervals are returned. Before, the whole call stopped with an error.
+- `ci()` on a `lavaan` fit now resolves a defined parameter (`:=`) that uses another one, for example
+  `abc := ab*c` where `ab := a*b`; before, the whole call stopped with an error. A definition that cannot be
+  resolved (a cycle, or text that does not parse) gets a warning and a `NULL` entry, and the other intervals are
+  returned.
+- `ci()` on a `lavaan` fit no longer stops on a product of three or more coefficients (`abc := a*b*c`, a serial
+  indirect effect) under `type = "dop"`, `"asymp"`, `"prodclin"` or `"all"`: the exact and asymptotic intervals exist
+  for two factors only, so such a product gets the Monte Carlo interval. When you set `type` explicitly, a warning
+  says so; under the default `type` nothing is printed. `type = "MC"` is unchanged.
 - `ci()` on a `lavaan` fit now warns when `type` was given explicitly but a defined parameter is not a product of
   estimated coefficients (for example `a*b + c`). Such a parameter always gets a Monte Carlo interval; the call used
   to say nothing.

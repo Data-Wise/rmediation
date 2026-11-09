@@ -32,6 +32,98 @@ S7::method(ci, S7::class_numeric) <- function(object, Sigma, quant, alpha = 0.05
   .ci_core(mu = mu, Sigma = Sigma, quant = quant, alpha = alpha, type = type, ...)
 }
 
+# Replace symbols by the expressions in `env`, leaving function names alone (a defined
+# parameter called `log` must not rewrite the call `log(a)`).
+.subst_symbols <- function(e, env) {
+  if (is.symbol(e)) {
+    nm <- as.character(e)
+    return(if (nm %in% names(env)) env[[nm]] else e)
+  }
+  if (is.call(e)) {
+    for (k in seq_along(e)[-1L]) {
+      e[[k]] <- .subst_symbols(e[[k]], env)
+    }
+  }
+  e
+}
+
+# Expand defined parameters (`:=`) that refer to other defined parameters.
+# `rhs` is a named character vector (names = labels). Substitution is done on parsed
+# expressions, never on the text, so a label that is a substring of another name
+# (`ab` inside `tab`) or that is also a function name (`c`) is handled correctly.
+# Returns list(expr = <named list of calls, NULL where unresolved>,
+#              problem = <named character vector, NA where resolved>).
+.expand_defined <- function(rhs) {
+  labels <- names(rhs)
+  parsed <- lapply(rhs, function(r) tryCatch(str2lang(r), error = function(e) NULL))
+  expr <- stats::setNames(vector("list", length(rhs)), labels)
+  problem <- stats::setNames(rep(NA_character_, length(rhs)), labels)
+  state <- stats::setNames(rep("todo", length(rhs)), labels) # todo | active | done
+
+  resolve <- function(lab) {
+    if (state[[lab]] == "done") {
+      return(invisible())
+    }
+    if (state[[lab]] == "active") {
+      return(invisible()) # caller sees the cycle through the still-unresolved entry
+    }
+    state[[lab]] <<- "active"
+    e <- parsed[[lab]]
+    if (is.null(e)) {
+      problem[[lab]] <<- sprintf("cannot parse `%s`", rhs[[lab]])
+      state[[lab]] <<- "done"
+      return(invisible())
+    }
+    refs <- intersect(all.vars(e), labels)
+    bad <- NULL
+    env <- list()
+    for (r in refs) {
+      resolve(r)
+      if (state[[r]] == "active" || is.null(expr[[r]])) {
+        bad <- c(bad, r)
+      } else {
+        env[[r]] <- expr[[r]]
+      }
+    }
+    if (length(bad) > 0L) {
+      problem[[lab]] <<- sprintf(
+        "depends on defined parameter(s) that cannot be resolved (%s), possibly a cycle",
+        paste(bad, collapse = ", ")
+      )
+    } else {
+      expr[[lab]] <<- if (length(env) > 0L) .subst_symbols(e, env) else e
+    }
+    state[[lab]] <<- "done"
+    invisible()
+  }
+  for (lab in labels) resolve(lab)
+  list(expr = expr, problem = problem)
+}
+
+# Factor names when `e` is a pure product of symbols (through `*` and parentheses),
+# else NULL. `(a*b)*c` and `a*b*c` give the same factors.
+.product_factors <- function(e) {
+  if (is.symbol(e)) {
+    return(as.character(e))
+  }
+  if (!is.call(e)) {
+    return(NULL)
+  }
+  op <- as.character(e[[1L]])
+  if (identical(op, "(") && length(e) == 2L) {
+    return(.product_factors(e[[2L]]))
+  }
+  if (identical(op, "*") && length(e) == 3L) {
+    l <- .product_factors(e[[2L]])
+    r <- .product_factors(e[[3L]])
+    if (is.null(l) || is.null(r)) {
+      return(NULL)
+    }
+    return(c(l, r))
+  }
+  NULL
+}
+
 #' @return A named list of CI results (one per defined parameter in the lavaan
 #'   object), each with elements \code{CI}, \code{Estimate}, and \code{SE}.
 #' @noRd
@@ -81,64 +173,74 @@ S7::method(ci, S7::class_any) <- function(object, level = 0.95, type = "dop", n.
     alpha <- 1 - level
   }
 
-  # General Monte Carlo interval for a defined parameter that is not a simple
-  # product of estimated coefficients. It ignores `type`, so say so when the
-  # caller chose one explicitly. A formula .ci_core cannot resolve (for example
-  # one that names another defined parameter) must not discard the other
-  # results: warn and return NULL for that label only.
-  mc_fallback <- function(label, rhs) {
+  # A defined parameter may refer to another one (`abc := ab*c`): expand those references
+  # first. One that cannot be resolved loses only its own entry, with a warning.
+  expanded <- .expand_defined(stats::setNames(defined$rhs, defined$lhs))
+  coefs <- lavaan::coef(object)
+  vcov_mat <- lavaan::vcov(object)
+
+  # General Monte Carlo interval for a defined parameter that is not a product of
+  # estimated coefficients. It ignores `type`, so say so when the caller chose one
+  # explicitly.
+  mc_fallback <- function(label, e) {
     if (type_given && type != "MC") {
       warning(sprintf(
         "Defined parameter '%s' is not a product of estimated coefficients; using a Monte Carlo interval instead of type = \"%s\".",
         label, type
       ), call. = FALSE)
     }
-    quant <- as.formula(paste("~", rhs))
     tryCatch(
-      .ci_core(mu = object, quant = quant, alpha = alpha, type = "MC", n.mc = n.mc, plot = FALSE),
-      error = function(e) {
+      .ci_core(
+        mu = object, quant = stats::as.formula(paste("~", deparse1(e))), alpha = alpha,
+        type = "MC", n.mc = n.mc, plot = FALSE
+      ),
+      error = function(err) {
         warning(sprintf(
           "No interval for defined parameter '%s' (:= %s): %s",
-          label, rhs, conditionMessage(e)
+          label, deparse1(e), conditionMessage(err)
         ), call. = FALSE)
         NULL
       }
     )
   }
 
-  for (i in 1:nrow(defined)) {
+  for (i in seq_len(nrow(defined))) {
     label <- defined$lhs[i]
-    rhs <- defined$rhs[i]
+    e <- expanded$expr[[label]]
 
-    vars <- .parse_product_string(rhs)
+    if (is.null(e)) {
+      warning(sprintf(
+        "No interval for defined parameter '%s' (:= %s): %s",
+        label, defined$rhs[i], expanded$problem[[label]]
+      ), call. = FALSE)
+      results[label] <- list(NULL)
+      next
+    }
 
-    if (!is.null(vars) && length(vars) >= 2) {
-      # Product of coefficients
-      coefs <- lavaan::coef(object)
-      vcov_mat <- lavaan::vcov(object)
+    vars <- .product_factors(e)
 
-      if (all(vars %in% names(coefs))) {
-        mu_vals <- coefs[vars]
-        Sigma_vals <- vcov_mat[vars, vars]
-
-        pn <- ProductNormal(mu = as.numeric(mu_vals), Sigma = as.matrix(Sigma_vals))
-
-        # Calculate CI using ProductNormal method
-        # Note: ci(ProductNormal) returns vector.
-        # We pass level/alpha correctly. ProductNormal ci uses level.
-        # If user passed alpha, we convert back to level for consistency with S7 generic?
-        # Or just pass level if we have it.
-        # The generic has 'level'.
-        res_ci <- ci(pn, level = 1 - alpha, type = type, n.mc = n.mc)
-        results[[label]] <- res_ci
-      } else {
-        # Fallback to general MC via .ci_core (e.g. a product that includes
-        # another defined parameter, which is not an estimated coefficient).
-        results[label] <- list(mc_fallback(label, rhs))
+    if (!is.null(vars) && length(vars) >= 2L && all(vars %in% names(coefs))) {
+      pn <- ProductNormal(
+        mu = as.numeric(coefs[vars]),
+        Sigma = as.matrix(vcov_mat[vars, vars])
+      )
+      # The exact (dop), asymptotic and prodclin intervals exist for two factors only
+      # (ci() on a ProductNormal stops for three or more). Such a product gets the Monte
+      # Carlo interval, and a warning when the caller chose `type` explicitly.
+      ptype <- type
+      if (length(vars) >= 3L && type != "MC") {
+        if (type_given) {
+          warning(sprintf(
+            "Defined parameter '%s' is a product of %d coefficients; using a Monte Carlo interval instead of type = \"%s\".",
+            label, length(vars), type
+          ), call. = FALSE)
+        }
+        ptype <- "MC"
       }
+      # ci(ProductNormal) takes `level`, so convert back from alpha.
+      results[[label]] <- ci(pn, level = 1 - alpha, type = ptype, n.mc = n.mc)
     } else {
-      # Not a simple product, use general MC
-      results[label] <- list(mc_fallback(label, rhs))
+      results[label] <- list(mc_fallback(label, e))
     }
   }
 
