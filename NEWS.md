@@ -8,6 +8,12 @@
   before (same value, same error messages, no attributes unless `diagnostics = TRUE`). A missing, infinite or empty `q`
   vector is an error.
 
+## Documentation
+
+- `?ci` now documents the `p` element of the Monte Carlo result: a two-sided proportion of simulated values above or
+  below 0 (the "P Value" on the density plot), 0 for any clearly nonzero effect, not a null-distribution test. The
+  element name is `MCError`, as returned, not `MC Error`. The asymptotic result has no `p`.
+
 ## Bug fixes
 
 - `ci()` on a `lavaan` fit no longer stops on a defined parameter that repeats a coefficient inside a product of

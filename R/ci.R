@@ -58,8 +58,16 @@
 #'   a \link{list} that contains: \item{CI}{a vector of lower and upper
 #'   confidence limits (at significance level \eqn{\alpha}),}
 #'   \item{Estimate}{a point estimate of the quantity of interest,}
-#'   \item{SE}{standard error of the quantity of interest,} \item{MC Error}{When
-#'   \code{type="MC"}, sampling standard error of the simulated mean, SE / sqrt(n.mc).} When
+#'   \item{SE}{standard error of the quantity of interest,} \item{MCError}{When
+#'   \code{type="MC"}, sampling standard error of the simulated mean, SE / sqrt(n.mc),}
+#'   \item{p}{When \code{type="MC"}, a two-sided Monte Carlo proportion:
+#'   \code{2 * min(P, 1 - P)}, where \code{P} is the share of simulated values of
+#'   the quantity that are greater than 0. It is the "P Value" printed on the density
+#'   plot. It describes where the sampling distribution of the estimate lies relative to 0; it is
+#'   \emph{not} a test against a null distribution, and it is exactly 0 whenever
+#'   every simulated value has the same sign, so it cannot rank clearly nonzero effects.
+#'   To test a hypothesis such as a product equal to 0, use \code{\link{mbco}}.
+#'   The asymptotic result has no \code{p} element.} When
 #'   \code{type="all"}, \code{ci} returns a \link{list} of two objects, each of
 #'   which a \link{list} that contains the results produced by each method as
 #'   described above.
