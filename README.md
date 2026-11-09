@@ -292,7 +292,8 @@ The default screen keeps only admissible (positive-definite) grid points; use
 | `pprodnormal()` | CDF of product of two normals |
 | `qprodnormal()` | Quantiles of product of two normals |
 | `dprodnormal()` | Exact density of the product of two normals |
-| `pprodnormal3()` | Exact CDF of product of three normals (`a1*a2*b`); takes a vector of `q` in the development version |
+| `pprodnormal3()` | Exact CDF of product of three normals (`a1*a2*b`); takes a vector of `q` and `lower.tail` in the development version |
+| `qprodnormal3()` | Quantiles of the product of three normals (development version); `lower.tail`, vectorized in `p` |
 | `dprodnormal3()` | Exact density of the product of three normals |
 | `pMC()`, `qMC()` | Monte Carlo CDF and quantile for any function of coefficient estimates |
 | `ProductNormal()` | S7 class for two-variable product distributions |
