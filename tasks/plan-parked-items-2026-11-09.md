@@ -1,6 +1,6 @@
 # Implementation Plan: the five parked items
 
-Status: APPROVED 2026-11-09 (all five recommendations accepted). Read-only research on `dev` at `9bd02bd`; nothing implemented. The task list is `tasks/todo-parked-items-2026-11-09.md`. Saved under dated names because `tasks/plan.md` is a finished 2026-10-12 plan (0 unchecked tasks) and this repo keeps one dated file per plan.
+Status: COMPLETE 2026-11-09 (T1 #167, T4 #168, T2 #169, T3 #170 merged; D2 recorded: `ml_admissible()` stays internal). Was: APPROVED 2026-11-09 (all five recommendations accepted). Read-only research on `dev` at `9bd02bd`; nothing implemented. The task list is `tasks/todo-parked-items-2026-11-09.md`. Saved under dated names because `tasks/plan.md` is a finished 2026-10-12 plan (0 unchecked tasks) and this repo keeps one dated file per plan.
 
 ## Overview
 
@@ -84,3 +84,10 @@ T1, T2, T4 touch different files and can be done in any order; T3 waits for T2. 
 
 ## Open questions
 - None blocking; the five decisions above only choose between stated options.
+
+## Outcome notes (2026-11-09)
+
+- T2 accuracy: the direct upper tail matches the independent oracle (rel 4.9e-9 at q = 30, tol 1e-10; 2.9e-9 at q = 100, tol 1e-14), but accuracy is the absolute `tol`, so a far tail needs a matching `tol`; this is documented, and the default `tol` was not changed.
+- T3 also changed `dist_quantile()` on a `ProductNormal3` at the edges (`p = 0/1` give `-Inf/Inf`; a point mass gives `prod(mu)`), because both now share `.qprodnormal3_one()`.
+- D2: `ml_admissible()` returns the quadratic form `r' R^-1 r`, not an admissibility flag; it stays internal and `ml_omitted_confounder()` already exposes `admissible`.
+- Nothing released. The next release would be 1.11.0 (new exports `qprodnormal3()` and the `lower.tail` argument; decision 5, the user's call); CRAN hold unchanged.
