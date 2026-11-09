@@ -36,6 +36,7 @@ S7::method(ci, S7::class_numeric) <- function(object, Sigma, quant, alpha = 0.05
 #'   object), each with elements \code{CI}, \code{Estimate}, and \code{SE}.
 #' @noRd
 S7::method(ci, S7::class_any) <- function(object, level = 0.95, type = "dop", n.mc = 1e5, ...) {
+  type_given <- !missing(type) # before match.arg() rebinds `type`
   checkmate::assert_number(level, lower = 0, upper = 1)
   type <- match.arg(type, c("dop", "MC", "asymp", "all", "prodclin"))
   checkmate::assert_count(n.mc, positive = TRUE)
@@ -80,6 +81,31 @@ S7::method(ci, S7::class_any) <- function(object, level = 0.95, type = "dop", n.
     alpha <- 1 - level
   }
 
+  # General Monte Carlo interval for a defined parameter that is not a simple
+  # product of estimated coefficients. It ignores `type`, so say so when the
+  # caller chose one explicitly. A formula .ci_core cannot resolve (for example
+  # one that names another defined parameter) must not discard the other
+  # results: warn and return NULL for that label only.
+  mc_fallback <- function(label, rhs) {
+    if (type_given && type != "MC") {
+      warning(sprintf(
+        "Defined parameter '%s' is not a product of estimated coefficients; using a Monte Carlo interval instead of type = \"%s\".",
+        label, type
+      ), call. = FALSE)
+    }
+    quant <- as.formula(paste("~", rhs))
+    tryCatch(
+      .ci_core(mu = object, quant = quant, alpha = alpha, type = "MC", n.mc = n.mc, plot = FALSE),
+      error = function(e) {
+        warning(sprintf(
+          "No interval for defined parameter '%s' (:= %s): %s",
+          label, rhs, conditionMessage(e)
+        ), call. = FALSE)
+        NULL
+      }
+    )
+  }
+
   for (i in 1:nrow(defined)) {
     label <- defined$lhs[i]
     rhs <- defined$rhs[i]
@@ -106,19 +132,13 @@ S7::method(ci, S7::class_any) <- function(object, level = 0.95, type = "dop", n.
         res_ci <- ci(pn, level = 1 - alpha, type = type, n.mc = n.mc)
         results[[label]] <- res_ci
       } else {
-        # Fallback to general MC via .ci_core
-        f_str <- paste("~", rhs)
-        quant <- as.formula(f_str)
-
-        res <- .ci_core(mu = object, quant = quant, alpha = alpha, type = "MC", n.mc = n.mc, plot = FALSE)
-        results[[label]] <- res
+        # Fallback to general MC via .ci_core (e.g. a product that includes
+        # another defined parameter, which is not an estimated coefficient).
+        results[label] <- list(mc_fallback(label, rhs))
       }
     } else {
       # Not a simple product, use general MC
-      f_str <- paste("~", rhs)
-      quant <- as.formula(f_str)
-      res <- .ci_core(mu = object, quant = quant, alpha = alpha, type = "MC", n.mc = n.mc, plot = FALSE)
-      results[[label]] <- res
+      results[label] <- list(mc_fallback(label, rhs))
     }
   }
 

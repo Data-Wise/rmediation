@@ -1,6 +1,15 @@
 # RMediation (development version)
 
-No change to returned values or to the API.
+No change to returned values for any call that worked before; the API is unchanged.
+
+## Bug fixes
+
+- `ci()` on a `lavaan` fit no longer fails outright when one defined parameter (`:=`) cannot be resolved, for example
+  `abc := ab*c`, where `ab` is itself a `:=`. That parameter now gets a warning and a `NULL` entry, and the other
+  intervals are returned. Before, the whole call stopped with an error.
+- `ci()` on a `lavaan` fit now warns when `type` was given explicitly but a defined parameter is not a product of
+  estimated coefficients (for example `a*b + c`). Such a parameter always gets a Monte Carlo interval; the call used
+  to say nothing.
 
 ## Internal
 
