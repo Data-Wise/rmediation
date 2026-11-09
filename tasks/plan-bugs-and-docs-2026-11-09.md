@@ -1,6 +1,6 @@
 # Implementation Plan: bugs and website docs after 1.10.0 (2026-11-09)
 
-Status: PROPOSED, not approved. Nothing in this plan is implemented. Source: a read-only review on `dev` at `cc96a18`
+Status: APPROVED 2026-11-09 (the user accepted the recommendation on all 7 open questions below). Implementation starts with T1; nothing is implemented when this file is written. Source: a read-only review on `dev` at `cc96a18`
 (v1.10.0 is the latest GitHub release; CRAN serves 1.6.1; CRAN hold unchanged). There are no open issues or PRs, so the
 bug list comes from probes and the parked items in `.STATUS`, not from a tracker. Existing `tasks/plan.md` is untouched.
 
@@ -147,7 +147,7 @@ Phase 3 articles:   T6 (N1)   T7 (N2)   T8 (N3)     T7 waits for T1; T6 waits fo
 | New articles run examples that need medfit/OpenMx | Medium: site build fails | guard chunks; build against scratch install before PR |
 | Site shows old wording until a release | Low | decision 6; do not cut a docs-only release |
 
-## Open questions (my recommendation first)
+## Decisions (accepted 2026-11-09: each recommendation below is the decision)
 
 1. **B2: vectorize `pprodnormal3()`?** Yes: it matches its four siblings and is additive. Alternative: document it as
    scalar-only.
