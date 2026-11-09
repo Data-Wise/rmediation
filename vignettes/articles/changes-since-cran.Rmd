@@ -1,0 +1,82 @@
+---
+title: "What Changed Since CRAN 1.6.1"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(RMediation)
+```
+
+CRAN serves RMediation 1.6.1. Releases 1.7.0 to 1.11.0 are on GitHub only (see [Status and Roadmap](roadmap.html) and [Reporting RMediation in a Paper](reporting.html) for how to install a tag). This page lists what can change a number you already have or break code you already wrote. The [News](../news/index.html) page has every change by version; this page does not repeat the bug fixes that only affect rare inputs.
+
+## 1. Results that changed
+
+Re-run anything you computed with 1.6.1 if it falls under one of these.
+
+| Version | What changed | Who is affected |
+|---|---|---|
+| 1.7.0 | `pprodnormal3()` now integrates with Gauss-Legendre quadrature by default (`method = "gauss"`). The earlier adaptive integrator (`method = "hcubature"`, still available) returned wrong values on ill-conditioned covariance, silently. | Anyone using `pprodnormal3()`, `ProductNormal3`, or `ci()` on three-factor products, above all with highly correlated estimates. Well-conditioned input agrees to about `1e-6`. |
+| 1.8.0 | The CDF of the product of two normals is exact at `|rho| = 1`, and no longer collapses at large standardized means (`pprodnormal()`, `qprodnormal()`, `medci()`). | `|rho| = 1`, or paths with a large estimate relative to its standard error. |
+| 1.8.0 | Point masses use the right-continuous CDF: `pprodnormal3()` returned `0.5` at `q == 0` for a product identically zero; it now returns `1`. | Zero-variance inputs. |
+| 1.8.0 | `medci(type = "mc")` reports `MC.Error` as `SE / sqrt(n.mc)`; it was `SE / n.mc`. Intervals and estimates did not change. | Anyone reading `MC.Error`. |
+| 1.9.0 | `ci(type = "asymp")` names its interval by its confidence level (`95% CI` at the default). It was `97.5% CI`. The interval itself was always correct. | Code that indexes the result by the old name. |
+| 1.9.0 | `dprodnormal()` and `dprodnormal3()` no longer return `0`, `NA` or a silently low density when a mean is very large relative to its standard error. | Large `mu / se`. |
+
+Three of these you can see directly:
+
+```{r large-mean}
+# 1.6.1 returned about 8e-7 here; the correct value is about 0.507
+pprodnormal(400, mu.x = 20, mu.y = 20, se.x = 1, se.y = 1)
+
+# a product identically equal to 0 is at or below 0 with probability 1
+pprodnormal3(0, mean = c(0, 0, 0), cov = matrix(0, 3, 3))
+
+# the interval is labeled by its confidence level
+names(ci(c(a = 0.5, b = 0.6), diag(c(0.08, 0.04)^2), ~ a * b, type = "asymp"))
+```
+
+## 2. Code that may stop working
+
+- **`medci_prototype()` is removed** (1.8.0). It shipped in 1.6.1 as an exported prototype that nothing in the package called. Use `medci()`, or `ci()` on a `ProductNormal`; they return the same intervals.
+- **`pprodnormal3()` rejects an invalid covariance** (1.8.0): one that is not finite and positive semidefinite, including negative variances at very different scales. It used to clamp negative variances to zero.
+- **`mbco()` is stricter** (1.8.0). It checks the constraints of `h0` and `h1` at the fitted solution and signals classed conditions (`RMediation_constraint_violation`, `RMediation_constraint_not_enforced`, `RMediation_h0_refit_failed` and others; the [Quick Reference](refcard.html) lists them). `type = "parametric"` now checks every bootstrap replicate like `type = "semi"` does, and stops with `RMediation_bootstrap_infeasible` when it cannot repair one, where it used to let a bad replicate into the null distribution. Equal-df and reversed model pairs are rejected.
+- **Defined parameters in `ci(<lavaan>)`** used to stop the whole call on a `:=` that uses another `:=`, and on a product of three or more coefficients under most `type` values. They now return a result (1.10.0); see below.
+
+## 3. New since 1.6.1
+
+| Version | Addition |
+|---|---|
+| 1.8.0 | `dprodnormal()` and `dprodnormal3()`, the exact densities of the product of two and three normals |
+| 1.8.0 | `pprodnormal()` and `qprodnormal()` accept vectors |
+| 1.8.0 | `mbco_product_null()`: an exact test of `a*b = 0` that cannot land on the wrong branch |
+| 1.8.0 | `ml_omitted_confounder()`: sensitivity of two-level 1-1-1 mediation to an omitted confounder |
+| 1.8.0 | `mbco(h0, h1, type = "asymp")` on two medfit `SEMFit` fits (needs medfit 0.8.0 or later) |
+| 1.10.0 | `@provenance` on `mbco()` results: versions, test type, bootstrap size, `RNGkind()` and run time (the seed is not recorded) |
+| 1.10.0 | `ci(<lavaan>)` resolves a `:=` built from other `:=` and handles products of three or more coefficients |
+
+The defined-parameter rules in 1.10.0 are easiest to see on a small fit:
+
+```{r lavaan-defined, eval = requireNamespace("lavaan", quietly = TRUE)}
+set.seed(2)
+d <- data.frame(x = rnorm(300))
+d$m <- 0.5 * d$x + rnorm(300)
+d$y <- 0.4 * d$m + 0.2 * d$x + rnorm(300)
+fit <- lavaan::sem("m ~ a*x\n y ~ b*m + cp*x\n ab := a*b\n abx := ab*a", d)
+res <- suppressWarnings(ci(fit, type = "MC", n.mc = 5000))
+names(res)
+```
+
+`abx := ab*a` is `a*b*a`, a product that repeats a coefficient. Releases up to 1.10.0 stop on it for every `type` except `"MC"`; 1.11.0 gives it a Monte Carlo interval with a warning when you chose another `type`.
+
+## 4. New in 1.11.0
+
+See the 1.11.0 entry on the [News](../news/index.html) page.
+
+- A coefficient repeated inside a product of three or more factors gets a Monte Carlo interval instead of an error.
+- `pprodnormal3()` accepts a vector of `q`, like the other distribution functions, and takes `lower.tail`; with `lower.tail = FALSE` it integrates the upper tail directly, so far tails are resolved (use a `tol` well below the probability you want).
+- `qprodnormal3()` is new: the quantile of the product of three normals, both tails. `dist_quantile()` on a `ProductNormal3` uses the same routine and now returns `-Inf` and `Inf` at `p = 0` and `p = 1`.
+- `?ci` now documents the `p` element of the Monte Carlo result (a sign proportion, not a null test).
+
+## Which version to cite
+
+Report the tag you ran, not `dev`: [Reporting RMediation in a Paper](reporting.html) lists what to record, and the [Quick Reference](refcard.html) has the one-page summary of functions and result shapes.

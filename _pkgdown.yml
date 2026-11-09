@@ -62,6 +62,10 @@ navbar:
         href: articles/serial-mediation-with-medfit.html
       - text: Testing an Indirect Effect with MBCO
         href: articles/mbco.html
+      - text: MBCO on medfit SEM Models
+        href: articles/mbco-semfit.html
+      - text: Indirect Effects in a lavaan Model
+        href: articles/indirect-effects-lavaan.html
       - text: Omitted-Confounder Sensitivity
         href: articles/omitted-confounder-sensitivity.html
       - text: "---------"
@@ -73,6 +77,8 @@ navbar:
         href: articles/technical-notes.html
       - text: Reporting RMediation in a Paper
         href: articles/reporting.html
+      - text: What Changed Since CRAN 1.6.1
+        href: articles/changes-since-cran.html
       - text: Status and Roadmap
         href: articles/roadmap.html
     ecosystem:
@@ -121,6 +127,7 @@ reference:
   contents:
   - pprodnormal
   - qprodnormal
+  - qprodnormal3
   - dprodnormal
   - dprodnormal3
   - pprodnormal3

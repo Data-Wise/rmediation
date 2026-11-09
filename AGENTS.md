@@ -75,8 +75,17 @@ devtools::test()
 
 - `pprodnormal()` / `qprodnormal()`: CDF and quantile for product of two normals
 - `pprodnormal3()`: CDF for the product of **three** normals (serial indirect
-  effects `a1 * a2 * b`); `p_prod3()` is a superseded alias
+  effects `a1 * a2 * b`); takes a vector of `q` (a single `q` runs the scalar path
+  `.pprodnormal3_one()`); `lower.tail = FALSE` integrates the upper tail directly;
+  `p_prod3()` is a superseded alias
+- `qprodnormal3()`: quantile of the product of three normals; inverts `pprodnormal3()` (both
+  tails) and shares `.qprodnormal3_one()` with `dist_quantile()` on a `ProductNormal3`
 - `pMC()` / `qMC()`: Monte Carlo-based for arbitrary functions
+- `dprodnormal()` / `dprodnormal3()`: exact densities of the product of two / three normals
+  (Bessel K0 for zero-mean K = 2; Rohatgi/Glen integral otherwise; K = 3 is a 1-D integral of
+  the K = 2 density conditioned on the first factor). Log singularity at exactly 0 (`Inf`).
+- Point masses (zero variance) have the right-continuous CDF everywhere; `|rho| = 1` in
+  `.dop_cdf()` uses Meeker & Escobar's (1994) quadratic-root closed form, not a step integral.
 
 **`pprodnormal3()` integrator (v1.7.0+):** the default is `method = "gauss"` —
 tensor-product Gauss-Legendre on a domain partitioned at the coordinate axes,
@@ -115,6 +124,24 @@ explanatory comments and regression tests, so read those before "fixing" either:
 - Compare to published examples (MacKinnon et al. 2007, Tofighi & MacKinnon 2011)
 - Test CI method consistency (DOP ≈ MC for large n.mc)
 - Test edge cases: small n, high correlation rho, near-zero effects
+
+---
+
+## CI Policy
+
+Code coverage and expensive GitHub checks (the R-CMD-check matrix, `semfit-mbco`, `test-coverage`, `pkgdown`, `lint`) run only
+for merge to `main`, for releases and on `workflow_dispatch`. PRs to `dev` and pushes to `dev` start none of them; they
+are gated locally with `scripts/check-local.sh` (workflow triggers, docs currency, lint, the issue #84 gate, tests, then
+`R CMD check`) and rforge (`/rforge:r:cycle`). `main` requires the status check `ubuntu-latest (release)`: keep that
+trigger and job name. The R-devel leg of R-CMD-check runs with `_R_CHECK_DEPENDS_ONLY_=true` (hard dependencies only), so an
+unguarded use of a Suggests package in an example or test fails there; `scripts/check-local.sh --depends-only` is the local
+equivalent. The issue #84 gate (`scripts/verify-constraint-not-enforced.R`, about 2 s) is its own workflow and job,
+`issue-84-gate.yaml`, not a step of `R-CMD-check`: a step there would fail `main`'s required check, so a red gate would block
+the release. It runs for `main`, releases and dispatch, with no path filter and no `continue-on-error`; `check-local.sh`
+runs it first. Plan and decisions:
+`planning/PLAN-mechanical-checks-2026-10-30.md`. One cheap check does run on PRs to `dev`: `risk-tier` (a stdlib Python
+script, no R install). A PR that changes a file listed in `.github/risk-files.txt` must carry the evidence checklist from
+`.github/PULL_REQUEST_TEMPLATE.md` in its body; a release PR from `dev` skips the checklist but must carry a `Ships: #N, #M` body line naming the PRs it ships. It is advisory, not a required check.
 
 ---
 
@@ -163,9 +190,9 @@ refits, requires medfit >= 0.8.0 (version-gated; older medfit gets a clear
 error), and does not need OpenMx. The OpenMx paths are unchanged.
 
 **Nothing is submitted to CRAN, by user decision.** CRAN serves 1.6.1. The GitHub
-latest GitHub release is 1.10.0 (1.9.0 before it), cut from `dev` with the SEMFit route included; the earlier 1.7.1 candidate on
+latest GitHub release is 1.11.0 (1.10.0 before it), cut from `dev` with the SEMFit route included; the earlier 1.7.1 candidate on
 `release/1.7.1` (draft PR #46, route removed) is superseded and closed. A later CRAN candidate must remove or finish
-the route, so its version will be later than 1.10.0. Never start `devtools::submit_cran()` without an explicit
+the route, so its version will be later than 1.11.0. Never start `devtools::submit_cran()` without an explicit
 instruction. The route is no longer labeled experimental (maintainer decision 2026-10-31: medfit dropped the label
 in 0.11.0). The hold lifts only when a medfit release with `fixed_x` and observed mean structure is on CRAN; medfit is
 GitHub-only for now (0.16.0; CRAN has 0.3.2). Criteria: `.STATUS`, 2026-10-31 entries. Then Suggests rises to
@@ -185,4 +212,4 @@ force-tracked), `.STATUS`.
 
 ---
 
-**Last Updated**: 2026-10-13
+**Last Updated**: 2026-11-09

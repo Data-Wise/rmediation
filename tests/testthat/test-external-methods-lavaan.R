@@ -154,6 +154,68 @@ test_that("a product of three coefficients gets the exact three-factor interval"
   expect_true("MC.Error" %in% names(mc$flat))
 })
 
+test_that("a coefficient repeated in a product of three or more factors takes Monte Carlo", {
+  # a*b*a is a^2 * b: the three "factors" are perfectly correlated in two places, so the exact
+  # three-factor interval does not apply and must not be attempted (it used to stop with a
+  # positive-definite error).
+  fit <- .lav_fit("rep3 := a*b*a\n cube := a*a*a")
+  expect_no_error(res <- suppressWarnings(ci(fit, type = "MC", n.mc = 2000)))
+  expect_true(all(c("rep3", "cube") %in% names(res)))
+  # default type: nothing was asked for, so no warning and no error
+  set.seed(7)
+  expect_no_warning(def <- ci(fit, n.mc = 2000))
+  expect_true("MC.Error" %in% names(def$rep3))
+  expect_true("MC.Error" %in% names(def$cube))
+  # an explicit non-MC type is overridden, and the warning says why
+  for (tp in c("dop", "asymp", "prodclin", "all")) {
+    expect_warning(
+      res_tp <- ci(fit, type = tp, n.mc = 2000),
+      sprintf("'rep3' repeats a coefficient; using a Monte Carlo interval instead of type = \"%s\"", tp),
+      info = tp
+    )
+    expect_true("MC.Error" %in% names(res_tp$rep3), info = tp)
+  }
+  # type = "MC" is used as asked, silently
+  set.seed(8)
+  expect_no_warning(ci(fit, type = "MC", n.mc = 2000))
+})
+
+test_that("the repeated-factor Monte Carlo interval matches a direct simulation of a^2 * b", {
+  skip_if_not_installed("MASS")
+  fit <- .lav_fit("rep3 := a*b*a")
+  est <- lavaan::coef(fit)[c("a", "b")]
+  vc <- as.matrix(lavaan::vcov(fit)[c("a", "b"), c("a", "b")])
+  # independent oracle: draw (a, b) from their joint normal and form a^2 * b directly
+  set.seed(101)
+  draws <- MASS::mvrnorm(2e5, mu = as.numeric(est), Sigma = vc)
+  prod_draws <- draws[, 1]^2 * draws[, 2]
+  oracle <- stats::quantile(prod_draws, c(0.025, 0.975), names = FALSE)
+  set.seed(202)
+  res <- suppressWarnings(ci(fit, type = "MC", n.mc = 2e5))$rep3
+  tol <- 0.05 * stats::sd(prod_draws)
+  expect_lt(max(abs(as.numeric(res$CI) - oracle)), tol)
+  expect_lt(abs(res$Estimate - mean(prod_draws)), tol)
+  expect_lt(abs(res$SE - stats::sd(prod_draws)), tol)
+})
+
+test_that("a repeated factor behind a nested `:=` is detected after expansion", {
+  # abx := ab*a expands to (a*b)*a, which repeats `a`
+  fit <- .lav_fit("abx := ab*a")
+  expect_no_error(res <- suppressWarnings(ci(fit, type = "MC", n.mc = 2000)))
+  expect_warning(
+    ci(fit, type = "dop", n.mc = 2000),
+    "'abx' repeats a coefficient; using a Monte Carlo interval instead of type = \"dop\""
+  )
+  expect_true("MC.Error" %in% names(res$abx))
+})
+
+test_that("two repeated factors (a*a) and distinct factors keep their existing routes", {
+  fit <- .lav_fit("sq := a*a\n flat := a*b*c")
+  expect_no_error(res <- ci(fit, type = "dop"))
+  expect_named(res$flat, c("lower", "upper")) # distinct three factors: exact interval
+  expect_true(all(c("CI", "Estimate", "SE") %in% names(res$sq))) # two factors: ProductNormal route
+})
+
 test_that("four or more factors take Monte Carlo, with a warning when type is explicit", {
   fit <- .lav_fit4("p4 := a*b*c*d")
   expect_warning(

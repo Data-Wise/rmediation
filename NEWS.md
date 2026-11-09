@@ -1,4 +1,45 @@
-# RMediation 1.10.0 (2026-11-08)
+# RMediation 1.11.0 (2026-11-09)
+
+## New features
+
+- `pprodnormal3()` now takes a vector of quantiles, like `pprodnormal()`, `dprodnormal()`, `qprodnormal()` and
+  `dprodnormal3()`. The result is a numeric vector of the same length and names as `q`, in the order given; with
+  `diagnostics = TRUE` the `"error"` and `"nodes"` attributes have one entry per `q`. A single `q` behaves exactly as
+  before (same value, same error messages, no attributes unless `diagnostics = TRUE`). A missing, infinite or empty `q`
+  vector is an error.
+
+- `pprodnormal3()` gains `lower.tail = TRUE`. With `lower.tail = FALSE` it returns `P(X1 * X2 * X3 > q)` by integrating
+  the complement directly, so far upper tails (for example `q = 100` at unit means, about 8e-11) are resolved
+  instead of lost to `1 - p`. As everywhere in this function the accuracy is the absolute `tol`, so use a `tol` well
+  below the probability you want. Default calls return the same values as before; vectors, names, `diagnostics`,
+  `method = "hcubature"` and every degenerate reduction (zero-variance factors, point masses) support it.
+
+- New `qprodnormal3(p, mean, cov, lower.tail = TRUE, tol = 1e-6)`: the quantile of the product of three normals, the
+  counterpart of `qprodnormal()`. It inverts `pprodnormal3()` by root-finding in either tail (so a small upper-tail `p` is
+  resolved), keeps the names of `p`, and returns `-Inf`/`Inf` at `p = 0`/`1`. `dist_quantile()` on a `ProductNormal3`
+  now uses the same routine, so the two agree; at `p = 0` and `p = 1` it returns `-Inf` and `Inf`, and for a point
+  mass (three zero variances) it returns `prod(mu)`.
+
+## Documentation
+
+- `?ci` now documents the `p` element of the Monte Carlo result: a two-sided proportion of simulated values above or
+  below 0 (the "P Value" on the density plot), 0 for any clearly nonzero effect, not a null-distribution test. The
+  element name is `MCError`, as returned, not `MC Error`. The asymptotic result has no `p`.
+
+## Bug fixes
+
+- A perfectly correlated pair (the same coefficient twice, as in `sq := a*a`) could fail with `non-finite function value` under
+  `type = "dop"`. `rho = Sigma[1, 2] / (se.x * se.y)` can come out as 1 plus or minus one rounding step because
+  `sqrt(v)^2` is not always `v`; above 1 the distribution-of-the-product root-finder failed. A `rho` within 1e-12 of 1 or -1
+  is now taken as exactly 1 or -1, so the closed-form collinear branch is used. A genuinely invalid correlation is still
+  rejected.
+- `ci()` on a `lavaan` fit no longer stops on a defined parameter that repeats a coefficient inside a product of
+  three or more factors (`ab := a*b*a`, `cube := a*a*a`, or a nested `abx := ab*a`). The exact three-factor interval
+  does not apply because the repeated factors are perfectly correlated, and it used to fail with a "perfect
+  correlation" error. Such a parameter now gets a Monte Carlo interval, with a warning when you set `type` to anything
+  other than `"MC"`. Two factors (`a*a`) and three distinct factors are unchanged.
+
+# RMediation 1.10.0 (2026-11-09)
 
 No change to returned values for any call that worked before; the only API addition is the optional `@provenance` on `MBCOResult`.
 

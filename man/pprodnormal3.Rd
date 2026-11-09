@@ -12,13 +12,15 @@ pprodnormal3(
   method = c("gauss", "hcubature"),
   tol = 1e-06,
   nodes = NULL,
-  diagnostics = FALSE
+  diagnostics = FALSE,
+  lower.tail = TRUE
 )
 
 p_prod3(...)
 }
 \arguments{
-\item{q}{Numeric scalar quantile.}
+\item{q}{Numeric vector of quantiles (finite, no missing values). A single value takes
+the scalar path unchanged.}
 
 \item{mean}{Numeric vector of means of length 3.}
 
@@ -64,11 +66,21 @@ result is badly wrong (see Note), which is why it cannot be used to
 detect the failure this method was replaced over.
 }}
 
+\item{lower.tail}{Logical; if \code{TRUE} (default) probabilities are \code{P(X1 * X2 * X3 <= q)}, otherwise
+\code{P(X1 * X2 * X3 > q)}. The upper tail is integrated directly, not computed as \code{1 - p}, so it
+stays accurate far out where \code{1 - p} would be lost to rounding. The accuracy is still the absolute
+tolerance \code{tol}, so for a tail probability of size \code{p} use \code{tol} well below \code{p} (for example \code{tol = 1e-14}
+for a probability near 1e-10).}
+
 \item{...}{Additional arguments (unused; present for the \code{p_prod3}
 deprecated alias).}
 }
 \value{
-Probability \code{P(X1 * X2 * X3 <= q)} as a numeric scalar in \verb{[0, 1]}.
+Probability \code{P(X1 * X2 * X3 <= q)} in \verb{[0, 1]}: a numeric scalar for a single
+\code{q}, and a numeric vector of the same length (and names) as \code{q} otherwise, in the order
+given. With \code{diagnostics = TRUE} and more than one \code{q}, the \code{"error"} and \code{"nodes"}
+attributes are vectors with one entry per \code{q} (\code{NA} where there is nothing to report,
+for example a point mass).
 }
 \description{
 Computes \code{P(X1 * X2 * X3 <= q)} where \verb{(X1, X2, X3)} follows a trivariate
@@ -100,6 +112,10 @@ compatibility; use \code{pprodnormal3()} in new code.
 \examples{
 Sigma <- diag(3)
 pprodnormal3(q = 0, mean = c(0, 0, 0), cov = Sigma)
+# the upper tail, integrated directly (far out, 1 - p would be lost to rounding)
+pprodnormal3(30, mean = c(1, 1, 1), cov = diag(3), tol = 1e-10, lower.tail = FALSE)
+# several quantiles at once
+pprodnormal3(q = c(-1, 0, 1), mean = c(0, 0, 0), cov = Sigma)
 }
 \seealso{
 \code{\link[=pprodnormal]{pprodnormal()}} and \code{\link[=qprodnormal]{qprodnormal()}} for the two-variable product-

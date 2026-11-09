@@ -15,9 +15,10 @@ One page: which function answers which question. Each row links to the full help
 |---|---|---|
 | a CI for `a*b` from estimates and standard errors | `medci(mu.x, mu.y, se.x, se.y, rho, type = "dop")` | `"dop"` is exact; `"MC"` samples; `"asymp"` is the delta method |
 | a CI for any function of fitted parameters | `ci()` with a medfit `MediationData` / `SerialMediationData` object | `ci_mediation_data()`, `ci_serial_mediation_data()` |
+| a CI for each `:=` in a `lavaan` fit | `ci(fit)` | the route depends on the form of the `:=`; see "Defined parameters" below |
 | a CI for a function of several parameters from a mean and covariance | `qMC()`, `pMC()` with `quant = ~ a*b` | Monte Carlo; `p` and `q` are scalars |
 | the CDF, quantile or density of `a*b` | `pprodnormal()`, `qprodnormal()`, `dprodnormal()` | two normals |
-| the CDF or density of `a1*a2*b` | `pprodnormal3()`, `dprodnormal3()` | three normals; pass `mean` and `cov` |
+| the CDF, quantile or density of `a1*a2*b` | `pprodnormal3()`, `qprodnormal3()`, `dprodnormal3()` | three normals; pass `mean` and `cov`; since 1.11.0 `pprodnormal3()` takes a vector of `q` and `lower.tail`, and `qprodnormal3()` is new |
 | test `H0: a*b = 0` with OpenMx | `mbco_product_null(h1, paths = c("a", "b"))` | exact: fixes one path at 0 per branch |
 | test any equality constraint with OpenMx | `mbco(h0, h1, type = ...)` | see the warnings below |
 | test with two medfit `SEMFit` fits | `mbco(h0, h1, type = "asymp")` | needs medfit >= 0.8.0 |
@@ -38,6 +39,25 @@ One page: which function answers which question. Each row links to the full help
 | `"asymp"` | chi-squared | one fit pair |
 | `"semi"` | semiparametric bootstrap, `R` replicates | `R` fit pairs |
 | `"parametric"` | parametric bootstrap, `R` replicates | `R` fit pairs |
+
+## Defined parameters in `ci(<lavaan>)`
+
+`ci(fit)` returns one interval per `:=`. What you get depends on the form of the definition; a `:=` that uses another `:=` is expanded first.
+
+| Form | Interval | Result names |
+|---|---|---|
+| two coefficients (`a*b`) | honors `type` | `CI`, `Estimate`, `SE` |
+| three different coefficients (`a*b*c`) | exact three-factor interval; ignores `type` | `lower`, `upper` |
+| four or more coefficients | Monte Carlo | `CI`, `Estimate`, `SE`, `MC.Error` |
+| any other formula (`a*b + c`, `exp(a)*b`) | Monte Carlo | an unnamed interval, then `Estimate`, `SE`, `MCError`, `p` |
+| three or more with a repeated coefficient (`a*b*a`), from 1.11.0 | Monte Carlo | `CI`, `Estimate`, `SE`, `MC.Error` |
+
+A warning says when your explicit `type` was overridden. A definition that cannot be resolved gets a warning and a `NULL` entry; the other intervals are still returned. See [Technical Notes](technical-notes.html), section 7, for the reasoning.
+
+## Changed in 1.10.0
+
+- An `mbco()` result carries `@provenance`: the RMediation, OpenMx, medfit and R versions, the test `type`, the bootstrap size `R`, `RNGkind()` and the run time. The seed is not recorded; call `set.seed()` and report it. `names()` of an `MBCOResult` gains `"provenance"` last.
+- `ci()` on a `lavaan` fit resolves a `:=` that uses another one, and no longer stops on a product of three or more coefficients (table above). It warns when you set `type` and a defined parameter is not a product of estimated coefficients.
 
 ## Changed in 1.9.0
 

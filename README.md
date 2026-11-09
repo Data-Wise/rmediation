@@ -52,16 +52,16 @@ Traditional methods (e.g., Sobel test) assume the indirect effect *ab* follows a
 install.packages("RMediation")
 ```
 
-### From GitHub (release 1.10.0, pre-release)
+### From GitHub (release 1.11.0)
 
-CRAN serves the stable 1.6.1. Release 1.10.0 is published on GitHub only, as a pre-release; it is not on CRAN.
+CRAN serves the stable 1.6.1. Release 1.11.0 is published on GitHub only, as the latest GitHub release; it is not on CRAN.
 
 ```r
 # Using pak (recommended)
-pak::pak("Data-Wise/rmediation@v1.10.0")
+pak::pak("Data-Wise/rmediation@v1.11.0")
 
 # Or using remotes
-remotes::install_github("Data-Wise/rmediation", ref = "v1.10.0")
+remotes::install_github("Data-Wise/rmediation", ref = "v1.11.0")
 ```
 
 For the development branch, use `@dev` or `ref = "dev"` instead.
@@ -146,7 +146,8 @@ ci(fit, type = "dop")
 `ci(fit)` returns one interval per `:=`. A product of two coefficients (`a*b`) gets the interval
 you ask for with `type`. A product of three coefficients (`a*b*c`) gets the exact three-factor
 interval, whatever `type` is. A product of four or more coefficients, or any other formula such as
-`a*b + c`, gets a Monte Carlo interval, with a warning when you set `type` yourself. A definition
+`a*b + c`, gets a Monte Carlo interval, with a warning when you set `type` yourself (so does a
+product of three or more that repeats a coefficient, such as `a*b*a`, since 1.11.0). A definition
 can use another one (`abc := ab*c`); one that cannot be resolved gets a warning and a `NULL`
 entry, and the other intervals are still returned.
 
@@ -284,14 +285,15 @@ The default screen keeps only admissible (positive-definite) grid points; use
 |----------|---------|
 | `medci()` | CI for product of two normal variables |
 | `ci()` | CI for any function of parameters (formulas, lavaan, ProductNormal, ProductNormal3) |
-| `mbco()` | Asymptotic and OpenMx bootstrap MBCO hypothesis tests |
+| `mbco()` | Asymptotic and OpenMx bootstrap MBCO hypothesis tests; the result records its provenance in `@provenance` (versions, `type`, `R`, `RNGkind()`, run time; not the seed) |
 | `mbco_product_null()` | MBCO test of a product null (`a*b = 0`, serial products) as an intersection-union test over single-path nulls, avoiding the wrong-branch failure of one nonlinear constraint |
 | `ml_omitted_confounder()` | Sensitivity of two-level (1-1-1) indirect effects to an omitted confounder (Tofighi & Kelley, 2016) |
 | `ci_mediation_data()`, `ci_serial_mediation_data()` | CI for a medfit `MediationData` or `SerialMediationData` object (also reached through `ci()`) |
 | `pprodnormal()` | CDF of product of two normals |
 | `qprodnormal()` | Quantiles of product of two normals |
 | `dprodnormal()` | Exact density of the product of two normals |
-| `pprodnormal3()` | Exact CDF of product of three normals (`a1*a2*b`) |
+| `pprodnormal3()` | Exact CDF of product of three normals (`a1*a2*b`); takes a vector of `q` and `lower.tail` (since 1.11.0) |
+| `qprodnormal3()` | Quantiles of the product of three normals (since 1.11.0); `lower.tail`, vectorized in `p` |
 | `dprodnormal3()` | Exact density of the product of three normals |
 | `pMC()`, `qMC()` | Monte Carlo CDF and quantile for any function of coefficient estimates |
 | `ProductNormal()` | S7 class for two-variable product distributions |
