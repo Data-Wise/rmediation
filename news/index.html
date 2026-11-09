@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.10.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,12 +23,15 @@
     <li><a class="dropdown-item" href="../articles/methods-comparison.html">CI Methods Comparison</a></li>
     <li><a class="dropdown-item" href="../articles/serial-mediation-with-medfit.html">Serial Mediation with medfit</a></li>
     <li><a class="dropdown-item" href="../articles/mbco.html">Testing an Indirect Effect with MBCO</a></li>
+    <li><a class="dropdown-item" href="../articles/mbco-semfit.html">MBCO on medfit SEM Models</a></li>
+    <li><a class="dropdown-item" href="../articles/indirect-effects-lavaan.html">Indirect Effects in a lavaan Model</a></li>
     <li><a class="dropdown-item" href="../articles/omitted-confounder-sensitivity.html">Omitted-Confounder Sensitivity</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
     <li><a class="dropdown-item" href="../articles/reporting.html">Reporting RMediation in a Paper</a></li>
+    <li><a class="dropdown-item" href="../articles/changes-since-cran.html">What Changed Since CRAN 1.6.1</a></li>
     <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://data-wise.github.io/mediationverse/articles/ecosystem.html">Ecosystem</a></li>
@@ -57,7 +60,27 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="1.10.0" id="rmediation-1100-2026-11-08">RMediation 1.10.0 (2026-11-08)<a class="anchor" aria-label="anchor" href="#rmediation-1100-2026-11-08"></a></h2>
+<h2 class="pkg-version" data-toc-text="1.11.0" id="rmediation-1110-2026-11-09">RMediation 1.11.0 (2026-11-09)<a class="anchor" aria-label="anchor" href="#rmediation-1110-2026-11-09"></a></h2>
+<div class="section level3">
+<h3 id="new-features-1-11-0">New features<a class="anchor" aria-label="anchor" href="#new-features-1-11-0"></a></h3>
+<ul><li><p><code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code> now takes a vector of quantiles, like <code><a href="../reference/pprodnormal.html">pprodnormal()</a></code>, <code><a href="../reference/dprodnormal.html">dprodnormal()</a></code>, <code><a href="../reference/qprodnormal.html">qprodnormal()</a></code> and <code><a href="../reference/dprodnormal3.html">dprodnormal3()</a></code>. The result is a numeric vector of the same length and names as <code>q</code>, in the order given; with <code>diagnostics = TRUE</code> the <code>"error"</code> and <code>"nodes"</code> attributes have one entry per <code>q</code>. A single <code>q</code> behaves exactly as before (same value, same error messages, no attributes unless <code>diagnostics = TRUE</code>). A missing, infinite or empty <code>q</code> vector is an error.</p></li>
+<li><p><code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code> gains <code>lower.tail = TRUE</code>. With <code>lower.tail = FALSE</code> it returns <code>P(X1 * X2 * X3 &gt; q)</code> by integrating the complement directly, so far upper tails (for example <code>q = 100</code> at unit means, about 8e-11) are resolved instead of lost to <code>1 - p</code>. As everywhere in this function the accuracy is the absolute <code>tol</code>, so use a <code>tol</code> well below the probability you want. Default calls return the same values as before; vectors, names, <code>diagnostics</code>, <code>method = "hcubature"</code> and every degenerate reduction (zero-variance factors, point masses) support it.</p></li>
+<li><p>New <code>qprodnormal3(p, mean, cov, lower.tail = TRUE, tol = 1e-6)</code>: the quantile of the product of three normals, the counterpart of <code><a href="../reference/qprodnormal.html">qprodnormal()</a></code>. It inverts <code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code> by root-finding in either tail (so a small upper-tail <code>p</code> is resolved), keeps the names of <code>p</code>, and returns <code>-Inf</code>/<code>Inf</code> at <code>p = 0</code>/<code>1</code>. <code><a href="../reference/dist_quantile.html">dist_quantile()</a></code> on a <code>ProductNormal3</code> now uses the same routine, so the two agree; at <code>p = 0</code> and <code>p = 1</code> it returns <code>-Inf</code> and <code>Inf</code>, and for a point mass (three zero variances) it returns <code>prod(mu)</code>.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-1-11-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-1-11-0"></a></h3>
+<ul><li>
+<code><a href="../reference/ci.html">?ci</a></code> now documents the <code>p</code> element of the Monte Carlo result: a two-sided proportion of simulated values above or below 0 (the “P Value” on the density plot), 0 for any clearly nonzero effect, not a null-distribution test. The element name is <code>MCError</code>, as returned, not <code>MC Error</code>. The asymptotic result has no <code>p</code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-1-11-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-11-0"></a></h3>
+<ul><li>A perfectly correlated pair (the same coefficient twice, as in <code>sq := a*a</code>) could fail with <code>non-finite function value</code> under <code>type = "dop"</code>. <code>rho = Sigma[1, 2] / (se.x * se.y)</code> can come out as 1 plus or minus one rounding step because <code>sqrt(v)^2</code> is not always <code>v</code>; above 1 the distribution-of-the-product root-finder failed. A <code>rho</code> within 1e-12 of 1 or -1 is now taken as exactly 1 or -1, so the closed-form collinear branch is used. A genuinely invalid correlation is still rejected.</li>
+<li>
+<code><a href="../reference/ci.html">ci()</a></code> on a <code>lavaan</code> fit no longer stops on a defined parameter that repeats a coefficient inside a product of three or more factors (<code>ab := a*b*a</code>, <code>cube := a*a*a</code>, or a nested <code>abx := ab*a</code>). The exact three-factor interval does not apply because the repeated factors are perfectly correlated, and it used to fail with a “perfect correlation” error. Such a parameter now gets a Monte Carlo interval, with a warning when you set <code>type</code> to anything other than <code>"MC"</code>. Two factors (<code>a*a</code>) and three distinct factors are unchanged.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.10.0" id="rmediation-1100-2026-11-09">RMediation 1.10.0 (2026-11-09)<a class="anchor" aria-label="anchor" href="#rmediation-1100-2026-11-09"></a></h2>
 <p>No change to returned values for any call that worked before; the only API addition is the optional <code>@provenance</code> on <code>MBCOResult</code>.</p>
 <div class="section level3">
 <h3 id="new-features-1-10-0">New features<a class="anchor" aria-label="anchor" href="#new-features-1-10-0"></a></h3>

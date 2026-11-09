@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.10.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,12 +46,15 @@
     <li><a class="dropdown-item" href="../articles/methods-comparison.html">CI Methods Comparison</a></li>
     <li><a class="dropdown-item" href="../articles/serial-mediation-with-medfit.html">Serial Mediation with medfit</a></li>
     <li><a class="dropdown-item" href="../articles/mbco.html">Testing an Indirect Effect with MBCO</a></li>
+    <li><a class="dropdown-item" href="../articles/mbco-semfit.html">MBCO on medfit SEM Models</a></li>
+    <li><a class="dropdown-item" href="../articles/indirect-effects-lavaan.html">Indirect Effects in a lavaan Model</a></li>
     <li><a class="dropdown-item" href="../articles/omitted-confounder-sensitivity.html">Omitted-Confounder Sensitivity</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
     <li><a class="dropdown-item" href="../articles/reporting.html">Reporting RMediation in a Paper</a></li>
+    <li><a class="dropdown-item" href="../articles/changes-since-cran.html">What Changed Since CRAN 1.6.1</a></li>
     <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul>
 </li>
@@ -107,8 +110,10 @@ status dashboard</a>.</p>
 <li>
 <strong>CRAN</strong> serves 1.6.1.</li>
 <li>
-<strong>GitHub</strong> carries the later releases (published as
-pre-releases); the development version is 1.10.0. Install with
+<strong>GitHub</strong> carries the later releases (1.10.0 and
+1.11.0 are full releases; 1.9.0 and earlier are pre-releases); the
+latest release is 1.11.0, and changes made after it are listed under
+“development version” on the News page. Install with
 <code>pak::pak("Data-Wise/rmediation")</code>; the <a href="https://github.com/Data-Wise/rmediation#installation" class="external-link">README</a>
 lists the tagged install commands.</li>
 <li>The <a href="../news/index.html">News</a> page lists every change by
@@ -123,7 +128,7 @@ version.</li>
 GitHub-only for now. When that happens, the <code>Suggests</code> entry
 for medfit rises to <code>medfit &gt;= 0.8.0</code>. A later CRAN
 candidate must also remove or finish the SEMFit route described below,
-so its version will be later than the current development version.</p>
+so its version will be later than 1.11.0.</p>
 </div>
 <div class="section level2">
 <h2 id="the-semfit-route-for-mbco">The SEMFit route for <code>mbco()</code><a class="anchor" aria-label="anchor" href="#the-semfit-route-for-mbco"></a>
@@ -146,6 +151,10 @@ ill-conditioned covariance (see the <a href="technical-notes.html">Technical Not
 <li>
 <code><a href="../reference/mbco_product_null.html">mbco_product_null()</a></code> tests <code>a*b = 0</code> exactly,
 one single-path null per branch.</li>
+<li>
+<code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code> accepts a vector of <code>q</code>, like
+the other distribution functions; a single <code>q</code> behaves as
+before (since 1.11.0).</li>
 <li>An <code><a href="../reference/mbco.html">mbco()</a></code> result carries <code>@provenance</code>
 (package and R versions, test type, bootstrap size,
 <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code> and run time). The seed is not recorded; call
@@ -153,9 +162,11 @@ one single-path null per branch.</li>
 <li>
 <code><a href="../reference/ci.html">ci()</a></code> on a <code>lavaan</code> fit resolves a
 <code>:=</code> that uses another <code>:=</code>. A product of three
-coefficients gets the exact three-factor interval; four or more get a
-Monte Carlo interval, with a warning when you set <code>type</code>. In
-1.10.0; see <a href="../news/index.html">News</a>.</li>
+different coefficients gets the exact three-factor interval; four or
+more get a Monte Carlo interval, with a warning when you set
+<code>type</code>. In 1.10.0; see <a href="../news/index.html">News</a>.
+A coefficient repeated inside a product of three or more also gets a
+Monte Carlo interval (since 1.11.0).</li>
 <li>
 <code>ci(type = "asymp")</code> labels its interval by the
 confidence level, and the densities are correct for very small standard

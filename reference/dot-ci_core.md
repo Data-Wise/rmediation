@@ -133,10 +133,23 @@ When `type` is `"MC"` or `"asymp"`, `ci` returns a
 
   standard error of the quantity of interest,
 
-- MC Error:
+- MCError:
 
   When `type="MC"`, sampling standard error of the simulated mean, SE /
-  sqrt(n.mc).
+  sqrt(n.mc),
+
+- p:
+
+  When `type="MC"`, a two-sided Monte Carlo proportion:
+  `2 * min(P, 1 - P)`, where `P` is the share of simulated values of the
+  quantity that are greater than 0. It is the "P Value" printed on the
+  density plot. It describes where the sampling distribution of the
+  estimate lies relative to 0; it is *not* a test against a null
+  distribution, and it is exactly 0 whenever every simulated value has
+  the same sign, so it cannot rank clearly nonzero effects. To test a
+  hypothesis such as a product equal to 0, use
+  [`mbco`](https://data-wise.github.io/rmediation/reference/mbco.md).
+  The asymptotic result has no `p` element.
 
 When `type="all"`, `ci` returns a
 [list](https://rdrr.io/r/base/list.html) of two objects, each of which a
@@ -187,7 +200,7 @@ ci(
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3 * b4
-#> <environment: 0x5e8a0e3cc848>
+#> <environment: 0x601bcdf1f200>
 #> 
 #> $Asymptotic
 #> $Asymptotic$`95% CI`
@@ -202,7 +215,7 @@ ci(
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3 * b4
-#> <environment: 0x5e8a0e3cc848>
+#> <environment: 0x601bcdf1f200>
 #> 
 # An Example of Conservative Null Sampling Distribution
 ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
@@ -229,7 +242,7 @@ ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3
-#> <environment: 0x5e8a0e3cc848>
+#> <environment: 0x601bcdf1f200>
 #> 
 #> [[2]]
 #> [[2]]$CI
@@ -275,7 +288,7 @@ ci(c(b1 = .3, b2 = .4, b3 = .3), c(.01, 0, 0, .01, 0, .02),
 #> 
 #> attr(,"quant")
 #> ~b1 * b2 * b3
-#> <environment: 0x5e8a0e3cc848>
+#> <environment: 0x601bcdf1f200>
 #> 
 #> [[2]]
 #> [[2]]$CI

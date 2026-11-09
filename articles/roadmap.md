@@ -11,8 +11,10 @@ dashboard](https://github.com/data-wise/mediationverse/blob/main/STATUS.md).
 ## Where each release lives
 
 - **CRAN** serves 1.6.1.
-- **GitHub** carries the later releases (published as pre-releases); the
-  development version is 1.10.0. Install with
+- **GitHub** carries the later releases (1.10.0 and 1.11.0 are full
+  releases; 1.9.0 and earlier are pre-releases); the latest release is
+  1.11.0, and changes made after it are listed under “development
+  version” on the News page. Install with
   `pak::pak("Data-Wise/rmediation")`; the
   [README](https://github.com/Data-Wise/rmediation#installation) lists
   the tagged install commands.
@@ -25,8 +27,7 @@ No CRAN submission is planned until a medfit release that provides
 `fixed_x` and observed mean structure is on CRAN. medfit is GitHub-only
 for now. When that happens, the `Suggests` entry for medfit rises to
 `medfit >= 0.8.0`. A later CRAN candidate must also remove or finish the
-SEMFit route described below, so its version will be later than the
-current development version.
+SEMFit route described below, so its version will be later than 1.11.0.
 
 ## The SEMFit route for `mbco()`
 
@@ -45,6 +46,9 @@ experimental, because medfit dropped that label in 0.11.0.
   Notes](https://data-wise.github.io/rmediation/articles/technical-notes.md)).
 - [`mbco_product_null()`](https://data-wise.github.io/rmediation/reference/mbco_product_null.md)
   tests `a*b = 0` exactly, one single-path null per branch.
+- [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md)
+  accepts a vector of `q`, like the other distribution functions; a
+  single `q` behaves as before (since 1.11.0).
 - An
   [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md)
   result carries `@provenance` (package and R versions, test type,
@@ -55,10 +59,12 @@ experimental, because medfit dropped that label in 0.11.0.
   [News](https://data-wise.github.io/rmediation/news/index.md).
 - [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) on a
   `lavaan` fit resolves a `:=` that uses another `:=`. A product of
-  three coefficients gets the exact three-factor interval; four or more
-  get a Monte Carlo interval, with a warning when you set `type`. In
-  1.10.0; see
-  [News](https://data-wise.github.io/rmediation/news/index.md).
+  three different coefficients gets the exact three-factor interval;
+  four or more get a Monte Carlo interval, with a warning when you set
+  `type`. In 1.10.0; see
+  [News](https://data-wise.github.io/rmediation/news/index.md). A
+  coefficient repeated inside a product of three or more also gets a
+  Monte Carlo interval (since 1.11.0).
 - `ci(type = "asymp")` labels its interval by the confidence level, and
   the densities are correct for very small standard errors (both in
   1.9.0; see

@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.10.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,12 +46,15 @@
     <li><a class="dropdown-item" href="../articles/methods-comparison.html">CI Methods Comparison</a></li>
     <li><a class="dropdown-item" href="../articles/serial-mediation-with-medfit.html">Serial Mediation with medfit</a></li>
     <li><a class="dropdown-item" href="../articles/mbco.html">Testing an Indirect Effect with MBCO</a></li>
+    <li><a class="dropdown-item" href="../articles/mbco-semfit.html">MBCO on medfit SEM Models</a></li>
+    <li><a class="dropdown-item" href="../articles/indirect-effects-lavaan.html">Indirect Effects in a lavaan Model</a></li>
     <li><a class="dropdown-item" href="../articles/omitted-confounder-sensitivity.html">Omitted-Confounder Sensitivity</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
     <li><a class="dropdown-item" href="../articles/reporting.html">Reporting RMediation in a Paper</a></li>
+    <li><a class="dropdown-item" href="../articles/changes-since-cran.html">What Changed Since CRAN 1.6.1</a></li>
     <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul>
 </li>
@@ -214,10 +217,10 @@ path at zero per branch. This is exact; a single constraint
 <span><span class="co">#&gt; Significance: ns (not significant)</span></span>
 <span><span class="co">#&gt; Note: product null; binding single-path null: b1 = 0.</span></span>
 <span><span class="co">#&gt; Provenance:</span></span>
-<span><span class="co">#&gt;   Packages: RMediation 1.10.0, OpenMx 2.22.11, medfit 0.3.2, R 4.6.2 </span></span>
+<span><span class="co">#&gt;   Packages: RMediation 1.11.0, OpenMx 2.22.11, medfit 0.3.2, R 4.6.2 </span></span>
 <span><span class="co">#&gt;   Test: type = asymp</span></span>
 <span><span class="co">#&gt;   RNG: Mersenne-Twister / Inversion / Rejection </span></span>
-<span><span class="co">#&gt;   Run at: 2026-11-09 16:44:59 UTC </span></span>
+<span><span class="co">#&gt;   Run at: 2026-11-09 22:45:12 UTC </span></span>
 <span><span class="co">#&gt;   Seed: not recorded (call set.seed() yourself and report it)</span></span></code></pre></div>
 <p>The note under the result names the binding branch, the single-path
 null with the largest p-value.</p>
@@ -366,6 +369,85 @@ frame with the estimate and its degrees of freedom.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tidy.html">tidy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/logLik.html" class="external-link">logLik</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">wt</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            term  estimate df</span></span>
 <span><span class="co">#&gt; 1 logLikelihood -80.01471  3</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="when-a-call-errors">15. When a call errors<a class="anchor" aria-label="anchor" href="#when-a-call-errors"></a>
+</h2>
+<p>The messages below are what the package returns today; each row says
+what to change.</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr class="header">
+<th>You see</th>
+<th>Cause</th>
+<th>Change</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>
+<code>argument "object" is missing, with no default</code> after
+<code>ci(mu = ..., Sigma = ...)</code>
+</td>
+<td>
+<code><a href="../reference/ci.html">ci()</a></code> is an S7 generic and dispatches on its first
+argument, so that argument must be passed by position</td>
+<td><code>ci(c(a = 1, b = 2), Sigma, quant = ~a*b)</code></td>
+</tr>
+<tr class="even">
+<td><code>'Sigma' is not positive definite</code></td>
+<td>The covariance matrix you passed is not a valid covariance (for
+example a correlation above 1 in absolute value)</td>
+<td>Check the matrix with <code>eigen(Sigma)$values</code>; all must be
+positive</td>
+</tr>
+<tr class="odd">
+<td><code>The parameters names in formula 'quant' must match the parameters names provided in 'mu'</code></td>
+<td>The formula uses a name that <code>mu</code> does not have</td>
+<td>Name every element of <code>mu</code> and use exactly those names in
+<code>quant</code>
+</td>
+</tr>
+<tr class="even">
+<td><code>'arg' should be one of "MC", "asymp", "all"</code></td>
+<td>
+<code>type = "dop"</code> was asked for a formula with more than two
+parameters, where only these types exist</td>
+<td>Use <code>type = "MC"</code>, or <code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code> for a
+product of exactly three normals</td>
+</tr>
+<tr class="odd">
+<td><code>Assertion on 'alpha' failed: Element 1 is not &lt;= 1</code></td>
+<td>
+<code>alpha</code> is the total tail probability, so it must lie
+strictly between 0 and 1</td>
+<td>
+<code>alpha = 0.05</code> gives a 95% interval</td>
+</tr>
+<tr class="even">
+<td><code>The density needs -1 &lt; rho &lt; 1</code></td>
+<td>At <code>abs(rho) = 1</code> the product is a function of one
+variable and has no bivariate density</td>
+<td>Use <code><a href="../reference/pprodnormal.html">pprodnormal()</a></code>, which handles
+<code>abs(rho) = 1</code> as a closed form</td>
+</tr>
+<tr class="odd">
+<td><code>'arg' should be one of "gauss", "hcubature"</code></td>
+<td>An unknown <code>method</code> for <code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code>
+</td>
+<td>Leave <code>method</code> at its default, <code>"gauss"</code>
+</td>
+</tr>
+</tbody>
+</table>
+<p>A <code><a href="../reference/ci.html">ci()</a></code> call on a lavaan fit that prints a Monte Carlo
+message is not an error: a defined parameter with four or more factors,
+or one that repeats a coefficient, is always computed by Monte Carlo.
+See <a href="indirect-effects-lavaan.html">Indirect Effects in a lavaan
+Model with ci()</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

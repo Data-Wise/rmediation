@@ -33,7 +33,7 @@
 
     <a class="navbar-brand me-2" href="index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.10.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,12 +51,15 @@
     <li><a class="dropdown-item" href="articles/methods-comparison.html">CI Methods Comparison</a></li>
     <li><a class="dropdown-item" href="articles/serial-mediation-with-medfit.html">Serial Mediation with medfit</a></li>
     <li><a class="dropdown-item" href="articles/mbco.html">Testing an Indirect Effect with MBCO</a></li>
+    <li><a class="dropdown-item" href="articles/mbco-semfit.html">MBCO on medfit SEM Models</a></li>
+    <li><a class="dropdown-item" href="articles/indirect-effects-lavaan.html">Indirect Effects in a lavaan Model</a></li>
     <li><a class="dropdown-item" href="articles/omitted-confounder-sensitivity.html">Omitted-Confounder Sensitivity</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="articles/technical-notes.html">Technical Notes</a></li>
     <li><a class="dropdown-item" href="articles/reporting.html">Reporting RMediation in a Paper</a></li>
+    <li><a class="dropdown-item" href="articles/changes-since-cran.html">What Changed Since CRAN 1.6.1</a></li>
     <li><a class="dropdown-item" href="articles/roadmap.html">Status and Roadmap</a></li>
   </ul>
 </li>
@@ -170,15 +173,15 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"RMediation"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="from-github-release-1100-pre-release">From GitHub (release 1.10.0, pre-release)<a class="anchor" aria-label="anchor" href="#from-github-release-1100-pre-release"></a>
+<h3 id="from-github-release-1110">From GitHub (release 1.11.0)<a class="anchor" aria-label="anchor" href="#from-github-release-1110"></a>
 </h3>
-<p>CRAN serves the stable 1.6.1. Release 1.10.0 is published on GitHub only, as a pre-release; it is not on CRAN.</p>
+<p>CRAN serves the stable 1.6.1. Release 1.11.0 is published on GitHub only, as the latest GitHub release; it is not on CRAN.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Using pak (recommended)</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Data-Wise/rmediation@v1.10.0"</span><span class="op">)</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Data-Wise/rmediation@v1.11.0"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Or using remotes</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Data-Wise/rmediation"</span>, ref <span class="op">=</span> <span class="st">"v1.10.0"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"Data-Wise/rmediation"</span>, ref <span class="op">=</span> <span class="st">"v1.11.0"</span><span class="op">)</span></span></code></pre></div>
 <p>For the development branch, use <code>@dev</code> or <code>ref = "dev"</code> instead.</p>
 </div>
 <div class="section level3">
@@ -253,7 +256,7 @@
 <span></span>
 <span><span class="co"># Compute CI for indirect effect (auto-detects 'ab := a*b')</span></span>
 <span><span class="fu"><a href="reference/ci.html">ci</a></span><span class="op">(</span><span class="va">fit</span>, type <span class="op">=</span> <span class="st">"dop"</span><span class="op">)</span></span></code></pre></div>
-<p><code>ci(fit)</code> returns one interval per <code>:=</code>. A product of two coefficients (<code>a*b</code>) gets the interval you ask for with <code>type</code>. A product of three coefficients (<code>a*b*c</code>) gets the exact three-factor interval, whatever <code>type</code> is. A product of four or more coefficients, or any other formula such as <code>a*b + c</code>, gets a Monte Carlo interval, with a warning when you set <code>type</code> yourself. A definition can use another one (<code>abc := ab*c</code>); one that cannot be resolved gets a warning and a <code>NULL</code> entry, and the other intervals are still returned.</p>
+<p><code>ci(fit)</code> returns one interval per <code>:=</code>. A product of two coefficients (<code>a*b</code>) gets the interval you ask for with <code>type</code>. A product of three coefficients (<code>a*b*c</code>) gets the exact three-factor interval, whatever <code>type</code> is. A product of four or more coefficients, or any other formula such as <code>a*b + c</code>, gets a Monte Carlo interval, with a warning when you set <code>type</code> yourself (so does a product of three or more that repeats a coefficient, such as <code>a*b*a</code>, since 1.11.0). A definition can use another one (<code>abc := ab*c</code>); one that cannot be resolved gets a warning and a <code>NULL</code> entry, and the other intervals are still returned.</p>
 </div>
 <div class="section level3">
 <h3 id="serial-mediation-via-medfit">Serial Mediation via medfit<a class="anchor" aria-label="anchor" href="#serial-mediation-via-medfit"></a>
@@ -371,7 +374,7 @@
 </tr>
 <tr>
 <td><code><a href="reference/mbco.html">mbco()</a></code></td>
-<td>Asymptotic and OpenMx bootstrap MBCO hypothesis tests</td>
+<td>Asymptotic and OpenMx bootstrap MBCO hypothesis tests; the result records its provenance in <code>@provenance</code> (versions, <code>type</code>, <code>R</code>, <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code>, run time; not the seed)</td>
 </tr>
 <tr>
 <td><code><a href="reference/mbco_product_null.html">mbco_product_null()</a></code></td>
@@ -401,7 +404,12 @@
 </tr>
 <tr>
 <td><code><a href="reference/pprodnormal3.html">pprodnormal3()</a></code></td>
-<td>Exact CDF of product of three normals (<code>a1*a2*b</code>)</td>
+<td>Exact CDF of product of three normals (<code>a1*a2*b</code>); takes a vector of <code>q</code> and <code>lower.tail</code> (since 1.11.0)</td>
+</tr>
+<tr>
+<td><code><a href="reference/qprodnormal3.html">qprodnormal3()</a></code></td>
+<td>Quantiles of the product of three normals (since 1.11.0); <code>lower.tail</code>, vectorized in <code>p</code>
+</td>
 </tr>
 <tr>
 <td><code><a href="reference/dprodnormal3.html">dprodnormal3()</a></code></td>

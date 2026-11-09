@@ -7,18 +7,18 @@ checklist, not a set of rules about what is statistically right.
 
 ## 1. Pin the version
 
-CRAN serves RMediation 1.6.1. Later releases are on GitHub only, as
-pre-releases, and are not on CRAN. Report which you used, and install
-the exact tag so a reader can too:
+CRAN serves RMediation 1.6.1. Later releases are on GitHub only and are
+not on CRAN. Report which you used, and install the exact tag so a
+reader can too:
 
 ``` r
 
-pak::pak("Data-Wise/rmediation@v1.9.0")
+pak::pak("Data-Wise/rmediation@v1.11.0")
 # or
-remotes::install_github("Data-Wise/rmediation", ref = "v1.9.0")
+remotes::install_github("Data-Wise/rmediation", ref = "v1.11.0")
 ```
 
-Replace `v1.9.0` with the tag you ran. The [Releases
+Replace `v1.11.0` with the tag you ran. The [Releases
 page](https://github.com/Data-Wise/rmediation/releases) lists the tags.
 Do not cite `dev` or an untagged install: it moves.
 
@@ -27,7 +27,7 @@ Record what R reports for your session:
 ``` r
 
 as.character(packageVersion("RMediation"))
-#> [1] "1.10.0"
+#> [1] "1.11.0"
 ```
 
 [`sessionInfo()`](https://rdrr.io/r/utils/sessionInfo.html) goes in a

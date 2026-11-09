@@ -17,7 +17,8 @@ pprodnormal3(
   method = c("gauss", "hcubature"),
   tol = 1e-06,
   nodes = NULL,
-  diagnostics = FALSE
+  diagnostics = FALSE,
+  lower.tail = TRUE
 )
 
 p_prod3(...)
@@ -27,7 +28,8 @@ p_prod3(...)
 
 - q:
 
-  Numeric scalar quantile.
+  Numeric vector of quantiles (finite, no missing values). A single
+  value takes the scalar path unchanged.
 
 - mean:
 
@@ -87,6 +89,15 @@ p_prod3(...)
     why it cannot be used to detect the failure this method was replaced
     over.
 
+- lower.tail:
+
+  Logical; if `TRUE` (default) probabilities are `P(X1 * X2 * X3 <= q)`,
+  otherwise `P(X1 * X2 * X3 > q)`. The upper tail is integrated
+  directly, not computed as `1 - p`, so it stays accurate far out where
+  `1 - p` would be lost to rounding. The accuracy is still the absolute
+  tolerance `tol`, so for a tail probability of size `p` use `tol` well
+  below `p` (for example `tol = 1e-14` for a probability near 1e-10).
+
 - ...:
 
   Additional arguments (unused; present for the `p_prod3` deprecated
@@ -94,7 +105,12 @@ p_prod3(...)
 
 ## Value
 
-Probability `P(X1 * X2 * X3 <= q)` as a numeric scalar in `[0, 1]`.
+Probability `P(X1 * X2 * X3 <= q)` in `[0, 1]`: a numeric scalar for a
+single `q`, and a numeric vector of the same length (and names) as `q`
+otherwise, in the order given. With `diagnostics = TRUE` and more than
+one `q`, the `"error"` and `"nodes"` attributes are vectors with one
+entry per `q` (`NA` where there is nothing to report, for example a
+point mass).
 
 ## Note
 
@@ -132,4 +148,10 @@ for the corresponding S7 class.
 Sigma <- diag(3)
 pprodnormal3(q = 0, mean = c(0, 0, 0), cov = Sigma)
 #> [1] 0.5
+# the upper tail, integrated directly (far out, 1 - p would be lost to rounding)
+pprodnormal3(30, mean = c(1, 1, 1), cov = diag(3), tol = 1e-10, lower.tail = FALSE)
+#> [1] 7.552061e-05
+# several quantiles at once
+pprodnormal3(q = c(-1, 0, 1), mean = c(0, 0, 0), cov = Sigma)
+#> [1] 0.07330808 0.50000000 0.92669192
 ```

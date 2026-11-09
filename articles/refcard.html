@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.10.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,12 +46,15 @@
     <li><a class="dropdown-item" href="../articles/methods-comparison.html">CI Methods Comparison</a></li>
     <li><a class="dropdown-item" href="../articles/serial-mediation-with-medfit.html">Serial Mediation with medfit</a></li>
     <li><a class="dropdown-item" href="../articles/mbco.html">Testing an Indirect Effect with MBCO</a></li>
+    <li><a class="dropdown-item" href="../articles/mbco-semfit.html">MBCO on medfit SEM Models</a></li>
+    <li><a class="dropdown-item" href="../articles/indirect-effects-lavaan.html">Indirect Effects in a lavaan Model</a></li>
     <li><a class="dropdown-item" href="../articles/omitted-confounder-sensitivity.html">Omitted-Confounder Sensitivity</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
     <li><a class="dropdown-item" href="../articles/reporting.html">Reporting RMediation in a Paper</a></li>
+    <li><a class="dropdown-item" href="../articles/changes-since-cran.html">What Changed Since CRAN 1.6.1</a></li>
     <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul>
 </li>
@@ -130,6 +133,12 @@ the full help page.</p>
 </td>
 </tr>
 <tr class="odd">
+<td>a CI for each <code>:=</code> in a <code>lavaan</code> fit</td>
+<td><code>ci(fit)</code></td>
+<td>the route depends on the form of the <code>:=</code>; see “Defined
+parameters” below</td>
+</tr>
+<tr class="even">
 <td>a CI for a function of several parameters from a mean and
 covariance</td>
 <td>
@@ -138,7 +147,7 @@ covariance</td>
 </td>
 <td>Monte Carlo; <code>p</code> and <code>q</code> are scalars</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>the CDF, quantile or density of <code>a*b</code>
 </td>
 <td>
@@ -147,31 +156,33 @@ covariance</td>
 </td>
 <td>two normals</td>
 </tr>
-<tr class="odd">
-<td>the CDF or density of <code>a1*a2*b</code>
+<tr class="even">
+<td>the CDF, quantile or density of <code>a1*a2*b</code>
 </td>
 <td>
-<code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code>, <code><a href="../reference/dprodnormal3.html">dprodnormal3()</a></code>
+<code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code>, <code><a href="../reference/qprodnormal3.html">qprodnormal3()</a></code>,
+<code><a href="../reference/dprodnormal3.html">dprodnormal3()</a></code>
 </td>
-<td>three normals; pass <code>mean</code> and <code>cov</code>
-</td>
+<td>three normals; pass <code>mean</code> and <code>cov</code>; since
+1.11.0 <code><a href="../reference/pprodnormal3.html">pprodnormal3()</a></code> takes a vector of <code>q</code> and
+<code>lower.tail</code>, and <code><a href="../reference/qprodnormal3.html">qprodnormal3()</a></code> is new</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>test <code>H0: a*b = 0</code> with OpenMx</td>
 <td><code>mbco_product_null(h1, paths = c("a", "b"))</code></td>
 <td>exact: fixes one path at 0 per branch</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>test any equality constraint with OpenMx</td>
 <td><code>mbco(h0, h1, type = ...)</code></td>
 <td>see the warnings below</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>test with two medfit <code>SEMFit</code> fits</td>
 <td><code>mbco(h0, h1, type = "asymp")</code></td>
 <td>needs medfit &gt;= 0.8.0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>sensitivity to an omitted confounder</td>
 <td><code><a href="../reference/ml_omitted_confounder.html">ml_omitted_confounder()</a></code></td>
 <td>1-1-1 multilevel mediation</td>
@@ -248,6 +259,89 @@ covariance</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level2">
+<h2 id="defined-parameters-in-cilavaan">Defined parameters in <code>ci(&lt;lavaan&gt;)</code><a class="anchor" aria-label="anchor" href="#defined-parameters-in-cilavaan"></a>
+</h2>
+<p><code>ci(fit)</code> returns one interval per <code>:=</code>. What
+you get depends on the form of the definition; a <code>:=</code> that
+uses another <code>:=</code> is expanded first.</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr class="header">
+<th>Form</th>
+<th>Interval</th>
+<th>Result names</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>two coefficients (<code>a*b</code>)</td>
+<td>honors <code>type</code>
+</td>
+<td>
+<code>CI</code>, <code>Estimate</code>, <code>SE</code>
+</td>
+</tr>
+<tr class="even">
+<td>three different coefficients (<code>a*b*c</code>)</td>
+<td>exact three-factor interval; ignores <code>type</code>
+</td>
+<td>
+<code>lower</code>, <code>upper</code>
+</td>
+</tr>
+<tr class="odd">
+<td>four or more coefficients</td>
+<td>Monte Carlo</td>
+<td>
+<code>CI</code>, <code>Estimate</code>, <code>SE</code>,
+<code>MC.Error</code>
+</td>
+</tr>
+<tr class="even">
+<td>any other formula (<code>a*b + c</code>, <code>exp(a)*b</code>)</td>
+<td>Monte Carlo</td>
+<td>an unnamed interval, then <code>Estimate</code>, <code>SE</code>,
+<code>MCError</code>, <code>p</code>
+</td>
+</tr>
+<tr class="odd">
+<td>three or more with a repeated coefficient (<code>a*b*a</code>), from
+1.11.0</td>
+<td>Monte Carlo</td>
+<td>
+<code>CI</code>, <code>Estimate</code>, <code>SE</code>,
+<code>MC.Error</code>
+</td>
+</tr>
+</tbody>
+</table>
+<p>A warning says when your explicit <code>type</code> was overridden. A
+definition that cannot be resolved gets a warning and a
+<code>NULL</code> entry; the other intervals are still returned. See <a href="technical-notes.html">Technical Notes</a>, section 7, for the
+reasoning.</p>
+</div>
+<div class="section level2">
+<h2 id="changed-in-1-10-0">Changed in 1.10.0<a class="anchor" aria-label="anchor" href="#changed-in-1-10-0"></a>
+</h2>
+<ul>
+<li>An <code><a href="../reference/mbco.html">mbco()</a></code> result carries <code>@provenance</code>: the
+RMediation, OpenMx, medfit and R versions, the test <code>type</code>,
+the bootstrap size <code>R</code>, <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">RNGkind()</a></code> and the run
+time. The seed is not recorded; call <code><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed()</a></code> and report
+it. <code><a href="https://rdrr.io/r/base/names.html" class="external-link">names()</a></code> of an <code>MBCOResult</code> gains
+<code>"provenance"</code> last.</li>
+<li>
+<code><a href="../reference/ci.html">ci()</a></code> on a <code>lavaan</code> fit resolves a
+<code>:=</code> that uses another one, and no longer stops on a product
+of three or more coefficients (table above). It warns when you set
+<code>type</code> and a defined parameter is not a product of estimated
+coefficients.</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="changed-in-1-9-0">Changed in 1.9.0<a class="anchor" aria-label="anchor" href="#changed-in-1-9-0"></a>

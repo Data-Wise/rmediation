@@ -130,10 +130,10 @@ mbco_product_null(full, paths = c("a1", "b1"), type = "asymp")
 #> Significance: ns (not significant)
 #> Note: product null; binding single-path null: b1 = 0.
 #> Provenance:
-#>   Packages: RMediation 1.10.0, OpenMx 2.22.11, medfit 0.3.2, R 4.6.2 
+#>   Packages: RMediation 1.11.0, OpenMx 2.22.11, medfit 0.3.2, R 4.6.2 
 #>   Test: type = asymp
 #>   RNG: Mersenne-Twister / Inversion / Rejection 
-#>   Run at: 2026-11-09 16:44:59 UTC 
+#>   Run at: 2026-11-09 22:45:12 UTC 
 #>   Seed: not recorded (call set.seed() yourself and report it)
 ```
 
@@ -313,3 +313,25 @@ tidy(logLik(lm(mpg ~ wt, data = mtcars)))
 #>            term  estimate df
 #> 1 logLikelihood -80.01471  3
 ```
+
+## 15. When a call errors
+
+The messages below are what the package returns today; each row says
+what to change.
+
+| You see | Cause | Change |
+|----|----|----|
+| `argument "object" is missing, with no default` after `ci(mu = ..., Sigma = ...)` | [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) is an S7 generic and dispatches on its first argument, so that argument must be passed by position | `ci(c(a = 1, b = 2), Sigma, quant = ~a*b)` |
+| `'Sigma' is not positive definite` | The covariance matrix you passed is not a valid covariance (for example a correlation above 1 in absolute value) | Check the matrix with `eigen(Sigma)$values`; all must be positive |
+| `The parameters names in formula 'quant' must match the parameters names provided in 'mu'` | The formula uses a name that `mu` does not have | Name every element of `mu` and use exactly those names in `quant` |
+| `'arg' should be one of "MC", "asymp", "all"` | `type = "dop"` was asked for a formula with more than two parameters, where only these types exist | Use `type = "MC"`, or [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md) for a product of exactly three normals |
+| `Assertion on 'alpha' failed: Element 1 is not <= 1` | `alpha` is the total tail probability, so it must lie strictly between 0 and 1 | `alpha = 0.05` gives a 95% interval |
+| `The density needs -1 < rho < 1` | At `abs(rho) = 1` the product is a function of one variable and has no bivariate density | Use [`pprodnormal()`](https://data-wise.github.io/rmediation/reference/pprodnormal.md), which handles `abs(rho) = 1` as a closed form |
+| `'arg' should be one of "gauss", "hcubature"` | An unknown `method` for [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md) | Leave `method` at its default, `"gauss"` |
+
+A [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) call
+on a lavaan fit that prints a Monte Carlo message is not an error: a
+defined parameter with four or more factors, or one that repeats a
+coefficient, is always computed by Monte Carlo. See [Indirect Effects in
+a lavaan Model with
+ci()](https://data-wise.github.io/rmediation/articles/indirect-effects-lavaan.md).

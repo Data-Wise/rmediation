@@ -15,7 +15,7 @@ adaptive cubature (dimension reduction; see Tofighi, 2026)."><meta property="og:
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.10.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,12 +31,15 @@ adaptive cubature (dimension reduction; see Tofighi, 2026)."><meta property="og:
     <li><a class="dropdown-item" href="../articles/methods-comparison.html">CI Methods Comparison</a></li>
     <li><a class="dropdown-item" href="../articles/serial-mediation-with-medfit.html">Serial Mediation with medfit</a></li>
     <li><a class="dropdown-item" href="../articles/mbco.html">Testing an Indirect Effect with MBCO</a></li>
+    <li><a class="dropdown-item" href="../articles/mbco-semfit.html">MBCO on medfit SEM Models</a></li>
+    <li><a class="dropdown-item" href="../articles/indirect-effects-lavaan.html">Indirect Effects in a lavaan Model</a></li>
     <li><a class="dropdown-item" href="../articles/omitted-confounder-sensitivity.html">Omitted-Confounder Sensitivity</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
     <li><a class="dropdown-item" href="../articles/reporting.html">Reporting RMediation in a Paper</a></li>
+    <li><a class="dropdown-item" href="../articles/changes-since-cran.html">What Changed Since CRAN 1.6.1</a></li>
     <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://data-wise.github.io/mediationverse/articles/ecosystem.html">Ecosystem</a></li>
@@ -82,7 +85,8 @@ adaptive cubature (dimension reduction; see Tofighi, 2026).</p>
 <span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gauss"</span>, <span class="st">"hcubature"</span><span class="op">)</span>,</span>
 <span>  tol <span class="op">=</span> <span class="fl">1e-06</span>,</span>
 <span>  nodes <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  diagnostics <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  diagnostics <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  lower.tail <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">p_prod3</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div>
@@ -93,7 +97,8 @@ adaptive cubature (dimension reduction; see Tofighi, 2026).</p>
 
 
 <dl><dt id="arg-q">q<a class="anchor" aria-label="anchor" href="#arg-q"></a></dt>
-<dd><p>Numeric scalar quantile.</p></dd>
+<dd><p>Numeric vector of quantiles (finite, no missing values). A single value takes
+the scalar path unchanged.</p></dd>
 
 
 <dt id="arg-mean">mean<a class="anchor" aria-label="anchor" href="#arg-mean"></a></dt>
@@ -149,6 +154,14 @@ detect the failure this method was replaced over.</p></li>
 </ul></dd>
 
 
+<dt id="arg-lower-tail">lower.tail<a class="anchor" aria-label="anchor" href="#arg-lower-tail"></a></dt>
+<dd><p>Logical; if <code>TRUE</code> (default) probabilities are <code>P(X1 * X2 * X3 &lt;= q)</code>, otherwise
+<code>P(X1 * X2 * X3 &gt; q)</code>. The upper tail is integrated directly, not computed as <code>1 - p</code>, so it
+stays accurate far out where <code>1 - p</code> would be lost to rounding. The accuracy is still the absolute
+tolerance <code>tol</code>, so for a tail probability of size <code>p</code> use <code>tol</code> well below <code>p</code> (for example <code>tol = 1e-14</code>
+for a probability near 1e-10).</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments (unused; present for the <code>p_prod3</code>
 deprecated alias).</p></dd>
@@ -156,7 +169,11 @@ deprecated alias).</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Probability <code>P(X1 * X2 * X3 &lt;= q)</code> as a numeric scalar in <code>[0, 1]</code>.</p>
+    <p>Probability <code>P(X1 * X2 * X3 &lt;= q)</code> in <code>[0, 1]</code>: a numeric scalar for a single
+<code>q</code>, and a numeric vector of the same length (and names) as <code>q</code> otherwise, in the order
+given. With <code>diagnostics = TRUE</code> and more than one <code>q</code>, the <code>"error"</code> and <code>"nodes"</code>
+attributes are vectors with one entry per <code>q</code> (<code>NA</code> where there is nothing to report,
+for example a point mass).</p>
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
@@ -190,6 +207,12 @@ normal CDF/quantile; <a href="ProductNormal3.html">ProductNormal3</a> for the co
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">pprodnormal3</span><span class="op">(</span>q <span class="op">=</span> <span class="fl">0</span>, mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, cov <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5</span>
+<span class="r-in"><span><span class="co"># the upper tail, integrated directly (far out, 1 - p would be lost to rounding)</span></span></span>
+<span class="r-in"><span><span class="fu">pprodnormal3</span><span class="op">(</span><span class="fl">30</span>, mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, cov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>, tol <span class="op">=</span> <span class="fl">1e-10</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.552061e-05</span>
+<span class="r-in"><span><span class="co"># several quantiles at once</span></span></span>
+<span class="r-in"><span><span class="fu">pprodnormal3</span><span class="op">(</span>q <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, cov <span class="op">=</span> <span class="va">Sigma</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.07330808 0.50000000 0.92669192</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

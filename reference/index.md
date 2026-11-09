@@ -28,6 +28,8 @@ variables.
   : Percentile for the Distribution of Product of Two Normal Variables
 - [`qprodnormal()`](https://data-wise.github.io/rmediation/reference/qprodnormal.md)
   : Quantile for the Distribution of Product of Two Normal Variables
+- [`qprodnormal3()`](https://data-wise.github.io/rmediation/reference/qprodnormal3.md)
+  : Quantile Function for the Product of Three Normal Variables
 - [`dprodnormal()`](https://data-wise.github.io/rmediation/reference/dprodnormal.md)
   : Density of the Product of Two Normal Random Variables
 - [`dprodnormal3()`](https://data-wise.github.io/rmediation/reference/dprodnormal3.md)

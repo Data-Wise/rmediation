@@ -2,10 +2,16 @@
 
 ### All vignettes
 
+- [What Changed Since CRAN
+  1.6.1](https://data-wise.github.io/rmediation/articles/changes-since-cran.md):
 - [RMediation
   Cookbook](https://data-wise.github.io/rmediation/articles/cookbook.md):
 - [Getting Started with
   RMediation](https://data-wise.github.io/rmediation/articles/getting-started.md):
+- [Indirect Effects in a lavaan Model with
+  ci()](https://data-wise.github.io/rmediation/articles/indirect-effects-lavaan.md):
+- [MBCO on medfit SEM
+  Models](https://data-wise.github.io/rmediation/articles/mbco-semfit.md):
 - [Testing an Indirect Effect with
   MBCO](https://data-wise.github.io/rmediation/articles/mbco.md):
 - [Comparing Confidence Interval Methods in

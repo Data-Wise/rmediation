@@ -31,7 +31,7 @@ will be displayed as well."><meta property="og:image" content="https://data-wise
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.10.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,12 +47,15 @@ will be displayed as well."><meta property="og:image" content="https://data-wise
     <li><a class="dropdown-item" href="../articles/methods-comparison.html">CI Methods Comparison</a></li>
     <li><a class="dropdown-item" href="../articles/serial-mediation-with-medfit.html">Serial Mediation with medfit</a></li>
     <li><a class="dropdown-item" href="../articles/mbco.html">Testing an Indirect Effect with MBCO</a></li>
+    <li><a class="dropdown-item" href="../articles/mbco-semfit.html">MBCO on medfit SEM Models</a></li>
+    <li><a class="dropdown-item" href="../articles/indirect-effects-lavaan.html">Indirect Effects in a lavaan Model</a></li>
     <li><a class="dropdown-item" href="../articles/omitted-confounder-sensitivity.html">Omitted-Confounder Sensitivity</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="../articles/refcard.html">Quick Reference</a></li>
     <li><a class="dropdown-item" href="../articles/cookbook.html">Cookbook</a></li>
     <li><a class="dropdown-item" href="../articles/technical-notes.html">Technical Notes</a></li>
     <li><a class="dropdown-item" href="../articles/reporting.html">Reporting RMediation in a Paper</a></li>
+    <li><a class="dropdown-item" href="../articles/changes-since-cran.html">What Changed Since CRAN 1.6.1</a></li>
     <li><a class="dropdown-item" href="../articles/roadmap.html">Status and Roadmap</a></li>
   </ul></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://data-wise.github.io/mediationverse/articles/ecosystem.html">Ecosystem</a></li>
@@ -208,9 +211,19 @@ confidence limits (at significance level \(\alpha\)),</p></dd>
 
 <dt>SE</dt>
 <dd><p>standard error of the quantity of interest,</p></dd>
- <dt>MC Error</dt>
+ <dt>MCError</dt>
 <dd><p>When
-<code>type="MC"</code>, sampling standard error of the simulated mean, SE / sqrt(n.mc).</p></dd>
+<code>type="MC"</code>, sampling standard error of the simulated mean, SE / sqrt(n.mc),</p></dd>
+
+<dt>p</dt>
+<dd><p>When <code>type="MC"</code>, a two-sided Monte Carlo proportion:
+<code>2 * min(P, 1 - P)</code>, where <code>P</code> is the share of simulated values of
+the quantity that are greater than 0. It is the "P Value" printed on the density
+plot. It describes where the sampling distribution of the estimate lies relative to 0; it is
+<em>not</em> a test against a null distribution, and it is exactly 0 whenever
+every simulated value has the same sign, so it cannot rank clearly nonzero effects.
+To test a hypothesis such as a product equal to 0, use <code><a href="mbco.html">mbco</a></code>.
+The asymptotic result has no <code>p</code> element.</p></dd>
 </dl><p>When
 <code>type="all"</code>, <code>ci</code> returns a <a href="https://rdrr.io/r/base/list.html" class="external-link">list</a> of two objects, each of
 which a <a href="https://rdrr.io/r/base/list.html" class="external-link">list</a> that contains the results produced by each method as
@@ -258,7 +271,7 @@ Research Methods</em>, <b>43</b>, 692–700. <a href="https://doi.org/10.3758/s1
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"quant")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ~b1 * b2 * b3 * b4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5e8a0e3cc848&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x601bcdf1f200&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Asymptotic</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Asymptotic$`95% CI`</span>
@@ -273,7 +286,7 @@ Research Methods</em>, <b>43</b>, 692–700. <a href="https://doi.org/10.3758/s1
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"quant")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ~b1 * b2 * b3 * b4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5e8a0e3cc848&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x601bcdf1f200&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># An Example of Conservative Null Sampling Distribution</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="ci.html">ci</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>b1 <span class="op">=</span> <span class="fl">.3</span>, b2 <span class="op">=</span> <span class="fl">.4</span>, b3 <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.01</span>, <span class="fl">0</span>, <span class="fl">.02</span><span class="op">)</span>,</span></span>
@@ -300,7 +313,7 @@ Research Methods</em>, <b>43</b>, 692–700. <a href="https://doi.org/10.3758/s1
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"quant")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ~b1 * b2 * b3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5e8a0e3cc848&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x601bcdf1f200&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$CI</span>
@@ -346,7 +359,7 @@ Research Methods</em>, <b>43</b>, 692–700. <a href="https://doi.org/10.3758/s1
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"quant")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ~b1 * b2 * b3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x5e8a0e3cc848&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x601bcdf1f200&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]$CI</span>
