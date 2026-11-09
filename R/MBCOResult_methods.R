@@ -53,6 +53,32 @@
   ))
 }
 
+# Trailing block: printed only when provenance was recorded, after every existing line,
+# so output for a result without provenance is unchanged.
+.mbco_provenance_line <- function(x) {
+  pv <- x@provenance
+  if (is.null(pv)) {
+    return(invisible(NULL))
+  }
+  pk <- c(
+    paste("RMediation", pv$rmediation),
+    if (!is.null(pv$openmx)) paste("OpenMx", pv$openmx),
+    if (!is.null(pv$medfit)) paste("medfit", pv$medfit),
+    paste("R", pv$r)
+  )
+  cat("Provenance:\n")
+  cat("  Packages:", paste(pk, collapse = ", "), "\n")
+  cat(
+    "  Test: type = ", pv$type,
+    if (!is.null(pv$R)) paste0(", R = ", pv$R), "\n",
+    sep = ""
+  )
+  cat("  RNG:", paste(pv$rng_kind, collapse = " / "), "\n")
+  cat("  Run at:", pv$time, "\n")
+  cat("  Seed: not recorded (call set.seed() yourself and report it)\n")
+  invisible(NULL)
+}
+
 #' @return The object \code{x} invisibly.
 #' @export
 S7::method(print, MBCOResult) <- function(x, ...) {
@@ -73,6 +99,7 @@ S7::method(print, MBCOResult) <- function(x, ...) {
   }
   .mbco_branch_line(x)
   .mbco_refit_line(x)
+  .mbco_provenance_line(x)
   invisible(x)
 }
 
@@ -97,6 +124,7 @@ S7::method(summary, MBCOResult) <- function(object, ...) {
   }
   .mbco_branch_line(object)
   .mbco_refit_line(object)
+  .mbco_provenance_line(object)
 
   invisible(object)
 }
