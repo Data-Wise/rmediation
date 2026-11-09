@@ -4,8 +4,11 @@
 # against an independently computed result or a known answer.
 #
 # The non-product `:=` fallback runs a Monte Carlo interval whatever `type`
-# the caller asked for; it now warns when `type` was given explicitly. A `:=`
-# that cannot be resolved loses only its own entry, with a warning.
+# the caller asked for; it warns when `type` was given explicitly. A `:=` that
+# refers to another `:=` is expanded first; products of three or more
+# coefficients take Monte Carlo (the exact and asymptotic intervals exist for two
+# factors only). A `:=` that cannot be resolved loses only its own entry, with a
+# warning.
 
 .lav_fit <- function(extra = "") {
   skip_if_not_installed("lavaan")
@@ -97,14 +100,66 @@ test_that("non-product `:=` uses Monte Carlo and warns when `type` was chosen", 
   expect_equal(ci(fit, n.mc = 20000)$tot$Estimate, pe, tolerance = 0.02)
 })
 
-test_that("a `:=` built from another `:=` warns and keeps the other results", {
-  # `ab*c` parses as a product, but `ab` is not an estimated coefficient, so
-  # it reaches the Monte Carlo fallback, which cannot resolve `ab`. Only that
-  # label is lost; the valid `ab` interval is still returned.
+test_that("a `:=` built from another `:=` is resolved, nested equals flat for every type", {
+  nested <- .lav_fit("abc := ab*c")  # ab := a*b comes first in both fits, so the
+  flat <- .lav_fit("abc := a*b*c")   # random-number sequence is the same
+  for (tp in c("dop", "asymp", "MC", "prodclin", "all")) {
+    set.seed(5)
+    rn <- suppressWarnings(ci(nested, type = tp, n.mc = 2000))
+    set.seed(5)
+    rf <- suppressWarnings(ci(flat, type = tp, n.mc = 2000))
+    expect_false(is.null(rn$abc), info = tp)
+    expect_length(rn$abc[[1]], 2L)
+    expect_equal(rn$abc, rf$abc, info = tp) # same classification, same interval
+  }
+})
+
+test_that("three or more factors warn when type is explicit and stay quiet otherwise", {
+  fit <- .lav_fit("flat := a*b*c")
+  expect_warning(
+    ci(fit, type = "dop", n.mc = 2000),
+    "product of 3 coefficients; using a Monte Carlo interval instead of type = \"dop\""
+  )
+  expect_no_warning(ci(fit, n.mc = 2000)) # default type: nothing was asked for
+  expect_no_warning(ci(fit, type = "MC", n.mc = 2000))
+  # a flat three-factor product no longer stops the call under dop (it did before)
+  res <- suppressWarnings(ci(fit, type = "dop", n.mc = 2000))
+  expect_true("MC.Error" %in% names(res$flat))
+})
+
+test_that("a nested alias of a two-factor product honors `type` like the flat product", {
+  fit <- .lav_fit("alias := ab")
+  for (tp in c("dop", "asymp")) {
+    res <- ci(fit, type = tp)
+    expect_equal(res$alias, res$ab, info = tp)
+    expect_false("MC.Error" %in% names(res$alias)) # planted defect: ignoring `type` would add it
+  }
+})
+
+test_that("a nested non-product resolves and uses Monte Carlo", {
+  fit <- .lav_fit("tot2 := ab + c")
+  set.seed(9)
+  res <- suppressWarnings(ci(fit, type = "dop", n.mc = 2000))
+  expect_true("MCError" %in% names(res$tot2))
+  est <- lavaan::parameterEstimates(fit)
+  ab <- est$est[est$lhs == "ab" & est$op == ":="]
+  cc <- est$est[est$label == "c" & est$op == "~"]
+  expect_equal(res$tot2$Estimate, ab + cc, tolerance = 0.05)
+})
+
+test_that("an unresolvable `:=` warns and keeps the other results", {
   fit <- .lav_fit("abc := ab*c")
+  testthat::local_mocked_bindings(
+    .expand_defined = function(rhs) {
+      list(
+        expr = list(ab = quote(a * b), abc = NULL),
+        problem = c(ab = NA_character_, abc = "possibly a cycle")
+      )
+    }
+  )
   expect_warning(
     res <- ci(fit, n.mc = 2000),
-    "No interval for defined parameter 'abc'"
+    "No interval for defined parameter 'abc'.*possibly a cycle"
   )
   expect_named(res, c("ab", "abc"))
   expect_null(res$abc)
