@@ -8,6 +8,9 @@
   integration tolerance, not exactly.
 - `dist_quantile()` and `confint()` for a `ProductNormal3` now use the object's `method` (`"gauss"` or `"hcubature"`), as
   `cdf()` already did; before, they always used `"gauss"` (#177).
+- `dist_quantile()` on a `ProductNormal` now accepts a vector of probabilities with the default `type = "dop"`, returning one
+  quantile per element with the names of `p` kept; before, a vector `p` stopped with `the condition has length > 1`
+  (#176). A single `p` returns the same value as before, and `type = "mc"` already accepted a vector.
 
 # RMediation 1.11.0 (2026-11-09)
 

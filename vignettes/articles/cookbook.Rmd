@@ -182,11 +182,11 @@ For a plain product, the exact quantiles of `qprodnormal()` (recipe 3) avoid the
 
 ## 13. Quantiles of a distribution object, and a medfit object directly
 
-`dist_quantile()` returns one quantile of a `ProductNormal` object (a single `p`; `type = "MC"` simulates instead).
+`dist_quantile()` returns the quantiles of a `ProductNormal` object, one per element of `p` (`type = "MC"` simulates instead).
 
 ```{r dist-quantile}
 pn <- ProductNormal(mu = c(0.5, 0.6), Sigma = diag(c(0.08, 0.04)^2))
-c(lower = dist_quantile(pn, 0.025), upper = dist_quantile(pn, 0.975))
+dist_quantile(pn, c(lower = 0.025, upper = 0.975))
 ```
 
 For a medfit serial object, `ci_serial_mediation_data()` is what `ci()` dispatches to, so the two give the same interval (`mu` is the object from recipe 9).
