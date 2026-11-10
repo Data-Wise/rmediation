@@ -1,4 +1,4 @@
-# RMediation (development version)
+# RMediation 1.11.1 (2026-11-09)
 
 ## Bug fixes
 
@@ -14,6 +14,10 @@
 - `ci(mu = ..., Sigma = ..., quant = ...)` now stops with a message that says to pass the estimates as the first argument
   by position, instead of `argument "object" is missing, with no default` (#179). `ci()` still dispatches on its first
   argument, so the call form is unchanged; `?ci` now lists the arguments of the numeric form.
+
+## Internal
+
+- New `scripts/pre-release-matrix.sh` runs the Linux, macOS and Windows checks and lint on `dev` before a release PR (#178).
 
 # RMediation 1.11.0 (2026-11-09)
 
