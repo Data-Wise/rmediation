@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -217,10 +217,10 @@ path at zero per branch. This is exact; a single constraint
 <span><span class="co">#&gt; Significance: ns (not significant)</span></span>
 <span><span class="co">#&gt; Note: product null; binding single-path null: b1 = 0.</span></span>
 <span><span class="co">#&gt; Provenance:</span></span>
-<span><span class="co">#&gt;   Packages: RMediation 1.11.0, OpenMx 2.22.11, medfit 0.3.2, R 4.6.2 </span></span>
+<span><span class="co">#&gt;   Packages: RMediation 1.11.1, OpenMx 2.22.11, medfit 0.3.2, R 4.6.2 </span></span>
 <span><span class="co">#&gt;   Test: type = asymp</span></span>
 <span><span class="co">#&gt;   RNG: Mersenne-Twister / Inversion / Rejection </span></span>
-<span><span class="co">#&gt;   Run at: 2026-11-09 22:45:12 UTC </span></span>
+<span><span class="co">#&gt;   Run at: 2026-11-10 02:16:50 UTC </span></span>
 <span><span class="co">#&gt;   Seed: not recorded (call set.seed() yourself and report it)</span></span></code></pre></div>
 <p>The note under the result names the binding branch, the single-path
 null with the largest p-value.</p>
@@ -341,12 +341,12 @@ Unlike <code><a href="../reference/qprodnormal.html">qprodnormal()</a></code> th
 <h2 id="quantiles-of-a-distribution-object-and-a-medfit-object-directly">13. Quantiles of a distribution object, and a medfit object
 directly<a class="anchor" aria-label="anchor" href="#quantiles-of-a-distribution-object-and-a-medfit-object-directly"></a>
 </h2>
-<p><code><a href="../reference/dist_quantile.html">dist_quantile()</a></code> returns one quantile of a
-<code>ProductNormal</code> object (a single <code>p</code>;
-<code>type = "MC"</code> simulates instead).</p>
+<p><code><a href="../reference/dist_quantile.html">dist_quantile()</a></code> returns the quantiles of a
+<code>ProductNormal</code> object, one per element of <code>p</code>
+(<code>type = "MC"</code> simulates instead).</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ProductNormal.html">ProductNormal</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.6</span><span class="op">)</span>, Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.08</span>, <span class="fl">0.04</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fu"><a href="../reference/dist_quantile.html">dist_quantile</a></span><span class="op">(</span><span class="va">pn</span>, <span class="fl">0.025</span><span class="op">)</span>, upper <span class="op">=</span> <span class="fu"><a href="../reference/dist_quantile.html">dist_quantile</a></span><span class="op">(</span><span class="va">pn</span>, <span class="fl">0.975</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/dist_quantile.html">dist_quantile</a></span><span class="op">(</span><span class="va">pn</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>lower <span class="op">=</span> <span class="fl">0.025</span>, upper <span class="op">=</span> <span class="fl">0.975</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     lower     upper </span></span>
 <span><span class="co">#&gt; 0.2010806 0.4053620</span></span></code></pre></div>
 <p>For a medfit serial object, <code><a href="../reference/ci_mediation_data.html">ci_serial_mediation_data()</a></code>
@@ -388,13 +388,11 @@ what to change.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>
-<code>argument "object" is missing, with no default</code> after
-<code>ci(mu = ..., Sigma = ...)</code>
-</td>
+<td><code>`ci()` needs the estimates ... as its first argument, passed by position and not named `mu`</code></td>
 <td>
 <code><a href="../reference/ci.html">ci()</a></code> is an S7 generic and dispatches on its first
-argument, so that argument must be passed by position</td>
+argument, so the estimates cannot be named <code>mu</code>
+</td>
 <td><code>ci(c(a = 1, b = 2), Sigma, quant = ~a*b)</code></td>
 </tr>
 <tr class="even">

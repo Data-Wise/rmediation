@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,7 +88,14 @@ list) as returned by the dispatched method.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>For numeric vectors or lavaan fits with a formula quantity, the Monte Carlo
+    <p>For numeric estimates, pass them as the first argument by position, followed by their
+covariance matrix: <code>ci(c(a = .5, b = .4), Sigma, quant = ~ a * b)</code>. The estimates cannot
+be named <code>mu</code>, because the generic dispatches on its first argument, <code>object</code>. The
+other arguments are <code>Sigma</code> (a covariance matrix, or its lower triangle by column),
+<code>quant</code> (a one-sided formula in the names of the estimates), <code>alpha</code> (default 0.05),
+<code>type</code> (<code>"MC"</code>, <code>"asymp"</code> or <code>"all"</code>), <code>n.mc</code>, <code>plot</code>,
+<code>plotCI</code>, <code>H0</code>, <code>mu0</code> and <code>Sigma0</code>.</p>
+<p>For numeric vectors or lavaan fits with a formula quantity, the Monte Carlo
 component reports MCError as the sampling standard error of the simulated mean
 (SE / sqrt(n.mc)); this is not the error of the interval endpoints. With
 H0 = TRUE, the Monte Carlo result contains the alternative and null results.

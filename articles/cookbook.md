@@ -130,10 +130,10 @@ mbco_product_null(full, paths = c("a1", "b1"), type = "asymp")
 #> Significance: ns (not significant)
 #> Note: product null; binding single-path null: b1 = 0.
 #> Provenance:
-#>   Packages: RMediation 1.11.0, OpenMx 2.22.11, medfit 0.3.2, R 4.6.2 
+#>   Packages: RMediation 1.11.1, OpenMx 2.22.11, medfit 0.3.2, R 4.6.2 
 #>   Test: type = asymp
 #>   RNG: Mersenne-Twister / Inversion / Rejection 
-#>   Run at: 2026-11-09 22:45:12 UTC 
+#>   Run at: 2026-11-10 02:16:50 UTC 
 #>   Seed: not recorded (call set.seed() yourself and report it)
 ```
 
@@ -273,13 +273,13 @@ For a plain product, the exact quantiles of
 ## 13. Quantiles of a distribution object, and a medfit object directly
 
 [`dist_quantile()`](https://data-wise.github.io/rmediation/reference/dist_quantile.md)
-returns one quantile of a `ProductNormal` object (a single `p`;
-`type = "MC"` simulates instead).
+returns the quantiles of a `ProductNormal` object, one per element of
+`p` (`type = "MC"` simulates instead).
 
 ``` r
 
 pn <- ProductNormal(mu = c(0.5, 0.6), Sigma = diag(c(0.08, 0.04)^2))
-c(lower = dist_quantile(pn, 0.025), upper = dist_quantile(pn, 0.975))
+dist_quantile(pn, c(lower = 0.025, upper = 0.975))
 #>     lower     upper 
 #> 0.2010806 0.4053620
 ```
@@ -321,7 +321,7 @@ what to change.
 
 | You see | Cause | Change |
 |----|----|----|
-| `argument "object" is missing, with no default` after `ci(mu = ..., Sigma = ...)` | [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) is an S7 generic and dispatches on its first argument, so that argument must be passed by position | `ci(c(a = 1, b = 2), Sigma, quant = ~a*b)` |
+| `` `ci()` needs the estimates ... as its first argument, passed by position and not named `mu` `` | [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md) is an S7 generic and dispatches on its first argument, so the estimates cannot be named `mu` | `ci(c(a = 1, b = 2), Sigma, quant = ~a*b)` |
 | `'Sigma' is not positive definite` | The covariance matrix you passed is not a valid covariance (for example a correlation above 1 in absolute value) | Check the matrix with `eigen(Sigma)$values`; all must be positive |
 | `The parameters names in formula 'quant' must match the parameters names provided in 'mu'` | The formula uses a name that `mu` does not have | Name every element of `mu` and use exactly those names in `quant` |
 | `'arg' should be one of "MC", "asymp", "all"` | `type = "dop"` was asked for a formula with more than two parameters, where only these types exist | Use `type = "MC"`, or [`pprodnormal3()`](https://data-wise.github.io/rmediation/reference/pprodnormal3.md) for a product of exactly three normals |

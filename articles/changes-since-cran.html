@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +98,7 @@
 
     
     
-<p>CRAN serves RMediation 1.6.1. Releases 1.7.0 to 1.11.0 are on GitHub
+<p>CRAN serves RMediation 1.6.1. Releases 1.7.0 to 1.11.1 are on GitHub
 only (see <a href="roadmap.html">Status and Roadmap</a> and <a href="reporting.html">Reporting RMediation in a Paper</a> for how to
 install a tag). This page lists what can change a number you already
 have or break code you already wrote. The <a href="../news/index.html">News</a> page has every change by version;
@@ -324,6 +324,26 @@ three normals, both tails. <code><a href="../reference/dist_quantile.html">dist_
 <li>
 <code><a href="../reference/ci.html">?ci</a></code> now documents the <code>p</code> element of the
 Monte Carlo result (a sign proportion, not a null test).</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="new-in-1-11-1">5. New in 1.11.1<a class="anchor" aria-label="anchor" href="#new-in-1-11-1"></a>
+</h2>
+<p>See the 1.11.1 entry on the <a href="../news/index.html">News</a>
+page. It fixes bugs only.</p>
+<ul>
+<li>
+<code><a href="../reference/cdf.html">cdf()</a></code> on a <code>ProductNormal3</code> with
+<code>lower.tail = FALSE</code> integrates the upper tail directly, and
+<code><a href="../reference/dist_quantile.html">dist_quantile()</a></code> and <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code> use the object’s
+integration <code>method</code>.</li>
+<li>
+<code><a href="../reference/dist_quantile.html">dist_quantile()</a></code> on a <code>ProductNormal</code> accepts
+a vector of probabilities.</li>
+<li>
+<code>ci(mu = ..., Sigma = ...)</code> stops with a message saying
+to pass the estimates by position; <code><a href="../reference/ci.html">?ci</a></code> lists the
+numeric-form arguments.</li>
 </ul>
 </div>
 <div class="section level2">

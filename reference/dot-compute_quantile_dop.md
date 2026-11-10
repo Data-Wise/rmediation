@@ -16,7 +16,7 @@ Internal: Compute quantile using Distribution of Product
 
 - p:
 
-  Probability
+  Probability, or a vector of probabilities
 
 - lower.tail:
 
@@ -24,4 +24,5 @@ Internal: Compute quantile using Distribution of Product
 
 ## Value
 
-Quantile value
+A list with `q` (one quantile per element of `p`, names kept) and
+`error`

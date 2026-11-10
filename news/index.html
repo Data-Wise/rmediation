@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.0</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,6 +59,24 @@
       <small>Source: <a href="https://github.com/data-wise/rmediation/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.11.1" id="rmediation-1111-2026-11-09">RMediation 1.11.1 (2026-11-09)<a class="anchor" aria-label="anchor" href="#rmediation-1111-2026-11-09"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-1-11-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-11-1"></a></h3>
+<ul><li>
+<code><a href="../reference/cdf.html">cdf()</a></code> for a <code>ProductNormal3</code> with <code>lower.tail = FALSE</code> now integrates the upper tail directly instead of computing <code>1 - p</code>, so a far upper tail is resolved: at unit means, <code>q = 100</code> and <code>tol = 1e-10</code> it returns 7.84e-11 where <code>1 - p</code> gave a value about 4% too large (50 times too large at the default <code>tol</code>) (<a href="https://github.com/data-wise/rmediation/issues/177" class="external-link">#177</a>). The two tails of the object now agree to the integration tolerance, not exactly.</li>
+<li>
+<code><a href="../reference/dist_quantile.html">dist_quantile()</a></code> and <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code> for a <code>ProductNormal3</code> now use the object’s <code>method</code> (<code>"gauss"</code> or <code>"hcubature"</code>), as <code><a href="../reference/cdf.html">cdf()</a></code> already did; before, they always used <code>"gauss"</code> (<a href="https://github.com/data-wise/rmediation/issues/177" class="external-link">#177</a>).</li>
+<li>
+<code><a href="../reference/dist_quantile.html">dist_quantile()</a></code> on a <code>ProductNormal</code> now accepts a vector of probabilities with the default <code>type = "dop"</code>, returning one quantile per element with the names of <code>p</code> kept; before, a vector <code>p</code> stopped with <code>the condition has length &gt; 1</code> (<a href="https://github.com/data-wise/rmediation/issues/176" class="external-link">#176</a>). A single <code>p</code> returns the same value as before, and <code>type = "mc"</code> already accepted a vector.</li>
+<li>
+<code>ci(mu = ..., Sigma = ..., quant = ...)</code> now stops with a message that says to pass the estimates as the first argument by position, instead of <code>argument "object" is missing, with no default</code> (<a href="https://github.com/data-wise/rmediation/issues/179" class="external-link">#179</a>). <code><a href="../reference/ci.html">ci()</a></code> still dispatches on its first argument, so the call form is unchanged; <code><a href="../reference/ci.html">?ci</a></code> now lists the arguments of the numeric form.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="internal-1-11-1">Internal<a class="anchor" aria-label="anchor" href="#internal-1-11-1"></a></h3>
+<ul><li>New <code>scripts/pre-release-matrix.sh</code> runs the Linux, macOS and Windows checks and lint on <code>dev</code> before a release PR (<a href="https://github.com/data-wise/rmediation/issues/178" class="external-link">#178</a>).</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.11.0" id="rmediation-1110-2026-11-09">RMediation 1.11.0 (2026-11-09)<a class="anchor" aria-label="anchor" href="#rmediation-1110-2026-11-09"></a></h2>
 <div class="section level3">

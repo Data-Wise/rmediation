@@ -11,9 +11,9 @@ dashboard](https://github.com/data-wise/mediationverse/blob/main/STATUS.md).
 ## Where each release lives
 
 - **CRAN** serves 1.6.1.
-- **GitHub** carries the later releases (1.10.0 and 1.11.0 are full
-  releases; 1.9.0 and earlier are pre-releases); the latest release is
-  1.11.0, and changes made after it are listed under “development
+- **GitHub** carries the later releases (1.10.0, 1.11.0 and 1.11.1 are
+  full releases; 1.9.0 and earlier are pre-releases); the latest release
+  is 1.11.1, and changes made after it are listed under “development
   version” on the News page. Install with
   `pak::pak("Data-Wise/rmediation")`; the
   [README](https://github.com/Data-Wise/rmediation#installation) lists

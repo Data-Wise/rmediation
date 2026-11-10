@@ -1,6 +1,6 @@
 # What Changed Since CRAN 1.6.1
 
-CRAN serves RMediation 1.6.1. Releases 1.7.0 to 1.11.0 are on GitHub
+CRAN serves RMediation 1.6.1. Releases 1.7.0 to 1.11.1 are on GitHub
 only (see [Status and
 Roadmap](https://data-wise.github.io/rmediation/articles/roadmap.md) and
 [Reporting RMediation in a
@@ -119,6 +119,25 @@ See the 1.11.0 entry on the
 - [`?ci`](https://data-wise.github.io/rmediation/reference/ci.md) now
   documents the `p` element of the Monte Carlo result (a sign
   proportion, not a null test).
+
+## 5. New in 1.11.1
+
+See the 1.11.1 entry on the
+[News](https://data-wise.github.io/rmediation/news/index.md) page. It
+fixes bugs only.
+
+- [`cdf()`](https://data-wise.github.io/rmediation/reference/cdf.md) on
+  a `ProductNormal3` with `lower.tail = FALSE` integrates the upper tail
+  directly, and
+  [`dist_quantile()`](https://data-wise.github.io/rmediation/reference/dist_quantile.md)
+  and [`confint()`](https://rdrr.io/r/stats/confint.html) use the
+  object’s integration `method`.
+- [`dist_quantile()`](https://data-wise.github.io/rmediation/reference/dist_quantile.md)
+  on a `ProductNormal` accepts a vector of probabilities.
+- `ci(mu = ..., Sigma = ...)` stops with a message saying to pass the
+  estimates by position;
+  [`?ci`](https://data-wise.github.io/rmediation/reference/ci.md) lists
+  the numeric-form arguments.
 
 ## Which version to cite
 

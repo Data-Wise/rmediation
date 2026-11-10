@@ -58,18 +58,18 @@ non-normality:
 install.packages("RMediation")
 ```
 
-### From GitHub (release 1.11.0)
+### From GitHub (release 1.11.1)
 
-CRAN serves the stable 1.6.1. Release 1.11.0 is published on GitHub
+CRAN serves the stable 1.6.1. Release 1.11.1 is published on GitHub
 only, as the latest GitHub release; it is not on CRAN.
 
 ``` r
 
 # Using pak (recommended)
-pak::pak("Data-Wise/rmediation@v1.11.0")
+pak::pak("Data-Wise/rmediation@v1.11.1")
 
 # Or using remotes
-remotes::install_github("Data-Wise/rmediation", ref = "v1.11.0")
+remotes::install_github("Data-Wise/rmediation", ref = "v1.11.1")
 ```
 
 For the development branch, use `@dev` or `ref = "dev"` instead.

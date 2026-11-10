@@ -25,6 +25,15 @@ as returned by the dispatched method.
 
 ## Details
 
+For numeric estimates, pass them as the first argument by position,
+followed by their covariance matrix:
+`ci(c(a = .5, b = .4), Sigma, quant = ~ a * b)`. The estimates cannot be
+named `mu`, because the generic dispatches on its first argument,
+`object`. The other arguments are `Sigma` (a covariance matrix, or its
+lower triangle by column), `quant` (a one-sided formula in the names of
+the estimates), `alpha` (default 0.05), `type` (`"MC"`, `"asymp"` or
+`"all"`), `n.mc`, `plot`, `plotCI`, `H0`, `mu0` and `Sigma0`.
+
 For numeric vectors or lavaan fits with a formula quantity, the Monte
 Carlo component reports MCError as the sampling standard error of the
 simulated mean (SE / sqrt(n.mc)); this is not the error of the interval

@@ -13,12 +13,12 @@ reader can too:
 
 ``` r
 
-pak::pak("Data-Wise/rmediation@v1.11.0")
+pak::pak("Data-Wise/rmediation@v1.11.1")
 # or
-remotes::install_github("Data-Wise/rmediation", ref = "v1.11.0")
+remotes::install_github("Data-Wise/rmediation", ref = "v1.11.1")
 ```
 
-Replace `v1.11.0` with the tag you ran. The [Releases
+Replace `v1.11.1` with the tag you ran. The [Releases
 page](https://github.com/Data-Wise/rmediation/releases) lists the tags.
 Do not cite `dev` or an untagged install: it moves.
 
@@ -27,7 +27,7 @@ Record what R reports for your session:
 ``` r
 
 as.character(packageVersion("RMediation"))
-#> [1] "1.11.0"
+#> [1] "1.11.1"
 ```
 
 [`sessionInfo()`](https://rdrr.io/r/utils/sessionInfo.html) goes in a
