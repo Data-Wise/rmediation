@@ -237,9 +237,9 @@
 #' Internal: Compute quantile using Distribution of Product
 #'
 #' @param object ProductNormal object
-#' @param p Probability
+#' @param p Probability, or a vector of probabilities
 #' @param lower.tail Logical; if TRUE (default), probabilities are P(X <= x)
-#' @return Quantile value
+#' @return A list with `q` (one quantile per element of `p`, names kept) and `error`
 #' @keywords internal
 .compute_quantile_dop <- function(object, p, lower.tail = TRUE) {
   mu <- object@mu
@@ -256,7 +256,15 @@
   mu.x <- mu[1]
   mu.y <- mu[2]
 
-  .compute_quantile_dop_internal(p, mu.x, mu.y, se.x, se.y, rho, lower.tail)
+  # The root-finder takes one probability at a time, so a vector p is handled element by element (#176).
+  res <- lapply(p, function(pp) {
+    .compute_quantile_dop_internal(pp, mu.x, mu.y, se.x, se.y, rho, lower.tail)
+  })
+  q <- vapply(res, function(r) as.numeric(r$q), numeric(1))
+  error <- vapply(res, function(r) as.numeric(r$error), numeric(1))
+  names(q) <- names(p)
+  names(error) <- names(p)
+  list(q = q, error = error)
 }
 
 #' Internal: Compute quantile using Monte Carlo
