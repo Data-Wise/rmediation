@@ -19,6 +19,14 @@ list) as returned by the dispatched method.
 Generic function for computing confidence intervals.
 }
 \details{
+For numeric estimates, pass them as the first argument by position, followed by their
+covariance matrix: \code{ci(c(a = .5, b = .4), Sigma, quant = ~ a * b)}. The estimates cannot
+be named \code{mu}, because the generic dispatches on its first argument, \code{object}. The
+other arguments are \code{Sigma} (a covariance matrix, or its lower triangle by column),
+\code{quant} (a one-sided formula in the names of the estimates), \code{alpha} (default 0.05),
+\code{type} (\code{"MC"}, \code{"asymp"} or \code{"all"}), \code{n.mc}, \code{plot},
+\code{plotCI}, \code{H0}, \code{mu0} and \code{Sigma0}.
+
 For numeric vectors or lavaan fits with a formula quantity, the Monte Carlo
 component reports MCError as the sampling standard error of the simulated mean
 (SE / sqrt(n.mc)); this is not the error of the interval endpoints. With

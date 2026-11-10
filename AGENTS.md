@@ -141,7 +141,7 @@ the release. It runs for `main`, releases and dispatch, with no path filter and 
 runs it first. Plan and decisions:
 `planning/PLAN-mechanical-checks-2026-10-30.md`. One cheap check does run on PRs to `dev`: `risk-tier` (a stdlib Python
 script, no R install). A PR that changes a file listed in `.github/risk-files.txt` must carry the evidence checklist from
-`.github/PULL_REQUEST_TEMPLATE.md` in its body; a release PR from `dev` skips the checklist but must carry a `Ships: #N, #M` body line naming the PRs it ships. It is advisory, not a required check.
+`.github/PULL_REQUEST_TEMPLATE.md` in its body; a release PR from `dev` skips the checklist but must carry a `Ships: #N, #M` body line naming the PRs it ships. It is advisory, not a required check. **Before a release, run `scripts/pre-release-matrix.sh`** on `dev` (after the last feature PR, before the version bump): it dispatches `R-CMD-check` and `lint`, waits, and prints each job's result, so the Linux and Windows runs happen before the release PR rather than on it. `check-local.sh` is single-platform (macOS here); the 1.11.0 rounding bug (#174) passed it and failed on Linux and Windows only on the release PR (#178).
 
 ---
 
@@ -190,9 +190,9 @@ refits, requires medfit >= 0.8.0 (version-gated; older medfit gets a clear
 error), and does not need OpenMx. The OpenMx paths are unchanged.
 
 **Nothing is submitted to CRAN, by user decision.** CRAN serves 1.6.1. The GitHub
-latest GitHub release is 1.11.0 (1.10.0 before it), cut from `dev` with the SEMFit route included; the earlier 1.7.1 candidate on
+latest GitHub release is 1.11.1 (1.11.0 and 1.10.0 before it), cut from `dev` with the SEMFit route included; the earlier 1.7.1 candidate on
 `release/1.7.1` (draft PR #46, route removed) is superseded and closed. A later CRAN candidate must remove or finish
-the route, so its version will be later than 1.11.0. Never start `devtools::submit_cran()` without an explicit
+the route, so its version will be later than 1.11.1. Never start `devtools::submit_cran()` without an explicit
 instruction. The route is no longer labeled experimental (maintainer decision 2026-10-31: medfit dropped the label
 in 0.11.0). The hold lifts only when a medfit release with `fixed_x` and observed mean structure is on CRAN; medfit is
 GitHub-only for now (0.16.0; CRAN has 0.3.2). Criteria: `.STATUS`, 2026-10-31 entries. Then Suggests rises to

@@ -1,3 +1,24 @@
+# RMediation 1.11.1 (2026-11-09)
+
+## Bug fixes
+
+- `cdf()` for a `ProductNormal3` with `lower.tail = FALSE` now integrates the upper tail directly instead of computing `1 - p`, so
+  a far upper tail is resolved: at unit means, `q = 100` and `tol = 1e-10` it returns 7.84e-11 where `1 - p` gave a value
+  about 4% too large (50 times too large at the default `tol`) (#177). The two tails of the object now agree to the
+  integration tolerance, not exactly.
+- `dist_quantile()` and `confint()` for a `ProductNormal3` now use the object's `method` (`"gauss"` or `"hcubature"`), as
+  `cdf()` already did; before, they always used `"gauss"` (#177).
+- `dist_quantile()` on a `ProductNormal` now accepts a vector of probabilities with the default `type = "dop"`, returning one
+  quantile per element with the names of `p` kept; before, a vector `p` stopped with `the condition has length > 1`
+  (#176). A single `p` returns the same value as before, and `type = "mc"` already accepted a vector.
+- `ci(mu = ..., Sigma = ..., quant = ...)` now stops with a message that says to pass the estimates as the first argument
+  by position, instead of `argument "object" is missing, with no default` (#179). `ci()` still dispatches on its first
+  argument, so the call form is unchanged; `?ci` now lists the arguments of the numeric form.
+
+## Internal
+
+- New `scripts/pre-release-matrix.sh` runs the Linux, macOS and Windows checks and lint on `dev` before a release PR (#178).
+
 # RMediation 1.11.0 (2026-11-09)
 
 ## New features

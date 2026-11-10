@@ -9,12 +9,12 @@
 \arguments{
 \item{object}{ProductNormal object}
 
-\item{p}{Probability}
+\item{p}{Probability, or a vector of probabilities}
 
 \item{lower.tail}{Logical; if TRUE (default), probabilities are P(X <= x)}
 }
 \value{
-Quantile value
+A list with \code{q} (one quantile per element of \code{p}, names kept) and \code{error}
 }
 \description{
 Internal: Compute quantile using Distribution of Product

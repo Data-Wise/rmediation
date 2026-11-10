@@ -401,7 +401,8 @@ test_that("cdf lower.tail = FALSE is the complement of lower.tail = TRUE", {
     mu = c(0.4, 0.3, 0.2), Sigma = diag(3),
     method = "hcubature"
   )
-  expect_equal(cdf(obj, 0.1, lower.tail = FALSE), 1 - cdf(obj, 0.1))
+  # Each tail is integrated directly (#177), so they agree to the integration tolerance (default 1e-6), not exactly.
+  expect_equal(cdf(obj, 0.1, lower.tail = FALSE), 1 - cdf(obj, 0.1), tolerance = 1e-6)
 })
 
 test_that("p_prod3 handles a negative-mean degenerate component", {
