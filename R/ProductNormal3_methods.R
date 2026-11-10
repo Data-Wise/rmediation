@@ -24,27 +24,23 @@ S7::method(show, ProductNormal3) <- function(object) {
 #' @export
 S7::method(cdf, ProductNormal3) <- function(object, q, lower.tail = TRUE, tol = 1e-6, ...) {
   checkmate::assert_numeric(q, finite = TRUE)
-  checkmate::assert_logical(lower.tail)
+  checkmate::assert_flag(lower.tail)
   checkmate::assert_number(tol, lower = 0)
 
-  p <- vapply(q, function(qq) {
+  # The upper tail is integrated directly, not computed as 1 - p, so a far upper tail is resolved (#177).
+  vapply(q, function(qq) {
     pprodnormal3(qq, # nolint: object_usage_linter.
       mean = object@mu, cov = object@Sigma,
-      method = object@method, tol = tol
+      method = object@method, tol = tol, lower.tail = lower.tail
     )
   }, FUN.VALUE = numeric(1))
-
-  if (!lower.tail) {
-    p <- 1 - p
-  }
-
-  p
 }
 
 #' @noRd
-.prod3_quantile <- function(p, mean, cov, lower, upper, tol = 1e-4, lower.tail = TRUE) {
+.prod3_quantile <- function(p, mean, cov, lower, upper, tol = 1e-4, lower.tail = TRUE, method = "gauss") {
   f <- function(q) {
-    pprodnormal3(q, mean = mean, cov = cov, tol = tol, lower.tail = lower.tail) - p # nolint: object_usage_linter.
+    # nolint next: object_usage_linter.
+    pprodnormal3(q, mean = mean, cov = cov, method = method, tol = tol, lower.tail = lower.tail) - p
   }
   res <- stats::uniroot(f, interval = c(lower, upper), tol = tol, extendInt = "yes")
   res$root
@@ -66,7 +62,7 @@ S7::method(cdf, ProductNormal3) <- function(object, q, lower.tail = TRUE, tol = 
 
 # One quantile: bracket with the delta interval (8 sd wide) and invert the CDF by root-finding.
 #' @noRd
-.qprodnormal3_one <- function(p, mean, cov, lower.tail, tol) {
+.qprodnormal3_one <- function(p, mean, cov, lower.tail, tol, method = "gauss") {
   if (p == 0 || p == 1) {
     return(if ((p == 0) == lower.tail) -Inf else Inf)
   }
@@ -79,7 +75,7 @@ S7::method(cdf, ProductNormal3) <- function(object, q, lower.tail = TRUE, tol = 
   width <- 8 * sc$sd
   .prod3_quantile(p,
     mean = mean, cov = cov, lower = center - width, upper = center + width,
-    tol = tol, lower.tail = lower.tail
+    tol = tol, lower.tail = lower.tail, method = method
   )
 }
 
@@ -89,7 +85,7 @@ S7::method(dist_quantile, ProductNormal3) <- function(object, p, tol = 1e-4, ...
   checkmate::assert_numeric(p, lower = 0, upper = 1, finite = TRUE)
   checkmate::assert_number(tol, lower = 0)
   vapply(p, .qprodnormal3_one, FUN.VALUE = numeric(1),
-    mean = object@mu, cov = object@Sigma, lower.tail = TRUE, tol = tol
+    mean = object@mu, cov = object@Sigma, lower.tail = TRUE, tol = tol, method = object@method
   )
 }
 
@@ -123,7 +119,10 @@ S7::method(dist_quantile, ProductNormal3) <- function(object, p, tol = 1e-4, ...
     center <- mean_v + sign(p - 0.5) * z * sd_delta
     lower <- center - delta_width
     upper <- center + delta_width
-    .prod3_quantile(p, mean = mu, cov = Sigma, lower = lower, upper = upper, tol = tol)
+    .prod3_quantile(p,
+      mean = mu, cov = Sigma, lower = lower, upper = upper, tol = tol,
+      method = object@method
+    )
   }, FUN.VALUE = numeric(1))
 
   c(lower = quantiles[1L], upper = quantiles[2L])
