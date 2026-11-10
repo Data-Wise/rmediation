@@ -7,7 +7,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library(RMediation)
 ```
 
-CRAN serves RMediation 1.6.1. Releases 1.7.0 to 1.11.0 are on GitHub only (see [Status and Roadmap](roadmap.html) and [Reporting RMediation in a Paper](reporting.html) for how to install a tag). This page lists what can change a number you already have or break code you already wrote. The [News](../news/index.html) page has every change by version; this page does not repeat the bug fixes that only affect rare inputs.
+CRAN serves RMediation 1.6.1. Releases 1.7.0 to 1.11.1 are on GitHub only (see [Status and Roadmap](roadmap.html) and [Reporting RMediation in a Paper](reporting.html) for how to install a tag). This page lists what can change a number you already have or break code you already wrote. The [News](../news/index.html) page has every change by version; this page does not repeat the bug fixes that only affect rare inputs.
 
 ## 1. Results that changed
 
@@ -76,6 +76,14 @@ See the 1.11.0 entry on the [News](../news/index.html) page.
 - `pprodnormal3()` accepts a vector of `q`, like the other distribution functions, and takes `lower.tail`; with `lower.tail = FALSE` it integrates the upper tail directly, so far tails are resolved (use a `tol` well below the probability you want).
 - `qprodnormal3()` is new: the quantile of the product of three normals, both tails. `dist_quantile()` on a `ProductNormal3` uses the same routine and now returns `-Inf` and `Inf` at `p = 0` and `p = 1`.
 - `?ci` now documents the `p` element of the Monte Carlo result (a sign proportion, not a null test).
+
+## 5. New in 1.11.1
+
+See the 1.11.1 entry on the [News](../news/index.html) page. It fixes bugs only.
+
+- `cdf()` on a `ProductNormal3` with `lower.tail = FALSE` integrates the upper tail directly, and `dist_quantile()` and `confint()` use the object's integration `method`.
+- `dist_quantile()` on a `ProductNormal` accepts a vector of probabilities.
+- `ci(mu = ..., Sigma = ...)` stops with a message saying to pass the estimates by position; `?ci` lists the numeric-form arguments.
 
 ## Which version to cite
 
