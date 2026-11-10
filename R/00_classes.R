@@ -142,6 +142,14 @@ dist_quantile <- S7::new_generic("dist_quantile", "object")
 #'   list) as returned by the dispatched method.
 #' @export
 #' @details
+#' For numeric estimates, pass them as the first argument by position, followed by their
+#' covariance matrix: \code{ci(c(a = .5, b = .4), Sigma, quant = ~ a * b)}. The estimates cannot
+#' be named \code{mu}, because the generic dispatches on its first argument, \code{object}. The
+#' other arguments are \code{Sigma} (a covariance matrix, or its lower triangle by column),
+#' \code{quant} (a one-sided formula in the names of the estimates), \code{alpha} (default 0.05),
+#' \code{type} (\code{"MC"}, \code{"asymp"} or \code{"all"}), \code{n.mc}, \code{plot},
+#' \code{plotCI}, \code{H0}, \code{mu0} and \code{Sigma0}.
+#'
 #' For numeric vectors or lavaan fits with a formula quantity, the Monte Carlo
 #' component reports MCError as the sampling standard error of the simulated mean
 #' (SE / sqrt(n.mc)); this is not the error of the interval endpoints. With
@@ -152,7 +160,17 @@ dist_quantile <- S7::new_generic("dist_quantile", "object")
 #' @examples
 #' pn <- ProductNormal(mu = c(0.5, 0.3), Sigma = diag(2) * 0.1)
 #' ci(pn)
-ci <- S7::new_generic("ci", "object")
+ci <- S7::new_generic("ci", "object", function(object, ...) {
+  # S7 dispatches on `object`; a call that names the estimates `mu` leaves it missing (#179).
+  if (missing(object)) {
+    stop(
+      "`ci()` needs the estimates (or a model or distribution object) as its first argument, passed by position ",
+      "and not named `mu`: ci(c(a = .5, b = .4), Sigma, quant = ~ a * b), not ci(mu = ..., Sigma = ...).",
+      call. = FALSE
+    )
+  }
+  S7::S7_dispatch()
+})
 
 # Note: print, summary, and show generics are NOT exported.
 # S7 methods will register directly with base generics to avoid masking.

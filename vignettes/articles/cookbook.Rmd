@@ -212,7 +212,7 @@ The messages below are what the package returns today; each row says what to cha
 
 | You see | Cause | Change |
 |---|---|---|
-| `argument "object" is missing, with no default` after `ci(mu = ..., Sigma = ...)` | `ci()` is an S7 generic and dispatches on its first argument, so that argument must be passed by position | `ci(c(a = 1, b = 2), Sigma, quant = ~a*b)` |
+| `` `ci()` needs the estimates ... as its first argument, passed by position and not named `mu` `` | `ci()` is an S7 generic and dispatches on its first argument, so the estimates cannot be named `mu` | `ci(c(a = 1, b = 2), Sigma, quant = ~a*b)` |
 | `'Sigma' is not positive definite` | The covariance matrix you passed is not a valid covariance (for example a correlation above 1 in absolute value) | Check the matrix with `eigen(Sigma)$values`; all must be positive |
 | `The parameters names in formula 'quant' must match the parameters names provided in 'mu'` | The formula uses a name that `mu` does not have | Name every element of `mu` and use exactly those names in `quant` |
 | `'arg' should be one of "MC", "asymp", "all"` | `type = "dop"` was asked for a formula with more than two parameters, where only these types exist | Use `type = "MC"`, or `pprodnormal3()` for a product of exactly three normals |

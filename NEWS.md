@@ -11,6 +11,9 @@
 - `dist_quantile()` on a `ProductNormal` now accepts a vector of probabilities with the default `type = "dop"`, returning one
   quantile per element with the names of `p` kept; before, a vector `p` stopped with `the condition has length > 1`
   (#176). A single `p` returns the same value as before, and `type = "mc"` already accepted a vector.
+- `ci(mu = ..., Sigma = ..., quant = ...)` now stops with a message that says to pass the estimates as the first argument
+  by position, instead of `argument "object" is missing, with no default` (#179). `ci()` still dispatches on its first
+  argument, so the call form is unchanged; `?ci` now lists the arguments of the numeric form.
 
 # RMediation 1.11.0 (2026-11-09)
 
