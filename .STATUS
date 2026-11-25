@@ -14,6 +14,8 @@ next: **1.11.1 is the latest GitHub release, a full release since 2026-11-09 (ta
 
 ## Local development
 
+- 2026-11-25 GitHub v1.11.2 preflight on `dev` `92736d3`: [R checks](https://github.com/Data-Wise/rmediation/actions/runs/45721516540) and [lint](https://github.com/Data-Wise/rmediation/actions/runs/45721519737) passed. [SEMFit compatibility](https://github.com/Data-Wise/rmediation/actions/runs/45721515340) failed in medfit with S7 1.0.0. The workflow now pairs the CRAN, 0.7.0, and 0.8.0 fixtures with S7 0.2.2 and checks medfit 0.20.0 with S7 1.0.0. The CRAN submission hold remains in effect.
+
 - 2026-11-25: Register the nullable `MBCOResult` property unions before the S4 class on S7 1.0.0. Installed-package S4 dispatch passed on S7 1.0.0 and 0.2.2. The local gate returned `Status: OK` with S7 1.0.0 / medfit 0.20.0 (2,983 passed, 4 warnings, 16 skipped) and S7 0.2.2 / medfit 0.7.0 (2,914 passed, 4 warnings, 26 skipped). S7 0.2.2 / medfit 0.20.0 produced one serial lavaan extraction failure (2,972 passed, 4 warnings, 16 skipped), reproduced on the unpatched baseline and directly in medfit without loading RMediation. Its separate `R CMD check` returned `Status: OK`.
 - PR #190 follow-up: run the guarded union registration at build and namespace load. The installed-package S7 0.2.2 to 1.0.0 upgrade probe fails at 65a826b and passes with this follow-up.
 
