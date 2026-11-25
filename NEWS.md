@@ -2,7 +2,7 @@
 
 ## Bug fixes
 
-- Register the nullable property unions of `MBCOResult` with S4 so RMediation installs and loads with S7 1.0.0.
+- Register the nullable property unions of `MBCOResult` with S4 so RMediation installs and loads with S7 1.0.0, including after upgrading S7 from 0.2.2.
 
 # RMediation 1.11.1 (2026-11-09)
 

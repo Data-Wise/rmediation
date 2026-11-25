@@ -15,6 +15,7 @@ next: **1.11.1 is the latest GitHub release, a full release since 2026-11-09 (ta
 ## Local development
 
 - 2026-11-25: Register the nullable `MBCOResult` property unions before the S4 class on S7 1.0.0. Installed-package S4 dispatch passed on S7 1.0.0 and 0.2.2. The local gate returned `Status: OK` with S7 1.0.0 / medfit 0.20.0 (2,983 passed, 4 warnings, 16 skipped) and S7 0.2.2 / medfit 0.7.0 (2,914 passed, 4 warnings, 26 skipped). S7 0.2.2 / medfit 0.20.0 produced one serial lavaan extraction failure (2,972 passed, 4 warnings, 16 skipped), reproduced on the unpatched baseline and directly in medfit without loading RMediation. Its separate `R CMD check` returned `Status: OK`.
+- PR #190 follow-up: run the guarded union registration at build and namespace load. The installed-package S7 0.2.2 to 1.0.0 upgrade probe fails at 65a826b and passes with this follow-up.
 
 ## Hold 2026-10-13
 - 2026-11-09 16:50 MST: impact of 1.11.0 on the mediationverse studied (rforge:impact plus manual call-site and consumer-test check): low risk, no downstream update needed; full write-up in `planning/IMPACT-1.11.0-mediationverse-2026-11-09.md`. Four issues filed from it, none blocking and none with a current consumer: #176 (`dist_quantile()` on `ProductNormal` fails for vector `p`), #177 (`cdf()` on `ProductNormal3` still computes `1 - p` for the upper tail), #178 (run the Linux and Windows matrix on dev before the release PR), #179 (`ci(mu = , Sigma = )` fails; `?ci` documents `.ci_core`). Open: those four.
