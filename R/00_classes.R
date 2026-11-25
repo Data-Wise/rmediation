@@ -299,7 +299,12 @@ MBCOResult <- S7::new_class("MBCOResult",
   }
 )
 
-# Register S4 for compatibility with base generics
+# S7 1.0.0 requires property unions to be registered before the class.
+if (utils::packageVersion("S7") >= "1.0.0") {
+  S7::S4_register(S7::new_union(NULL, S7::class_list))
+  S7::S4_register(S7::new_union(NULL, S7::class_character))
+  S7::S4_register(S7::new_union(NULL, S7::class_integer))
+}
 S7::S4_register(MBCOResult)
 
 #' Multilevel Omitted-Confounder Sensitivity Result
