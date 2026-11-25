@@ -299,8 +299,15 @@ MBCOResult <- S7::new_class("MBCOResult",
   }
 )
 
-# Register S4 for compatibility with base generics
-S7::S4_register(MBCOResult)
+.register_mbco_s4 <- function() {
+  if (utils::packageVersion("S7") >= "1.0.0") {
+    S7::S4_register(S7::new_union(NULL, S7::class_list))
+    S7::S4_register(S7::new_union(NULL, S7::class_character))
+    S7::S4_register(S7::new_union(NULL, S7::class_integer))
+  }
+  S7::S4_register(MBCOResult)
+}
+.register_mbco_s4()
 
 #' Multilevel Omitted-Confounder Sensitivity Result
 #'
