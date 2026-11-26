@@ -40,7 +40,9 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, local::.
+          # Build with the compatible pair from the controlled SEMFit lane.
+          # The separate live CRAN lane continues to expose medfit #523.
+          extra-packages: any::pkgdown, local::., cran::S7@1.0.0, github::Data-Wise/medfit@4739e8e76020cd7d0e5f8f29e9d918c6dd4e6ef8
           needs: website
 
       - name: Hide agent-instruction docs from pkgdown

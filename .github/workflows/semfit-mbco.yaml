@@ -19,14 +19,20 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {label: absent, mode: none, package: 'any::testthat'}
-          - {label: CRAN, mode: old, package: 'any::medfit'}
-          - {label: '0.7.0', mode: old, package: 'github::Data-Wise/medfit@v0.7.0'}
-          - {label: '0.8.0', mode: new, package: 'github::Data-Wise/medfit@v0.8.0'}
-    name: medfit ${{ matrix.label }} without OpenMx
+          - {label: absent, mode: none, package: 'any::testthat', s7: '1.0.0'}
+          # Keep the live CRAN compatibility failure visible until medfit#523 is fixed.
+          - {label: 'CRAN (live)', mode: cran, package: 'cran::medfit', s7: '1.0.0'}
+          # The historical medfit fixtures predate S7 1.0.0 union registration.
+          - {label: '0.3.2 (CRAN pin)', mode: old, package: 'cran::medfit@0.3.2', s7: '0.2.2'}
+          - {label: '0.7.0', mode: old, package: 'github::Data-Wise/medfit@v0.7.0', s7: '0.2.2'}
+          - {label: '0.8.0', mode: new, package: 'github::Data-Wise/medfit@v0.8.0', s7: '0.2.2'}
+          - {label: '0.20.0', mode: new, package: 'github::Data-Wise/medfit@4739e8e76020cd7d0e5f8f29e9d918c6dd4e6ef8', s7: '1.0.0'}
+    name: medfit ${{ matrix.label }} with S7 ${{ matrix.s7 }} without OpenMx
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       _R_CHECK_FORCE_SUGGESTS_: false
+      SEMFIT_MODE: ${{ matrix.mode }}
+      SEMFIT_S7_VERSION: ${{ matrix.s7 }}
     steps:
       - uses: actions/checkout@v4
       - uses: r-lib/actions/setup-r@v2
@@ -38,20 +44,27 @@ jobs:
           extra-packages: |
             any::testthat
             any::pkgload
+            cran::S7@${{ matrix.s7 }}
             ${{ matrix.package }}
       - name: Prepare controlled library and install RMediation
         shell: bash
         run: |
           gate_lib=$(mktemp -d)
           echo "SEMFIT_GATE_LIB=$gate_lib" >> "$GITHUB_ENV"
-          Rscript scripts/prepare-semfit-library.R "$gate_lib" "${{ matrix.mode }}"
+          mode="$SEMFIT_MODE"
+          if [ "$mode" = cran ]; then
+            mode=$(Rscript --vanilla -e 'cat(if (utils::packageVersion("medfit") >= "0.8.0") "new" else "old")')
+          fi
+          echo "SEMFIT_GATE_MODE=$mode" >> "$GITHUB_ENV"
+          Rscript scripts/prepare-semfit-library.R "$gate_lib" "$mode"
           R CMD INSTALL --library="$gate_lib" .
       - name: Verify both namespace load orders
         run: |
-          Rscript scripts/check-semfit-load.R "$SEMFIT_GATE_LIB" "${{ matrix.mode }}" RMediation
-          Rscript scripts/check-semfit-load.R "$SEMFIT_GATE_LIB" "${{ matrix.mode }}" medfit
+          Rscript scripts/check-semfit-load.R "$SEMFIT_GATE_LIB" "$SEMFIT_GATE_MODE" RMediation
+          Rscript scripts/check-semfit-load.R "$SEMFIT_GATE_LIB" "$SEMFIT_GATE_MODE" medfit
       - name: Run adapter tests in controlled library
         shell: Rscript {0}
         run: |
           .libPaths(Sys.getenv("SEMFIT_GATE_LIB"), include.site = FALSE)
+          stopifnot(utils::packageVersion("S7") == Sys.getenv("SEMFIT_S7_VERSION"))
           testthat::test_local(filter = "mbco-semfit", stop_on_failure = TRUE)
