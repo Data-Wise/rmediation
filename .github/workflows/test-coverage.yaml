@@ -28,7 +28,12 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::covr, any::xml2, github::Data-Wise/medfit@v0.8.0
+          # medfit v0.8.0 predates S7 1.0.0 union registration.
+          extra-packages: |
+            any::covr
+            any::xml2
+            cran::S7@0.2.2
+            github::Data-Wise/medfit@v0.8.0
           needs: coverage
 
       - name: Test coverage
