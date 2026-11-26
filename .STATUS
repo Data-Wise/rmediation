@@ -14,6 +14,8 @@ next: **1.11.1 is the latest GitHub release, a full release since 2026-11-09 (ta
 
 ## Local development
 
+- 2026-11-25 GitHub v1.11.2 website gate: [the first hosted pkgdown build](https://github.com/Data-Wise/rmediation/actions/runs/45732552703) failed loading CRAN medfit with S7 1.0.0. Pin pkgdown to medfit 0.20.0 (`4739e8e`) and S7 1.0.0, the pair used in the successful local site build and controlled SEMFit lane. The separate live CRAN compatibility check still reports medfit #523.
+
 - 2026-11-25 GitHub v1.11.2 prepared on top of `dev` `331f83a`. [Four hosted R checks](https://github.com/Data-Wise/rmediation/actions/runs/45731157746) and [lint](https://github.com/Data-Wise/rmediation/actions/runs/45731161123) passed before the version bump. Includes the S7 1.0.0 union-registration fix and pinned SEMFit and coverage fixtures. The live CRAN medfit job remains an external compatibility failure tracked in [medfit #523](https://github.com/Data-Wise/medfit/issues/523). All five [controlled SEMFit lanes](https://github.com/Data-Wise/rmediation/actions/runs/45731435085) passed on the same SHA. The maintainer approved this one known diagnostic failure as a release exception if it is the only failure on the release candidate and on main. The CRAN submission hold remains in effect.
 
 - 2026-11-25 GitHub v1.11.2 coverage follow-up: pin S7 0.2.2 with the existing medfit 0.8.0 fixture in `test-coverage`. Local `covr` verification with OpenMx installed passed (3,045 assertions, 4 warnings, 3 skips), generated Cobertura and the coverage inventory, and measured 97.68% line coverage. The live CRAN medfit 0.3.2 / S7 1.0.0 job still fails on `dev` `d9fd5dc`. The CRAN submission hold remains in effect.
