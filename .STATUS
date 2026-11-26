@@ -10,9 +10,11 @@ next: **1.11.2 is the latest GitHub release (tag `v1.11.2` on main `f5606ae`, PR
 
 ## Status: Active
 ## Progress: 100
-## Focus: v1.7.0 on GitHub as pre-release only. CRAN submission ON HOLD at user request (2026-08-17) — not merely waiting on the 08-21 cadence window. main + CRAN remain at 1.6.1.
+## Focus: v1.11.2 is published on GitHub. CRAN serves 1.6.1 and submission remains on hold. Once CRAN serves medfit with the S7 union fix, run the live SEMFit fixture on dev and verify both namespace load orders.
 
 ## Local development
+
+- 2026-11-26 verification checkpoint: [hosted coverage](https://github.com/Data-Wise/rmediation/actions/runs/45745656051) passed on dev `3e9566e`; [Codecov](https://app.codecov.io/github/data-wise/rmediation/commit/3e9566e17807df8401a524855659927567e99598) processed the report at 97.23% line coverage. Rforge verified the `withr` test dependency fix in [PR #197](https://github.com/Data-Wise/rmediation/pull/197) with 2,984 passing assertions, zero failures, 11 skips, four existing Monte Carlo fallback warnings, and a CRAN-style check with no errors, warnings, or notes. The live SEMFit rerun still depends on the upstream fix tracked in [medfit #523](https://github.com/Data-Wise/medfit/issues/523). CRAN submission remains on hold.
 
 - 2026-11-25 RMediation [v1.11.2](https://github.com/Data-Wise/rmediation/releases/tag/v1.11.2) published on GitHub from main `f5606ae3e7f365ba5e9c3aa2c0f0622efed297d6` (PR #194). The [hosted R checks](https://github.com/Data-Wise/rmediation/actions/runs/45734236375), lint, issue-84 gate, [coverage](https://github.com/Data-Wise/rmediation/actions/runs/45734236483) and [pkgdown deployment](https://github.com/Data-Wise/rmediation/actions/runs/45734236386) passed on that SHA. All five controlled [SEMFit lanes](https://github.com/Data-Wise/rmediation/actions/runs/45734236490) passed. The live CRAN medfit 0.3.2 / S7 1.0.0 S4 registration failure was the sole release exception approved by the maintainer ([medfit #523](https://github.com/Data-Wise/medfit/issues/523)). The CRAN submission hold remains in effect.
 
