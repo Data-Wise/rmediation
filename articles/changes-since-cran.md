@@ -1,6 +1,6 @@
 # What Changed Since CRAN 1.6.1
 
-CRAN serves RMediation 1.6.1. Releases 1.7.0 to 1.11.1 are on GitHub
+CRAN serves RMediation 1.6.1. Releases 1.7.0 to 1.11.2 are on GitHub
 only (see [Status and
 Roadmap](https://data-wise.github.io/rmediation/articles/roadmap.md) and
 [Reporting RMediation in a
@@ -146,3 +146,10 @@ Paper](https://data-wise.github.io/rmediation/articles/reporting.md)
 lists what to record, and the [Quick
 Reference](https://data-wise.github.io/rmediation/articles/refcard.md)
 has the one-page summary of functions and result shapes.
+
+## 6. New in 1.11.2
+
+RMediation installs and loads with S7 1.0.0, including after upgrading
+S7 from 0.2.2. See the
+[News](https://data-wise.github.io/rmediation/news/index.md) page for
+the compatibility fix.

@@ -130,10 +130,10 @@ mbco_product_null(full, paths = c("a1", "b1"), type = "asymp")
 #> Significance: ns (not significant)
 #> Note: product null; binding single-path null: b1 = 0.
 #> Provenance:
-#>   Packages: RMediation 1.11.1, OpenMx 2.22.11, medfit 0.3.2, R 4.6.2 
+#>   Packages: RMediation 1.11.2, OpenMx 2.22.11, medfit 0.20.0, R 4.6.2 
 #>   Test: type = asymp
 #>   RNG: Mersenne-Twister / Inversion / Rejection 
-#>   Run at: 2026-11-10 02:16:50 UTC 
+#>   Run at: 2026-11-26 01:16:20 UTC 
 #>   Seed: not recorded (call set.seed() yourself and report it)
 ```
 

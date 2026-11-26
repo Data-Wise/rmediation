@@ -12,9 +12,9 @@
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Inter-0.4.10/font.css" rel="stylesheet">
-<link href="../deps/Fira_Code-0.4.10/font.css" rel="stylesheet">
-<link href="../deps/Montserrat-0.4.10/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Inter-0.5.0/font.css" rel="stylesheet">
+<link href="../deps/Fira_Code-0.5.0/font.css" rel="stylesheet">
+<link href="../deps/Montserrat-0.5.0/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Status and Roadmap">
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -110,9 +110,9 @@ status dashboard</a>.</p>
 <li>
 <strong>CRAN</strong> serves 1.6.1.</li>
 <li>
-<strong>GitHub</strong> carries the later releases (1.10.0, 1.11.0
-and 1.11.1 are full releases; 1.9.0 and earlier are pre-releases); the
-latest release is 1.11.1, and changes made after it are listed under
+<strong>GitHub</strong> carries the later releases (1.10.0 through
+1.11.2 are full releases; 1.9.0 and earlier are pre-releases); the
+latest release is 1.11.2, and changes made after it are listed under
 “development version” on the News page. Install with
 <code>pak::pak("Data-Wise/rmediation")</code>; the <a href="https://github.com/Data-Wise/rmediation#installation" class="external-link">README</a>
 lists the tagged install commands.</li>
@@ -124,11 +124,11 @@ version.</li>
 <h2 id="cran-submission-is-on-hold">CRAN submission is on hold<a class="anchor" aria-label="anchor" href="#cran-submission-is-on-hold"></a>
 </h2>
 <p>No CRAN submission is planned until a medfit release that provides
-<code>fixed_x</code> and observed mean structure is on CRAN. medfit is
-GitHub-only for now. When that happens, the <code>Suggests</code> entry
-for medfit rises to <code>medfit &gt;= 0.8.0</code>. A later CRAN
-candidate must also remove or finish the SEMFit route described below,
-so its version will be later than 1.11.0.</p>
+<code>fixed_x</code> and observed mean structure is on CRAN. CRAN serves
+medfit 0.3.2. When that happens, the <code>Suggests</code> entry for
+medfit rises to <code>medfit &gt;= 0.8.0</code>. A later CRAN candidate
+must also remove or finish the SEMFit route described below, so its
+version will be later than 1.11.2.</p>
 </div>
 <div class="section level2">
 <h2 id="the-semfit-route-for-mbco">The SEMFit route for <code>mbco()</code><a class="anchor" aria-label="anchor" href="#the-semfit-route-for-mbco"></a>

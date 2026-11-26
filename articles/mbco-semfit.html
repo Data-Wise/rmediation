@@ -12,9 +12,9 @@
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Inter-0.4.10/font.css" rel="stylesheet">
-<link href="../deps/Fira_Code-0.4.10/font.css" rel="stylesheet">
-<link href="../deps/Montserrat-0.4.10/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Inter-0.5.0/font.css" rel="stylesheet">
+<link href="../deps/Fira_Code-0.5.0/font.css" rel="stylesheet">
+<link href="../deps/Montserrat-0.5.0/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="MBCO on medfit SEM Models">
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">RMediation</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.1</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.11.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -122,8 +122,8 @@ data that ships with the package:</p>
 <span>  <span class="st">"recall ~ cp*x + b1*repetition + b2*imagery"</span>,</span>
 <span>  sep <span class="op">=</span> <span class="st">"\n"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">full</span> <span class="op">&lt;-</span> <span class="fu">medfit</span><span class="fu">::</span><span class="fu">fit_sem</span><span class="op">(</span><span class="va">syntax</span>, <span class="va">d</span>, fixed_x <span class="op">=</span> <span class="cn">FALSE</span>, meanstructure <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span><span class="va">null</span> <span class="op">&lt;-</span> <span class="fu">medfit</span><span class="fu">::</span><span class="fu">fit_sem</span><span class="op">(</span></span>
+<span><span class="va">full</span> <span class="op">&lt;-</span> <span class="fu">medfit</span><span class="fu">::</span><span class="fu"><a href="https://data-wise.github.io/medfit/reference/fit_sem.html" class="external-link">fit_sem</a></span><span class="op">(</span><span class="va">syntax</span>, <span class="va">d</span>, fixed_x <span class="op">=</span> <span class="cn">FALSE</span>, meanstructure <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="va">null</span> <span class="op">&lt;-</span> <span class="fu">medfit</span><span class="fu">::</span><span class="fu"><a href="https://data-wise.github.io/medfit/reference/fit_sem.html" class="external-link">fit_sem</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">syntax</span>, <span class="st">"a1*b1 == 0"</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span>, <span class="va">d</span>,</span>
 <span>  fixed_x <span class="op">=</span> <span class="cn">FALSE</span>, meanstructure <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -137,7 +137,20 @@ above are the ones the package’s own tests use.</p>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mbco.html">mbco</a></span><span class="op">(</span><span class="va">null</span>, <span class="va">full</span><span class="op">)</span></span>
-<span><span class="va">res</span></span></code></pre></div>
+<span><span class="va">res</span></span>
+<span><span class="co">#&gt; MBCO Test Result</span></span>
+<span><span class="co">#&gt; ================</span></span>
+<span><span class="co">#&gt; Test type: asymp </span></span>
+<span><span class="co">#&gt; Chi-squared statistic: 0.0831 </span></span>
+<span><span class="co">#&gt; Degrees of freedom: 1 </span></span>
+<span><span class="co">#&gt; P-value: 0.7731 </span></span>
+<span><span class="co">#&gt; Significance: ns (not significant)</span></span>
+<span><span class="co">#&gt; Provenance:</span></span>
+<span><span class="co">#&gt;   Packages: RMediation 1.11.2, medfit 0.20.0, R 4.6.2 </span></span>
+<span><span class="co">#&gt;   Test: type = asymp</span></span>
+<span><span class="co">#&gt;   RNG: Mersenne-Twister / Inversion / Rejection </span></span>
+<span><span class="co">#&gt;   Run at: 2026-11-26 01:16:35 UTC </span></span>
+<span><span class="co">#&gt;   Seed: not recorded (call set.seed() yourself and report it)</span></span></code></pre></div>
 <p>With these data the statistic is 0.0831 on 1 degree of freedom,
 <code>p = 0.7731</code>. The test type is always <code>"asymp"</code>
 here, so the test uses no random numbers and there is no seed to report.

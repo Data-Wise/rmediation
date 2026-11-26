@@ -73,11 +73,12 @@ arbitrary nonlinear restrictions do not necessarily have one. An active
 tested bound or inequality at the null causes an error here because the
 ordinary chi-square p-value is invalid. Other medfit warnings propagate.
 
-For a product-zero null, `medfit::fit_sem()` with `a*b == 0` fits one
-branch per factor from clean starts and selects the smallest
-discrepancy. Pass that fitted null and the full fit to `mbco()`. medfit
-is optional: this route needs 0.8.0 or later (GitHub/r-universe);
-existing
+For a product-zero null,
+[`medfit::fit_sem()`](https://data-wise.github.io/medfit/reference/fit_sem.html)
+with `a*b == 0` fits one branch per factor from clean starts and selects
+the smallest discrepancy. Pass that fitted null and the full fit to
+`mbco()`. medfit is optional: this route needs 0.8.0 or later
+(GitHub/r-universe); existing
 [`ci()`](https://data-wise.github.io/rmediation/reference/ci.md)
 integration needs only 0.2.0. No change to the CRAN dependency minimum
 is implied.
@@ -224,6 +225,19 @@ if (requireNamespace("medfit", quietly = TRUE) &&
                           fixed_x = FALSE, meanstructure = NULL)
   mbco(null, full) # statistic 0.0831, df 1
 }
+#> MBCO Test Result
+#> ================
+#> Test type: asymp 
+#> Chi-squared statistic: 0.0831 
+#> Degrees of freedom: 1 
+#> P-value: 0.7731 
+#> Significance: ns (not significant)
+#> Provenance:
+#>   Packages: RMediation 1.11.2, medfit 0.20.0, R 4.6.2 
+#>   Test: type = asymp
+#>   RNG: Mersenne-Twister / Inversion / Rejection 
+#>   Run at: 2026-11-26 01:16:09 UTC 
+#>   Seed: not recorded (call set.seed() yourself and report it)
 if (FALSE) { # \dontrun{
 data(memory_exp)
 memory_exp <- as.data.frame(memory_exp) # mxData() does not accept tibbles

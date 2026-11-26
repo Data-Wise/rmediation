@@ -1,5 +1,13 @@
 # Changelog
 
+## RMediation 1.11.2 (2026-11-25)
+
+### Bug fixes
+
+- Register the nullable property unions of `MBCOResult` with S4 so
+  RMediation installs and loads with S7 1.0.0, including after upgrading
+  S7 from 0.2.2.
+
 ## RMediation 1.11.1 (2026-11-09)
 
 ### Bug fixes
@@ -274,7 +282,8 @@ No change to returned values or to the API.
   summaries and uncovered-line artifacts.
 - The `SEMFit` MBCO tests and the
   [`mbco()`](https://data-wise.github.io/rmediation/reference/mbco.md)
-  example pass `fixed_x` and `meanstructure` to `medfit::fit_sem()`
+  example pass `fixed_x` and `meanstructure` to
+  [`medfit::fit_sem()`](https://data-wise.github.io/medfit/reference/fit_sem.html)
   explicitly, at today’s values, so medfit 0.14.0’s default-change
   warning does not appear (medfit flips these defaults in 0.15.0).
   Results are unchanged; the example now needs medfit \>= 0.9.0

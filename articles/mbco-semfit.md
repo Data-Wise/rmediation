@@ -45,6 +45,19 @@ the package’s own tests use.
 
 res <- mbco(null, full)
 res
+#> MBCO Test Result
+#> ================
+#> Test type: asymp 
+#> Chi-squared statistic: 0.0831 
+#> Degrees of freedom: 1 
+#> P-value: 0.7731 
+#> Significance: ns (not significant)
+#> Provenance:
+#>   Packages: RMediation 1.11.2, medfit 0.20.0, R 4.6.2 
+#>   Test: type = asymp
+#>   RNG: Mersenne-Twister / Inversion / Rejection 
+#>   Run at: 2026-11-26 01:16:35 UTC 
+#>   Seed: not recorded (call set.seed() yourself and report it)
 ```
 
 With these data the statistic is 0.0831 on 1 degree of freedom,
