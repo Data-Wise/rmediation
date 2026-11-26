@@ -43,7 +43,8 @@ Suggests:
     mvtnorm,
     OpenMx (>= 2.13),
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    withr
 VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US
