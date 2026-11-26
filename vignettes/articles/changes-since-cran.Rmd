@@ -7,7 +7,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library(RMediation)
 ```
 
-CRAN serves RMediation 1.6.1. Releases 1.7.0 to 1.11.1 are on GitHub only (see [Status and Roadmap](roadmap.html) and [Reporting RMediation in a Paper](reporting.html) for how to install a tag). This page lists what can change a number you already have or break code you already wrote. The [News](../news/index.html) page has every change by version; this page does not repeat the bug fixes that only affect rare inputs.
+CRAN serves RMediation 1.6.1. Releases 1.7.0 to 1.11.2 are on GitHub only (see [Status and Roadmap](roadmap.html) and [Reporting RMediation in a Paper](reporting.html) for how to install a tag). This page lists what can change a number you already have or break code you already wrote. The [News](../news/index.html) page has every change by version; this page does not repeat the bug fixes that only affect rare inputs.
 
 ## 1. Results that changed
 
@@ -88,3 +88,7 @@ See the 1.11.1 entry on the [News](../news/index.html) page. It fixes bugs only.
 ## Which version to cite
 
 Report the tag you ran, not `dev`: [Reporting RMediation in a Paper](reporting.html) lists what to record, and the [Quick Reference](refcard.html) has the one-page summary of functions and result shapes.
+
+## 6. New in 1.11.2
+
+RMediation installs and loads with S7 1.0.0, including after upgrading S7 from 0.2.2. See the [News](../news/index.html) page for the compatibility fix.
